@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "updated": "2026-11-04",
+  "note": "Seeded from local checkouts in E:/Work (the exact code the docs were traced against). Prefix matching is fine; the watcher normalizes to full SHAs on its first run.",
+  "site": "https://providhydev.github.io/Documentations/esewa-miniapp-docs/",
+  "docsDir": "esewa-miniapp-docs",
+  "repos": {
+    "ProvidhyDev/IAM-Backend": {
+      "path": "E:/Work/IAM-Backend",
+      "branch": "production",
+      "sha": "81493132b90a",
+      "docs": [
+        "03-iam-federated-identity"
+      ]
+    },
+    "ProvidhyDev/Sales": {
+      "path": "E:/Work/Sales",
+      "branch": "production",
+      "sha": "b18a5124bfe3",
+      "docs": [
+        "04-sales-miniapp"
+      ]
+    },
+    "ProvidhyDev/CDXE-REBOOT": {
+      "path": "E:/Work/CDXE-REBOOT",
+      "branch": "production",
+      "sha": "e6557984f760",
+      "docs": [
+        "05-cdxe-miniapp"
+      ]
+    },
+    "ProvidhyDev/ERP-Projectmaster": {
+      "path": "E:/Work/ERP-Projectmaster",
+      "branch": "production",
+      "sha": "e8c37ee0ef24",
+      "docs": [
+        "06-projectmaster-miniapp"
+      ]
+    },
+    "ProvidhyDev/Payment-Service": {
+      "path": "E:/Work/Payment-Service",
+      "branch": "production",
+      "sha": "e1ad4f37b5a6",
+      "docs": [
+        "07-payment-esewa"
+      ]
+    },
+    "ProvidhyDev/TMS-service": {
+      "path": "E:/Work/TMS-service",
+      "branch": "production",
+      "sha": "38cf8e00c82c",
+      "docs": [
+        "08-tms-registration-config"
+      ]
+    },
+    "ProvidhyDev/Configuration-Service": {
+      "path": "E:/Work/Configuration-Service",
+      "branch": "production",
+      "sha": "9a4929b40c39",
+      "docs": [
+        "09-configuration-service"
+      ]
+    },
+    "ProvidhyDev/events": {
+      "path": "E:/Work/events",
+      "branch": "production",
+      "sha": "916cf2797128",
+      "docs": [
+        "10-events-miniapp"
+      ]
+    },
+    "ProvidhyDev/miniapp-esewa": {
+      "path": "E:/Work/miniapp-esewa",
+      "branch": "production",
+      "sha": "3a89b3d66602",
+      "docs": [
+        "M-merchant-side",
+        "C-customer-side",
+        "01-overview (frontend mapping)"
+      ]
+    }
+  }
+}

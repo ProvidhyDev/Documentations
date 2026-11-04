@@ -1,0 +1,69 @@
+# DRAFT — GitHub-native docs watcher.
+# Not active: lives in docs-agent/, NOT .github/workflows/.
+# To enable:
+#   1. Create secrets on ProvidhyDev/Documentations (Settings > Secrets > Actions):
+#        DOCS_SYNC_TOKEN : fine-grained PAT — Contents read on the 9 tracked service repos + Contents write here
+#        MODEL_KEY       : API key for the headless agent's model (any OpenAI-compatible endpoint works)
+#   2. Copy this file to .github/workflows/docs-watch.yml and push.
+# The agent runner below is Claude Code headless; swap the run step for Codex CLI (codex exec) or a
+# DSH headless invocation if you prefer — the playbook (docs-agent/PLAYBOOK.md) is runner-agnostic by design.
+name: docs-watch
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # every 30 minutes; GitHub may delay schedules, that is fine for docs
+  workflow_dispatch: {}       # manual run from the Actions tab
+
+jobs:
+  check-shas:
+    runs-on: ubuntu-latest
+    outputs:
+      moved: ${{ steps.shas.outputs.moved }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: shas
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+        run: |
+          node -e '
+          (async () => {
+            const st = require("./.docs-state.json");
+            const moved = [];
+            for (const [repo, e] of Object.entries(st.repos)) {
+              const r = await fetch(`https://api.github.com/repos/${repo}/branches/${e.branch}`,
+                { headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, "User-Agent": "docs-watch" } });
+              if (!r.ok) { console.log(`WARN ${repo} unreadable (${r.status})`); continue; }
+              const cur = (await r.json()).commit.sha;
+              if (!cur.startsWith(e.sha)) moved.push(repo);
+            }
+            console.log(`moved=${moved.length ? moved.join(",") : "none"}`);
+            if (moved.length) process.stdout.write(`moved=${moved.join(",")}\n`);
+          })();
+          ' >> "$GITHUB_OUTPUT" 2>/dev/null || true
+  sync-docs:
+    needs: check-shas
+    if: needs.check-shas.outputs.moved != '' && needs.check-shas.outputs.moved != 'none'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout tracked service repos
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+        run: |
+          node -e '
+          const st = require("./.docs-state.json");
+          for (const [repo, e] of Object.entries(st.repos)) {
+            console.log(`git clone --branch ${e.branch} --depth 50 https://x:${process.env.GH_TOKEN}@github.com/${repo}.git /src/${repo.split("/")[1]}`);
+          }
+          ' | bash
+      - name: Run the agent (Claude Code headless)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.MODEL_KEY }}
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude -p "Read docs-agent/PLAYBOOK.md and execute it completely. Service repos are cloned under /src/.
+          Treat /src/<repo> as the local checkouts named in the playbook. Commit and push the docs updates to main.
+          End with the acceptance report defined in the playbook." --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
+      - name: Verify Pages deploy
+        run: sleep 90 && echo 'check the Actions tab for the Pages run'
