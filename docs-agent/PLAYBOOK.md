@@ -82,7 +82,9 @@ Source markdown lives in E:/Work/Documentations/Federated-Miniapps-Docs/ (16 fil
 ### 2.6 Commit, state, push
 1. Update .docs-state.json: set each moved repo's sha to the full NEW sha and updated to today's date.
 2. git add -A; commit with message:  docs(sync): <Repo>@<new-10-char> [ +<n> repos] — <one-line feature summary>
-3. Push to main. The Pages workflow (pages.yml) deploys automatically.
+3. Push. Default (local/maintainer runs): push to main — the Pages workflow (pages.yml) deploys automatically.
+   PR MODE (headless CI runs — see docs-watch.yml): instead push branch docs-sync-<YYYYMMDD-HHMM> and open a PR to
+   main with the acceptance report as the body. Never push directly to main in CI mode.
 4. Report: per repo — what moved, what changed, which docs updated, citation count, validation results, new site state.
 
 ## 3. Guardrails
