@@ -63,9 +63,8 @@ jobs:
         env:
           MODEL_KEY: ${{ secrets.MODEL_KEY }}
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
-          CODEX_HOME: /tmp/codex
         run: |
-          mkdir -p "$CODEX_HOME"
+          mkdir -p "$HOME/.codex"
           {
           echo 'model = "qwen3.8-27B"'
           echo 'model_provider = "providhy"'
@@ -74,8 +73,8 @@ jobs:
           echo 'name = "Providhy hosted"'
           echo 'base_url = "https://ai-gw.f1arl.com/v1"'
           echo 'env_key = "MODEL_KEY"'
-          echo 'wire_api = "chat"'
-          } > "$CODEX_HOME/config.toml"
+          echo 'wire_api = "responses"'
+          } > "$HOME/.codex/config.toml"
           codex exec --dangerously-bypass-approvals-and-sandbox "You are the docs-sync agent. Read docs-agent/PLAYBOOK.md and execute it completely. The tracked service repos are cloned under /src/<RepoName>/ - treat those as the local checkouts named in the playbook (map by repo name). Because this is a headless CI run, use PR MODE for section 2.6: branch docs-sync-<YYYYMMDD-HHMM>, push it, and open a PR to main with the acceptance report as the PR body. Do NOT push directly to main. If no repos moved, say so and stop. Service repos under /src are READ-ONLY."
       - name: Watch the PR
         run: echo 'Review the opened PR in the PRs tab; merging it deploys the site via pages.yml'

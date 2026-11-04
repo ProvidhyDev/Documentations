@@ -22,12 +22,11 @@ jobs:
         env:
           MODEL_KEY: ${{ secrets.MODEL_KEY }}
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
-          CODEX_HOME: /tmp/codex
         run: |
           git config user.name "docs-agent[bot]"
           git config user.email "docs-agent@users.noreply.github.com"
           echo "GH_TOKEN present: length=${#GH_TOKEN}"
-          mkdir -p "$CODEX_HOME"
+          mkdir -p "$HOME/.codex"
           {
           echo 'model = "qwen3.8-27B"'
           echo 'model_provider = "providhy"'
@@ -36,8 +35,8 @@ jobs:
           echo 'name = "Providhy hosted"'
           echo 'base_url = "https://ai-gw.f1arl.com/v1"'
           echo 'env_key = "MODEL_KEY"'
-          echo 'wire_api = "chat"'
-          } > "$CODEX_HOME/config.toml"
+          echo 'wire_api = "responses"'
+          } > "$HOME/.codex/config.toml"
           codex exec --dangerously-bypass-approvals-and-sandbox "TASK (simple, visible test): update the agent status line on the portal.
           1) Open index.html in the repo root. Find the single line containing id=agentline.
           2) Replace ONLY the text between its > and </p> with: TEST OK - <current UTC date and time> - qwen3.8-27B via ai-gw.f1arl.com (codex). Change nothing else in the file.
