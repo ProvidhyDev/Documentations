@@ -3,6 +3,9 @@ name: docs-watch
 # headless agent (qwen3.8-27B via ai-gw.f1arl.com through Claude Code) with docs-agent/PLAYBOOK.md,
 # and opens a docs PR. Verified 2026-11-04: endpoint speaks OpenAI + Anthropic formats; effort must
 # be medium (gateway rejects 'high'). Secrets: MODEL_KEY, DOCS_SYNC_TOKEN.
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '*/30 * * * *'

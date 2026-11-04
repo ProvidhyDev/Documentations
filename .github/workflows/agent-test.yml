@@ -5,6 +5,9 @@ name: agent-test
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
           ANTHROPIC_SMALL_FAST_MODEL: qwen3.8-27B
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
         run: |
-          git config user.name "docs-agent[bot]"
+          echo "GH_TOKEN present: length=${#GH_TOKEN}" "docs-agent[bot]"
           git config user.email "docs-agent@users.noreply.github.com"
           claude -p "TASK (simple, visible test): update the agent status line on the portal.
           1) Open index.html in the repo root. Find the single line containing id=\"agentline\".
