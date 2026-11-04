@@ -1,0 +1,1026 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>API Catalog - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc current" href="13-api-catalog.html"><span>API Catalog</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="13-api-catalog.html#iam-federated-identity-app-mount-api-external-doc-03">IAM — federated_identity app (mount /api/external/) — doc 03</a><a class="sb-item sb-sub" href="13-api-catalog.html#sales-miniapp-app-mount-api-miniapp-doc-04">Sales — miniapp app (mount /api/miniapp/) — doc 04</a><a class="sb-item sb-sub" href="13-api-catalog.html#cdxe-miniapp-app-mount-api-miniapp-doc-05">CDXE — miniapp app (mount /api/miniapp/) — doc 05</a><a class="sb-item sb-sub" href="13-api-catalog.html#projectmaster-miniapp-app-mount-api-miniapp-doc-06">Projectmaster — miniapp app (mount /api/miniapp/) — doc 06</a><a class="sb-item sb-sub" href="13-api-catalog.html#payment-service-esewa-app-mount-api-esewa-doc-07">Payment-Service — esewa app (mount /api/esewa/) — doc 07</a><a class="sb-item sb-sub" href="13-api-catalog.html#tms-miniapp-app-mount-api-miniapp-tenant-payment-doc-08">TMS — miniapp app (mount /api/miniapp/) + tenant + payment — doc 08</a><a class="sb-item sb-sub" href="13-api-catalog.html#configuration-service-service-configuration-mount-api-service-configuration-doc-09">Configuration-Service — service_configuration (mount /api/service-configuration/) — doc 09</a><a class="sb-item sb-sub" href="13-api-catalog.html#events-notification-app-activity-log-mounts-api-notification-api-activity-log-doc-10">Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10</a><a class="sb-item sb-sub" href="13-api-catalog.html#package-service-out-of-scope-referenced">Package service (out of scope, referenced)</a><a class="sb-item sb-sub" href="13-api-catalog.html#iam-heimer-auth-context-endpoints-used-by-miniapp-lifecycle-doc-03-8">IAM heimer_auth (context endpoints used by miniapp lifecycle, doc 03 §8)</a></div></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>13 — Global API Catalog (every in-scope endpoint)</h1>
+<blockquote>
+<p>One row per endpoint. Full paths use the dev public hosts (see .env of each repo).
+&quot;Auth&quot; column: FI = FederatedIdentityAuthentication (JWT+TOTP, service copy);
+FI-IAM = the IAM-local FederatedIdentityAuthentication (body provider_code+external_identifier lookup);
+INT = InternalRequestAuthentication (shared internal password); JWT = normal IAM JWT; — = none/other.
+Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.</p>
+</blockquote>
+<p>Hosts: IAM=<a href="https://dev-iam-api.providhy.com">https://dev-iam-api.providhy.com</a> · SALES=<a href="https://dev-sales-api.providhy.com">https://dev-sales-api.providhy.com</a> · CDXE=<a href="https://dev-cdxe-api.providhy.com">https://dev-cdxe-api.providhy.com</a> · PM=<a href="https://dev-projectmaster-api.providhy.com">https://dev-projectmaster-api.providhy.com</a> · PAY=<a href="https://dev-payment-api.providhy.com">https://dev-payment-api.providhy.com</a> · TMS=<a href="https://dev-tms-api.providhy.com">https://dev-tms-api.providhy.com</a> · CFG=<a href="https://dev-configuration-api.providhy.com">https://dev-configuration-api.providhy.com</a> · EVT=<a href="https://dev-events-api.providhy.com">https://dev-events-api.providhy.com</a> · PKG=<a href="https://dev-package-api.providhy.com">https://dev-package-api.providhy.com</a></p>
+</section><section class="sec" data-title="IAM — federated_identity app (mount /api/external/) — doc 03"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="iam-federated-identity-app-mount-api-external-doc-03">IAM — federated_identity app (mount /api/external/) — doc 03</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td>$IAM/api/external/register/</td>
+<td>ExternalRegistrationView</td>
+<td>public (token-based)</td>
+<td>First-time miniapp registration / accept terms</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td>$IAM/api/external/token/</td>
+<td>ExternalTokenView</td>
+<td>public</td>
+<td>Login → issue access+refresh JWT</td>
+</tr>
+<tr>
+<td>3</td>
+<td>POST</td>
+<td>$IAM/api/external/token/verify/</td>
+<td>VerifyAuthTokenView</td>
+<td>token in body</td>
+<td>Server-side token verification (called by every service&#39;s FI auth)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>POST</td>
+<td>$IAM/api/external/token/refresh/</td>
+<td>RefreshAuthTokenView</td>
+<td>refresh token</td>
+<td>Rotate refresh, new access</td>
+</tr>
+<tr>
+<td>5</td>
+<td>POST/GET</td>
+<td>$IAM/api/external/is-registered/</td>
+<td>CheckForRegisteredUser</td>
+<td>INT</td>
+<td>Check whether an external identity is registered (used by TMS helper acheck_registered_user)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>GET</td>
+<td>$IAM/api/external/user-statistics/summary/</td>
+<td>ExternalUserStatisticsSummaryView</td>
+<td>INT</td>
+<td>Registration statistics</td>
+</tr>
+<tr>
+<td>7</td>
+<td>GET/POST</td>
+<td>$IAM/api/external/users/</td>
+<td>ExternalEntityViewSet (router)</td>
+<td>FI-IAM/INT</td>
+<td>List/create external entities</td>
+</tr>
+<tr>
+<td>8</td>
+<td>GET</td>
+<td>$IAM/api/external/users/<pk>/</td>
+<td>ExternalEntityViewSet</td>
+<td>FI-IAM</td>
+<td>Fetch one entity</td>
+</tr>
+<tr>
+<td>9</td>
+<td>POST</td>
+<td>$IAM/api/external/users/fetch/<pk>/</td>
+<td>ExternalEntityViewSet.fetch</td>
+<td>FI-IAM</td>
+<td>Fetch entity details</td>
+</tr>
+<tr>
+<td>10</td>
+<td>GET/POST</td>
+<td>$IAM/api/external/activities/</td>
+<td>ExternalUserActivityView (router)</td>
+<td>FI-IAM</td>
+<td>User activity events</td>
+</tr>
+<tr>
+<td>11</td>
+<td>POST</td>
+<td>$IAM/api/external/clear-cache/</td>
+<td>ClearRedisCacheView</td>
+<td>INT</td>
+<td>Clear redis cache</td>
+</tr>
+<tr>
+<td>12</td>
+<td>POST</td>
+<td>$IAM/api/external/oms/onboard/</td>
+<td>OMSOnboardView</td>
+<td>OMS key</td>
+<td>OMS partner onboarding</td>
+</tr>
+<tr>
+<td>13</td>
+<td>POST</td>
+<td>$IAM/api/external/oms/api-key/verify/</td>
+<td>OMSAPIKeyVerifyView</td>
+<td>OMS key</td>
+<td>Verify OMS API key</td>
+</tr>
+<tr>
+<td>14</td>
+<td>POST</td>
+<td>$IAM/api/external/oms/merchant-token/verify/</td>
+<td>OMSMerchantTokenVerifyView</td>
+<td>OMS</td>
+<td>Verify merchant token</td>
+</tr>
+<tr>
+<td>15</td>
+<td>POST</td>
+<td>$IAM/api/external/oms/merchant-token/mint/</td>
+<td>OMSMerchantTokenMintView</td>
+<td>OMS</td>
+<td>Mint merchant token</td>
+</tr>
+<tr>
+<td>16</td>
+<td>POST</td>
+<td>$IAM/api/external/oms/merchant/resolve/</td>
+<td>OMSMerchantResolveView</td>
+<td>OMS</td>
+<td>Resolve merchant</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Sales — miniapp app (mount /api/miniapp/) — doc 04"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="sales-miniapp-app-mount-api-miniapp-doc-04">Sales — miniapp app (mount /api/miniapp/) — doc 04</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S1</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/overview/</td>
+<td>CreditOverviewView</td>
+<td>FI</td>
+<td>Customer credit summary</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/credit/create/</td>
+<td>CreateCreditRecord</td>
+<td>FI</td>
+<td>Create credit record</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/search/</td>
+<td>CreditRecordListView</td>
+<td>FI</td>
+<td>Search credits</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/detail/<pk>/</td>
+<td>CreditRecordDetailView</td>
+<td>FI</td>
+<td>Credit detail</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/detail/customer/<pk>/</td>
+<td>CreditDetailViewForCustomer</td>
+<td>FI</td>
+<td>Credit detail (customer view)</td>
+</tr>
+<tr>
+<td>S6</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/credit/pay/</td>
+<td>PayCreditView</td>
+<td>FI</td>
+<td>Pay credit (initiate eSewa payment)</td>
+</tr>
+<tr>
+<td>S7</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/dispute/raise/</td>
+<td>RaiseCreditRecordDisputeByUserView</td>
+<td>FI</td>
+<td>Raise dispute</td>
+</tr>
+<tr>
+<td>S8</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/dispute/cancel/<dispute_id>/</td>
+<td>CreditDisputeCancelView</td>
+<td>FI</td>
+<td>Cancel dispute</td>
+</tr>
+<tr>
+<td>S9</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/dispute/search/</td>
+<td>CreditDisputeListAPIView</td>
+<td>FI</td>
+<td>List disputes</td>
+</tr>
+<tr>
+<td>S10</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/dispute/detail/<dispute_id>/</td>
+<td>CreditDisputeDetailView</td>
+<td>FI</td>
+<td>Dispute detail</td>
+</tr>
+<tr>
+<td>S11</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/settlement/manual/create/</td>
+<td>ManualCreditSettlementView</td>
+<td>FI</td>
+<td>Manual settlement</td>
+</tr>
+<tr>
+<td>S12</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/settlement/detail/<pk>/</td>
+<td>SettlementDetailView</td>
+<td>FI</td>
+<td>Settlement detail</td>
+</tr>
+<tr>
+<td>S13</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/settlement/search/</td>
+<td>ManualCreditSettlementSearchView</td>
+<td>FI</td>
+<td>Settlement search</td>
+</tr>
+<tr>
+<td>S14</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/ledger/overview/</td>
+<td>CreditLedgerOverviewView</td>
+<td>FI</td>
+<td>Ledger overview</td>
+</tr>
+<tr>
+<td>S15</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/ledger/</td>
+<td>FetchCreditLogsView</td>
+<td>FI</td>
+<td>Ledger entries</td>
+</tr>
+<tr>
+<td>S16</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/user/search/</td>
+<td>GetCreditRecordForCustomer</td>
+<td>INT</td>
+<td>Internal: credit for customer</td>
+</tr>
+<tr>
+<td>S17</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/merchant/search/</td>
+<td>GetCreditRecordForMerchant</td>
+<td>INT</td>
+<td>Internal: credit for merchant</td>
+</tr>
+<tr>
+<td>S18</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/settlement/detail/customer/<pk>/</td>
+<td>SettlementDetailViewForCustomer</td>
+<td>INT</td>
+<td>Internal: settlement (customer)</td>
+</tr>
+<tr>
+<td>S19</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/settlement/search/internal/</td>
+<td>InternalCreditSettlementSearchView</td>
+<td>INT</td>
+<td>Internal: settlement search</td>
+</tr>
+<tr>
+<td>S20</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/payment/request/</td>
+<td>PaymentRequestView</td>
+<td>INT</td>
+<td>Internal: create payment request</td>
+</tr>
+<tr>
+<td>S21</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/payment/request/settle/</td>
+<td>InitiateTransactionSettlementView</td>
+<td>INT</td>
+<td>Internal: settle payment request</td>
+</tr>
+<tr>
+<td>S22</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/ledger/internal/</td>
+<td>FetchCreditLogsViewInternal</td>
+<td>INT</td>
+<td>Internal: ledger</td>
+</tr>
+<tr>
+<td>S23</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/ledger/customer/</td>
+<td>CreditLedgerForCustomerView</td>
+<td>INT</td>
+<td>Internal: ledger (customer)</td>
+</tr>
+<tr>
+<td>S24</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/ledger/customer/overview/</td>
+<td>CreditLedgerOverviewForCustomerView</td>
+<td>INT</td>
+<td>Internal: ledger overview (customer)</td>
+</tr>
+<tr>
+<td>S25</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/credit/overview/customer/</td>
+<td>CreditOverviewForCustomerView</td>
+<td>INT</td>
+<td>Internal: credit overview (customer)</td>
+</tr>
+<tr>
+<td>S26</td>
+<td>POST</td>
+<td>$SALES/api/miniapp/records/delete/customer/</td>
+<td>DeleteCustomerRecordsView</td>
+<td>INT</td>
+<td>Internal: delete customer records</td>
+</tr>
+<tr>
+<td>S27</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/dispute/search/customer/</td>
+<td>CreditDisputeListViewForCustomer</td>
+<td>INT</td>
+<td>Internal: disputes (customer)</td>
+</tr>
+<tr>
+<td>S28</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/dispute/detail/customer/<dispute_id>/</td>
+<td>CreditDisputeDetailViewForCustomer</td>
+<td>INT</td>
+<td>Internal: dispute detail (customer)</td>
+</tr>
+<tr>
+<td>S29</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/admin/dispute/search/</td>
+<td>CreditDisputeListViewForAdmin</td>
+<td>FI(admin)</td>
+<td>Admin: disputes</td>
+</tr>
+<tr>
+<td>S30</td>
+<td>GET</td>
+<td>$SALES/api/miniapp/admin/credit/overview/</td>
+<td>CreditOverviewForAdminView</td>
+<td>FI(admin)</td>
+<td>Admin: credit overview</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="CDXE — miniapp app (mount /api/miniapp/) — doc 05"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="cdxe-miniapp-app-mount-api-miniapp-doc-05">CDXE — miniapp app (mount /api/miniapp/) — doc 05</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C1</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/get-connection/</td>
+<td>GetConnectionList</td>
+<td>FI</td>
+<td>Merchant: list connections</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/get-all-connection/</td>
+<td>GetAllConnections</td>
+<td>FI</td>
+<td>Merchant: all connections</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/connection/delete/customer/</td>
+<td>DeleteCustomerConnection</td>
+<td>FI</td>
+<td>Delete customer connection</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/connection/search/</td>
+<td>GetConnectionListForCustomer</td>
+<td>FI</td>
+<td>Customer: search connections</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/create-connection/</td>
+<td>CreateConnection</td>
+<td>FI</td>
+<td>Create merchant→customer connection</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/approve-reject-connection/<connection_id>/</td>
+<td>ApproveRejectConnection</td>
+<td>FI</td>
+<td>Customer approves/rejects</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/connection/terminate/<pk>/</td>
+<td>RemoveConnection</td>
+<td>FI</td>
+<td>Terminate connection</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/get-credit/</td>
+<td>GetCreditDetailsForCustomer</td>
+<td>FI</td>
+<td>Customer: credit detail</td>
+</tr>
+<tr>
+<td>C9</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/credit/pay/</td>
+<td>SettleOutstandingCredit</td>
+<td>FI</td>
+<td>Settle outstanding credit</td>
+</tr>
+<tr>
+<td>C10</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/credit/ledger/</td>
+<td>CreditLedgerView</td>
+<td>FI</td>
+<td>Credit ledger</td>
+</tr>
+<tr>
+<td>C11</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/credit/ledger/overview/</td>
+<td>CreditLedgerOverview</td>
+<td>FI</td>
+<td>Ledger overview</td>
+</tr>
+<tr>
+<td>C12</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/credit/overview/</td>
+<td>CreditOverview</td>
+<td>FI</td>
+<td>Credit overview</td>
+</tr>
+<tr>
+<td>C13</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/credit/detail/<pk>/</td>
+<td>CreditDetailView</td>
+<td>FI</td>
+<td>Credit detail</td>
+</tr>
+<tr>
+<td>C14</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/payment/request/</td>
+<td>RequestMiniappPayment</td>
+<td>FI</td>
+<td>Request payment from customer</td>
+</tr>
+<tr>
+<td>C15</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/payment/request/pay/<payment_request_id>/</td>
+<td>ApproveDeclinePaymentRequest</td>
+<td>FI</td>
+<td>Customer pays/declines request</td>
+</tr>
+<tr>
+<td>C16</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/merchant/detail/<pk></td>
+<td>MerchantDetailView</td>
+<td>FI</td>
+<td>Merchant detail</td>
+</tr>
+<tr>
+<td>C17</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/settlement/search/</td>
+<td>SettlementSearchView</td>
+<td>FI</td>
+<td>Settlement search</td>
+</tr>
+<tr>
+<td>C18</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/settlement/detail/<pk>/</td>
+<td>SettlementDetailView</td>
+<td>FI</td>
+<td>Settlement detail</td>
+</tr>
+<tr>
+<td>C19</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/dispute/raise/</td>
+<td>RaiseCreditRecordDisputeView</td>
+<td>FI</td>
+<td>Raise dispute</td>
+</tr>
+<tr>
+<td>C20</td>
+<td>POST</td>
+<td>$CDXE/api/miniapp/dispute/cancel/<dispute_id>/</td>
+<td>CreditDisputeCancelView</td>
+<td>FI</td>
+<td>Cancel dispute</td>
+</tr>
+<tr>
+<td>C21</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/dispute/search/</td>
+<td>SearchCreditRecordDisputeView</td>
+<td>FI</td>
+<td>Dispute search</td>
+</tr>
+<tr>
+<td>C22</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/dispute/detail/<dispute_id>/</td>
+<td>CreditDisputeDetailView</td>
+<td>FI</td>
+<td>Dispute detail</td>
+</tr>
+<tr>
+<td>C23</td>
+<td>GET</td>
+<td>$CDXE/api/miniapp/total-connections/</td>
+<td>TotalConnectionsView</td>
+<td>FI(admin)</td>
+<td>Admin: total connections</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Projectmaster — miniapp app (mount /api/miniapp/) — doc 06"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="projectmaster-miniapp-app-mount-api-miniapp-doc-06">Projectmaster — miniapp app (mount /api/miniapp/) — doc 06</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P1</td>
+<td>POST</td>
+<td>$PM/api/miniapp/customer/</td>
+<td>AddCustomer</td>
+<td>FI</td>
+<td>Add customer (merchant)</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>GET</td>
+<td>$PM/api/miniapp/customer/search/</td>
+<td>CustomerSearchView</td>
+<td>FI</td>
+<td>Search customers</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>GET</td>
+<td>$PM/api/miniapp/customer/detail/<pk>/</td>
+<td>RetrieveEditCustomer</td>
+<td>FI</td>
+<td>Customer detail/edit</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>POST</td>
+<td>$PM/api/miniapp/dummy-customer-check/</td>
+<td>DummyCustomerCheck</td>
+<td>INT/external</td>
+<td>Validate eSewa user (ESEWA_USER_CHECK_API)</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>POST</td>
+<td>$PM/api/miniapp/validate-customer-connection/</td>
+<td>ValidateCustomerConnection</td>
+<td>INT</td>
+<td>Validate connection before create</td>
+</tr>
+<tr>
+<td>P6</td>
+<td>POST</td>
+<td>$PM/api/miniapp/customer-check/</td>
+<td>ValidateMiniAppCustomer</td>
+<td>INT</td>
+<td>Validate miniapp customer</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Payment-Service — esewa app (mount /api/esewa/) — doc 07"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="payment-service-esewa-app-mount-api-esewa-doc-07">Payment-Service — esewa app (mount /api/esewa/) — doc 07</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>POST</td>
+<td>$PAY/api/esewa/payment/request/</td>
+<td>EsewaPaymentRequestAPIView</td>
+<td>FI</td>
+<td>Create eSewa payment request</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>GET</td>
+<td>$PAY/api/esewa/payment/request/search/</td>
+<td>EsewaPaymentRequestSearchView</td>
+<td>FI</td>
+<td>Search payment requests</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>POST</td>
+<td>$PAY/api/esewa/payment/request/cancel/<payment_id>/</td>
+<td>EsewaPaymentRequestCancelAPIView</td>
+<td>FI</td>
+<td>Cancel payment request</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>POST</td>
+<td>$PAY/api/esewa/payment/request/pay/<payment_id>/</td>
+<td>EsewaPaymentRequestPayAPIView</td>
+<td>FI</td>
+<td>Pay payment request (eSewa ePay)</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>POST</td>
+<td>$PAY/api/esewa/payment/request/exists/</td>
+<td>EsewaPaymentRequestExistsView</td>
+<td>INT</td>
+<td>Check payment request exists</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>POST</td>
+<td>$PAY/api/esewa/tenant-data-deletion/</td>
+<td>EsewaTenantDataDeletionAPIView</td>
+<td>INT</td>
+<td>Tenant data deletion</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>GET</td>
+<td>$PAY/api/esewa/payment/request/statistics/</td>
+<td>EsewaPaymentRequestStatisticsView</td>
+<td>FI(admin)</td>
+<td>Admin: statistics</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="TMS — miniapp app (mount /api/miniapp/) + tenant + payment — doc 08"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="tms-miniapp-app-mount-api-miniapp-tenant-payment-doc-08">TMS — miniapp app (mount /api/miniapp/) + tenant + payment — doc 08</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1</td>
+<td>POST</td>
+<td>$TMS/api/miniapp/subscriptions/initiate/</td>
+<td>InitiateSubscriptionView</td>
+<td>FI</td>
+<td>Start subscription purchase (eSewa)</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>POST</td>
+<td>$TMS/api/miniapp/subscriptions/verify/</td>
+<td>VerifyPaymentView</td>
+<td>FI</td>
+<td>Verify subscription payment</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/subscriptions/status/</td>
+<td>SubscriptionStatusView</td>
+<td>FI</td>
+<td>Subscription status (frontend auto-fetch)</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>POST</td>
+<td>$TMS/api/miniapp/subscriptions/cancel/</td>
+<td>CancelSubscriptionView</td>
+<td>FI</td>
+<td>Cancel subscription</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/subscribed-modules/</td>
+<td>GetSubscribedmodules (internal)</td>
+<td>INT</td>
+<td>Subscribed modules (internal)</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/check-subscription/</td>
+<td>CheckSubscription (internal)</td>
+<td>INT</td>
+<td>Check subscription (internal)</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/subscription-log/</td>
+<td>TenantSubscriptionLogInternalView</td>
+<td>INT</td>
+<td>Subscription log (internal)</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/payment-history/</td>
+<td>TenantPaymentHistoryInternalView</td>
+<td>INT</td>
+<td>Payment history (internal)</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>GET</td>
+<td>$TMS/api/miniapp/active-subscription/</td>
+<td>TenantActiveSubscriptionInternalView</td>
+<td>INT</td>
+<td>Active subscription (internal)</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>GET</td>
+<td>$TMS/api/tenant/tour-status/miniapp/</td>
+<td>TenantTrakerMiniapp</td>
+<td>FI</td>
+<td>Tour/onboarding status (miniapp)</td>
+</tr>
+<tr>
+<td>T11*</td>
+<td>—</td>
+<td>$TMS/api/payment/* (renew/upgrade/resubscribe/credit-payment-internal/...)</td>
+<td>payment.app views</td>
+<td>INT/JWT</td>
+<td>Subscription payment plumbing (miniapp-relevant subset traced in doc 08)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Configuration-Service — service_configuration (mount /api/service-configuration/) — doc 09"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="configuration-service-service-configuration-mount-api-service-configuration-doc-09">Configuration-Service — service_configuration (mount /api/service-configuration/) — doc 09</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G1</td>
+<td>GET</td>
+<td>$CFG/api/service-configuration/tenant/miniapp/</td>
+<td>TenantServiceConfigurationMiniapp</td>
+<td>FI</td>
+<td>Miniapp: tenant service config (frontend SERVICE_CONFIGURATION)</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>GET</td>
+<td>$CFG/api/service-configuration/tenant/miniapp/detail/<pk>/</td>
+<td>TenantServiceConfigurationMiniappDetailView</td>
+<td>FI</td>
+<td>Miniapp: one config detail</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>GET</td>
+<td>$CFG/api/service-configuration/tenant/</td>
+<td>TenantServiceConfigurationAPIView</td>
+<td>JWT/INT</td>
+<td>Tenant config list</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>GET/POST</td>
+<td>$CFG/api/service-configuration/tenant/create/configuration/(v1/)</td>
+<td>CreateTenantConfigutation(v1)</td>
+<td>INT</td>
+<td>Provision config on tenant creation</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>GET</td>
+<td>$CFG/api/service-configuration/tenant/ensure-configuration/</td>
+<td>EnsureTenantServiceConfigurationView</td>
+<td>INT</td>
+<td>Ensure config exists</td>
+</tr>
+<tr>
+<td>G6</td>
+<td>GET</td>
+<td>$CFG/api/service-configuration/tenant/bulk-ensure-configuration/</td>
+<td>BulkEnsureTenantServiceConfigurationView</td>
+<td>INT</td>
+<td>Bulk ensure</td>
+</tr>
+<tr>
+<td>G7</td>
+<td>—</td>
+<td>(default/<em>, cms/</em>, cost-term, expose, status, delete)</td>
+<td>various</td>
+<td>JWT/INT</td>
+<td>Platform/CMS config management (context only in doc 09)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="events-notification-app-activity-log-mounts-api-notification-api-activity-log-doc-10">Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>N1</td>
+<td>POST</td>
+<td>$EVT/api/notification/miniapp/notify-user/</td>
+<td>NotificationHandlerMiniApp</td>
+<td>INT</td>
+<td>Backend→miniapp notification push</td>
+</tr>
+<tr>
+<td>N2</td>
+<td>GET</td>
+<td>$EVT/api/notification/miniapp/list/</td>
+<td>MiniAppNotificationList</td>
+<td>FI</td>
+<td>Miniapp: notification list (frontend NOTIFICATIONS)</td>
+</tr>
+<tr>
+<td>N3</td>
+<td>POST</td>
+<td>$EVT/api/notification/miniapp/mark-read/</td>
+<td>MarkMiniAppNotificationASRead</td>
+<td>FI</td>
+<td>Mark notification read</td>
+</tr>
+<tr>
+<td>N4</td>
+<td>GET/PUT</td>
+<td>$EVT/api/notification/preference/</td>
+<td>NotificationPreference views</td>
+<td>FI</td>
+<td>Notification preference (frontend NOTIFICATION_PREFERENCE)</td>
+</tr>
+<tr>
+<td>N5</td>
+<td>POST</td>
+<td>$EVT/api/activity_log/miniapp/log-activity/</td>
+<td>activity_log view</td>
+<td>INT</td>
+<td>Log miniapp activity</td>
+</tr>
+<tr>
+<td>N6</td>
+<td>GET</td>
+<td>$EVT/api/activity_log/miniapp/list/</td>
+<td>activity_log view</td>
+<td>INT/FI</td>
+<td>Activity log list</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Package service (out of scope, referenced)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="package-service-out-of-scope-referenced">Package service (out of scope, referenced)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>K1</td>
+<td>GET</td>
+<td>$PKG/api/miniapp/modules/?service=PR2600</td>
+<td>Module catalog used by miniapp upgrade page (hosted by Package service, not traced in scope)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="IAM heimer_auth (context endpoints used by miniapp lifecycle, doc 03 §8)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="iam-heimer-auth-context-endpoints-used-by-miniapp-lifecycle-doc-03-8">IAM heimer_auth (context endpoints used by miniapp lifecycle, doc 03 §8)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H1</td>
+<td>POST</td>
+<td>$IAM/api/register/ (and /api/register/v2/)</td>
+<td>Internal user registration (federated register creates/links into this world)</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>POST</td>
+<td>$IAM/api/token/ , /api/token/refresh/, /api/token/verify/</td>
+<td>Main portal JWT endpoints</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>GET/POST</td>
+<td>$IAM/api/update-subscribed-services/</td>
+<td>Subscription service updates (used in onboarding/upgrade flows)</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>GET</td>
+<td>$IAM/api/onboarding-status/ , POST /api/update-user-registration-status/</td>
+<td>Onboarding status (miniapp registration journey)</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>GET</td>
+<td>$IAM/api/payment-success-callback/<user_id>/</td>
+<td>Payment redirect callback</td>
+</tr>
+</tbody></table>
+<p>Notes:</p>
+<ul>
+<li>Method columns marked GET/POST reflect common usage; verify exact allowed methods in the
+per-service doc (each view&#39;s http_method_names / @api_view decorator is cited there).</li>
+<li>Rows T11*, G7, N1..N6 method details are finalized in docs 08/09/10.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="12-sequence-diagrams.html"><div class="pn-dir">← Previous</div><div class="pn-name">Sequence Diagrams</div></a><a class="pn next" href="index.html"><div class="pn-dir">Back →</div><div class="pn-name">Start page</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#iam-federated-identity-app-mount-api-external-doc-03">IAM — federated_identity app (mount /api/external/) — doc 03</a></li><li class="l2"><a href="#sales-miniapp-app-mount-api-miniapp-doc-04">Sales — miniapp app (mount /api/miniapp/) — doc 04</a></li><li class="l2"><a href="#cdxe-miniapp-app-mount-api-miniapp-doc-05">CDXE — miniapp app (mount /api/miniapp/) — doc 05</a></li><li class="l2"><a href="#projectmaster-miniapp-app-mount-api-miniapp-doc-06">Projectmaster — miniapp app (mount /api/miniapp/) — doc 06</a></li><li class="l2"><a href="#payment-service-esewa-app-mount-api-esewa-doc-07">Payment-Service — esewa app (mount /api/esewa/) — doc 07</a></li><li class="l2"><a href="#tms-miniapp-app-mount-api-miniapp-tenant-payment-doc-08">TMS — miniapp app (mount /api/miniapp/) + tenant + payment — doc 08</a></li><li class="l2"><a href="#configuration-service-service-configuration-mount-api-service-configuration-doc-09">Configuration-Service — service_configuration (mount /api/service-configuration/) — doc 09</a></li><li class="l2"><a href="#events-notification-app-activity-log-mounts-api-notification-api-activity-log-doc-10">Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10</a></li><li class="l2"><a href="#package-service-out-of-scope-referenced">Package service (out of scope, referenced)</a></li><li class="l2"><a href="#iam-heimer-auth-context-endpoints-used-by-miniapp-lifecycle-doc-03-8">IAM heimer_auth (context endpoints used by miniapp lifecycle, doc 03 §8)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

@@ -1,0 +1,330 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sequence Diagrams - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc current" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="12-sequence-diagrams.html#1-login-minting-the-miniapp-token">1. Login — minting the miniapp token</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#2-first-time-registration-tenant-provisioning">2. First-time registration &amp; tenant provisioning</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#3-per-request-federated-validation-shown-once-applies-everywhere">3. Per-request federated validation (shown once, applies everywhere)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#4a-merchant-adds-a-customer-with-wallet-identity">4a. Merchant adds a customer (with wallet identity)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#4b-merchant-invites-the-customer-customer-approves-connection">4b. Merchant invites the customer; customer approves (connection)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#5-merchant-creates-a-credit-record">5. Merchant creates a credit record</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#6-customer-initiated-settlement-customer-pays-outstanding-credit">6. Customer-initiated settlement (customer pays outstanding credit)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#7-merchant-initiated-payment-request-wallet-payment-settlement">7. Merchant-initiated payment request -&gt; wallet payment -&gt; settlement</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#8-dispute-lifecycle">8. Dispute lifecycle</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#9-customer-deletion-guarded-cross-service-cascade">9. Customer deletion (guarded cross-service cascade)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#10-subscription-upgrade-merchant-s-own-subscription">10. Subscription upgrade (merchant's own subscription)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#11a-notification-delivery-to-the-miniapp">11a. Notification delivery to the miniapp</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#11b-credit-creation-notification-activity-entry">11b. Credit creation -&gt; notification + activity entry</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#12-oms-merchant-resolution-first-order">12. OMS merchant resolution (first order)</a><a class="sb-item sb-sub" href="12-sequence-diagrams.html#conventions">Conventions</a></div><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>12 — End-to-End Sequence Diagrams</h1>
+<blockquote>
+<p>The cross-service flows the business actually runs, in the order a merchant/customer experiences them. Each diagram is lifted verbatim from the owning service doc (source cited); the per-service docs contain the endpoint-level call maps and file:line evidence for every arrow. Arrows between services are HTTP (sync) unless marked celery (async). TOTP (X-MINIAPP-TOKEN) + JWT verification against IAM happens on <strong>every</strong> federated request and is shown in detail once (section 3).</p>
+</blockquote>
+</section><section class="sec" data-title="1. Login — minting the miniapp token"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-login-minting-the-miniapp-token">1. Login — minting the miniapp token</h2>
+<p>The wallet hands the miniapp an eSewa token + external identifier; IAM exchanges it for a JWT whose claims (tenant_id, user_type, subscribed_services, permissions) drive every later call. Refresh + 401 handling: doc 07 Part B §B.3.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (Next.js)
+    participant IAM as IAM /api/external/
+    participant REDIS as Redis db 7
+    participant KAFKA as Kafka (activity log)
+    FE-&gt;&gt;FE: compute TOTP from CUSTOM_KEY (speakeasy, step 20) - otp.ts:15-21
+    FE-&gt;&gt;IAM: POST external/token/ with token, external_identifier, encrypted_text, provider_code + X-MINIAPP-TOKEN
+    IAM-&gt;&gt;IAM: verify_request_origin TOTP check (utils.py:78-84)
+    IAM-&gt;&gt;IAM: AES-256-ECB decrypt envelope, id must match external_identifier (views.py:330-346)
+    IAM-&gt;&gt;IAM: ExternalEntity lookup by provider + identifier (auth_backends.py:18-21)
+    IAM-&gt;&gt;IAM: mint RefreshToken + custom claims (views.py:361-378)
+    IAM-&gt;&gt;REDIS: save access jti per user (jti invalidation)
+    IAM--&gt;&gt;FE: 200 access, refresh, payload + miniApp cookies
+    IAM-&gt;&gt;KAFKA: activity log (views.py:417-444)
+    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27); EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
+</pre></div>
+<p><em>Source: doc 03 §7.1</em></p>
+</section><section class="sec" data-title="2. First-time registration &amp; tenant provisioning"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-first-time-registration-tenant-provisioning">2. First-time registration &amp; tenant provisioning</h2>
+<p>End to end: terms acceptance -&gt; IAM external-register -&gt; TMS tenant provisioning -&gt; Configuration data-transfer (default rules/COA/FY copied into the tenant) -&gt; ExternalTenantLink marker. The IAM-side half of this flow (token mint at registration, funnel event) is doc 03 §7.2; the Configuration-side transfer is doc 09 §6.3.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant W as eSewa Wallet app
+    participant F as miniapp-esewa (Next.js)
+    participant I as IAM-Backend
+    participant T as TMS-service
+    participant C as Configuration-Service
+    participant P as Package-Service
+
+    W-&gt;&gt;F: opens miniapp, provides miniAppAuthToken + merchant identifier
+    F-&gt;&gt;W: requestFromMiniApp MERCHANT_DETAIL
+    W--&gt;&gt;F: encrypted merchant details
+    F-&gt;&gt;I: POST api/external/register/ (token, provider_code=esewa, entity_type=ESM, encrypted_text, external_identifier, user_details)
+    I-&gt;&gt;I: AES-decrypt + verify identity match (views.py:262-272)
+    I-&gt;&gt;T: POST api/tenant/external-register/ (internal password)
+    T-&gt;&gt;C: POST api/sanitization/form-data/ (name)
+    T-&gt;&gt;T: Company(esewa) + Tenant ES_xxxxxx (verified, active)
+    T-&gt;&gt;P: GET api/check-package/ (provider_code, module payment)
+    T-&gt;&gt;T: TenantPackage + TenantPackageModule + TenantContract
+    T-&gt;&gt;T: trial CREDIT Subscription + SubscriptionLog (payment_status=credit)
+    T-&gt;&gt;C: POST api/dashboard/data-transfer/ (row-locked, once per identity)
+    C--&gt;&gt;T: fiscal year data
+    T--&gt;&gt;I: tenant_id + subscribed_services + fiscal_year
+    I-&gt;&gt;I: ExternalEntity + CustomUser, funnel ONBOARDED, username_&lt;tenant&gt;
+    I--&gt;&gt;F: access/refresh + payload (user_type=ESM, subscribed_services)
+    F-&gt;&gt;F: stores tokens, redirects to /dashboard
+</pre></div>
+<p><em>Source: doc 08 §6.1</em></p>
+</section><section class="sec" data-title="3. Per-request federated validation (shown once, applies everywhere)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-per-request-federated-validation-shown-once-applies-everywhere">3. Per-request federated validation (shown once, applies everywhere)</h2>
+<p>Every miniapp request to any service: JWT + X-MINIAPP-TOKEN -&gt; IAM verify -&gt; local claim decode (verify=False) -&gt; permission gate. Per-service auth variants and their divergences: doc 02 §4, each service doc §3.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant SVC as ERP miniapp service (Sales/CDXE/PM/Payment/TMS/Config/events)
+    participant IAM as IAM /api/external/token/verify/
+    FE-&gt;&gt;SVC: miniapp business call + Bearer access + X-MINIAPP-TOKEN + miniApp cookies
+    SVC-&gt;&gt;SVC: FederatedIdentityAuthentication copy: read token (Sales auth_backends.py:180-215)
+    SVC-&gt;&gt;IAM: POST external/token/verify/ with token, forwarding X-MINIAPP-TOKEN (Sales auth_backends.py:218-229)
+    IAM-&gt;&gt;IAM: TOTP check + simplejwt signature/exp check (views.py:455-468)
+    IAM--&gt;&gt;SVC: 200 Token is valid (or 401)
+    SVC-&gt;&gt;SVC: decode JWT verify=False, read claims tenant_id, user_type, external_identifier, subscribed_services (Sales auth_backends.py:192-206)
+    SVC--&gt;&gt;FE: business response
+</pre></div>
+<p><em>Source: doc 03 §7.3</em></p>
+</section><section class="sec" data-title="4a. Merchant adds a customer (with wallet identity)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4a-merchant-adds-a-customer-with-wallet-identity">4a. Merchant adds a customer (with wallet identity)</h2>
+<p>Customer row in Projectmaster; wallet identity link; GL mapping from Configuration; activity log to Events.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant PM as Projectmaster
+    participant IAM as IAM
+    participant CFG as Configuration
+    participant EV as Events
+
+    FE-&gt;&gt;PM: POST /api/miniapp/customer/ (Bearer JWT + X-MINIAPP-TOKEN)
+    PM-&gt;&gt;IAM: POST /api/external/token/verify/ (token, X-MINIAPP-TOKEN)
+    IAM--&gt;&gt;PM: token valid
+    PM-&gt;&gt;IAM: GET /api/internal-check-permissions/ (non-root users only)
+    IAM--&gt;&gt;PM: feature PR301 + action add_edit
+    PM-&gt;&gt;PM: validate name/identifier/mobile; duplicate check (CustomerIdentityLink)
+    PM-&gt;&gt;CFG: POST /api/service-configuration/tenant/expose/ (gl_mapping, customer)
+    CFG--&gt;&gt;PM: account_receivable id (or none)
+    PM-&gt;&gt;PM: create Customer (unique_id CUS&lt;n&gt;) + CustomerIdentityLink
+    PM-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ (inline task)
+    EV--&gt;&gt;PM: 200
+    PM--&gt;&gt;FE: 200 {id, unique_id, name, mobile, external_identifier, is_provider_user}
+</pre></div>
+<p><em>Source: doc 06 §7.1</em></p>
+</section><section class="sec" data-title="4b. Merchant invites the customer; customer approves (connection)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4b-merchant-invites-the-customer-customer-approves-connection">4b. Merchant invites the customer; customer approves (connection)</h2>
+<p>CDXE stores the relationship (Connection + ConnectionIdentityLink) with a 5-digit code; decline cascade-deletes both rows. The internal validation call into Projectmaster (validate-customer-connection) is traced in doc 06 §7.4.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as &quot;Merchant (ESM) / miniapp-esewa&quot;
+    participant C as &quot;CDXE api/miniapp&quot;
+    participant I as &quot;IAM&quot;
+    participant P as &quot;Projectmaster&quot;
+    participant E as &quot;Events&quot;
+    participant U as &quot;Customer (ESU) / miniapp-esewa&quot;
+    M-&gt;&gt;C: &quot;POST create-connection/ (JWT + X-MINIAPP-TOKEN)&quot;
+    C-&gt;&gt;I: &quot;POST api/external/token/verify/ (JWT + TOTP header)&quot;
+    I--&gt;&gt;C: &quot;200 (TOTP + JWT verified)&quot;
+    C-&gt;&gt;I: &quot;POST api/external/is-registered/ (customer id)&quot;
+    C-&gt;&gt;P: &quot;POST api/miniapp/validate-customer-connection/&quot;
+    P--&gt;&gt;C: &quot;is_provider_user, customer name/tenant&quot;
+    C-&gt;&gt;C: &quot;INSERT Connection(pending, 5-digit code) + link&quot;
+    C--)E: &quot;notify-user x2 + log-activity (celery)&quot;
+    C--&gt;&gt;M: &quot;201 {connection_id: code, ...}&quot;
+    Note over E,U: &quot;customer sees the request in-app&quot;
+    U-&gt;&gt;C: &quot;POST approve-reject-connection/{code}/ {status: approved}&quot;
+    C-&gt;&gt;P: &quot;POST validate-customer-connection/ (name)&quot;
+    C-&gt;&gt;I: &quot;POST is-registered/ (merchant id)&quot;
+    C-&gt;&gt;C: &quot;Connection: approved, code_validated, code cleared&quot;
+    C--)E: &quot;notify-user (approved) + log-activity (celery)&quot;
+    C--&gt;&gt;U: &quot;200&quot;
+</pre></div>
+<p><em>Source: doc 05 §7.1</em></p>
+</section><section class="sec" data-title="5. Merchant creates a credit record"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-merchant-creates-a-credit-record">5. Merchant creates a credit record</h2>
+<p>Sales ledger of record: CreditRecord (proxy over SalesInvoice) + customer-check against Projectmaster + Configuration GL + Events notification.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant SALES as Sales
+    participant IAM as IAM
+    participant PM as Projectmaster
+    participant CONF as Configuration
+    participant DOC as Document
+    participant EV as Events (celery)
+    FE-&gt;&gt;SALES: POST /api/miniapp/credit/create/ (JWT + X-MINIAPP-TOKEN)
+    SALES-&gt;&gt;IAM: POST /api/external/token/verify/ (token + TOTP header)
+    IAM--&gt;&gt;SALES: 200 (valid token + TOTP)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;CONF: POST /api/service-configuration/tenant/expose/
+    CONF--&gt;&gt;SALES: credit settings (limit, period)
+    SALES-&gt;&gt;SALES: save CreditRecord (approved, CID-, remaining=total)
+    opt files uploaded
+        SALES-&gt;&gt;DOC: POST /api/document/record-entry-document/
+        DOC--&gt;&gt;SALES: 200
+    end
+    SALES--&gt;&gt;FE: 201 {id, unique_id}
+    SALES--)EV: send_notification_task + send_activity_log
+</pre></div>
+<p><em>Source: doc 04 §7.1</em></p>
+</section><section class="sec" data-title="6. Customer-initiated settlement (customer pays outstanding credit)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-customer-initiated-settlement-customer-pays-outstanding-credit">6. Customer-initiated settlement (customer pays outstanding credit)</h2>
+<p>CDXE is the customer-facing proxy (dry-run commit=false -&gt; signed commit=true); the CDXE-internal view of the same flow (HMAC verify step) is doc 05 §7.2. NOTE: the frontend defines the signed flow but does not send the SIGNATURE header in this checkout — flagged unshipped in docs 05 §11 and 07 §C.5.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (customer)
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/credit/pay/ (customer view)
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/credit/pay/ (internal password)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;SALES: settlement APPROVED + items, credits reduced (tx)
+    SALES-&gt;&gt;PAY: POST /api/esewa/payment/request/ (status completed, transaction_id)
+    PAY--&gt;&gt;SALES: 200
+    SALES--&gt;&gt;CDXE: 200 {id}
+    CDXE--&gt;&gt;FE: 200
+    SALES--)EV: notify merchant + customer, activity log
+    Note over SALES,PAY: wallet charge itself is executed by Payment/eSewa gateway (outside Sales trace)
+</pre></div>
+<p><em>Source: doc 04 §7.2</em></p>
+</section><section class="sec" data-title="7. Merchant-initiated payment request -&gt; wallet payment -&gt; settlement"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-merchant-initiated-payment-request-wallet-payment-settlement">7. Merchant-initiated payment request -&gt; wallet payment -&gt; settlement</h2>
+<p>The full lifecycle: request (PENDING settlement, credits untouched) -&gt; wallet charge (outside these repos; mock-mode verdict in doc 07 Part C) -&gt; Payment-Service pay -&gt; Sales settle (approved/rejected/draft) -&gt; Events. Customer-side payment request view: doc 10 §7.3; FE/ownership verdict: doc 07 §C.1.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (merchant)
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant ESEWA as eSewa wallet
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/payment/request/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/payment/request/ (internal password)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/ (verified provider user)
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;SALES: settlement PENDING + items (credit balances unchanged, tx)
+    SALES-&gt;&gt;PAY: POST /api/esewa/payment/request/
+    PAY--&gt;&gt;CDXE: payment request created (wallet collect link)
+    CDXE--&gt;&gt;FE: 201
+    ESEWA-&gt;&gt;PAY: customer pays (completed, transaction_id)
+    PAY-&gt;&gt;SALES: POST /api/miniapp/payment/request/settle/ (status completed)
+    SALES-&gt;&gt;SALES: settlement APPROVED, credit remaining -= allocation (tx)
+    SALES--&gt;&gt;PAY: 200
+    SALES--)EV: notify merchant + customer, activity log
+    Note over PAY,SALES: declined maps to rejected, cancelled maps to draft (views.py:1595-1601)
+</pre></div>
+<p><em>Source: doc 04 §7.3</em></p>
+</section><section class="sec" data-title="8. Dispute lifecycle"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-dispute-lifecycle">8. Dispute lifecycle</h2>
+<p>Raise (guards: unpaid, no settlement, no pending dispute) -&gt; resolve by credit edit or deletion -&gt; customer cancel; every transition notifies Events. CDXE-facing traces: doc 05 §5 (dispute endpoints).</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/dispute/raise/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/dispute/raise/ (internal password)
+    SALES-&gt;&gt;SALES: save CreditDispute (issued, CD-)
+    SALES--&gt;&gt;FE: 201 {id, amount}
+    FE-&gt;&gt;SALES: POST /api/miniapp/credit/detail/{id}/ (dispute_data resolved)
+    SALES-&gt;&gt;SALES: dispute RESOLVED (resolution_by_edition)
+    SALES--)EV: notify customer, activity log
+    FE-&gt;&gt;CDXE: POST miniapp/dispute/cancel/{id}/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/dispute/cancel/{id}/ (internal password)
+    SALES-&gt;&gt;SALES: dispute CANCELLED
+    SALES--&gt;&gt;FE: 200
+</pre></div>
+<p><em>Source: doc 04 §7.4</em></p>
+</section><section class="sec" data-title="9. Customer deletion (guarded cross-service cascade)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-customer-deletion-guarded-cross-service-cascade">9. Customer deletion (guarded cross-service cascade)</h2>
+<p>Pending payment request blocks deletion (Payment exists-check); Sales records + CDXE connection cleaned up; soft delete. CDXE-side termination: doc 05 §7.4.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant SALES as Sales
+    participant CDXE as CDXE
+    participant EV as Events
+
+    FE-&gt;&gt;PM: DELETE /api/miniapp/customer/detail/{pk}/
+    PM-&gt;&gt;PAY: POST /api/esewa/payment/request/exists/ (tenant_id, customer_identifier, provider_code)
+    alt payment request in flight
+        PAY--&gt;&gt;PM: {&quot;exists&quot;: true, ...}
+        PM--&gt;&gt;FE: 400 &quot;cannot be deleted right now&quot;
+    else no pending payment request
+        PAY--&gt;&gt;PM: {&quot;exists&quot;: false}
+        PM-&gt;&gt;SALES: POST /api/miniapp/records/delete/customer/ (tenant_id, customer_identifier)
+        SALES--&gt;&gt;PM: ok (errors swallowed per-task)
+        opt customer is a provider user
+            PM-&gt;&gt;CDXE: POST /api/miniapp/connection/delete/customer/ (user_identifier, customer_identifier, provider_code)
+            CDXE--&gt;&gt;PM: ok
+        end
+        PM-&gt;&gt;PM: Customer.active_status = &quot;inactive&quot;
+        PM-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ (service_type=inactive)
+        PM--&gt;&gt;FE: 204 No Content
+    end
+</pre></div>
+<p><em>Source: doc 06 §7.3</em></p>
+</section><section class="sec" data-title="10. Subscription upgrade (merchant's own subscription)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-subscription-upgrade-merchant-s-own-subscription">10. Subscription upgrade (merchant&#39;s own subscription)</h2>
+<p>initiate (PENDING Payment + Subscription) -&gt; verify (activate + TenantPackage/TenantPackageModule + IAM expiry refresh) -&gt; cancel (unused in FE). Frontend/upgrade-page view: doc 07 §C.1 (subscription purchase). Mock-mode + payment_period mismatch caveats: doc 08 §10.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant F as miniapp-esewa (UpgradePage)
+    participant P as Package-Service
+    participant T as TMS-service
+    participant E as Events-service
+
+    F-&gt;&gt;P: GET miniapp/modules/?service=PR2600
+    P--&gt;&gt;F: module list (id)
+    F-&gt;&gt;P: GET miniapp/modules/{id}/?service=PR2600&amp;payment_period=monthly
+    P--&gt;&gt;F: price_break_down + payment_period
+    F-&gt;&gt;T: POST api/miniapp/subscriptions/initiate/ (payment_period, module_id)
+    T-&gt;&gt;P: GET api/check-module/ (price and vat)
+    T-&gt;&gt;T: Payment(pending) + BillItem + Subscription(pending) + SubscriptionLog
+    Note over F,T: transaction_id is a random 12-char stub, no gateway call
+    F-&gt;&gt;T: POST api/miniapp/subscriptions/verify/ (transaction_id)
+    T--&gt;&gt;T: mock verify success (ESEWA_MOCK_MODE default true)
+    T-&gt;&gt;T: Payment paid, Subscription active, TenantPackage+Module created
+    T-&gt;&gt;E: POST api/notification/miniapp/notify-user/ (celery, async)
+    T--&gt;&gt;F: 200 payment_id, transaction_id, amount, module_id
+    F-&gt;&gt;F: toast &quot;Subscription successful&quot;, back to /profile
+</pre></div>
+<p><em>Source: doc 08 §6.3</em></p>
+</section><section class="sec" data-title="11a. Notification delivery to the miniapp"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11a-notification-delivery-to-the-miniapp">11a. Notification delivery to the miniapp</h2>
+<p>notify-user (celery, INTERNAL_PASS) -&gt; preference gate -&gt; NotificationChannel row; frontend polls miniapp/list (federated).</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as eSewa miniapp (Next.js, miniapp-esewa)
+    participant EV as events (dev-events-api.providhy.com)
+    participant IAM as IAM (dev-iam-api.providhy.com)
+    FE-&gt;&gt;FE: compute TOTP: speakeasy(secret=CUSTOM_KEY, step=20) [src/actions/otp.ts:17-21]
+    FE-&gt;&gt;EV: GET /api/notification/miniapp/list/ + Bearer JWT + X-MINIAPP-TOKEN [src/services/requests/notifications.ts:26-36]
+    EV-&gt;&gt;IAM: POST /api/external/token/verify/ body token=JWT, header X-MINIAPP-TOKEN [events dashboard/auth_backends.py:146-162]
+    IAM-&gt;&gt;IAM: verify_request_origin: pyotp TOTP.verify [IAM federated_identity/utils.py:78-84]
+    IAM--&gt;&gt;EV: 200 Token is valid. [IAM federated_identity/views.py:491]
+    EV-&gt;&gt;EV: decode JWT locally (verify=False), read claims [events dashboard/auth_backends.py:102-114]
+    EV-&gt;&gt;EV: HasFederatedEntityPermission: provider_code=esewa, user_type in ESM/ESU [auth_backends.py:128-143]
+    EV-&gt;&gt;EV: NotificationChannel filter by identifier/tenant, order by -tag,-created [notification_app/views.py:1021-1027]
+    EV--&gt;&gt;FE: 200 paginated notifications [views.py:1032-1033]
+</pre></div>
+<p><em>Source: doc 10 §7.1</em></p>
+</section><section class="sec" data-title="11b. Credit creation -&gt; notification + activity entry"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11b-credit-creation-notification-activity-entry">11b. Credit creation -&gt; notification + activity entry</h2>
+<p>The consumer side of section 5: Sales celery -&gt; events notify-user + log-activity.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as eSewa merchant miniapp
+    participant SALES as sales (dev-sales-api.providhy.com)
+    participant CEL as Sales celery worker
+    participant EV as events
+    M-&gt;&gt;SALES: POST miniapp credit create (merchant grants credit) [Sales/miniapp/views.py:83 CreateCreditRecord]
+    SALES-&gt;&gt;SALES: create CreditRecord, CreditLedger
+    SALES-&gt;&gt;CEL: send_notification_task.delay(sending_user, CREDIT_RECORD, CREATION, receiving_user=customer identifier) [views.py:158-165]
+    SALES-&gt;&gt;CEL: send_activity_log.delay(user, CREDIT_RECORD, CREATION, context) [views.py:166-172]
+    CEL-&gt;&gt;EV: POST /api/notification/miniapp/notify-user/ password=INTERNAL_PASS [Sales/miniapp/tasks.py:42-61]
+    EV-&gt;&gt;EV: template lookup (sales, PR1208, creation) -&gt; New Credit Added [notification_app/registry.py:61-66]
+    EV-&gt;&gt;EV: preference gate CREDIT_ADDED [views.py:973-990]
+    EV-&gt;&gt;EV: NotificationChannel.objects.create (tenant_id NULL) [views.py:992-1002]
+    EV--&gt;&gt;CEL: 200 Notification created successfully!
+    CEL-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ password=INTERNAL_PASS [Sales/miniapp/tasks.py:90-106]
+    EV-&gt;&gt;EV: ActivityLog.objects.create [activity_log/views.py:526-535]
+    EV--&gt;&gt;CEL: 201 Log created successfully!
+    M-&gt;&gt;EV: GET /api/notification/miniapp/list/ (customer later sees New Credit Added)
+</pre></div>
+<p><em>Source: doc 10 §7.2</em></p>
+</section><section class="sec" data-title="12. OMS merchant resolution (first order)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="12-oms-merchant-resolution-first-order">12. OMS merchant resolution (first order)</h2>
+<p>OMS third-party -&gt; IAM merchant-token verify/mint -&gt; merchant resolution; supports the OMS provider_code surface alongside eSewa.</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant OMS as third-party OMS backend
+    participant IAM as IAM /api/external/oms/
+    participant TMS as TMS-service
+    OMS-&gt;&gt;IAM: POST oms/merchant/resolve/ with provider_code, merchant_id, name, contact + shared password
+    IAM-&gt;&gt;IAM: per-provider row lock; look up entity (oms_views.py:142-160)
+    alt first sight
+        IAM-&gt;&gt;IAM: create CustomUser + ExternalEntity (OMS_MERCHANT, product_code=uuid) (oms_views.py:164-178)
+        IAM-&gt;&gt;TMS: POST api/tenant/external-register/ with no_package_module and no_fiscal_transfer
+        TMS--&gt;&gt;IAM: tenant_id (no package, no fiscal year)
+        IAM--&gt;&gt;OMS: 201 tenant_id
+    else already registered
+        IAM--&gt;&gt;OMS: 200 tenant_id
+    end
+</pre></div>
+<p><em>Source: doc 03 §7.4</em></p>
+</section><section class="sec" data-title="Conventions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="conventions">Conventions</h2>
+<ul>
+<li><code>A--)B</code> = async (celery/Kafka); <code>A-&gt;&gt;B</code> = sync HTTP.</li>
+<li>&#39;IAM verify&#39; arrows collapse the per-request check of section 3.</li>
+<li>Dotted notes in diagrams are code-verified state, not runtime-observed (no runtime was executed; see each doc §11 for unknowns).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="11-er-diagrams.html"><div class="pn-dir">← Previous</div><div class="pn-name">ER Diagrams</div></a><a class="pn next" href="13-api-catalog.html"><div class="pn-dir">Next →</div><div class="pn-name">API Catalog</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-login-minting-the-miniapp-token">1. Login — minting the miniapp token</a></li><li class="l2"><a href="#2-first-time-registration-tenant-provisioning">2. First-time registration &amp; tenant provisioning</a></li><li class="l2"><a href="#3-per-request-federated-validation-shown-once-applies-everywhere">3. Per-request federated validation (shown once, applies everywhere)</a></li><li class="l2"><a href="#4a-merchant-adds-a-customer-with-wallet-identity">4a. Merchant adds a customer (with wallet identity)</a></li><li class="l2"><a href="#4b-merchant-invites-the-customer-customer-approves-connection">4b. Merchant invites the customer; customer approves (connection)</a></li><li class="l2"><a href="#5-merchant-creates-a-credit-record">5. Merchant creates a credit record</a></li><li class="l2"><a href="#6-customer-initiated-settlement-customer-pays-outstanding-credit">6. Customer-initiated settlement (customer pays outstanding credit)</a></li><li class="l2"><a href="#7-merchant-initiated-payment-request-wallet-payment-settlement">7. Merchant-initiated payment request -&gt; wallet payment -&gt; settlement</a></li><li class="l2"><a href="#8-dispute-lifecycle">8. Dispute lifecycle</a></li><li class="l2"><a href="#9-customer-deletion-guarded-cross-service-cascade">9. Customer deletion (guarded cross-service cascade)</a></li><li class="l2"><a href="#10-subscription-upgrade-merchant-s-own-subscription">10. Subscription upgrade (merchant's own subscription)</a></li><li class="l2"><a href="#11a-notification-delivery-to-the-miniapp">11a. Notification delivery to the miniapp</a></li><li class="l2"><a href="#11b-credit-creation-notification-activity-entry">11b. Credit creation -&gt; notification + activity entry</a></li><li class="l2"><a href="#12-oms-merchant-resolution-first-order">12. OMS merchant resolution (first order)</a></li><li class="l2"><a href="#conventions">Conventions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

@@ -1,0 +1,252 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Index &amp; Reading Guide - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc current" href="00-README.html"><span>Index &amp; Reading Guide</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="00-README.html#what-this-is">What this is</a><a class="sb-item sb-sub" href="00-README.html#how-to-read-suggested-paths">How to read (suggested paths)</a><a class="sb-item sb-sub" href="00-README.html#document-map">Document map</a><a class="sb-item sb-sub" href="00-README.html#scope-as-requested">Scope (as requested)</a><a class="sb-item sb-sub" href="00-README.html#key-facts-verified">Key facts (verified)</a><a class="sb-item sb-sub" href="00-README.html#status-complete-2026-11-03-feature-guides-2026-11-04">Status — COMPLETE (2026-11-03) + feature guides (2026-11-04)</a></div><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Federated Identity &amp; eSewa Miniapps — Complete Documentation</h1>
+<blockquote>
+<p>Reverse-engineered from the production codebase (E:\Work) on 2026-11-03.
+Every claim in this documentation set is backed by source file:line citations.
+Nothing is invented — unknowns are explicitly labeled in each doc&#39;s &quot;Unknowns&quot; section.</p>
+</blockquote>
+</section><section class="sec" data-title="What this is"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="what-this-is">What this is</h2>
+<p>A complete technical + business documentation of the <strong>federated identity miniapp surface</strong>
+of the Providhy multi-tenant ERP platform: how the eSewa merchant/customer miniapp
+authenticates against IAM, and how it talks to Sales, CDXE, Projectmaster, Payment (eSewa),
+TMS, Configuration, Events, and back again — endpoint by endpoint, call by call.</p>
+<p>Written so that <strong>both audiences</strong> get what they need:</p>
+<ul>
+<li><strong>Non-technical reader</strong>: sections &quot;Business overview&quot; and &quot;Business process walkthrough&quot;
+in every doc, plus 01-overview. Read those first.</li>
+<li><strong>Technical reader</strong>: endpoint catalogs, per-endpoint flow traces with file:line refs,
+ER diagrams, sequence diagrams, cross-service call maps.</li>
+</ul>
+</section><section class="sec" data-title="How to read (suggested paths)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="how-to-read-suggested-paths">How to read (suggested paths)</h2>
+<table>
+<thead>
+<tr>
+<th>If you want to...</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Understand the whole business in 15 min</td>
+<td>01-overview (sections 1-4)</td>
+</tr>
+<tr>
+<td>Learn it feature-by-feature (simplest start)</td>
+<td>M-merchant-side.md + C-customer-side.md</td>
+</tr>
+<tr>
+<td>Understand how login/auth actually works</td>
+<td>02-authentication-deep-dive, then 03</td>
+</tr>
+<tr>
+<td>Find any specific API</td>
+<td>13-api-catalog (global index), then the per-service doc</td>
+</tr>
+<tr>
+<td>Understand the data</td>
+<td>11-er-diagrams, then section 6 of each service doc</td>
+</tr>
+<tr>
+<td>Trace a flow end-to-end</td>
+<td>12-sequence-diagrams, then the per-service flow section</td>
+</tr>
+<tr>
+<td>Audit security</td>
+<td>02 section 6, 03 section 5</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Document map"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="document-map">Document map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>00-README.md</td>
+<td>This index</td>
+</tr>
+<tr>
+<td>01-overview.md</td>
+<td>Big picture: business context, architecture, service map, key user journeys</td>
+</tr>
+<tr>
+<td>02-authentication-deep-dive.md</td>
+<td>FederatedIdentityAuthentication: mechanism, variants, security notes</td>
+</tr>
+<tr>
+<td>03-iam-federated-identity.md</td>
+<td>IAM: external register/token/verify/refresh, user &amp; activity endpoints, OMS endpoints, models</td>
+</tr>
+<tr>
+<td>04-sales-miniapp.md</td>
+<td>Sales miniapp: credit, settlement, disputes, payment-request (public + internal + admin)</td>
+</tr>
+<tr>
+<td>05-cdxe-miniapp.md</td>
+<td>CDXE miniapp: connections, credit, payment requests, merchant lookup</td>
+</tr>
+<tr>
+<td>06-projectmaster-miniapp.md</td>
+<td>Projectmaster miniapp: customer master data (search/create/detail/validate)</td>
+</tr>
+<tr>
+<td>07-payment-esewa.md</td>
+<td>Payment-Service esewa app (eSewa ePay integration) + miniapp-esewa frontend (all pages &amp; requests)</td>
+</tr>
+<tr>
+<td>08-tms-registration-config.md</td>
+<td>TMS miniapp (subscriptions) + registration/onboarding + configuration portions</td>
+</tr>
+<tr>
+<td>09-configuration-service.md</td>
+<td>Configuration-Service: service_configuration (federated) + configuration_service</td>
+</tr>
+<tr>
+<td>10-events-miniapp.md</td>
+<td>Events service: miniapp notifications + activity log</td>
+</tr>
+<tr>
+<td>11-er-diagrams.md</td>
+<td>Consolidated entity-relationship diagrams (cross-service)</td>
+</tr>
+<tr>
+<td>12-sequence-diagrams.md</td>
+<td>End-to-end cross-service sequences (login, onboarding, credit, payment, dispute, upgrade)</td>
+</tr>
+<tr>
+<td>13-api-catalog.md</td>
+<td>Global API catalog: every in-scope endpoint, one row each, with owning doc</td>
+</tr>
+<tr>
+<td>M-merchant-side.md</td>
+<td><strong>Feature guide (merchant)</strong>: register/login, customers, connections, credit book, offline settlement, payment requests, disputes, notifications, profile/upgrade - plain + technical, with diagrams (2026-11-04)</td>
+</tr>
+<tr>
+<td>C-customer-side.md</td>
+<td><strong>Feature guide (customer/eSewa user)</strong>: register/login, connection accept/decline, see credit, disputes, pay/decline payment requests, self-settlement, notifications - the wallet-app backend contract (2026-11-04)</td>
+</tr>
+<tr>
+<td>SHARED-CONTEXT.md</td>
+<td>Working notes: platform facts + template used by the tracing team</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Scope (as requested)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="scope-as-requested">Scope (as requested)</h2>
+<ul>
+<li>miniapp apps inside: <strong>Sales</strong>, <strong>CDXE-REBOOT</strong>, <strong>ERP-Projectmaster</strong>, <strong>other apps with a
+miniapp surface</strong> (TMS, Events)</li>
+<li><strong>federated_identity</strong> app in <strong>IAM-Backend</strong></li>
+<li><strong>payment services esewa</strong> app in <strong>Payment-Service</strong> (+ the miniapp-esewa frontend that drives it)</li>
+<li><strong>certain portions of TMS</strong>: only the registration/onboarding and configuration parts used
+by the miniapp (not the full tenant-management admin surface)</li>
+<li><strong>Configuration-Service</strong> service_configuration (the federated-authenticated tenant config)</li>
+<li>Every endpoint <strong>authenticated with FederatedIdentityAuthentication</strong>, plus the
+service-to-service <strong>internal</strong> endpoints those flows call, traced from the exposed
+endpoint down to the leaf call.</li>
+</ul>
+<p>Out of scope (noted in docs where they appear as boundaries): Website-Service
+(terms page), Package service (module catalog), Purchase/Accounting/PMS/Document, the
+main ERP frontends, CMS surface, heimer_auth&#39;s full admin user surface.</p>
+</section><section class="sec" data-title="Key facts (verified)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="key-facts-verified">Key facts (verified)</h2>
+<ul>
+<li>Platform: Django 5 + DRF microservices, one Postgres DB per service, Redis, Celery, Kafka (kafka_producer consumer repos), Prometheus metrics.</li>
+<li>Public (dev) hosts: dev-iam-api.providhy.com, dev-sales-api.providhy.com, dev-cdxe-api.providhy.com, dev-projectmaster-api.providhy.com, dev-payment-api.providhy.com, dev-tms-api.providhy.com, dev-configuration-api.providhy.com, dev-events-api.providhy.com, dev-package-api.providhy.com ...</li>
+<li>Internal (docker) hosts: <a href="http://iam:8000">http://iam:8000</a>, <a href="http://sales:8000">http://sales:8000</a>, <a href="http://cdxe:8000">http://cdxe:8000</a>, ...</li>
+<li>Frontend: miniapp-esewa (Next.js App Router, TypeScript) — E:\Work\miniapp-esewa.</li>
+<li>Auth: federated JWT (HS256) issued by IAM external/token/, re-verified against IAM per
+request + X-MINIAPP-TOTP header; internal service calls use a shared internal password.</li>
+<li>Miniapp URL mounts: Sales/CDXE/Projectmaster/TMS under /api/miniapp/, Payment-Service
+esewa app under /api/esewa/, IAM federated app under /api/external/, Configuration under
+/api/service-configuration/, TMS tenant endpoints under /api/tenant/, events under
+/api/notification/ and activity log mounts (see 13-api-catalog).</li>
+</ul>
+</section><section class="sec" data-title="Status — COMPLETE (2026-11-03) + feature guides (2026-11-04)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="status-complete-2026-11-03-feature-guides-2026-11-04">Status — COMPLETE (2026-11-03) + feature guides (2026-11-04)</h2>
+<p>All 12 documentation files are finished, plus two feature-based guides (M-merchant-side, C-customer-side) for a simpler, business-requirement view; the miniapp-esewa production branch (3a89b3d, 2026-11-04) was checked and matches the traced frontend (only a terms-page video changed).</p>
+<p>Core set:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Lines</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>00-README.md</td>
+<td>~90</td>
+<td>index (this file)</td>
+</tr>
+<tr>
+<td>01-overview.md</td>
+<td>165</td>
+<td>complete</td>
+</tr>
+<tr>
+<td>02-authentication-deep-dive.md</td>
+<td>158</td>
+<td>complete</td>
+</tr>
+<tr>
+<td>03-iam-federated-identity.md</td>
+<td>551</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>04-sales-miniapp.md</td>
+<td>1121</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>05-cdxe-miniapp.md</td>
+<td>503</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>06-projectmaster-miniapp.md</td>
+<td>511</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>07-payment-esewa.md</td>
+<td>555</td>
+<td>complete (Part A/B/C)</td>
+</tr>
+<tr>
+<td>08-tms-registration-config.md</td>
+<td>693</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>09-configuration-service.md</td>
+<td>455</td>
+<td>complete (sections 1-11; lead finished sections 7-11 from the in-doc traces)</td>
+</tr>
+<tr>
+<td>10-events-miniapp.md</td>
+<td>434</td>
+<td>complete (sections 1-11)</td>
+</tr>
+<tr>
+<td>11-er-diagrams.md</td>
+<td>~230</td>
+<td>complete (cross-service map + 8 per-service ERs)</td>
+</tr>
+<tr>
+<td>12-sequence-diagrams.md</td>
+<td>~200</td>
+<td>complete (13 end-to-end sequences)</td>
+</tr>
+<tr>
+<td>13-api-catalog.md</td>
+<td>176</td>
+<td>complete</td>
+</tr>
+</tbody></table>
+<p>Tracing was performed in parallel by a team of specialist agents; each service doc is
+self-contained and cites its evidence. Cross-service consolidation (11/12/13) is produced
+by the lead from the per-service findings. Mermaid fences verified balanced in every file;
+no truncation markers remain.</p>
+<p><strong>Housekeeping:</strong> the 0-byte files 03a/03b/03c, 05a/05b/05c1-3, 07a/07b/07c, _09tail and
+_probe in this folder are emptied intermediate part files from the parallel writing process
+(their content is fully contained in the final docs). Delete them freely.
+SHARED-CONTEXT.md is the working-notes template kept for future documentation runs.</p>
+</section></article><div class="pagenav"><a class="pn" href="index.html"><div class="pn-dir">← Home</div><div class="pn-name">Start page</div></a><a class="pn next" href="01-overview.html"><div class="pn-dir">Next →</div><div class="pn-name">Overview</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#what-this-is">What this is</a></li><li class="l2"><a href="#how-to-read-suggested-paths">How to read (suggested paths)</a></li><li class="l2"><a href="#document-map">Document map</a></li><li class="l2"><a href="#scope-as-requested">Scope (as requested)</a></li><li class="l2"><a href="#key-facts-verified">Key facts (verified)</a></li><li class="l2"><a href="#status-complete-2026-11-03-feature-guides-2026-11-04">Status — COMPLETE (2026-11-03) + feature guides (2026-11-04)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

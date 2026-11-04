@@ -1,0 +1,780 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Events Miniapp - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc current" href="10-events-miniapp.html"><span>Events Miniapp</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="10-events-miniapp.html#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a><a class="sb-item sb-sub" href="10-events-miniapp.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="10-events-miniapp.html#3-authentication-authorization">3. Authentication &amp; authorization</a><a class="sb-item sb-sub" href="10-events-miniapp.html#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a><a class="sb-item sb-sub" href="10-events-miniapp.html#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a><a class="sb-item sb-sub" href="10-events-miniapp.html#6-data-model">6. Data model</a><a class="sb-item sb-sub" href="10-events-miniapp.html#7-key-sequence-diagrams">7. Key sequence diagrams</a><a class="sb-item sb-sub" href="10-events-miniapp.html#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a><a class="sb-item sb-sub" href="10-events-miniapp.html#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a><a class="sb-item sb-sub" href="10-events-miniapp.html#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a><a class="sb-item sb-sub" href="10-events-miniapp.html#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></div></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Events — Federated Miniapp Documentation</h1>
+<p>Scope: The eSewa miniapp surface of the events service — in-app notifications (read/list/mark-read + per-user preference) and miniapp activity logging — in the Django project <strong>EMAIL_SERVICE</strong> (repo E:/Work/events, DB events). Evidence: E:/Work/events/EMAIL_SERVICE/urls.py, notification_app/{urls,views,models,serializers,registry,tasks}.py, activity_log/{urls,views,models,serializers,registry,tasks}.py, dashboard/{generics,auth_backends,helpers,choices,views,messages,app_links}.py, kafka_consumers/handlers.py, EMAIL_SERVICE/{settings,celery}.py, .env, plus caller repos Sales, CDXE-REBOOT, ERP-Projectmaster, TMS-service, IAM-Backend, frontend miniapp-esewa.</p>
+</section><section class="sec" data-title="1. Business overview (plain language for a NON-technical reader)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</h2>
+<p>Providhy is a business-management platform with a wallet/credit miniapp for eSewa merchants (ESM) and their customers (ESU). The events service is the platform&#39;s shared &quot;noticeboard and diary&quot;: it stores the little messages that pop up inside the miniapp (&quot;New Credit Added&quot;, &quot;Payment Received&quot;, &quot;Overdue Alert&quot;) and it keeps a diary of what people did (who created a credit record, who settled a payment, when).</p>
+<p>Merchants and customers do not talk to the events service for most of what happens behind the scenes. When a merchant grants a customer credit in the sales system, or a customer pays a payment request, those business services (Sales, CDXE) silently tell the events service &quot;write a notice for this person&quot;. Later, when the customer opens the eSewa miniapp, the app asks the events service &quot;what notices do I have?&quot; and shows them, newest first, unread on top.</p>
+<p>The events service also lets each person control which kinds of notices they want (payment requests, credit added, overdue alerts, due-date reminders). Turning one off stops that kind of notice from being written. And because the diary (activity log) records every credit/payment/dispute action with names and amounts, a merchant can audit exactly what happened and when — this is also the data behind the platform&#39;s audit reports.</p>
+<p>Finally, the events service receives some of these &quot;write a notice/diary entry&quot; instructions over the company&#39;s internal message bus (Kafka) instead of direct service calls — same result, different wire.</p>
+</section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
+<ul>
+<li><strong>Stack</strong>: Django 5 + DRF, project EMAIL_SERVICE (settings module EMAIL_SERVICE.settings, set in manage.py:9; historical name — the service is &quot;events&quot;). Python deps in requirements.txt/poetry.lock.</li>
+<li><strong>DB</strong>: Postgres, DB name events (.env DB_NAME=&quot;events&quot;, settings EMAIL_SERVICE/settings.py:93-102; prometheus engine wrapper django_prometheus.db.backends.postgresql).</li>
+<li><strong>Apps</strong> (settings EMAIL_SERVICE/settings.py:33-51): email_app (out of scope), dashboard (shared helpers/auth), notification_app, activity_log, export_service (out of scope), providhy_kafka (shared Kafka lib), kafka_consumers (in-scope: consumes notification/activity/email topics).</li>
+<li><strong>Root URL mounts</strong> (EMAIL_SERVICE/urls.py:22-29): api/email/ -&gt; email_app, api/ -&gt; dashboard, api/notification/ -&gt; notification_app.urls (line 26), api/activity_log/ -&gt; activity_log.urls (line 27), api/export/ -&gt; export_service. Dev public host: <strong>dev-events-api.providhy.com</strong> (.env EVENTS_BACKEND_URL).</li>
+<li><strong>Celery</strong>: broker redis://redis:6379/1, result backend django-db (EMAIL_SERVICE/settings.py:179-185); beat schedule in EMAIL_SERVICE/celery.py:17-54 (e.g. send-task-notification daily 06:00 for invoice due-date alerts).</li>
+<li><strong>Kafka</strong>: KAFKA_URL=kafka-crs:9092 (SASL_SSL/SCRAM-SHA-512), KAFKA_ENABLED=True default (EMAIL_SERVICE/settings.py:321-338). Events is a <strong>consumer</strong>: kafka_consumers/handlers.py:69-70 registers handlers for activity-log and notification creation topics, :50 for email.</li>
+<li><strong>Public ids</strong>: EMAIL_SERVICE/public_ids.py — opaque UUID-shaped tokens over integer PKs (AES-256, shared PUBLIC_ID_KEY); ENCODE_PUBLIC_IDS default True (settings.py:157-159). entry_id columns are typed PublicIdIntegerField (see models below).</li>
+<li><strong>Key modules</strong>: dashboard/generics.py (federated auth base view), dashboard/auth_backends.py (events&#39; copy of FederatedIdentityAuthentication + internal-password backend), notification_app/registry.py (miniapp message + preference templates), activity_log/registry.py (miniapp activity message templates).</li>
+</ul>
+</section><section class="sec" data-title="3. Authentication &amp; authorization"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-authentication-authorization">3. Authentication &amp; authorization</h2>
+<p>Two mechanisms are used on the miniapp surface:</p>
+<h3 id="3-1-federated-frontend-facing-4-endpoints">3.1 Federated (frontend-facing) — 4 endpoints</h3>
+<p>Base class FederatedAuthenticationView (dashboard/generics.py:10-14):</p>
+<ul>
+<li>authentication_classes = [FederatedIdentityAuthentication] (imported from dashboard/auth_backends.py:5, class at auth_backends.py:92-125)</li>
+<li>required_user_type = choices.ExternalEntityType.values = [&quot;ESM&quot;, &quot;ESU&quot;] (dashboard/choices.py:242-244)</li>
+<li>required_app_scope = choices.ExternalProviderChoices.values = [&quot;esewa&quot;] (dashboard/choices.py:238-240)</li>
+<li>permission_classes = [HasFederatedEntityPermission] (auth_backends.py:128-143)</li>
+</ul>
+<p>Events&#39; copy of FederatedIdentityAuthentication.authenticate (dashboard/auth_backends.py:93-125):</p>
+<ol>
+<li>Extracts the JWT via get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;) (auth_backends.py:95; helpers.py:141-168) — order: cookie miniAppAccessToken -&gt; Authorization: Bearer <jwt> -&gt; body field miniAppAccessToken.</li>
+<li>Reads the X-MINIAPP-TOKEN header and POSTs {&quot;token&quot;: <jwt>} + that header to IAM at {IAM_API}/api/external/token/verify/ (validate_token_with_external_iam, auth_backends.py:146-162). IAM&#39;s VerifyAuthTokenView (IAM-Backend/federated_identity/views.py:447-491) first runs utils.verify_request_origin (views.py:455; utils.py:78-84) which <strong>verifies the TOTP</strong> (pyotp, secret ESEWA_TOTP_SECRET_KEY, valid_window=settings.TOTP_VALID_WINDOW; missing header tolerated only in UAT/DEVELOPMENT), then validates the JWT via its serializer and returns 200 &quot;Token is valid.&quot; — <strong>the TOTP is checked by IAM, not by events</strong>.</li>
+<li>Back in events, the JWT is decoded <strong>locally without signature verification</strong> (TokenBackend(algorithm=&quot;HS256&quot;).decode(token, verify=False), auth_backends.py:102); claims are read: user_id, tenant_id, external_identifier, provider_code, user_type, tenant_root, username, subscribed_services, user_permissions (auth_backends.py:103-114) and stashed on the request. These claims are minted by IAM in FederatedTokenRefreshSerializer.add_custom_fields_to_token (IAM-Backend/federated_identity/serializers.py:84-96; username is already get_username()-processed).</li>
+<li>Returns (user_id, tenant_id) -&gt; DRF sets request.user = user_id, request.auth = tenant_id (views rely on this, e.g. notification_app/views.py:1017-1018).</li>
+<li>Errors: missing token -&gt; 401 INVALID_TOKEN (auth_backends.py:96-97); IAM connection error -&gt; 503 CONNECTION_TIMEOUT (auth_backends.py:116-122); anything else -&gt; 401 via CustomAuthenticationFailed (auth_backends.py:124-125).</li>
+</ol>
+<p>Permission layer HasFederatedEntityPermission (auth_backends.py:128-143): request.provider_code must be in required_app_scope (only esewa) and request.user_type in required_user_type (ESM or ESU), else 403 (PermissionError). If a view omits either class attribute, the permission itself raises 403.</p>
+<p><strong>Comparison with the canonical IAM implementation</strong> (IAM-Backend/federated_identity/auth_backends.py:10-25): the canonical class checks the TOTP origin in the service itself and resolves identity from <strong>request-body fields</strong> provider_code + external_identifier via a local ExternalEntity DB lookup (no JWT). The events copy instead treats the <strong>JWT as the identity carrier</strong>, delegates TOTP verification to IAM&#39;s verify endpoint, performs <strong>no ExternalEntity lookup</strong> in events, and adds the provider/user-type permission gate. No other copy-specific protections (no local TOTP check, no permission classes of its own).</p>
+<p>Frontend side (miniapp-esewa): every request carries Authorization: Bearer <JWT> and X-MINIAPP-TOKEN: <TOTP> (src/services/api.ts:34-56); the TOTP is computed server-side in a Next.js action with speakeasy.totp({secret: process.env.CUSTOM_KEY, step: 20}) (src/actions/otp.ts:15-21). (Whether IAM&#39;s ESEWA_TOTP_SECRET_KEY equals the frontend CUSTOM_KEY is assumed, not verified in this workspace.)</p>
+<p>Endpoints using the federated base class: miniapp/list/, miniapp/mark-read/, preference/, preference/<pk>/ (see section 4.1).</p>
+<h3 id="3-2-internal-service-to-service-the-miniapp-write-endpoints">3.2 Internal service-to-service — the &quot;miniapp write&quot; endpoints</h3>
+<p>InternalAuthenticationBackend (dashboard/auth_backends.py:165-176): accepts password (body or query) which must equal env INTERNAL_PASS (validate_internal_pass, helpers.py:81-84; dev value in .env: wRdDGGjiIQiBswoff2C); optional tenant_id/external_identifier become (request.user, request.auth). No JWT, no TOTP. Used by miniapp/notify-user/, activity_log/miniapp/log-activity/, activity_log/miniapp/list/ (and other internal endpoints) — the <strong>frontend never calls them</strong>; the eSewa backends (Sales/CDXE/Projectmaster/TMS/IAM celery tasks) do.</p>
+</section><section class="sec" data-title="4. Exposed endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-exposed-endpoint-catalog">4. Exposed endpoint catalog</h2>
+<p>Host prefix: <a href="https://dev-events-api.providhy.com/api">https://dev-events-api.providhy.com/api</a>.</p>
+<h3 id="4-1-public-miniapp-endpoints-federated-auth-called-by-the-esewa-frontend">4.1 Public miniapp endpoints (federated auth; called by the eSewa frontend)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>GET</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/miniapp/list/">https://dev-events-api.providhy.com/api/notification/miniapp/list/</a></td>
+<td>MiniAppNotificationList</td>
+<td>notification_app/urls.py:102; views.py:1013-1033</td>
+<td>List the logged-in ESM/ESU&#39;s in-app notifications (tag/created order)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/miniapp/mark-read/">https://dev-events-api.providhy.com/api/notification/miniapp/mark-read/</a></td>
+<td>MarkMiniAppNotificationASRead</td>
+<td>notification_app/urls.py:103; views.py:1036-1054</td>
+<td>Mark the user&#39;s notifications read/unread (tag flag)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/preference/">https://dev-events-api.providhy.com/api/notification/preference/</a></td>
+<td>NotificationPreferencesView</td>
+<td>notification_app/urls.py:91-95; views.py:872-896</td>
+<td>Get (and auto-seed) the user&#39;s notification preferences</td>
+</tr>
+<tr>
+<td>4</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/preference/">https://dev-events-api.providhy.com/api/notification/preference/</a><pk>/</td>
+<td>NotificationPreferencesView</td>
+<td>notification_app/urls.py:96-100; views.py:898-924</td>
+<td>Enable/disable one preference type</td>
+</tr>
+</tbody></table>
+<p>Frontend call sites: miniapp-esewa/src/services/requests/notifications.ts:26-36 (GET list), src/services/requests/profile.ts:93-118 (GET/POST preference); base URL EVENT_BASE_URL = <a href="https://dev-events-api.providhy.com/api/">https://dev-events-api.providhy.com/api/</a> (src/shared/constants.ts:36 + .env.example:1,14).</p>
+<h3 id="4-2-internal-service-to-service-endpoints-same-service-called-by-other-services-internal">4.2 Internal service-to-service endpoints (same service, called by OTHER services / internal)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Auth</th>
+<th>Called by (evidence)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/miniapp/notify-user/">https://dev-events-api.providhy.com/api/notification/miniapp/notify-user/</a></td>
+<td>NotificationHandlerMiniApp</td>
+<td>notification_app/urls.py:101; views.py:927-1010</td>
+<td>INTERNAL_PASS</td>
+<td>Sales/miniapp/tasks.py:42; CDXE-REBOOT/miniapp/tasks.py:34; TMS-service/miniapp/tasks.py:41; IAM-Backend/federated_identity/tasks.py:38</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/miniapp/log-activity/">https://dev-events-api.providhy.com/api/activity_log/miniapp/log-activity/</a></td>
+<td>MiniAppActivityLogHandler</td>
+<td>activity_log/urls.py:37-41; views.py:503-538</td>
+<td>INTERNAL_PASS</td>
+<td>Sales/miniapp/tasks.py:90; CDXE-REBOOT/miniapp/tasks.py:77; ERP-Projectmaster/miniapp/tasks.py:27</td>
+</tr>
+<tr>
+<td>3</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/miniapp/list/">https://dev-events-api.providhy.com/api/activity_log/miniapp/list/</a></td>
+<td>ActivityLogForMiniAppListView</td>
+<td>activity_log/urls.py:42-46; views.py:541-563</td>
+<td>INTERNAL_PASS</td>
+<td><strong>none found in workspace</strong> (see section 11)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/create-notification/">https://dev-events-api.providhy.com/api/notification/create-notification/</a></td>
+<td>NotificationHandler</td>
+<td>notification_app/urls.py:23-27; views.py:93-99</td>
+<td>INTERNAL_PASS</td>
+<td>Sales/dashboard/helper.py:159; CDXE-REBOOT/dashboard/helpers.py:34; ERP-Projectmaster/dashboard/helper.py:79; Accounting/dashboard/helpers.py:64,147; Purchase/dashboard/helper.py:106; ProductManagement/dashboard/helper.py:99; reporting/dashboard/helpers.py:75,225</td>
+</tr>
+<tr>
+<td>5</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/create/">https://dev-events-api.providhy.com/api/notification/create/</a></td>
+<td>CreateNotificationView</td>
+<td>notification_app/urls.py:28-32; views.py:102-162</td>
+<td>INTERNAL_PASS</td>
+<td>(same helper families define create/ variants; no per-caller line verified)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/status-change-notification/">https://dev-events-api.providhy.com/api/notification/status-change-notification/</a></td>
+<td>TenantNotificationHandler</td>
+<td>notification_app/urls.py:86-90; views.py:814-842</td>
+<td>INTERNAL_PASS</td>
+<td>TMS-service/dashboard/helpers.py:157</td>
+</tr>
+<tr>
+<td>7</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/approved-purchase-invoice-list/">https://dev-events-api.providhy.com/api/notification/approved-purchase-invoice-list/</a></td>
+<td>PurchaseInvoicelist</td>
+<td>notification_app/urls.py:76-80; views.py:642-728</td>
+<td>none (celery-internal)</td>
+<td>events&#39; own beat via tasks.py:37-47 (self-call)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/notification/approved-sales-invoice-list/">https://dev-events-api.providhy.com/api/notification/approved-sales-invoice-list/</a></td>
+<td>SalesInvoicelist</td>
+<td>notification_app/urls.py:81-85; views.py:731-811</td>
+<td>none (celery-internal)</td>
+<td>events&#39; own beat via tasks.py:37-47 (self-call)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/create-activity-log/">https://dev-events-api.providhy.com/api/activity_log/create-activity-log/</a></td>
+<td>ActivityLogHandler</td>
+<td>activity_log/urls.py:18-20; views.py:119-129</td>
+<td>INTERNAL_PASS</td>
+<td>Sales/dashboard/helper.py:160; CDXE-REBOOT/dashboard/helpers.py:37,56; ERP-Projectmaster/dashboard/helper.py:80; Accounting/dashboard/helpers.py:63,201; TMS-service/dashboard/helpers.py:159; ProductManagement/dashboard/helper.py:100; Purchase/dashboard/helper.py:107; Payment-Service/dashboard/helpers.py:34; IAM-Backend/heimer_auth/helpers.py:36,66</td>
+</tr>
+<tr>
+<td>10</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/create/">https://dev-events-api.providhy.com/api/activity_log/create/</a></td>
+<td>CreateActivityLogView</td>
+<td>activity_log/urls.py:21; views.py:132-193</td>
+<td>INTERNAL_PASS</td>
+<td>(same helper families as #9; no per-caller line verified)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/create-export-log/">https://dev-events-api.providhy.com/api/activity_log/create-export-log/</a></td>
+<td>CreateExportLog</td>
+<td>activity_log/urls.py:28; views.py:319-349</td>
+<td><strong>none</strong></td>
+<td>events self (dashboard/helpers.py:45 ACTIVITY_LOG_CREATE used by export flow)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>GET</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/report-log-list/">https://dev-events-api.providhy.com/api/activity_log/report-log-list/</a></td>
+<td>LogListForReport</td>
+<td>activity_log/urls.py:29; views.py:352-406</td>
+<td>INTERNAL_PASS (query param)</td>
+<td>reporting/dashboard/helpers.py:145,271</td>
+</tr>
+<tr>
+<td>13</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/flush-log/">https://dev-events-api.providhy.com/api/activity_log/flush-log/</a></td>
+<td>FlushLogView</td>
+<td>activity_log/urls.py:31; views.py:441-478</td>
+<td>INTERNAL_PASS</td>
+<td>TMS-service/dashboard/helpers.py:154</td>
+</tr>
+<tr>
+<td>14</td>
+<td>POST</td>
+<td><a href="https://dev-events-api.providhy.com/api/activity_log/update-reference-to-login/">https://dev-events-api.providhy.com/api/activity_log/update-reference-to-login/</a></td>
+<td>UpdateReferenceToLoginView</td>
+<td>activity_log/urls.py:32-36; views.py:481-500</td>
+<td>INTERNAL_PASS</td>
+<td><strong>none found in workspace</strong></td>
+</tr>
+</tbody></table>
+<h3 id="4-3-admin-other-endpoints-in-scope-same-url-files-not-part-of-the-miniapp-surface-listed-for-completeness-not-traced-in-section-5">4.3 Admin/other endpoints in scope (same URL files; not part of the miniapp surface — listed for completeness, not traced in section 5)</h3>
+<p>notification_app (notification_app/urls.py): create-cms-notification/ (CMSNotificationCreateView, PAM auth, urls.py:33-37; views.py:372-389), cms-notification-list/(<pk>/) (CMSNotificationList, PAM, urls.py:38-52; views.py:392-484), status/ (TenantNotificationReadUnread, IAM JWT, urls.py:38-42; views.py:526-553), module-notification-list/ (NotificationFilterAPIView, IAM JWT, urls.py:53-57; views.py:277-339), module-status/ (NotificationStatusUpdate, IAM JWT, urls.py:58-60; views.py:342-369), inactive/ (CMSNotificationActiveStatusUpdate, PAM, urls.py:61-65; views.py:487-523), tenant-display-notification/(<pk>/) (TenantNotificationDisplay, IAM JWT + tenant_root_required, urls.py:66-75; views.py:556-599).
+activity_log (activity_log/urls.py): activity-log-list/ (ActivityLogListView, IAM JWT, urls.py:22; views.py:196-234), master-activity-log-list/ (MasterActivityLogListView, IAM JWT, urls.py:23-27; views.py:284-316), cms-log-list/ (LogListForCms, PAM, urls.py:30; views.py:237-281).
+dashboard (dashboard/urls.py): notification-choices-list/ (no auth, urls.py:7-11; views.py:41-56), tenant-data-deletion/ (INTERNAL_PASS, urls.py:12-16; views.py:70-130; also deletes miniapp notification/preference rows via IAM is-registered/ lookup, views.py:106-118), log-viewer/ (Django admin BasicAuth, urls.py:17-21; views.py:151-205).</p>
+</section><section class="sec" data-title="5. Per-endpoint flow trace"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-per-endpoint-flow-trace">5. Per-endpoint flow trace</h2>
+<h3 id="5-1-get-api-notification-miniapp-list-list-the-user-s-in-app-notifications">5.1 GET /api/notification/miniapp/list/ — list the user&#39;s in-app notifications</h3>
+<ul>
+<li><strong>Request</strong>: query params only: module_type (optional str, must be a MainModule value), page (int), count (int, page size, max 100). The frontend also sends q (notifications.ts:21-24) but the view ignores it.</li>
+<li><strong>Auth</strong>: federated chain (section 3.1) -&gt; request.user = user_id, request.auth = tenant_id, request.external_identifier, request.provider_code = &quot;esewa&quot;, request.user_type = ESM/ESU.</li>
+<li><strong>Flow</strong>:<ol>
+<li>DRF auth: FederatedIdentityAuthentication.authenticate (dashboard/generics.py:11 -&gt; dashboard/auth_backends.py:93-125), incl. IAM verify call.</li>
+<li>HasFederatedEntityPermission (auth_backends.py:128-143): provider_code in {esewa}, user_type in {ESM, ESU}.</li>
+<li>identifier = request.external_identifier (notification_app/views.py:1017); tenant_id = request.auth (views.py:1018).</li>
+<li>Optional module_type validated by validate_choice (views.py:1020; dashboard/views.py:59-67) — raises ValidationError otherwise.</li>
+<li>Lookup (views.py:1021-1023): rows where (user = identifier OR user = tenant_id) with submit_user IS NULL, OR (submit_user = identifier OR submit_user = tenant_id).</li>
+<li>filter(lookup).order_by(&quot;-tag&quot;, &quot;-created&quot;) (views.py:1025-1027) — see Unknowns: -tag sorts tag=true (read) rows first; documented as coded, intent unverified.</li>
+<li>Paginate with CustomPagination (page_size=100, count param, max 100 — dashboard/views.py:35-38; views.py:1029-1030).</li>
+<li>Serialize with NotificationChannelSerializer (notification_app/serializers.py:24-27; excludes modified, tenant_id) -&gt; paginated 200 (views.py:1032-1033).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads NotificationChannel (fields of note: user, submit_user, tag, created, message, title, entry_type, entry_id).</li>
+<li><strong>Outbound calls</strong>: IAM POST /api/external/token/verify/ once per request (auth_backends.py:146-162). No eSewa push, no email, no Kafka — this is a pure read of in-app rows.</li>
+<li><strong>Errors</strong>: 401 (bad/missing token or TOTP — auth_backends.py:96-97,124-125; IAM 401 propagates as CustomAuthenticationFailed), 503 (IAM connection timeout, auth_backends.py:116-122), 403 (provider/user-type mismatch, auth_backends.py:136-142), ValidationError for bad module_type (dashboard/views.py:61-62 -&gt; custom exception handler, settings.py:221-224).</li>
+</ul>
+<h3 id="5-2-post-api-notification-miniapp-mark-read-mark-notifications-read-unread">5.2 POST /api/notification/miniapp/mark-read/ — mark notifications read/unread</h3>
+<ul>
+<li><strong>Request</strong>: JSON body: id (list of notification ids, optional default []), tag (bool, default true = mark read).</li>
+<li><strong>Auth</strong>: federated (same chain); additionally user = helpers.get_username(request.username) (views.py:1041; helpers.py:87-92 — strips the last _-suffixed segment of the JWT username).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth chain (as 5.1).</li>
+<li>ids = request.data.get(&quot;id&quot;, []) (views.py:1038); tag_value = request.data.get(&quot;tag&quot;, True) (views.py:1039).</li>
+<li>identifier = request.external_identifier (views.py:1040); user = get_username(request.username) (views.py:1041).</li>
+<li>instances = NotificationChannel.objects.filter(Q(user=identifier, submit_user=None) | Q(submit_user=user)) (views.py:1044-1046) — <strong>the id list is not used in the filter</strong>.</li>
+<li>Guard: if instances.count() != len(ids) -&gt; 404 &quot;Notification not found&quot; (views.py:1047-1051).</li>
+<li>instances.update(tag=tag_value) (views.py:1052) — updates <strong>all</strong> matched rows.</li>
+<li>Serialize with NotificationStatusSerializer (serializers.py:30-33; excludes created, modified) -&gt; 200 (views.py:1053-1054).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads + updates NotificationChannel.tag.</li>
+<li><strong>Outbound calls</strong>: IAM verify only.</li>
+<li><strong>Errors</strong>: 404 on count mismatch; 401/403 as in 5.1.</li>
+<li><strong>Observed inconsistency (code as written)</strong>: rows created by notify-user/ (5.5) always have submit_user set and user = a sender string, so clause 1 (user=identifier AND submit_user IS NULL) and clause 2 (submit_user=<processed username>) rarely match those rows — i.e., this endpoint appears to operate on the legacy IAM-user notification shape rather than the miniapp rows. No frontend caller of this endpoint exists in the workspace (see 10/11).</li>
+</ul>
+<h3 id="5-3-get-api-notification-preference-get-and-auto-seed-notification-preferences">5.3 GET /api/notification/preference/ — get (and auto-seed) notification preferences</h3>
+<ul>
+<li><strong>Request</strong>: none (frontend may pass query params; backend ignores them — profile.ts:96-101).</li>
+<li><strong>Auth</strong>: federated -&gt; tenant_id = request.auth, user_id = request.user (views.py:873-874).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth chain.</li>
+<li>preferences = NotificationPreference.objects.filter(tenant_id=tenant_id, user=user_id) (views.py:875-877).</li>
+<li>If none exist: build one row per NotificationPreferences choice (payment_request, credit_added, credit_overdue, due_date_reminder — choices.py:227-231) with external_identifier = JWT claim, channel=&quot;in_app&quot; (choices.py:234-236), enabled=True (views.py:878-892), then bulk_create (views.py:892).</li>
+<li>Serialize with NotificationPreferencesSerializer (serializers.py:36-39; excludes created, modified) -&gt; 200 (views.py:893-896).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads, conditionally creates NotificationPreference (unique on tenant_id+user+preference_type+channel, models.py:104-110).</li>
+<li><strong>Outbound calls</strong>: IAM verify only.</li>
+<li><strong>Errors</strong>: 401/403 as in 5.1.</li>
+</ul>
+<h3 id="5-4-post-api-notification-preference-pk-toggle-one-preference">5.4 POST /api/notification/preference/<pk>/ — toggle one preference</h3>
+<ul>
+<li><strong>Request</strong>: path pk (int; public-id tokens accepted by PublicIdMiddleware), body {&quot;enabled&quot;: bool} (required).</li>
+<li><strong>Auth</strong>: federated.</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth chain.</li>
+<li>tenant_id, user_id (views.py:899-900).</li>
+<li>NotificationPreference.objects.get(pk=pk, tenant_id=tenant_id, user=user_id) (views.py:903-905).</li>
+<li>enabled missing/None -&gt; 400 &quot;Request Failed. Try again with valid data&quot; (views.py:906-911).</li>
+<li>If value changed: preference.enabled = enabled; preference.external_identifier = request.external_identifier (refreshed from JWT); save() (views.py:913-916).</li>
+<li>200 {&quot;status&quot;: &quot;Record updated&quot;} (views.py:917-919).</li>
+<li>DoesNotExist -&gt; 404 &quot;Record not found&quot; (views.py:920-924).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads + updates NotificationPreference.enabled/external_identifier.</li>
+<li><strong>Outbound calls</strong>: IAM verify only.</li>
+<li><strong>Errors</strong>: 400, 404, plus auth errors.</li>
+</ul>
+<h3 id="5-5-post-api-notification-miniapp-notify-user-write-a-miniapp-notification-internal">5.5 POST /api/notification/miniapp/notify-user/ — write a miniapp notification (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body: password (str, required = INTERNAL_PASS), sending_user (str — sender&#39;s external_identifier or tenant_id), receiving_user (str — recipient&#39;s external_identifier or tenant_id), module_type (str, e.g. sales/cdxe/iam), entry_type (str, e.g. PR1208 credit record), service_type (str, e.g. creation), entry_id (int/public-id, optional), title (str, optional), message (str, optional), message_data (dict, optional — template context), notification_type (str, default basic).</li>
+<li><strong>Auth</strong>: InternalAuthenticationBackend (views.py:928; auth_backends.py:165-176) — password in body/query; <strong>plus</strong> an explicit second check inside the view (views.py:935-937).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Backend password check -&gt; 401 on mismatch (auth_backends.py:174-175).</li>
+<li>View re-check -&gt; 401 (views.py:935-937); logs the full payload (views.py:938).</li>
+<li>Look up (module_type, entry_type, service_type) in registry.mini_app_notification_msg_reg -&gt; (title_template, message_template) and in registry.mini_app_notificaton_preference_reg -&gt; preference_type (views.py:931-932, 952-955, 973-975; registry.py:240-241, 10-239).</li>
+<li>If message and title were not both supplied: use the templates; message = message_template.format(**message_data) (views.py:951-967). No template for the triple -&gt; 400 INCORRECT_DATA_FORMAT <strong>echoing the request data back</strong> (views.py:956-963). Still missing after templating -&gt; 400 (views.py:968-972).</li>
+<li>Preference gate: if a preference_type is registered, query NotificationPreference.filter(Q(external_identifier=receiving_user) | Q(tenant_id=receiving_user), preference_type=...) (views.py:983-987). Create the notification only when no row exists <strong>or</strong> the row is enabled (views.py:989-990); a disabled row suppresses it. If no preference_type is registered for the triple, always create (views.py:980-981).</li>
+<li>NotificationChannel.objects.create(user=sending_user, submit_user=receiving_user, module_type=..., service_type=..., entry_type=..., title=..., message=..., notification_type=..., entry_id=...) (views.py:992-1002) — <strong>tenant_id is not set</strong> (row has tenant_id = NULL); inside a transaction.atomic() (views.py:934).</li>
+<li>200 {&quot;status&quot;: &quot;Notification created successfully!&quot;} (views.py:1003-1004).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads NotificationPreference; creates NotificationChannel (fields: user=sender, submit_user=recipient, entry_id typed PublicId, tag default false).</li>
+<li><strong>Outbound calls</strong>: <strong>none</strong> — no eSewa API push, no email, no Kafka. Delivery to the device is purely via the miniapp polling miniapp/list/.</li>
+<li><strong>Errors</strong>: 401 (password), 400 (template/format; ValidationError handler views.py:1006-1010). Note message_template.format(**message_data) raises KeyError if a placeholder is missing from message_data — unhandled -&gt; 500 (no try around it).</li>
+</ul>
+<p>Registered message templates (notification_app/registry.py:10-202): CDXE connection lifecycle (request sent/received/approved/rejected), SALES credit record (due tomorrow, overdue, new credit, credit edited), credit settlement (customer paid, settlement recorded), payment request (created/approved/rejected), credit dispute (raised/cancelled/resolved-by-edition/resolved-by-deletion), IAM subscription lifecycle (trial started/expiring/expired, subscription expiring/expired, upgrade successful, renewal successful). Preference-mapped triples (registry.py:203-239): credit_added, payment_request, due_date_reminder, credit_overdue.</p>
+<h3 id="5-6-post-api-activity-log-miniapp-log-activity-write-a-miniapp-activity-log-entry-internal">5.6 POST /api/activity_log/miniapp/log-activity/ — write a miniapp activity-log entry (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body: password (str, required), user (str — the acting user&#39;s external_identifier/tenant string), module_type (str), entry_type (str), service_type (str), entry_id (int, optional), unique_id (str, optional), message (str, optional), message_data (dict, optional context).</li>
+<li><strong>Auth</strong>: InternalAuthenticationBackend (activity_log/views.py:504) + explicit password re-check (views.py:508-510).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Password check -&gt; 401.</li>
+<li>If message absent: message = activity_log_message_registry.get((module_type, feature, service_type), &quot;Performed an action&quot;).format(**context) (views.py:521-525; registry at activity_log/registry.py:5-95 — CDXE connection/payment/dispute, SALES credit/settlement, MASTER customer create/edit/delete templates).</li>
+<li>ActivityLog.objects.create(user=user, module_type=..., service_type=..., entry_type=..., entry_id=..., entry_unique_id=unique_id, message=..., log_date_time=timezone.now()) (views.py:526-535) — <strong>tenant_id not set (NULL)</strong>.</li>
+<li>201 {&quot;status&quot;: &quot;Log created successfully!&quot;} (views.py:536-538).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: creates ActivityLog (user, entry_unique_id, message, log_date_time; check_login default False).</li>
+<li><strong>Outbound calls</strong>: none.</li>
+<li><strong>Errors</strong>: 401; KeyError from .format with missing context -&gt; unhandled 500. Note: <strong>no validate_choice</strong> here (unlike the other create paths) — any module/service/entry strings are stored. Caller-side quirk: Sales/CDXE check status_code != 200 and therefore <strong>log a false error</strong> for the 201 this endpoint returns (Sales/miniapp/tasks.py:107-111; CDXE-REBOOT/miniapp/tasks.py:94-98).</li>
+</ul>
+<h3 id="5-7-post-api-activity-log-miniapp-list-list-a-user-s-activity-log-entries-internal">5.7 POST /api/activity_log/miniapp/list/ — list a user&#39;s activity-log entries (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body: external_identifier (str, or list when many; required), many (bool, default false), plus pagination params page/count.</li>
+<li><strong>Auth</strong>: InternalAuthenticationBackend (activity_log/views.py:542) — <strong>not</strong> the federated base class; i.e., this &quot;miniapp&quot; endpoint is server-to-server.</li>
+<li><strong>Flow</strong>:<ol>
+<li>Password check (auth_backends.py:167-176) -&gt; 401.</li>
+<li>external_identifier missing -&gt; 400 &quot;external_identifier is required.&quot; (views.py:547-552).</li>
+<li>lookup = Q(tenant_id__isnull=True); if many: &amp; Q(user__in=external_identifier) else &amp; Q(user=external_identifier) (views.py:553-558).</li>
+<li>ActivityLog.objects.filter(lookup).order_by(&quot;-log_date_time&quot;) (views.py:559).</li>
+<li>Paginate with CustomPagination (views.py:560-561).</li>
+<li>Serialize with ActivityLogSerializer — <strong>only message + service_type fields</strong> (views.py:562; serializers.py:8-11) -&gt; paginated 200 (views.py:563).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: reads ActivityLog (only rows with tenant_id IS NULL, i.e., the miniapp-written ones from 5.6).</li>
+<li><strong>Outbound calls</strong>: none.</li>
+<li><strong>Errors</strong>: 400, 401. <strong>No caller found in this workspace</strong> (see sections 10, 11).</li>
+</ul>
+<h3 id="5-8-internal-endpoint-group-traced-briefly">5.8 Internal endpoint group (traced briefly)</h3>
+<ul>
+<li><strong>POST /api/notification/create-notification/</strong> (NotificationHandler, views.py:93-99): password check -&gt; create_notification(request.data.get) (views.py:33-90): resolves approver via helpers.get_submit_user -&gt; <strong>outbound IAM POST {IAM_SERVICE}api/check-user/</strong> (helpers.py:54,103-114), builds message by service_type (views.py:53-74), then calls send_notification <strong>synchronously</strong> (tasks.py:10-34 -&gt; NotificationChannel.objects.create, tenant_id set). 201.</li>
+<li><strong>POST /api/notification/create/</strong> (CreateNotificationView, views.py:102-162): password + MessageLibrary.get_notification_message (messages.py:74-78) -&gt; send_notification.delay(...) (celery) -&gt; same model create, async. 201; 400/500 handlers (views.py:153-162).</li>
+<li><strong>POST /api/notification/status-change-notification/</strong> (TenantNotificationHandler, views.py:814-842): password -&gt; CMSNotification.objects.create(tenant_id, message, notification_type, title) (views.py:829-834). 201. (Caller: TMS — TMS-service/dashboard/helpers.py:157.)</li>
+<li><strong>POST /api/notification/approved-purchase-invoice-list/</strong> (PurchaseInvoicelist, views.py:642-728): <strong>no auth</strong>. Outbound: GET {PURCHASE_SERVICE}api/purchase/invoice/invoice-approval-list/?password= (helpers.py:57-59; views.py:644-650) and POST {PROJECTMASTER_SERVICE}api/payment-term/all-payment-term/ (helpers.py:56; views.py:653-657). Creates NotificationChannel warning rows (views.py:667-675) for purchase invoices whose credit-period due date is today (expired) or 5 days or less. Triggered daily 06:00 by beat task send_task_notification (EMAIL_SERVICE/celery.py:26-29; tasks.py:37-66, self-POSTs both invoice endpoints, retries up to 3).</li>
+<li><strong>POST /api/notification/approved-sales-invoice-list/</strong> (SalesInvoicelist, views.py:731-811): same shape with {SALES_SERVICE}api/sales/invoice/sales-invoice-approved-all/ (helpers.py:60; views.py:733-735).</li>
+<li><strong>POST /api/activity_log/create-activity-log/</strong> (ActivityLogHandler, activity_log/views.py:119-129): password -&gt; create_activity_log(request.data.get) (views.py:36-116): message map by service_type (views.py:63-96), check_login when service_type=login or ip present (views.py:51-52), then send_activity_log(...) called <strong>synchronously</strong> (views.py:100-115 -&gt; tasks.py:11-51 ActivityLog.objects.create, tenant_id set). 201.</li>
+<li><strong>POST /api/activity_log/create/</strong> (CreateActivityLogView, activity_log/views.py:132-193): password -&gt; MessageLibrary.get_message (messages.py:67-71) -&gt; send_activity_log.delay(tenant_id, user, module_type, service_type, feature, entry_id, message, log_date_time, unique_id) (views.py:175-185). <strong>Anomaly</strong>: the celery task signature takes 14 required positional args (tasks.py:18-33) but only 9 are passed -&gt; this path would fail in the worker if actually invoked (unverified at runtime; see section 11).</li>
+<li><strong>POST /api/activity_log/create-export-log/</strong> (CreateExportLog, activity_log/views.py:319-349): <strong>no authentication at all</strong>; creates ActivityLog(tenant_id, entry_type, message, entry_id, log_date_time) — but module_type is NOT NULL on the model (activity_log/models.py:11-13) and is not passed -&gt; DB IntegrityError -&gt; 500 if called (anomaly, see section 11).</li>
+<li><strong>GET /api/activity_log/report-log-list/</strong> (LogListForReport, activity_log/views.py:352-406): password in <strong>query</strong> (views.py:363-364); requires from_date+to_date (366-370); filters tenant/date-range/user, excludes FLUSH (and LOGIN unless check_login) (386-390); CustomTransactionPagination + ActivityLogForReportSerializer (serializers.py:20-44). Caller: reporting service (reporting/dashboard/helpers.py:145,271).</li>
+<li><strong>POST /api/activity_log/flush-log/</strong> (FlushLogView, activity_log/views.py:441-478): password (443-444); bulk-creates ActivityLog rows with service_type=flush per (tenant_id, service) (457-473). Caller: TMS (TMS-service/dashboard/helpers.py:154).</li>
+<li><strong>POST /api/activity_log/update-reference-to-login/</strong> (UpdateReferenceToLoginView, activity_log/views.py:481-500): InternalAuthenticationBackend; if no tenant_id given, <strong>outbound GET {TMS_SERVICE}/api/tenant/tenant-list/?password=</strong> (views.py:486-490); updates ActivityLog rows (service_type=reference + check_login=true) to service_type=login (492-496). No workspace caller found.</li>
+</ul>
+</section><section class="sec" data-title="6. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model">6. Data model</h2>
+<p>All three miniapp-surface models live in the events Postgres DB (notification_app/models.py, activity_log/models.py); all extend dashboard.models.TimeModel (created/modified). entry_id columns are PublicIdIntegerField(IdModel.SALES_INVOICE, entity_types=FEATURES, type_field=&quot;entry_type&quot;) — opaque public-id tokens, model-tagged by entry_type (notification_app/models.py:25-31; activity_log/models.py:18-24; EMAIL_SERVICE/public_ids.py:1-22,174).</p>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    NotificationChannel {
+        int id PK &quot;public-id token&quot;
+        string tenant_id &quot;NULL for miniapp rows (notify-user does not set it)&quot;
+        string user &quot;sender: external_identifier or tenant_id&quot;
+        string submit_user &quot;recipient: external_identifier or tenant_id&quot;
+        string module_type &quot;MainModule, e.g. sales/cdxe/iam&quot;
+        string service_type &quot;ServiceType, e.g. creation/approval&quot;
+        string entry_type &quot;EntryType code, e.g. PR1208&quot;
+        string adjustment_type &quot;optional&quot;
+        int entry_id &quot;typed public id by entry_type&quot;
+        string title &quot;set only by notify-user path&quot;
+        text message
+        bool tag &quot;false = unread&quot;
+        string notification_type &quot;success/error/warning/basic&quot;
+    }
+    NotificationPreference {
+        int id PK
+        string tenant_id &quot;from JWT (request.auth)&quot;
+        string external_identifier &quot;from JWT claim&quot;
+        string user &quot;user_id from JWT&quot;
+        string preference_type &quot;payment_request/credit_added/credit_overdue/due_date_reminder&quot;
+        string channel &quot;in_app (only choice)&quot;
+        bool enabled &quot;default true&quot;
+    }
+    ActivityLog {
+        int id PK
+        string tenant_id &quot;NULL for miniapp rows&quot;
+        string user &quot;external_identifier/tenant string&quot;
+        string module_type
+        string service_type
+        string entry_type
+        int entry_id &quot;typed public id&quot;
+        string entry_unique_id &quot;business unique id&quot;
+        text message
+        datetime log_date_time
+        string device
+        string ip_address
+        string description
+        string device_info
+        bool check_login &quot;default false&quot;
+    }
+    NotificationPreference ||--o{ NotificationChannel : &quot;gates notify-user creation by preference_type (logical, no FK)&quot;
+    NotificationPreference ||--o{ ActivityLog : &quot;same user/tenant identity (logical, no FK)&quot;
+</pre></div>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Key fields</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NotificationChannel (notification_app/models.py:8-47)</td>
+<td>user, submit_user, tag, entry_id, title</td>
+<td>tenant_id is a plain nullable CharField — miniapp rows have it NULL; identity scoping is done by the user/submit_user strings. tag doubles as the read/unread flag. No FKs. db_table NotificationChannel.</td>
+</tr>
+<tr>
+<td>NotificationPreference (notification_app/models.py:85-111)</td>
+<td>tenant_id, user, preference_type, channel, enabled, external_identifier</td>
+<td>unique_together = (tenant_id, user, preference_type, channel) (models.py:104-110). channel only has one value (in_app, choices.py:234-236).</td>
+</tr>
+<tr>
+<td>ActivityLog (activity_log/models.py:8-39)</td>
+<td>user, entry_unique_id, message, log_date_time, check_login</td>
+<td>Miniapp rows have tenant_id NULL (5.6) — that&#39;s how miniapp/list/ isolates them (5.7). entry_id typed public id. db_table ActivityLog.</td>
+</tr>
+<tr>
+<td>CMSNotification (notification_app/models.py:50-79)</td>
+<td>tenant_id (JSON!), unique_id, active_status</td>
+<td>Not touched by the in-scope miniapp endpoints; used by CMS/status-change paths (4.3). Listed for completeness of the app&#39;s models.</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="7. Key sequence diagrams"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-key-sequence-diagrams">7. Key sequence diagrams</h2>
+<h3 id="7-1-miniapp-notification-list-with-the-federated-auth-chain">7.1 Miniapp notification list (with the federated auth chain)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as eSewa miniapp (Next.js, miniapp-esewa)
+    participant EV as events (dev-events-api.providhy.com)
+    participant IAM as IAM (dev-iam-api.providhy.com)
+    FE-&gt;&gt;FE: compute TOTP: speakeasy(secret=CUSTOM_KEY, step=20) [src/actions/otp.ts:17-21]
+    FE-&gt;&gt;EV: GET /api/notification/miniapp/list/ + Bearer JWT + X-MINIAPP-TOKEN [src/services/requests/notifications.ts:26-36]
+    EV-&gt;&gt;IAM: POST /api/external/token/verify/ body token=JWT, header X-MINIAPP-TOKEN [events dashboard/auth_backends.py:146-162]
+    IAM-&gt;&gt;IAM: verify_request_origin: pyotp TOTP.verify [IAM federated_identity/utils.py:78-84]
+    IAM--&gt;&gt;EV: 200 Token is valid. [IAM federated_identity/views.py:491]
+    EV-&gt;&gt;EV: decode JWT locally (verify=False), read claims [events dashboard/auth_backends.py:102-114]
+    EV-&gt;&gt;EV: HasFederatedEntityPermission: provider_code=esewa, user_type in ESM/ESU [auth_backends.py:128-143]
+    EV-&gt;&gt;EV: NotificationChannel filter by identifier/tenant, order by -tag,-created [notification_app/views.py:1021-1027]
+    EV--&gt;&gt;FE: 200 paginated notifications [views.py:1032-1033]
+</pre></div>
+<h3 id="7-2-credit-created-in-sales-miniapp-notification-activity-entry">7.2 Credit created in Sales -&gt; miniapp notification + activity entry</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as eSewa merchant miniapp
+    participant SALES as sales (dev-sales-api.providhy.com)
+    participant CEL as Sales celery worker
+    participant EV as events
+    M-&gt;&gt;SALES: POST miniapp credit create (merchant grants credit) [Sales/miniapp/views.py:83 CreateCreditRecord]
+    SALES-&gt;&gt;SALES: create CreditRecord, CreditLedger
+    SALES-&gt;&gt;CEL: send_notification_task.delay(sending_user, CREDIT_RECORD, CREATION, receiving_user=customer identifier) [views.py:158-165]
+    SALES-&gt;&gt;CEL: send_activity_log.delay(user, CREDIT_RECORD, CREATION, context) [views.py:166-172]
+    CEL-&gt;&gt;EV: POST /api/notification/miniapp/notify-user/ password=INTERNAL_PASS [Sales/miniapp/tasks.py:42-61]
+    EV-&gt;&gt;EV: template lookup (sales, PR1208, creation) -&gt; New Credit Added [notification_app/registry.py:61-66]
+    EV-&gt;&gt;EV: preference gate CREDIT_ADDED [views.py:973-990]
+    EV-&gt;&gt;EV: NotificationChannel.objects.create (tenant_id NULL) [views.py:992-1002]
+    EV--&gt;&gt;CEL: 200 Notification created successfully!
+    CEL-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ password=INTERNAL_PASS [Sales/miniapp/tasks.py:90-106]
+    EV-&gt;&gt;EV: ActivityLog.objects.create [activity_log/views.py:526-535]
+    EV--&gt;&gt;CEL: 201 Log created successfully!
+    M-&gt;&gt;EV: GET /api/notification/miniapp/list/ (customer later sees New Credit Added)
+</pre></div>
+<h3 id="7-3-payment-request-lifecycle-cdxe-creates-sales-settles-notifications">7.3 Payment request lifecycle (CDXE creates, Sales settles) -&gt; notifications</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant CUST as eSewa customer miniapp
+    participant M as eSewa merchant miniapp
+    participant CDXE as cdxe (dev-cdxe-api.providhy.com)
+    participant SALES as sales
+    participant EV as events
+    M-&gt;&gt;CDXE: create payment request [CDXE-REBOOT/miniapp/views.py:727 RequestMiniappPayment]
+    CDXE-&gt;&gt;EV: POST notify-user (cdxe, PR1210, creation) -&gt; Payment Request [CDXE-REBOOT/miniapp/tasks.py:34-50, views.py:772-777]
+    CDXE-&gt;&gt;EV: POST log-activity (cdxe, PR1210, creation) [views.py:772-777]
+    CUST-&gt;&gt;SALES: pay the payment request (SettleMerchantCredit flow) [Sales/miniapp/views.py:1684 PayCreditView]
+    SALES-&gt;&gt;SALES: allocate settlement, update CreditLedger
+    SALES-&gt;&gt;EV: POST notify-user (sales, PR1209, approval) -&gt; Customer Paid [Sales/miniapp/views.py:1753-1760]
+    SALES-&gt;&gt;EV: POST log-activity (sales, PR1209, approval) [views.py:1761-1767]
+    M-&gt;&gt;EV: GET /api/notification/miniapp/list/ (sees Customer Paid)
+</pre></div>
+<h3 id="7-4-subscription-lifecycle-notifications-iam-tms-events">7.4 Subscription lifecycle notifications (IAM/TMS -&gt; events)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as eSewa merchant miniapp
+    participant IAM as IAM
+    participant TMS as TMS (dev-tms-api.providhy.com)
+    participant EV as events
+    M-&gt;&gt;IAM: POST /api/external/register/ (new ESM entity)
+    IAM-&gt;&gt;IAM: _record_log: create login REFERENCE activity + TRIAL_SUBSCRIPTION task [IAM-Backend/federated_identity/views.py:244-254]
+    IAM-&gt;&gt;EV: POST /api/notification/miniapp/notify-user/ (module=iam, PR2502, trial_subscription) [federated_identity/tasks.py:38-59]
+    EV--&gt;&gt;IAM: 200 (row: Your trial has started...)
+    TMS-&gt;&gt;TMS: daily send_subscription_notifications (trial/subscription expiring+expired) [TMS-service/miniapp/tasks.py:74-171]
+    TMS-&gt;&gt;EV: POST /api/notification/miniapp/notify-user/ per tenant (module=iam, PR2502, service_type) [TMS-service/miniapp/tasks.py:41-70,155-162]
+    M-&gt;&gt;EV: GET /api/notification/miniapp/list/ (sees Trial Expiring / Subscription Expired)
+</pre></div>
+</section><section class="sec" data-title="8. Business process walkthrough (non-technical)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</h2>
+<p><strong>8.1 &quot;Maria is a merchant who extends credit to a customer&quot;</strong>
+Maria (an eSewa merchant) opens her miniapp, goes to credit management, and grants her customer Sita NPR 10,000. Her phone sends that to the <strong>sales</strong> service. Sales books the credit on its own ledger and, at the same moment, queues two background jobs: &quot;send a notice&quot; and &quot;write a diary entry&quot;. A few seconds later both jobs arrive at the <strong>events</strong> service with a shared internal password. Events looks up the standard wording for &quot;credit created&quot; (&quot;... added NPR 10,000 credit — new balance ...&quot;), checks whether Sita still wants that kind of notice (the preference page), and writes a notice row addressed to Sita. It also writes a diary row: &quot;merchant added NPR 10,000 credit against Sita at <time>&quot;. When Sita opens her miniapp, the app asks events &quot;what&#39;s my inbox?&quot; and events answers with the new notice. No SMS, no email, no push to eSewa&#39;s servers — the notice simply exists in the shared inbox until Sita opens the app (see 5.5/5.7 for the mechanism).</p>
+<p><strong>8.2 &quot;Sita pays back&quot; (payment request + settlement)</strong>
+Maria can also request money from Sita. The request is created in the <strong>CDXE</strong> (connections/data-exchange) service, which tells events to notify Sita (&quot;Maria requested NPR 10,000 from you&quot;). Sita pays inside the miniapp; the payment is processed by the <strong>sales</strong> service (which coordinates with the eSewa payment backend). Once the payment succeeds, sales tells events &quot;a settlement was approved&quot;, and a new notice appears for Maria: &quot;Sita paid NPR 10,000 — new balance ...&quot;. Every one of these steps also leaves a diary entry, so Maria&#39;s audit trail later reads: request created -&gt; payment approved -&gt; credit settled.</p>
+<p><strong>8.3 &quot;The audit diary&quot;</strong>
+Behind every action above, the events service stores a row: who did it (by external identifier), what kind of action, the business document reference, a human-readable sentence, and the timestamp. The same diary feeds the platform&#39;s report service (which pulls date-range slices via an internal endpoint) and the tenant data-deletion flow. For eSewa users, the diary rows are written <strong>without</strong> a tenant stamp (tenant is NULL) and keyed by the user&#39;s identifier — that&#39;s how the miniapp-facing list endpoint finds exactly &quot;this person&#39;s&quot; entries and how a later account deletion can sweep them.</p>
+<p><strong>8.4 &quot;Sita turns off payment-request notices&quot;</strong>
+In the miniapp settings, Sita flips &quot;Payment Request&quot; off. Her phone calls events&#39; preference endpoint with her JWT + TOTP; events finds her row (auto-created on first visit, all four types on) and sets that one to disabled. From then on, when CDXE creates a payment request addressed to her, events checks her preference and silently skips writing the notice (5.5, step 5) — the diary entry, however, is still recorded.</p>
+</section><section class="sec" data-title="9. Cross-service call map (outbound calls from this service)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Target service</th>
+<th>Method+path</th>
+<th>Triggered by (local endpoint)</th>
+<th>Purpose</th>
+<th>Sync/Async</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>IAM</td>
+<td>POST <a href="https://dev-iam-api.providhy.com/api/external/token/verify/">https://dev-iam-api.providhy.com/api/external/token/verify/</a></td>
+<td>every federated request (5.1-5.4)</td>
+<td>verify JWT + X-MINIAPP-TOKEN TOTP</td>
+<td>sync (requests) [dashboard/auth_backends.py:146-162]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IAM</td>
+<td>POST {IAM_SERVICE}api/check-user/</td>
+<td>/api/notification/create-notification/ and /api/notification/create/ (5.8)</td>
+<td>resolve approver username (get_submit_user)</td>
+<td>sync [dashboard/helpers.py:54,103-114]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Purchase</td>
+<td>GET <a href="http://purchase:8000/api/purchase/invoice/invoice-approval-list/?password=">http://purchase:8000/api/purchase/invoice/invoice-approval-list/?password=</a></td>
+<td>/api/notification/approved-purchase-invoice-list/ (5.8)</td>
+<td>invoices for due-date alerts</td>
+<td>sync [helpers.py:57-59; views.py:644-650]</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Projectmaster</td>
+<td>POST <a href="http://projectmaster:8000/api/payment-term/all-payment-term/">http://projectmaster:8000/api/payment-term/all-payment-term/</a></td>
+<td>both approved-*-invoice-list/ endpoints (5.8)</td>
+<td>credit periods for due-date math</td>
+<td>sync [helpers.py:56; views.py:652-657,741-746]</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sales</td>
+<td>GET <a href="http://sales:8000/api/sales/invoice/sales-invoice-approved-all/?password=">http://sales:8000/api/sales/invoice/sales-invoice-approved-all/?password=</a></td>
+<td>/api/notification/approved-sales-invoice-list/ (5.8)</td>
+<td>sales invoices for due-date alerts</td>
+<td>sync [helpers.py:60; views.py:733-735]</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TMS</td>
+<td>GET <a href="http://tms:8000/api/tenant/tenant-list/?password=">http://tms:8000/api/tenant/tenant-list/?password=</a></td>
+<td>/api/activity_log/update-reference-to-login/ (5.8)</td>
+<td>enumerate tenants when none supplied</td>
+<td>sync [activity_log/views.py:486-490]</td>
+</tr>
+<tr>
+<td>7</td>
+<td>TMS</td>
+<td>GET <a href="http://tms:8000/api/tenant/check-tenant/">http://tms:8000/api/tenant/check-tenant/</a></td>
+<td>CMS notification create/update (4.3, out of miniapp scope)</td>
+<td>validate tenant list</td>
+<td>sync [helpers.py:52,75-78]</td>
+</tr>
+<tr>
+<td>8</td>
+<td>IAM</td>
+<td>POST <a href="https://dev-iam-api.providhy.com/api/external/is-registered/">https://dev-iam-api.providhy.com/api/external/is-registered/</a></td>
+<td>/api/tenant-data-deletion/ (4.3, out of miniapp scope)</td>
+<td>fetch eSewa identifiers before deleting miniapp rows</td>
+<td>sync [dashboard/views.py:75-87]</td>
+</tr>
+</tbody></table>
+<p>Kafka <strong>inbound</strong> (events is a consumer): handlers registered for the activity-log-created and notification-created topics plus email-created (kafka_consumers/handlers.py:50-70); the envelope data is fed straight into the same create_activity_log/create_notification functions used by the HTTP paths (handlers.py:20-47). Literal topic names live in the private providhy_kafka.topics package (not present in this workspace — see section 11). No eSewa API / email / Kafka <strong>outbound</strong> calls exist in the in-scope miniapp code — notification delivery is purely the miniapp polling its inbox.</p>
+</section><section class="sec" data-title="10. Inbound calls (who calls THIS service's miniapp/internal endpoints)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service&#39;s miniapp/internal endpoints)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Caller service/frontend</th>
+<th>Method+path</th>
+<th>Purpose</th>
+<th>Evidence (call site)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Sales (celery)</td>
+<td>POST /api/notification/miniapp/notify-user/</td>
+<td>credit/dispute/settlement/payment-request notices (module sales)</td>
+<td>Sales/miniapp/tasks.py:42-61; triggered at Sales/miniapp/views.py:158,374,401,489,700,1663,1753</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sales (celery)</td>
+<td>POST /api/activity_log/miniapp/log-activity/</td>
+<td>credit/dispute/settlement diary (module sales)</td>
+<td>Sales/miniapp/tasks.py:90-116; views.py:166,382,409,497,708,1761</td>
+</tr>
+<tr>
+<td>3</td>
+<td>CDXE-REBOOT (celery)</td>
+<td>POST /api/notification/miniapp/notify-user/</td>
+<td>connection/payment-request/dispute notices (module cdxe)</td>
+<td>CDXE-REBOOT/miniapp/tasks.py:34-58; views.py:129,222,772,1170,1232</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CDXE-REBOOT (celery)</td>
+<td>POST /api/activity_log/miniapp/log-activity/</td>
+<td>connection/payment/dispute diary (module cdxe)</td>
+<td>CDXE-REBOOT/miniapp/tasks.py:77-103; views.py:129,222,772,1170,1232</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ERP-Projectmaster (celery)</td>
+<td>POST /api/activity_log/miniapp/log-activity/</td>
+<td>customer master create/edit/delete diary (module master)</td>
+<td>ERP-Projectmaster/miniapp/tasks.py:27-53</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TMS-service (celery)</td>
+<td>POST /api/notification/miniapp/notify-user/</td>
+<td>subscription trial/expiring/expired notices (module iam)</td>
+<td>TMS-service/miniapp/tasks.py:41-70,74-171</td>
+</tr>
+<tr>
+<td>7</td>
+<td>IAM-Backend (celery)</td>
+<td>POST /api/notification/miniapp/notify-user/</td>
+<td>trial-started notice on ESM registration (payload hardcodes module=SALES — see 11)</td>
+<td>IAM-Backend/federated_identity/tasks.py:38-67; views.py:244-254</td>
+</tr>
+<tr>
+<td>8</td>
+<td>eSewa miniapp frontend</td>
+<td>GET /api/notification/miniapp/list/</td>
+<td>user&#39;s notification inbox</td>
+<td>miniapp-esewa/src/services/requests/notifications.ts:26-36</td>
+</tr>
+<tr>
+<td>9</td>
+<td>eSewa miniapp frontend</td>
+<td>GET /api/notification/preference/</td>
+<td>read (auto-seed) preferences</td>
+<td>miniapp-esewa/src/services/requests/profile.ts:93-103</td>
+</tr>
+<tr>
+<td>10</td>
+<td>eSewa miniapp frontend</td>
+<td>POST /api/notification/preference/<id>/</td>
+<td>toggle a preference</td>
+<td>miniapp-esewa/src/services/requests/profile.ts:105-118</td>
+</tr>
+<tr>
+<td>11</td>
+<td>eSewa miniapp frontend</td>
+<td>POST /api/notification/miniapp/mark-read/</td>
+<td>(endpoint exists; <strong>no frontend call site found in workspace</strong>)</td>
+<td>grep across miniapp-esewa found none (see 11)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>unknown (no workspace caller)</td>
+<td>POST /api/activity_log/miniapp/list/</td>
+<td>(endpoint exists; <strong>no workspace caller found</strong>)</td>
+<td>grep across Sales/CDXE/Payment-Service/ERP-Projectmaster/TMS/IAM/frontend found none</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Kafka producers (other services, when KAFKA_ENABLED)</td>
+<td>topic: activity-log-created</td>
+<td>async diary ingestion</td>
+<td>kafka_consumers/handlers.py:69</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Kafka producers (other services, when KAFKA_ENABLED)</td>
+<td>topic: notification-created</td>
+<td>async notification ingestion</td>
+<td>kafka_consumers/handlers.py:70</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Kafka producers (other services, when KAFKA_ENABLED)</td>
+<td>topic: email-created</td>
+<td>email delegation (out of miniapp scope)</td>
+<td>kafka_consumers/handlers.py:50-65</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Sales, CDXE, ERP-Projectmaster, Accounting, reporting, Purchase, ProductManagement</td>
+<td>POST /api/notification/create-notification/</td>
+<td>tenant-user notifications (legacy portal path)</td>
+<td>helper refs: Sales/dashboard/helper.py:159; CDXE-REBOOT/dashboard/helpers.py:34; ERP-Projectmaster/dashboard/helper.py:79; Accounting/dashboard/helpers.py:64,147; reporting/dashboard/helpers.py:75,225; Purchase/dashboard/helper.py:106; ProductManagement/dashboard/helper.py:99</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Sales, CDXE, ERP-Projectmaster, Accounting, TMS, ProductManagement, Purchase, Payment-Service, IAM</td>
+<td>POST /api/activity_log/create-activity-log/</td>
+<td>tenant-user activity logging (legacy portal path)</td>
+<td>helper refs: Sales/dashboard/helper.py:160; CDXE-REBOOT/dashboard/helpers.py:37,56; ERP-Projectmaster/dashboard/helper.py:80; Accounting/dashboard/helpers.py:63,201; TMS-service/dashboard/helpers.py:159; ProductManagement/dashboard/helper.py:100; Purchase/dashboard/helper.py:107; Payment-Service/dashboard/helpers.py:34; IAM-Backend/heimer_auth/helpers.py:36,66</td>
+</tr>
+<tr>
+<td>18</td>
+<td>TMS-service</td>
+<td>POST /api/notification/status-change-notification/</td>
+<td>tenant CMS notification</td>
+<td>TMS-service/dashboard/helpers.py:157</td>
+</tr>
+<tr>
+<td>19</td>
+<td>TMS-service</td>
+<td>POST /api/activity_log/flush-log/</td>
+<td>data-flush audit markers</td>
+<td>TMS-service/dashboard/helpers.py:154</td>
+</tr>
+<tr>
+<td>20</td>
+<td>reporting service</td>
+<td>GET /api/activity_log/report-log-list/</td>
+<td>audit report data</td>
+<td>reporting/dashboard/helpers.py:145,271</td>
+</tr>
+<tr>
+<td>21</td>
+<td>events self (beat)</td>
+<td>POST /api/notification/approved-{purchase,sales}-invoice-list/</td>
+<td>daily 06:00 invoice due-date alerts</td>
+<td>EMAIL_SERVICE/celery.py:26-29; notification_app/tasks.py:37-47</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="11. Unknowns &amp; assumptions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-assumptions">11. Unknowns &amp; assumptions</h2>
+<ul>
+<li><strong>activity_log/miniapp/list/ has no caller in this workspace.</strong> It requires INTERNAL_PASS, so the frontend cannot call it directly; no backend in E:/Work references the path. Either an out-of-workspace service calls it, or it is legacy. (Verified by grep across all local repos, patterns activity_log/miniapp and miniapp/list.)</li>
+<li><strong>miniapp/mark-read/ has no frontend caller</strong> in miniapp-esewa (grep mark-read/markRead -&gt; none). It exists, is federated-auth, and may be used by another client or be legacy.</li>
+<li><strong>mark-read filter vs ids (observed, code as written)</strong>: the view filters by user/submit_user, never by the supplied id list, compares the <em>count</em> of matches to len(ids), then updates <em>all</em> matches (notification_app/views.py:1044-1052). Combined with the fact that notify-user rows always have submit_user set and user = a sender string, this endpoint appears unable to mark miniapp rows read. Flagged as an inconsistency; intent unverified.</li>
+<li><strong>order_by(&quot;-tag&quot;, &quot;-created&quot;) on miniapp/list</strong> puts tag=true (read) rows <strong>before</strong> unread ones (notification_app/views.py:1026). If &quot;unread on top&quot; was the intent, this is inverted; documented as coded.</li>
+<li><strong>tenant_id NULL on miniapp rows</strong>: notify-user and log-activity never set tenant_id (views.py:992-1002; activity views.py:526-535). Consequences: miniapp/list and mark-read scope purely on user/submit_user strings; tenant-data-deletion must use IAM is-registered/ to find the identifiers to sweep (dashboard/views.py:106-118). Assumed to be by design.</li>
+<li><strong>JWT decoded with verify=False</strong> in the events copy (dashboard/auth_backends.py:102): signature/expiry trust is delegated to IAM&#39;s verify call (IAM re-validates via serializer). Assumed safe due to IAM round-trip on every request; noted as a design observation.</li>
+<li><strong>TOTP secret identity unverified</strong>: the frontend computes TOTP from its own CUSTOM_KEY (miniapp-esewa/src/actions/otp.ts:15) while IAM validates against ESEWA_TOTP_SECRET_KEY (IAM-Backend/federated_identity/utils.py:67-71). The two are assumed to be the same value; not comparable from this workspace (IAM&#39;s env not inspected for that key).</li>
+<li><strong>Kafka literal topic names unknown</strong>: providhy_kafka (Topics/Actions) is a private package not vendored in E:/Work; only the symbolic names (Topics.ACTIVITY_LOG/NOTIFICATION/EMAIL, Actions.*_CREATED) are evidenced (kafka_consumers/handlers.py:11-70).</li>
+<li><strong>KAFKA_PRODUCER_SERVICE is empty</strong> in events&#39; .env — the events service has no producer gateway configured here; it only consumes. Whether other services actually prefer the Kafka path over the direct HTTP miniapp endpoints (KAFKA_ENABLED flags) is not verifiable from events alone.</li>
+<li><strong>/api/activity_log/create/ celery arg mismatch (potential bug)</strong>: send_activity_log.delay passes 9 positional args but the task defines 14 required parameters (activity_log/views.py:175-185 vs activity_log/tasks.py:18-33). Would TypeError in the worker if invoked; no runtime evidence either way.</li>
+<li><strong>/api/activity_log/create-export-log/</strong>: no authentication, and the create omits the NOT NULL module_type (activity_log/views.py:329-335 vs models.py:11-13) -&gt; expected IntegrityError/500 if called. Anomaly, flagged.</li>
+<li><strong>Caller-side 201 mishandling</strong>: Sales/CDXE send_activity_log tasks treat any status != 200 as failure and log an error, yet log-activity returns 201 (Sales/miniapp/tasks.py:107; CDXE-REBOOT/miniapp/tasks.py:94). The log row is still created server-side; only the caller&#39;s log line is wrong.</li>
+<li><strong>IAM notify-user payload hardcodes module_type=SALES</strong> (IAM-Backend/federated_identity/tasks.py:49) even though the subscription templates live under the IAM module (events registry.py:145-199). The registry lookup for (sales, PR2502, trial_subscription) does not exist in events&#39; registry, and the IAM call site (views.py:244-254) supplies no title/message — so that IAM call would hit the &quot;no template&quot; 400 path. Flagged as a likely defect (unverified at runtime).</li>
+<li><strong>get_access_token also accepts a cookie named miniAppAccessToken</strong> (helpers.py:157) — no miniapp client was found that sets it; noted, not used.</li>
+<li><strong>INTERNAL_PASS in plaintext in .env</strong> (dev checkout; value differs from the commented sample) — service-to-service auth is a shared secret; noted for the global security doc.</li>
+<li><strong>Frontend q param on notification list is ignored</strong> by the view (notifications.ts:22 vs views.py:1019) — minor.</li>
+<li>Assumed (not re-verified in this task): IAM login/refresh flows per SHARED-CONTEXT.md; eSewa payment mechanics inside the Payment-Service esewa app (no events references found there).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="09-configuration-service.html"><div class="pn-dir">← Previous</div><div class="pn-name">Configuration Service</div></a><a class="pn next" href="11-er-diagrams.html"><div class="pn-dir">Next →</div><div class="pn-name">ER Diagrams</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l3"><a href="#3-1-federated-frontend-facing-4-endpoints">3.1 Federated (frontend-facing) — 4 endpoints</a></li><li class="l3"><a href="#3-2-internal-service-to-service-the-miniapp-write-endpoints">3.2 Internal service-to-service — the &quot;miniapp write&quot; endpoints</a></li><li class="l2"><a href="#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-endpoints-federated-auth-called-by-the-esewa-frontend">4.1 Public miniapp endpoints (federated auth; called by the eSewa frontend)</a></li><li class="l3"><a href="#4-2-internal-service-to-service-endpoints-same-service-called-by-other-services-internal">4.2 Internal service-to-service endpoints (same service, called by OTHER services / internal)</a></li><li class="l3"><a href="#4-3-admin-other-endpoints-in-scope-same-url-files-not-part-of-the-miniapp-surface-listed-for-completeness-not-traced-in-section-5">4.3 Admin/other endpoints in scope (same URL files; not part of the miniapp surface — listed for completeness, not traced in section 5)</a></li><li class="l2"><a href="#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a></li><li class="l3"><a href="#5-1-get-api-notification-miniapp-list-list-the-user-s-in-app-notifications">5.1 GET /api/notification/miniapp/list/ — list the user's in-app notifications</a></li><li class="l3"><a href="#5-2-post-api-notification-miniapp-mark-read-mark-notifications-read-unread">5.2 POST /api/notification/miniapp/mark-read/ — mark notifications read/unread</a></li><li class="l3"><a href="#5-3-get-api-notification-preference-get-and-auto-seed-notification-preferences">5.3 GET /api/notification/preference/ — get (and auto-seed) notification preferences</a></li><li class="l3"><a href="#5-4-post-api-notification-preference-pk-toggle-one-preference">5.4 POST /api/notification/preference/&lt;pk&gt;/ — toggle one preference</a></li><li class="l3"><a href="#5-5-post-api-notification-miniapp-notify-user-write-a-miniapp-notification-internal">5.5 POST /api/notification/miniapp/notify-user/ — write a miniapp notification (internal)</a></li><li class="l3"><a href="#5-6-post-api-activity-log-miniapp-log-activity-write-a-miniapp-activity-log-entry-internal">5.6 POST /api/activity_log/miniapp/log-activity/ — write a miniapp activity-log entry (internal)</a></li><li class="l3"><a href="#5-7-post-api-activity-log-miniapp-list-list-a-user-s-activity-log-entries-internal">5.7 POST /api/activity_log/miniapp/list/ — list a user's activity-log entries (internal)</a></li><li class="l3"><a href="#5-8-internal-endpoint-group-traced-briefly">5.8 Internal endpoint group (traced briefly)</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-key-sequence-diagrams">7. Key sequence diagrams</a></li><li class="l3"><a href="#7-1-miniapp-notification-list-with-the-federated-auth-chain">7.1 Miniapp notification list (with the federated auth chain)</a></li><li class="l3"><a href="#7-2-credit-created-in-sales-miniapp-notification-activity-entry">7.2 Credit created in Sales -&gt; miniapp notification + activity entry</a></li><li class="l3"><a href="#7-3-payment-request-lifecycle-cdxe-creates-sales-settles-notifications">7.3 Payment request lifecycle (CDXE creates, Sales settles) -&gt; notifications</a></li><li class="l3"><a href="#7-4-subscription-lifecycle-notifications-iam-tms-events">7.4 Subscription lifecycle notifications (IAM/TMS -&gt; events)</a></li><li class="l2"><a href="#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a></li><li class="l2"><a href="#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a></li><li class="l2"><a href="#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

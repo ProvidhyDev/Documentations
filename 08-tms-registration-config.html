@@ -1,0 +1,921 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TMS Registration and Config - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc current" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="08-tms-registration-config.html#1-service-identity">1. Service identity</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#2-url-surface-in-scope">2. URL surface in scope</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#3-auth-mechanism-on-the-miniapp-surface">3. Auth mechanism on the miniapp surface</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#4-data-model-miniapp-relevant">4. Data model (miniapp-relevant)</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#5-endpoint-traces">5. Endpoint traces</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#6-business-flows">6. Business flows</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#7-outbound-calls-from-traced-endpoints">7. Outbound calls from traced endpoints</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#9-error-paths-edge-cases-key-ones">9. Error paths &amp; edge cases (key ones)</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#10-unknowns-open-questions">10. Unknowns &amp; open questions</a><a class="sb-item sb-sub" href="08-tms-registration-config.html#11-cross-references">11. Cross-references</a></div><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>TMS-service — eSewa Miniapp Registration, Onboarding &amp; Configuration Surface</h1>
+<p>Federated miniapps documentation, part 08. Scope: the TMS <code>miniapp</code> app, the
+<code>tenant_management</code> endpoints used in the eSewa miniapp registration/onboarding
+journey and configuration, and the TMS <code>payment</code> app&#39;s role (or lack of one) in
+miniapp subscription payments. Every other TMS endpoint (portal/CMS tenant
+management) is out of scope; see SHARED-CONTEXT.md for house rules.</p>
+<p>Base hosts (from E:\Work\TMS-service.env): docker internal <code>http://tms:8000</code>,
+dev-public <code>dev-tms-api.providhy.com</code> (settings.py:46 puts
+<code>TMS_BACKEND_URL</code> in ALLOWED_HOSTS). Postgres DB name: <code>TMS</code> (.env DB_NAME).</p>
+<hr>
+</section><section class="sec" data-title="1. Service identity"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-service-identity">1. Service identity</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Repo</td>
+<td>E:\Work\TMS-service</td>
+</tr>
+<tr>
+<td>Django project</td>
+<td><code>config</code> (manage.py:9 sets DJANGO_SETTINGS_MODULE=config.settings)</td>
+</tr>
+<tr>
+<td>Public host (dev)</td>
+<td><a href="https://dev-tms-api.providhy.com">https://dev-tms-api.providhy.com</a> (.env TMS_BACKEND_URL)</td>
+</tr>
+<tr>
+<td>Docker internal</td>
+<td><a href="http://tms:8000">http://tms:8000</a> (.env TMS_SERVICE)</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>Postgres &quot;TMS&quot; (config/settings.py DATABASES, .env DB_NAME=TMS)</td>
+</tr>
+<tr>
+<td>Apps (settings.py:51-68)</td>
+<td>dashboard, tenant_management, rest_framework, corsheaders, payment, django_celery_results, django_prometheus, apps.release_note, multicompany, <strong>miniapp</strong></td>
+</tr>
+<tr>
+<td>Celery</td>
+<td>config/celery.py (broker from .env CELERY_BROKER_URL=redis://localhost:6379/0, settings.py:183)</td>
+</tr>
+<tr>
+<td>Key env</td>
+<td>INTERNAL_PASS (shared service password), ESEWA_KEY/ESEWA_SECRET_KEY/ESEWA_STATUS_URL, FONEPAY_MERCHANT_CODE/FONEPAY_SECRET_KEY, IAM_SERVICE, PACKAGE_SERVICE, EVENTS_SERVICE, CONFIGURATION_SERVICE, KAFKA_PRODUCER_SERVICE (.env)</td>
+</tr>
+</tbody></table>
+<p>Root URL mounts (config/urls.py:18-24):</p>
+<table>
+<thead>
+<tr>
+<th>Mount</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/dashboard/</code></td>
+<td>dashboard (service-wide helpers; not miniapp surface)</td>
+</tr>
+<tr>
+<td><code>/api/tenant/</code></td>
+<td><strong>tenant_management</strong> (tenant CRUD incl. external-register, tour-status/miniapp)</td>
+</tr>
+<tr>
+<td><code>/api/payment/</code></td>
+<td>payment (portal payment flows; see §5.9)</td>
+</tr>
+<tr>
+<td><code>/api/release-notes/</code></td>
+<td>apps.release_note</td>
+</tr>
+<tr>
+<td><code>/api/miniapp/</code></td>
+<td><strong>miniapp</strong> (subscription lifecycle)</td>
+</tr>
+<tr>
+<td><code>/admin/</code></td>
+<td>settings.ADMIN_URL = admin/ (.env TMS_ADMIN_URL, settings.py:251)</td>
+</tr>
+</tbody></table>
+<hr>
+</section><section class="sec" data-title="2. URL surface in scope"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-url-surface-in-scope">2. URL surface in scope</h2>
+<h3 id="2-1-miniapp-app-miniapp-urls-py-mounted-at-code-api-miniapp-code-config-urls-py-21">2.1 miniapp app (miniapp/urls.py) — mounted at <code>/api/miniapp/</code> (config/urls.py:21)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Path (full dev)</th>
+<th>View</th>
+<th>Auth</th>
+<th>miniapp caller?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscriptions/initiate/">https://dev-tms-api.providhy.com/api/miniapp/subscriptions/initiate/</a></td>
+<td>InitiateSubscriptionView (views.py:38)</td>
+<td>FederatedIdentityAuthentication + ExternalUserPermission (ESM only)</td>
+<td>yes (auth.ts:187)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscriptions/verify/">https://dev-tms-api.providhy.com/api/miniapp/subscriptions/verify/</a></td>
+<td>VerifyPaymentView (views.py:211)</td>
+<td>same</td>
+<td>yes (auth.ts:203)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscriptions/status/">https://dev-tms-api.providhy.com/api/miniapp/subscriptions/status/</a></td>
+<td>SubscriptionStatusView (views.py:335)</td>
+<td>same</td>
+<td>yes (auth.ts:163)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscriptions/cancel/">https://dev-tms-api.providhy.com/api/miniapp/subscriptions/cancel/</a></td>
+<td>CancelSubscriptionView (views.py:366)</td>
+<td>same</td>
+<td><strong>no caller found in miniapp-esewa</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>GET</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscribed-modules/">https://dev-tms-api.providhy.com/api/miniapp/subscribed-modules/</a></td>
+<td>GetSubscribedmodules (internal_views.py:21)</td>
+<td>InternalRequestAuthentication</td>
+<td>inter-service only</td>
+</tr>
+<tr>
+<td>6</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/check-subscription/">https://dev-tms-api.providhy.com/api/miniapp/check-subscription/</a></td>
+<td>CheckSubscription (internal_views.py:36)</td>
+<td>InternalRequestAuthentication</td>
+<td>inter-service only</td>
+</tr>
+<tr>
+<td>7</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/subscription-log/">https://dev-tms-api.providhy.com/api/miniapp/subscription-log/</a></td>
+<td>TenantSubscriptionLogInternalView (internal_views.py:62)</td>
+<td>InternalRequestAuthentication</td>
+<td>inter-service only</td>
+</tr>
+<tr>
+<td>8</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/payment-history/">https://dev-tms-api.providhy.com/api/miniapp/payment-history/</a></td>
+<td>TenantPaymentHistoryInternalView (internal_views.py:84)</td>
+<td>InternalRequestAuthentication</td>
+<td>inter-service only</td>
+</tr>
+<tr>
+<td>9</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/miniapp/active-subscription/">https://dev-tms-api.providhy.com/api/miniapp/active-subscription/</a></td>
+<td>TenantActiveSubscriptionInternalView (internal_views.py:109)</td>
+<td>InternalRequestAuthentication</td>
+<td>inter-service only</td>
+</tr>
+</tbody></table>
+<p>urls.py:14-28 declares the four public subscription routes; urls.py:46-68
+declares the five internal routes; urls.py:69 appends internal to public.</p>
+<p><strong>Not in this app (verified):</strong> there is <strong>no</strong> <code>miniapp/modules/</code> route in
+TMS. The frontend&#39;s <code>getModules</code> (<code>MODULES: &#39;miniapp/modules/&#39;</code>,
+miniapp-esewa/src/shared/constants.ts:109) is called with
+<code>PACKAGE_BASE_URL</code> (src/services/requests/auth.ts:213-223,
+params <code>service=&#39;PR2600&#39;</code>) → the <strong>Package service</strong> hosts modules.</p>
+<p><strong>Also not in TMS (verified):</strong> <code>notification/miniapp/list/</code> and
+<code>notification/preference/</code> have no match in TMS urls. The frontend calls them
+with <code>EVENT_BASE_URL</code> (src/services/requests/notifications.ts:30;
+src/services/requests/profile.ts:97,113) → hosted by the <strong>Events service</strong>.
+TMS only <em>sends</em> notifications to Events (tasks.py:127, see §5.8).</p>
+<h3 id="2-2-tenant-management-app-mounted-at-code-api-tenant-code-config-urls-py-19-endpoints-in-the-miniapp-journey">2.2 tenant_management app (mounted at <code>/api/tenant/</code>, config/urls.py:19) — endpoints in the miniapp journey</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Path (full dev)</th>
+<th>View</th>
+<th>Auth</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/tenant/external-register/">https://dev-tms-api.providhy.com/api/tenant/external-register/</a></td>
+<td>RegisterExternalEntityView (tenant_management/views.py:4784)</td>
+<td>InternalRequestAuthentication</td>
+<td>Tenant+package+trial-subscription provisioning, called by IAM during <code>external/register/</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>GET/POST</td>
+<td><a href="https://dev-tms-api.providhy.com/api/tenant/tour-status/miniapp/">https://dev-tms-api.providhy.com/api/tenant/tour-status/miniapp/</a></td>
+<td>TenantTrakerMiniapp (tenant_management/views.py:4085)</td>
+<td>FederatedIdentityAuthentication</td>
+<td>Miniapp onboarding-tour flag (frontend profile.ts:120-144)</td>
+</tr>
+</tbody></table>
+<p>urls.py anchors: tour-status/miniapp/ at tenant_management/urls.py:299-301;
+external-register/ at urls.py:373-376.</p>
+<p>Related but <strong>not called by the miniapp frontend</strong> (portal paths, listed for
+context only): <code>company-setup/</code> (urls.py:75), <code>verify_status/</code>
+(urls.py:319), <code>status/</code> (urls.py:324, onboarding-status read/update used by
+the TMS web portal and IAM flows).</p>
+</section><section class="sec" data-title="3. Auth mechanism on the miniapp surface"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-auth-mechanism-on-the-miniapp-surface">3. Auth mechanism on the miniapp surface</h2>
+<p>All four public miniapp views and TenantTrakerMiniapp use
+<code>FederatedIdentityAuthentication</code> (dashboard/auth_backends.py:147-175) plus
+<code>ExternalUserPermission</code> with <code>required_user_type = &quot;ESM&quot;</code>
+(Esewa Merchant; auth_backends.py:41-43,166-168,369-371; choices.py:352-354).</p>
+<p>Flow (TMS side):</p>
+<ol>
+<li>JWT extracted via <code>helpers.get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;)</code> (auth_backends.py:154) — from
+cookie, Bearer header, or request body key <code>miniAppAccessToken</code>
+(helpers.py:401+). IAM sets the cookie key <code>miniAppAccessToken</code>
+(IAM-Backend/federated_identity/views.py:196-202, 397-403).</li>
+<li><code>validate_token_with_external_iam(token, headers={X-MINIAPP-TOKEN: &lt;TOTP&gt;})</code> (auth_backends.py:159-164) POSTs the
+access token <strong>plus the X-MINIAPP-TOKEN header</strong> to IAM
+<code>{IAM_SERVICE}api/external/token/verify/</code> (auth_backends.py:186-190).
+IAM&#39;s VerifyAuthTokenView (IAM-Backend/federated_identity/views.py:447-491)
+first enforces <code>verify_request_origin</code> (utils.py:78-84): a missing
+X-MINIAPP-TOKEN header is only accepted in UAT/DEVELOPMENT; otherwise the
+TOTP is verified with pyotp (secret = settings.ESEWA_TOTP_SECRET_KEY =
+CUSTOM_KEY_ESEWA, settings.py:207; 6 digits, interval 20, window ±5,
+settings.py:286-288). Then the JWT itself is validated.</li>
+<li>Back in TMS, the JWT is decoded locally <strong>without signature verification</strong>
+(<code>api_key=False, verify=False</code>, auth_backends.py:166-167) purely to
+populate request fields: user_id, tenant_id, subscribed_services,
+provider_code, user_type, tenant_root, username, external_identifier,
+subscription_expired (auth_backends.py:169-174). It returns (user_id,
+tenant_id) → DRF sets <code>request.user = user_id</code>, <code>request.auth = tenant_id</code>; the views read <code>request.auth</code> as tenant_id (views.py:68).</li>
+<li><code>ExternalUserPermission</code> (auth_backends.py:178-204): rejects with 403
+when <code>request.user_type</code> != view.required_user_type (ESM).</li>
+</ol>
+<p>Frontend half: every axios request (except <code>website/terms/web/*</code>,
+api.ts:47-49) gets <code>Authorization: Bearer &lt;access&gt;</code> and a fresh
+<code>X-MINIAPP-TOKEN</code> computed by speakeasy TOTP with secret
+<code>process.env.CUSTOM_KEY</code>, step 20 (src/actions/otp.ts:5-24,
+src/services/api.ts:34-56).</p>
+<p>Internal endpoints (5-9, 10) use <code>InternalRequestAuthentication</code>
+(auth_backends.py:83-106): caller sends <code>tenant_id</code> + shared
+<code>password</code> == INTERNAL_PASS in the body; request.user/auth = tenant_id.</p>
+<hr>
+</section><section class="sec" data-title="4. Data model (miniapp-relevant)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-data-model-miniapp-relevant">4. Data model (miniapp-relevant)</h2>
+<p>Tables live in Postgres DB &quot;TMS&quot;. EncryptedCharField = field-level AES
+encryption (settings.py:246-250, FIELD_ENCRYPTION_KEY). unique_id values come
+from the <code>ID</code> counter table (dashboard/models.py:8-43, createID).</p>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    Company ||--o{ Tenant : &quot;company FK (PROTECT)&quot;
+    Tenant ||--o{ TenantPackage : &quot;tenant_id&quot;
+    TenantPackage ||--o{ TenantPackageModule : &quot;tenant_package&quot;
+    Tenant ||--o{ TenantContract : &quot;tenant_id&quot;
+    TenantPackage ||--o{ TenantContract : &quot;tenant_package&quot;
+    Tenant ||--o{ Subscription : &quot;tenant_id&quot;
+    TenantPackage ||--o{ Subscription : &quot;package_type&quot;
+    TenantPackageModule ||--o{ Subscription : &quot;module_type&quot;
+    Tenant ||--o{ SubscriptionLog : &quot;tenant_id&quot;
+    Tenant ||--o{ ExternalTenantLink : &quot;tenant (provider_code + external_identifier)&quot;
+    Payment ||--o{ BillItem : &quot;payment&quot;
+    Tenant ||--o{ Payment : &quot;tenant_id (string, no FK)&quot;
+    Subscription ||--o{ Payment : &quot;subscription_id (string, no FK)&quot;
+
+    Tenant {
+        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:79)&quot;
+        string name &quot;encrypted&quot;
+        string email &quot;encrypted&quot;
+        string contact &quot;encrypted&quot;
+        string verification &quot;default pending (models.py:45)&quot;
+        bool complete
+        string active_status &quot;default inactive (models.py:53)&quot;
+        json product_tour &quot;8 tour flags incl miniapp (models.py:58)&quot;
+    }
+    Company {
+        string company_code &quot;provider code e.g. esewa (multicompany app)&quot;
+    }
+    ExternalTenantLink {
+        string provider_code &quot;unique together (models.py:465)&quot;
+        string external_identifier &quot;wallet id&quot;
+        json fiscal_year &quot;marks config transferred (models.py:455)&quot;
+    }
+    TenantPackage {
+        string package_id &quot;PublicId of package-service id (models.py:105)&quot;
+        string name
+        string payment_period
+        string user_range
+        int price
+        bool trial
+        string active_status &quot;default active (models.py:124)&quot;
+    }
+    TenantPackageModule {
+        string module_id &quot;PublicId (models.py:150)&quot;
+        string name
+        json services
+        json services_show
+    }
+    Subscription {
+        string unique_id &quot;SUBxxx (models.py:321)&quot;
+        int users
+        string payment_period
+        date subscribe_date
+        date expire_date
+        int price
+        string payment_status &quot;credit/paid/failed/pending (models.py:306)&quot;
+        string active_status &quot;default inactive (models.py:310)&quot;
+        bool is_expired &quot;property (models.py:341)&quot;
+    }
+    SubscriptionLog {
+        int users
+        string payment_period
+        date subscribe_date
+        date expire_date
+        int price
+        string action
+        string payment_status
+        string subscription_type
+    }
+    Payment {
+        string tenant_id &quot;string (payment/models.py:11)&quot;
+        string subscription_id &quot;string (payment/models.py:12)&quot;
+        string transaction_id &quot;unique (payment/models.py:14)&quot;
+        string product_name
+        string service_type
+        decimal total_amount
+        int payment_status &quot;0..5 (payment/models.py:19)&quot;
+        string payment_method
+    }
+    BillItem {
+        string package_id
+        string module_id
+        int quantity
+        float rate
+        float amount
+    }
+</pre></div>
+<p>Choice enums (dashboard/choices.py): ActiveStatus (6-9); PaymentPeriod
+monthly/quarterly/halfyearly/three_quarter/annually/fortnightly with day
+mappings 30/120/180/270/365 (11-47); VatChoices 0/13/non-vatable (56-70);
+PaymentStatus CREDIT/PAID/FAILED/PENDING (112-129);
+ExternalProviderChoices esewa/fonepoint (347-350);
+ExternalEntityTypeChoices ESM/ESU/OMM (352-356); ProductTour 8 keys incl
+<code>miniapp</code> (328-339); OnboardingStatus init → company_setup_complete
+(358-369).</p>
+</section><section class="sec" data-title="5. Endpoint traces"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-endpoint-traces">5. Endpoint traces</h2>
+<h3 id="5-1-post-api-miniapp-subscriptions-initiate">5.1 POST /api/miniapp/subscriptions/initiate/</h3>
+<p>View: InitiateSubscriptionView, miniapp/views.py:38-208. Auth:
+FederatedIdentityAuthentication (views.py:39), ExternalUserPermission ESM
+(views.py:40-43).</p>
+<p>Request body (frontend auth.ts:181-191): <code>{payment_period: &quot;monthly&quot;|&quot;quarterly&quot;|&quot;half_yearly&quot;|&quot;yearly&quot;, module_id?: string, subscription_id?: string}</code>.</p>
+<ol>
+<li><code>tenant_id = request.auth</code> (views.py:68).</li>
+<li>InitiateSubscriptionSerializer (serializers.py:12-65): requires tenant_id
+in context (32-34); subscription_id queryset scoped to the tenant&#39;s
+non-null-module subscriptions (35-37); <code>validate</code> requires module_id or
+subscription_id (49-54), resolves module via
+<code>helpers.checked_module(module_id)</code> → <strong>outbound GET to Package service</strong>
+<code>{PACKAGE_SERVICE}api/check-module/</code> (helpers.py:72, 298+) — fetches the
+module&#39;s name/price/vat/services; sets attrs[&quot;module_data&quot;] (57-64).</li>
+<li>Tenant lookup by tenant_id → 404 if missing (views.py:81-86).</li>
+<li>Price: <code>calculate_payment</code> (views.py:45-65): total = module.price ×
+months(payment_period) (choices.py:37-47) + VAT per module.vat
+(choices.py:61-70); rounded to 2 dp.</li>
+<li><strong>Outbound to IAM</strong> (views.py:110-124): POST
+<code>{IAM_SERVICE}api/tenant-user-info/</code> (helpers.py:144) with
+<code>{tenant_id, password: INTERNAL_PASS, subscribed_services: [], subscription_expiry: expiry_date, package_upgrade: True}</code> (expiry from
+choices.get_time_period days, views.py:104-108) — refreshes the user&#39;s
+subscription claims in IAM.</li>
+<li>Creates Payment row (views.py:126-138): get_or_create on (tenant_id,
+transaction_id=module id, subscription_id, product_name=module name,
+service_type=SUBSCRIPTION, total_amount, payment_status=0 pending).
+<strong>The payment app&#39;s tables are used directly, but no payment app view is
+invoked.</strong></li>
+<li>Creates BillItem (views.py:140-147): module_id, quantity 1, rate = module
+price, amount = sub_total.</li>
+<li><strong>Payment &quot;initiation&quot; is a stub</strong> (views.py:149-154):
+<code>EsewaPaymentService.initiate_payment</code> (services.py:70-85) returns a
+<strong>random 12-char alphanumeric transaction_id</strong>, the computed amount, and
+<code>payment_url: None</code> (&quot;Not used for miniapp&quot;). No eSewa ePay API call, no
+FonePay, no payment-service call.</li>
+<li>Creates Subscription + SubscriptionLog (views.py:156-186):
+Subscription(payment_period, subscription_type=module_addition,
+subscribe_date=today, expire_date=+period days, price=total,
+payment_status=PENDING, active_status=ACTIVE, users=1);
+SubscriptionLog(payment_period, users=1, action=subscription,
+payment_status=PAID (views.py:181 — note: log says paid while the
+Subscription row is still pending), price, subscription_type=module_addition,
+user_id=None).</li>
+<li>Response 200 (views.py:188-196): payment_id, transaction_id, amount,
+module_id.</li>
+</ol>
+<p>Error paths: serializer invalid → 400 (views.py:72-73); tenant missing → 404
+(84-86); IAM refresh non-200 → 400 &quot;Failed to refresh subscription expiry in
+IAM&quot; (114-124); any exception → 500 (197-208).</p>
+<p><strong>Gateway finding:</strong> the miniapp subscription payment does <strong>not</strong> route
+through the TMS payment app, eSewa ePay, or FonePay. The real eSewa ePay
+status check (ESEWA_STATUS_URL) exists only in the payment app for portal
+flows (§5.9). See §10 unknowns.</p>
+<h3 id="5-2-post-api-miniapp-subscriptions-verify">5.2 POST /api/miniapp/subscriptions/verify/</h3>
+<p>View: VerifyPaymentView, miniapp/views.py:211-332. Same auth as initiate
+(views.py:212-214). Body: <code>{transaction_id}</code> (frontend auth.ts:197-207).</p>
+<ol>
+<li>VerifyPaymentSerializer (serializers.py:68-72): transaction_id required;
+optional amount.</li>
+<li>Payment row must exist with that transaction_id and the tenant → 400 if
+not (views.py:225-231).</li>
+<li><strong>Verification call is a stub</strong> (views.py:233-235):
+<code>EsewaPaymentService.verify_payment</code> (services.py:27-68). Behavior is
+gated by <code>getattr(settings, &quot;ESEWA_MOCK_MODE&quot;, True)</code> (services.py:46) —
+<strong>ESEWA_MOCK_MODE is not defined in config/settings.py or .env, so the
+mock branch is taken by default</strong>: returns
+<code>{success: True, transaction_id, verified_at}</code> without calling eSewa.
+The non-mock branch (services.py:48-64) would GET
+<code>ESEWA_VERIFY_URL?merchant_code=...&amp;transaction_uuid=...</code> with an
+X-API-KEY header, but ESEWA_VERIFY_URL/ESEWA_MERCHANT_CODE are also absent
+from settings/.env, so that path is dead unless configured externally.</li>
+<li>On success (views.py:237-289): sets Payment.payment_status=1 (paid);
+finds the module&#39;s Subscription by (tenant, module_type__module_id) →
+activates it (active_status=ACTIVE, payment_status=PAID, views.py:254-262);
+creates the <strong>TenantPackage row</strong> (views.py:264-271, package &quot;miniapp
+module&quot;, trial=True, active) and <strong>TenantPackageModule</strong> row (272-280) if
+missing; updates SubscriptionLog payment_status=PAID (281-289).</li>
+<li><strong>Outbound to Events</strong> (views.py:291-300):
+<code>send_notification_task.delay</code> (tasks.py:18-59) POSTs to
+<code>{EVENTS_SERVICE}api/notification/miniapp/notify-user/</code> (tasks.py:21,
+127-133) with entry_type SUBSCRIPTION_MANAGEMENT, service_type
+SUBSCRIPTION, receiving_user = provider code (esewa).</li>
+<li>Response 200 (views.py:302-311): payment_id, transaction_id, amount,
+module_id.
+On verification failure: Payment.payment_status=3 (failed),
+Subscription.payment_status=FAILED, SubscriptionLog payment_status=FAILED,
+400 &quot;Payment verification failed&quot; (views.py:312-332).</li>
+</ol>
+<h3 id="5-3-get-api-miniapp-subscriptions-status">5.3 GET /api/miniapp/subscriptions/status/</h3>
+<p>View: SubscriptionStatusView, miniapp/views.py:335-363. Same auth.</p>
+<ol>
+<li>tenant_id = request.auth (345).</li>
+<li>Package row: active TenantPackage for tenant (346-350) → serialized with
+SubscriptionStatusSerializer (serializers.py:80-91: is_active, is_expired,
+expire_date, remaining_days, payment_status, subscription_type=&quot;package&quot;,
+subscription_name).</li>
+<li>Module subscription: active Subscription with module_type not null,
+ordered -id, first (351-354) → same serializer + module_id
+(serializers.py:101-117).</li>
+<li>Response 200 <code>{package: {...}, module: {...}}</code> (355-363). No package →
+package=null; no module subscription → module=null.</li>
+</ol>
+<p>Frontend: auth-context.tsx:75 fetches this on app auth
+(SunscriptionResponse shape, auth.ts:138-159); the upgrade page reads
+<code>subscriptionData.module.module_id</code> to pick the module
+(upgrade/index.tsx:72-88).</p>
+<h3 id="5-4-post-api-miniapp-subscriptions-cancel">5.4 POST /api/miniapp/subscriptions/cancel/</h3>
+<p>View: CancelSubscriptionView, miniapp/views.py:366-387. Same auth. No
+serializer (CancelSubscriptionSerializer is empty, serializers.py:75-77).
+Bulk-sets <strong>all</strong> active subscriptions of the tenant to active_status=
+&quot;cancelled&quot; (375-384). 400 if none active (378-382). <strong>No caller found in
+miniapp-esewa</strong> (no subscriptions/cancel in frontend constants); likely
+reserved for an admin flow or future use.</p>
+<h3 id="5-5-post-api-tenant-external-register-tenant-provisioning-internal">5.5 POST /api/tenant/external-register/ — tenant provisioning (internal)</h3>
+<p>View: RegisterExternalEntityView, tenant_management/views.py:4784-4870.
+Auth: InternalRequestAuthentication (4789). Called by IAM during external
+registration: IAM-Backend/federated_identity/views.py:119-141
+(register_tenant_if_needed; URL built in heimer_auth/helpers.py:52-54, 86-91),
+invoked from ExternalRegistrationView.post (views.py:293-299). Not called by
+ExternalTokenView (login; views.py:348-359) — login never provisions.</p>
+<p>Request (from IAM): <code>{provider_code, external_identifier, name, contact, entity_type, password: INTERNAL_PASS}</code>.</p>
+<ol>
+<li>Serializer switch: default ExternalEntityRegisterSerializer; if
+<code>no_package_module</code> flag → WithOutPackage variant (4792-4798;
+serializers.py:494+).</li>
+<li>Idempotency (4837-4858): lookup ExternalTenantLink by
+(provider_code, external_identifier) (4800-4805); if missing,
+create_tenant in one atomic block (4807-4819): serializer.save() creates
+the tenant (serializers.py:380-443) plus an ExternalTenantLink;
+IntegrityError race → re-fetch the winner (4851-4853).</li>
+<li>Tenant creation (serializers.py:380-443):<ul>
+<li>name sanitized via <strong>outbound POST to Configuration
+<code>api/sanitization/form-data/</code></strong> (serializers.py:290-304,
+helpers.py:167).</li>
+<li>Company get_or_create for provider_code (399-402).</li>
+<li>Tenant with tenant_id =
+<code>generate_unique_tenant_id_with_provider_code</code>
+(custom_functions.py:48-61): &quot;ES_&quot; + 6-digit number for esewa (prefix
+map custom_functions.py:28-32); name, email=&quot;&quot;, contact,
+verification=VERIFIED, complete=True, active_status=ACTIVE,
+user_type=genuine_user (404-420).</li>
+<li><code>handle_package_creation</code> (421-441): for ESM (ESM check at
+serializers.py:374-378) → <strong>outbound GET to Package
+<code>api/check-package/</code> with provider_code + module [&quot;payment&quot;]</strong>
+(helpers.py:71, 268+); then creates TenantPackage + TenantPackageModule
+rows (306-338) and TenantContracts via <code>helpers.checked_contract</code> →
+Package <code>api/check-contract/</code> (helpers.py:73; 340-378). Non-ESM →
+<strong>outbound GET <code>api/package/check-trial-package/</code></strong> (helpers.py:77)
+and trial package/modules.</li>
+<li><code>handle_subscription_creation</code> (443-477): for the payment module
+(ESM) creates a <strong>trial CREDIT subscription</strong> (payment_status=CREDIT,
+active, expire_date=None, price=0, subscription_type=module_addition,
+users=1) + SubscriptionLog (action=trial, payment_status=CREDIT);
+package subscription → ACTIVE with expire_date None, price 0.</li>
+</ul>
+</li>
+<li>Config transfer, once per identity (4821-4835):
+<code>transfer_configuration_once</code> takes a row lock on the
+ExternalTenantLink (select_for_update); if fiscal_year is null it calls
+<strong>outbound POST to Configuration <code>api/dashboard/data-transfer/</code></strong>
+(custom_functions.py:570-587, helpers.py:161-163, timeout (2,6)) and
+stores the returned fiscal-year data as the &quot;transferred&quot; marker.
+What data-transfer does: doc 09 §6.1.</li>
+<li>Response 200 (4859-4870): tenant_id + TenantSerializer data (incl.
+subscribed_services, trial flag, user_range, payment_status).
+Errors: missing required fields → 400 (4842-4844); serializer errors →
+400 with INCORRECT_DATA_FORMAT (4854-4858).</li>
+</ol>
+<p>IAM side after success (IAM-Backend/federated_identity/views.py:285-316):
+creates ExternalEntity + CustomUser in one transaction, records funnel
+ONBOARDED stage (305-306), update_user (sets user.tenant_id,
+subscribed_services, fiscal_year, username suffix — views.py:144-158),
+issues tokens with claims tenant_id / user_type ESM|ESU /
+subscribed_services / product_code / subscription_expired (views.py:160-177,
+361-378), records activity log, and for ESM sends a trial-subscription
+notification to the entity&#39;s identifier (views.py:245-254).</p>
+<h3 id="5-6-get-post-api-tenant-tour-status-miniapp">5.6 GET/POST /api/tenant/tour-status/miniapp/</h3>
+<p>View: TenantTrakerMiniapp (tenant_management/views.py:4085-4086) — subclass
+of TenantTracker (4019-4082) that only overrides auth to
+FederatedIdentityAuthentication (4086). The parent implements:</p>
+<ul>
+<li>GET (4022-4045): tenant by request.auth; with <code>?tracker_name=X</code> returns
+that field (4026-4028); otherwise reads tenant.product_tour JSON (default 8
+false flags incl. miniapp, helpers.py:219-229) and returns
+<code>{tour_taken: bool}</code> for the requested take_tour key (must be a valid
+ProductTour value → else 400). All tours done → true (4037-4038).</li>
+<li>POST (4061-4082): body <code>{tour_taken: &quot;miniapp&quot;}</code> sets
+product_tour[tour_taken]=True and saves (4073-4074); without tour_taken it
+falls back to generic tracker update (4047-4059).</li>
+</ul>
+<p>Frontend: getTourStatus (profile.ts:120-131, GET with
+<code>take_tour=&#39;miniapp&#39;</code>) and updateTourStatus (profile.ts:133-144, POST
+<code>{tour_taken:&#39;miniapp&#39;}</code>), used by the dashboard onboarding tour
+(dashboard/index.tsx:230-234). 404 if tenant missing (4042-4045, 4079-4082).</p>
+<h3 id="5-7-internal-miniapp-endpoints-inter-service">5.7 Internal miniapp endpoints (inter-service)</h3>
+<p>All auth&#39;d by InternalRequestAuthentication; <code>request.auth</code> = tenant_id.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Logic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET subscribed-modules/ (internal_views.py:21-33)</td>
+<td>Distinct list of module_id values of the tenant&#39;s ACTIVE subscriptions (package-service module ids).</td>
+</tr>
+<tr>
+<td>POST check-subscription/ (36-59)</td>
+<td>Body {service_name}; true iff an active, unexpired Subscription exists whose module&#39;s services contain service_name (48-57). 400 without service_name (42-46).</td>
+</tr>
+<tr>
+<td>POST subscription-log/ (62-81)</td>
+<td>Paginated (CustomTransactionPagination) SubscriptionLog list for the tenant.</td>
+</tr>
+<tr>
+<td>POST payment-history/ (84-106)</td>
+<td>Paginated Payment list (payment app) for the tenant.</td>
+</tr>
+<tr>
+<td>POST active-subscription/ (109-130)</td>
+<td>Active, unexpired Subscriptions with related package/module, paginated.</td>
+</tr>
+</tbody></table>
+<p><strong>Inbound callers:</strong> none found in any local repo (searched Sales,
+CDXE-REBOOT, ERP-Projectmaster, Payment-Service, Configuration-Service,
+IAM-Backend, ERP-Project-Package, events, Purchase, Accounting,
+Document-Service, reporting, Website-Service, Migration-service). The Package
+service repo is not checked out locally — the most likely consumer, but
+unverified (see §10).</p>
+<h3 id="5-8-celery-beat-subscription-lifecycle-notifications">5.8 Celery beat: subscription lifecycle notifications</h3>
+<p>config/celery.py:21-64 schedules, daily at 00:00 (crontab minute=0 hour=0):
+send_trial_expiring_notification_daily (service_type=trial_expiring),
+send_trial_expired_notification_daily (trial_expired),
+send_subscription_expiring_notification_daily (subscription_expiring),
+send_subscription_expired_notification_daily (subscription_expired) — all
+call <code>miniapp.tasks.send_subscription_notifications</code> (tasks.py:74-171).</p>
+<p>Task logic: for the given service_type it selects tenants (e.g. trials
+expiring within 3 days: tasks.py:77-88; expired trials: 90-102; paid
+subscriptions expiring within the period: 104-124), chunks by 100 (126-131),
+and for each tenant POSTs to Events
+<code>api/notification/miniapp/notify-user/</code> via send_notification_task
+(tasks.py:18-59; outbound URL tasks.py:127-133; loop 137-171 with 2 s sleep
+per chunk). A failed tenant is logged and skipped (139-153).</p>
+<h3 id="5-9-payment-app-context-where-esewa-epay-actually-exists">5.9 payment app (context): where eSewa ePay actually exists</h3>
+<p><code>/api/payment/</code> (config/urls.py:22) hosts the <strong>portal/CMS</strong> payment flows
+(payment/urls.py, 28 routes), e.g. test-status/ (PaymentTransactionStatus,
+payment/views.py:282+), renew-package-payment/, upgrade-package-payment/,
+credit-payment-internal/ (called by IAM, heimer_auth/helpers.py:96),
+paid-subscription-internal/ (helpers.py:97-99).</p>
+<p>ESEWA_STATUS_URL usage (the only one in the repo, grep-verified):
+payment/views.py:176 — EsewaPayment.post (views.py:141-208) decodes the
+base64 eSewa ePay redirect payload, then GETs
+<code>{ESEWA_STATUS_URL}/?product_code=&amp;total_amount=&amp;transaction_uuid=</code>
+(settings.py:220; .env ESEWA_STATUS_URL=
+<a href="https://epay.esewa.com.np/api/epay/transaction/status/">https://epay.esewa.com.np/api/epay/transaction/status/</a>) and accepts only
+status &quot;COMPLETE&quot; with both uuid and code (181-191). FonepayPayment
+(views.py:212-275) validates the HMAC-SHA512 DV with FONEPAY_SECRET_KEY
+(239-258). These serve the TMS web tenant-portal onboarding/upgrade payments
+(IAMAuthenticationBackend), <strong>not</strong> the miniapp.</p>
+</section><section class="sec" data-title="6. Business flows"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-business-flows">6. Business flows</h2>
+<h3 id="6-1-new-esewa-merchant-first-time-registration-tenant-provisioning">6.1 New eSewa merchant: first-time registration → tenant provisioning</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant W as eSewa Wallet app
+    participant F as miniapp-esewa (Next.js)
+    participant I as IAM-Backend
+    participant T as TMS-service
+    participant C as Configuration-Service
+    participant P as Package-Service
+
+    W-&gt;&gt;F: opens miniapp, provides miniAppAuthToken + merchant identifier
+    F-&gt;&gt;W: requestFromMiniApp MERCHANT_DETAIL
+    W--&gt;&gt;F: encrypted merchant details
+    F-&gt;&gt;I: POST api/external/register/ (token, provider_code=esewa, entity_type=ESM, encrypted_text, external_identifier, user_details)
+    I-&gt;&gt;I: AES-decrypt + verify identity match (views.py:262-272)
+    I-&gt;&gt;T: POST api/tenant/external-register/ (internal password)
+    T-&gt;&gt;C: POST api/sanitization/form-data/ (name)
+    T-&gt;&gt;T: Company(esewa) + Tenant ES_xxxxxx (verified, active)
+    T-&gt;&gt;P: GET api/check-package/ (provider_code, module payment)
+    T-&gt;&gt;T: TenantPackage + TenantPackageModule + TenantContract
+    T-&gt;&gt;T: trial CREDIT Subscription + SubscriptionLog (payment_status=credit)
+    T-&gt;&gt;C: POST api/dashboard/data-transfer/ (row-locked, once per identity)
+    C--&gt;&gt;T: fiscal year data
+    T--&gt;&gt;I: tenant_id + subscribed_services + fiscal_year
+    I-&gt;&gt;I: ExternalEntity + CustomUser, funnel ONBOARDED, username_&lt;tenant&gt;
+    I--&gt;&gt;F: access/refresh + payload (user_type=ESM, subscribed_services)
+    F-&gt;&gt;F: stores tokens, redirects to /dashboard
+</pre></div>
+<p>Evidence: frontend terms-conditions/index.tsx:248-290 (register body incl.
+product_code from onGetProductClick); IAM views.py:256-316; TMS §5.5. The
+trial subscription gives the merchant immediate access with
+payment_status=CREDIT; the token&#39;s subscribed_services claims drive what
+other services allow.</p>
+<h3 id="6-2-first-time-login-registered-merchant">6.2 First-time login (registered merchant)</h3>
+<p>Wallet hands over token + identifier → frontend home page
+(home/index.tsx:58-90) decrypts details client-side, calls IAM
+<code>api/external/token/</code> (auth.ts:114-124) → token with the same custom
+claims; ESM → /dashboard, ESU → /user/dashboard (home/index.tsx:47, 53). IAM
+login does <strong>not</strong> touch TMS (verified §5.5).</p>
+<h3 id="6-3-subscription-purchase-upgrade-page">6.3 Subscription purchase (upgrade page)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant F as miniapp-esewa (UpgradePage)
+    participant P as Package-Service
+    participant T as TMS-service
+    participant E as Events-service
+
+    F-&gt;&gt;P: GET miniapp/modules/?service=PR2600
+    P--&gt;&gt;F: module list (id)
+    F-&gt;&gt;P: GET miniapp/modules/{id}/?service=PR2600&amp;payment_period=monthly
+    P--&gt;&gt;F: price_break_down + payment_period
+    F-&gt;&gt;T: POST api/miniapp/subscriptions/initiate/ (payment_period, module_id)
+    T-&gt;&gt;P: GET api/check-module/ (price and vat)
+    T-&gt;&gt;T: Payment(pending) + BillItem + Subscription(pending) + SubscriptionLog
+    Note over F,T: transaction_id is a random 12-char stub, no gateway call
+    F-&gt;&gt;T: POST api/miniapp/subscriptions/verify/ (transaction_id)
+    T--&gt;&gt;T: mock verify success (ESEWA_MOCK_MODE default true)
+    T-&gt;&gt;T: Payment paid, Subscription active, TenantPackage+Module created
+    T-&gt;&gt;E: POST api/notification/miniapp/notify-user/ (celery, async)
+    T--&gt;&gt;F: 200 payment_id, transaction_id, amount, module_id
+    F-&gt;&gt;F: toast &quot;Subscription successful&quot;, back to /profile
+</pre></div>
+<p>Evidence: upgrade/index.tsx:65-70 (getModules), 84-88 (getPackageDetails),
+92-175 (initiate then verify mutations; the &quot;Confirm Pay via esewa&quot; button
+at 155-175 calls initiate and, on success, immediately verify — there is
+<strong>no eSewa wallet payment step in this web frontend</strong>, see §10).</p>
+<h3 id="6-4-expiry-notifications">6.4 Expiry notifications</h3>
+<p>Daily 00:00 celery beat (§5.8) → Events notify-user → miniapp notification
+list (Events hosts notification/miniapp/list/, frontend
+notifications.ts:26-36).</p>
+<hr>
+</section><section class="sec" data-title="7. Outbound calls from traced endpoints"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-outbound-calls-from-traced-endpoints">7. Outbound calls from traced endpoints</h2>
+<table>
+<thead>
+<tr>
+<th>From (file:line)</th>
+<th>To</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auth_backends.py:186-196</td>
+<td>IAM <code>{IAM_SERVICE}api/external/token/verify/</code> (dev: <a href="https://dev-iam-api.providhy.com">https://dev-iam-api.providhy.com</a>)</td>
+<td>JWT+TOTP validation on every federated request</td>
+</tr>
+<tr>
+<td>miniapp/views.py:110-115</td>
+<td>IAM <code>api/tenant-user-info/</code></td>
+<td>refresh IAM subscription claims at initiate</td>
+</tr>
+<tr>
+<td>miniapp/views.py:149-154 → services.py:70-85</td>
+<td>none (stub)</td>
+<td>&quot;initiate&quot; returns dummy txn id</td>
+</tr>
+<tr>
+<td>miniapp/views.py:233-235 → services.py:27-68</td>
+<td>eSewa ESEWA_VERIFY_URL (not configured; mock default)</td>
+<td>payment verify (mocked)</td>
+</tr>
+<tr>
+<td>miniapp/views.py:291-300 → tasks.py:127-133</td>
+<td>Events <code>api/notification/miniapp/notify-user/</code></td>
+<td>post-payment notification</td>
+</tr>
+<tr>
+<td>miniapp/tasks.py:74-171 (celery beat)</td>
+<td>Events same URL</td>
+<td>trial/subscription expiry notifications</td>
+</tr>
+<tr>
+<td>tenant views.py:4784-4870 → serializers.py:290-304</td>
+<td>Configuration <code>api/sanitization/form-data/</code></td>
+<td>name sanitization</td>
+</tr>
+<tr>
+<td>serializers.py:421-441 → helpers.py:71,73,77,268+</td>
+<td>Package <code>api/check-package/</code>, <code>api/check-contract/</code>, <code>api/check-trial-package/</code></td>
+<td>provider/trial package data</td>
+</tr>
+<tr>
+<td>custom_functions.py:570-587</td>
+<td>Configuration <code>api/dashboard/data-transfer/</code></td>
+<td>one-time tenant data transfer</td>
+</tr>
+<tr>
+<td>custom_functions.py:555-567 (iam_service_post)</td>
+<td>IAM <code>api/tenant-user-info/</code></td>
+<td>used by portal payment completion (not miniapp surface, same helper family)</td>
+</tr>
+<tr>
+<td>payment/views.py:176-178</td>
+<td>eSewa <code>ESEWA_STATUS_URL</code> (epay.esewa.com.np)</td>
+<td>portal ePay status check only</td>
+</tr>
+<tr>
+<td>helpers.py:69-77</td>
+<td>Package service various</td>
+<td>module/package/user-range checks (portal + initiate serializer)</td>
+</tr>
+</tbody></table>
+<p>No Kafka calls in the traced miniapp surface (KAFKA_PRODUCER_SERVICE, .env,
+is used by other TMS flows; miniapp/* has no kafka imports — grep-verified).</p>
+<hr>
+</section><section class="sec" data-title="8. Inbound callers (with evidence)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Caller</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>subscriptions/status, initiate, verify</td>
+<td>miniapp-esewa frontend</td>
+<td>src/services/requests/auth.ts:163,187,203 (TMS_BASE_URL)</td>
+</tr>
+<tr>
+<td>subscriptions/cancel</td>
+<td><strong>none found</strong></td>
+<td>no reference in miniapp-esewa src</td>
+</tr>
+<tr>
+<td>tenant/external-register/</td>
+<td>IAM-Backend</td>
+<td>federated_identity/views.py:119-141 → heimer_auth/helpers.py:52-54 (TMS_SERVICE) / 86-91 (TMS_BACKEND_URL)</td>
+</tr>
+<tr>
+<td>tenant/tour-status/miniapp/</td>
+<td>miniapp-esewa frontend</td>
+<td>src/services/requests/profile.ts:120-144 (TMS_BASE_URL), dashboard/index.tsx:230-234</td>
+</tr>
+<tr>
+<td>api/miniapp/{subscribed-modules, check-subscription, subscription-log, payment-history, active-subscription}</td>
+<td><strong>unknown — no local caller found</strong></td>
+<td>see §5.7</td>
+</tr>
+</tbody></table>
+<hr>
+</section><section class="sec" data-title="9. Error paths &amp; edge cases (key ones)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-error-paths-edge-cases-key-ones">9. Error paths &amp; edge cases (key ones)</h2>
+<table>
+<thead>
+<tr>
+<th>Where</th>
+<th>Condition</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auth_backends.py:150-152</td>
+<td>no JWT in cookie/header/body</td>
+<td>401 CustomAuthenticationFailed(INVALID_TOKEN)</td>
+</tr>
+<tr>
+<td>auth_backends.py:160-164</td>
+<td>IAM verify != 200 or TOTP bad</td>
+<td>401 AuthenticationFailed(&quot;Failed to validate token&quot;)</td>
+</tr>
+<tr>
+<td>auth_backends.py:201-204</td>
+<td>user_type != ESM</td>
+<td>403 &quot;You donot have permission to this resource&quot;</td>
+</tr>
+<tr>
+<td>views.py:84-86</td>
+<td>tenant_id from JWT has no Tenant row</td>
+<td>404 &quot;Tenant not found&quot;</td>
+</tr>
+<tr>
+<td>views.py:114-124</td>
+<td>IAM tenant-user-info refresh fails</td>
+<td>400 &quot;Failed to refresh subscription expiry in IAM&quot;</td>
+</tr>
+<tr>
+<td>views.py:225-231</td>
+<td>verify without matching Payment row</td>
+<td>400 &quot;Payment not found for this transaction&quot;</td>
+</tr>
+<tr>
+<td>views.py:312-332</td>
+<td>verify failure</td>
+<td>400, Payment=failed(3), Subscription=FAILED</td>
+</tr>
+<tr>
+<td>views.py:378-382</td>
+<td>cancel with no active subscription</td>
+<td>400</td>
+</tr>
+<tr>
+<td>serializers.py:32-34</td>
+<td>missing tenant context</td>
+<td>400 &quot;Tenant ID is required&quot;</td>
+</tr>
+<tr>
+<td>serializers.py:49-54</td>
+<td>neither module_id nor subscription_id</td>
+<td>400</td>
+</tr>
+<tr>
+<td>internal_views.py:42-46</td>
+<td>check-subscription without service_name</td>
+<td>400</td>
+</tr>
+<tr>
+<td>tenant views.py:4842-4858</td>
+<td>external-register bad payload</td>
+<td>400 INCORRECT_DATA_FORMAT</td>
+</tr>
+<tr>
+<td>tenant views.py:4033-4035, 4069-4072</td>
+<td>invalid take_tour/tour_taken</td>
+<td>400</td>
+</tr>
+<tr>
+<td>custom_functions.py:583-586</td>
+<td>Configuration data-transfer unreachable/non-200</td>
+<td>ValidationError → 500 in external-register (registration fails; IAM retries are safe — idempotent link)</td>
+</tr>
+</tbody></table>
+<p>Edge: initiate&#39;s SubscriptionLog is written with payment_status=PAID even
+though the Subscription is PENDING until verify (views.py:181 vs 174-186).
+Edge: verify creates TenantPackage/TenantPackageModule if missing (264-280);
+it does not check for an already-active module subscription before creating
+them, so repeated verifies could stack rows (no guard found).</p>
+<hr>
+</section><section class="sec" data-title="10. Unknowns &amp; open questions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-unknowns-open-questions">10. Unknowns &amp; open questions</h2>
+<ol>
+<li><strong>Who calls the 5 internal miniapp endpoints?</strong> No caller in any local
+repo. Package-service and PMS-service repos are not checked out here.
+Marked unknown; package service is the most likely consumer.</li>
+<li><strong>Real eSewa payment is not wired to the miniapp flow in this code.</strong>
+initiate returns a random stub transaction id (services.py:77-85), verify
+is mocked by default (services.py:46; ESEWA_MOCK_MODE undefined), and the
+frontend fires verify immediately after initiate (upgrade/index.tsx:160-175)
+with no wallet-payment step. Whether production sets ESEWA_MOCK_MODE=false<ul>
+<li>ESEWA_VERIFY_URL externally (UAT/prod .env) is unknown from this
+checkout.</li>
+</ul>
+</li>
+<li><strong>payment_period mismatch:</strong> frontend sends <code>half_yearly</code> / <code>yearly</code>
+(upgrade/index.tsx:34-48) but TMS PaymentPeriod choices are
+<code>halfyearly</code> / <code>annually</code> (choices.py:11-17) → 6/12-month selection
+should 400 at the serializer ChoiceField unless an intermediate layer
+rewrites it (none found). Flagged as suspected bug.</li>
+<li><strong>subscriptions/cancel/</strong> has no known caller.</li>
+<li>ESEWA_KEY / ESEWA_SECRET_KEY (settings.py:215-217) are imported in
+custom_functions.py:15-20 but unused in the miniapp surface; they feed
+portal payment payload generation (custom.payment_detail).</li>
+<li>Whether the TMS/frontend CUSTOM_KEY equals IAM&#39;s CUSTOM_KEY_ESEWA is
+plausible (identical values in the .env files inspected) but IAM&#39;s .env
+is not in this checkout — noted, not verified.</li>
+</ol>
+<hr>
+</section><section class="sec" data-title="11. Cross-references"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-cross-references">11. Cross-references</h2>
+<ul>
+<li>Auth mechanism + IAM register/login/token internals: IAM docs (parts 01/02).</li>
+<li>Modules/packages source (getModules, getPackageDetails): Package-service
+docs (part 05) — TMS only <em>checks</em> module prices via check-module.</li>
+<li>Notifications (list/preference/notify-user): Events docs (part 06).</li>
+<li>Configuration: sanitization + data-transfer + fiscal year: <strong>09
+(Configuration-Service docs)</strong> — §6.1 and §5.5 depend on it.</li>
+<li>Payment service (esewa/payment/request/cancel/): Payment-Service docs
+(part 07).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="07-payment-esewa.html"><div class="pn-dir">← Previous</div><div class="pn-name">Payment + Frontend</div></a><a class="pn next" href="09-configuration-service.html"><div class="pn-dir">Next →</div><div class="pn-name">Configuration Service</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-service-identity">1. Service identity</a></li><li class="l2"><a href="#2-url-surface-in-scope">2. URL surface in scope</a></li><li class="l3"><a href="#2-1-miniapp-app-miniapp-urls-py-mounted-at-code-api-miniapp-code-config-urls-py-21">2.1 miniapp app (miniapp/urls.py) — mounted at &lt;code&gt;/api/miniapp/&lt;/code&gt; (config/urls.py:21)</a></li><li class="l3"><a href="#2-2-tenant-management-app-mounted-at-code-api-tenant-code-config-urls-py-19-endpoints-in-the-miniapp-journey">2.2 tenant_management app (mounted at &lt;code&gt;/api/tenant/&lt;/code&gt;, config/urls.py:19) — endpoints in the miniapp journey</a></li><li class="l2"><a href="#3-auth-mechanism-on-the-miniapp-surface">3. Auth mechanism on the miniapp surface</a></li><li class="l2"><a href="#4-data-model-miniapp-relevant">4. Data model (miniapp-relevant)</a></li><li class="l2"><a href="#5-endpoint-traces">5. Endpoint traces</a></li><li class="l3"><a href="#5-1-post-api-miniapp-subscriptions-initiate">5.1 POST /api/miniapp/subscriptions/initiate/</a></li><li class="l3"><a href="#5-2-post-api-miniapp-subscriptions-verify">5.2 POST /api/miniapp/subscriptions/verify/</a></li><li class="l3"><a href="#5-3-get-api-miniapp-subscriptions-status">5.3 GET /api/miniapp/subscriptions/status/</a></li><li class="l3"><a href="#5-4-post-api-miniapp-subscriptions-cancel">5.4 POST /api/miniapp/subscriptions/cancel/</a></li><li class="l3"><a href="#5-5-post-api-tenant-external-register-tenant-provisioning-internal">5.5 POST /api/tenant/external-register/ — tenant provisioning (internal)</a></li><li class="l3"><a href="#5-6-get-post-api-tenant-tour-status-miniapp">5.6 GET/POST /api/tenant/tour-status/miniapp/</a></li><li class="l3"><a href="#5-7-internal-miniapp-endpoints-inter-service">5.7 Internal miniapp endpoints (inter-service)</a></li><li class="l3"><a href="#5-8-celery-beat-subscription-lifecycle-notifications">5.8 Celery beat: subscription lifecycle notifications</a></li><li class="l3"><a href="#5-9-payment-app-context-where-esewa-epay-actually-exists">5.9 payment app (context): where eSewa ePay actually exists</a></li><li class="l2"><a href="#6-business-flows">6. Business flows</a></li><li class="l3"><a href="#6-1-new-esewa-merchant-first-time-registration-tenant-provisioning">6.1 New eSewa merchant: first-time registration → tenant provisioning</a></li><li class="l3"><a href="#6-2-first-time-login-registered-merchant">6.2 First-time login (registered merchant)</a></li><li class="l3"><a href="#6-3-subscription-purchase-upgrade-page">6.3 Subscription purchase (upgrade page)</a></li><li class="l3"><a href="#6-4-expiry-notifications">6.4 Expiry notifications</a></li><li class="l2"><a href="#7-outbound-calls-from-traced-endpoints">7. Outbound calls from traced endpoints</a></li><li class="l2"><a href="#8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</a></li><li class="l2"><a href="#9-error-paths-edge-cases-key-ones">9. Error paths &amp; edge cases (key ones)</a></li><li class="l2"><a href="#10-unknowns-open-questions">10. Unknowns &amp; open questions</a></li><li class="l2"><a href="#11-cross-references">11. Cross-references</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

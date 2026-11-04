@@ -1,0 +1,1056 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CDXE Miniapp - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc current" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#3-authentication-authorization">3. Authentication &amp; authorization</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#5-per-endpoint-flow-traces">5. Per-endpoint flow traces</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#6-data-model">6. Data model</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#7-sequence-diagrams">7. Sequence diagrams</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#8-business-process-walkthroughs">8. Business process walkthroughs</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#9-outbound-calls-cdxe-other-services">9. Outbound calls (CDXE → other services)</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#10-inbound-calls-who-calls-cdxe">10. Inbound calls (who calls CDXE)</a><a class="sb-item sb-sub" href="05-cdxe-miniapp.html#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></div><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>CDXE — Federated Miniapp Documentation</h1>
+<p>Scope: reverse-trace of the <code>miniapp</code> app in E:\Work\CDXE-REBOOT (plus its supporting <code>connections</code> app, <code>dashboard.auth_backends</code>, <code>dashboard.helpers.APICalls</code>) powering the eSewa merchant↔customer connection and customer-side credit/payment/dispute surface of the Providhy federated miniapps. Evidence: <code>core/urls.py</code>, <code>miniapp/urls.py</code>, <code>miniapp/views.py</code> (1368 lines, read in full), <code>miniapp/serializers.py</code> (583), <code>miniapp/generics.py</code>, <code>miniapp/models.py</code>, <code>miniapp/domain.py</code>, <code>miniapp/utils.py</code>, <code>miniapp/tasks.py</code>, <code>connections/{urls,views,models,serializers,domain}.py</code>, <code>dashboard/{auth_backends,helpers,choices,api_links,mixins,pagination}.py</code>, <code>core/{settings,urls,celery}.py</code>, <code>.env</code>, frontend <code>E:\Work\miniapp-esewa\src\services\requests\*</code> + <code>src/shared/constants.ts</code>, and call-site grep across <code>E:\Work</code> (ERP-Projectmaster, Sales).</p>
+</section><section class="sec" data-title="1. Business overview (plain language for a NON-technical reader)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</h2>
+<p>CDXE is the service that links eSewa merchants to their eSewa customers — the &quot;phone book plus handshake&quot; of the eSewa mini-app. A merchant (a shop or business running Providhy&#39;s ERP) can invite a customer — a real eSewa wallet user — into their private mini-app; once the customer accepts, the two are &quot;connected&quot;. CDXE keeps the list of who is connected to whom and in which state (waiting, connected, declined, terminated).</p>
+<p>Why does this matter? Without a connection, the merchant&#39;s ERP and the customer&#39;s phone app have no agreed relationship. Once connected, the customer can see — in the mobile app — how much credit the merchant has given them, the ledger of transactions, can pay back credit themselves, or raise a dispute if a credit entry looks wrong. The merchant can also send a &quot;payment request&quot; to the customer and see whether it was paid or declined.</p>
+<p>One subtlety: CDXE does not store the money or the credit. It stores the <em>relationship</em>. Credit records, ledgers, payments and disputes live in the <strong>Sales</strong> and <strong>Payment</strong> services; the customer&#39;s identity (&quot;is this really an eSewa wallet user?&quot;) lives in <strong>IAM</strong> and <strong>Projectmaster</strong>. CDXE sits in front of all of those for the mobile app: it checks the connection exists and is approved, fans out to the right services, merges the answers, and hands the mobile app one clean response. It also forwards every meaningful action (request sent, accepted, payment requested, dispute raised…) to the <strong>Events</strong> service so both parties get notifications and an activity history.</p>
+<p>A second, separate audience uses the same repository: merchants also manage <em>merchant-to-merchant</em> (ERP tenant↔tenant) connections in the web ERP dashboard (the <code>connections</code> app). Those endpoints use ordinary ERP login (IAM-issued JWT for ERP users), not the federated mini-app auth — but they share the same underlying <code>ConnectionRequest</code> table.</p>
+</section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
+<ul>
+<li><strong>Stack</strong>: Python/Django 5.1.6 (project package <code>core</code>; <code>manage.py</code> → <code>DJANGO_SETTINGS_MODULE=core.settings</code>), DRF, drf-yasg (Swagger/ReDoc), django-cors-headers, silk, django-extensions, django-celery-results. Evidence: <code>core/settings.py:1-11</code>, <code>core/settings.py:45-63</code>.</li>
+<li><strong>Apps</strong>: <code>dashboard</code> (shared helpers/auth/choices), <code>connections</code> (ERP-side tenant connections + the <code>ConnectionRequest</code> model the miniapp reuses), <code>setup_panel</code>, <code>report_sharing</code>, <code>miniapp</code> (documented here). <code>core/settings.py:45-63</code>.</li>
+<li><strong>Database</strong>: PostgreSQL, DB name <code>Cdxe</code> (<code>E:\Work\CDXE-REBOOT\.env:11</code>; <code>core/settings.py:101-110</code>, port 5432).</li>
+<li><strong>Celery/Redis</strong>: Celery app <code>core/celery.py:7-9</code> (<code>Celery(&quot;core&quot;)</code>, autodiscover); broker <code>redis://localhost:6379/9</code> (docker: <code>redis:6379/9</code>), result backend <code>django-db</code>, Redis cache db 9 (<code>core/settings.py:152-154</code>, <code>core/settings.py:165-173</code>). The miniapp defines two celery tasks: <code>send_notification_task</code>, <code>send_activity_log</code> (<code>miniapp/tasks.py:11-58</code>, <code>miniapp/tasks.py:61-103</code>).</li>
+<li><strong><code>multi_tenancy</code> app</strong>: directory exists but contains <strong>no source files</strong> (only stale <code>__pycache__/*.pyc</code>), is <strong>not</strong> in <code>INSTALLED_APPS</code>, and is referenced nowhere in the repo — the miniapp does <strong>not</strong> use it (see §11).</li>
+<li><strong>Key modules</strong>:<ul>
+<li><code>miniapp/generics.py:11-26</code> — <code>FederatedAuthenticationView</code> base: forces <code>FederatedIdentityAuthentication</code> + <code>HasFederatedEntityPermission</code>, and raises <code>ImproperlyConfigured</code> at class-creation time if a subclass omits <code>required_feature_permission</code>/<code>required_action_permission</code> (<code>miniapp/generics.py:20-26</code>).</li>
+<li><code>miniapp/views.py</code> — all 23 miniapp endpoint views.</li>
+<li><code>miniapp/serializers.py</code> — request/response serialization; several serializers perform outbound service calls during validation/creation (enrichment pattern: <code>miniapp/serializers.py:14-84</code>, <code>miniapp/serializers.py:521-549</code>).</li>
+<li><code>miniapp/models.py:84-107</code> — <code>ConnectionIdentityLink</code> (identity metadata on top of <code>connections.ConnectionRequest</code>) and its manager <code>get_connected_merchant_tenant_ids</code> (<code>miniapp/models.py:9-81</code>), used by nearly every customer-side endpoint.</li>
+<li><code>miniapp/domain.py:8-24</code> — <code>MiniAppConnectionDomain</code> (terminate = set status, keep history).</li>
+<li><code>miniapp/utils.py:19-42</code> — TOTP + HMAC-SHA256 (<code>SIGNATURE</code> header) verification for payment commits.</li>
+<li><code>dashboard/helpers.py:64-785</code> — <code>APICalls</code>: every outbound service call of the service; URLs built from env values in <code>dashboard/api_links.py:4-18</code>.</li>
+<li><code>dashboard/auth_backends.py</code> — auth classes (§3).</li>
+</ul>
+</li>
+<li><strong>Local-dev overrides</strong>: when <code>LOCAL=True</code>, helpers re-point IAM/TMS/Sales/Payment/Events/Projectmaster to localhost ports (<code>dashboard/helpers.py:41-61</code>).</li>
+</ul>
+</section><section class="sec" data-title="3. Authentication &amp; authorization"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-authentication-authorization">3. Authentication &amp; authorization</h2>
+<p>All 19 public miniapp endpoints opt in through the shared base class (<code>miniapp/generics.py:11-13</code>). The 4 internal endpoints use a different auth: <code>InternalRequestPermission</code> (§3.3). The ERP-side <code>connections</code> app uses <code>IAMAuthenticationBackend</code> (§3.4).</p>
+<h3 id="3-1-code-federatedidentityauthentication-code-cdxe-copy">3.1 <code>FederatedIdentityAuthentication</code> — CDXE copy</h3>
+<p>Implemented in <code>dashboard/auth_backends.py:97-136</code>. It is a <strong>divergent copy</strong> of the canonical class in <code>IAM-Backend/federated_identity/auth_backends.py:10-25</code> — the canonical one validates the <code>X-MINIAPP-TOKEN</code> TOTP <em>locally</em> and then looks up <code>ExternalEntity(provider_code, external_identifier)</code> in IAM&#39;s own DB. The CDXE copy does <strong>neither</strong> locally. Its flow:</p>
+<ol>
+<li>Extract the access JWT via <code>helpers.get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;)</code> (<code>dashboard/auth_backends.py:100-102</code>; <code>dashboard/helpers.py:1047-1074</code>). Lookup order: cookie <code>miniAppAccessToken</code> → <code>Authorization: Bearer &lt;jwt&gt;</code> header → request body field <code>accessToken</code>. (The miniapp frontend sends <code>Authorization: Bearer</code> — <code>miniapp-esewa/src/services/api.ts:34-56</code>.)</li>
+<li>Forward the token <strong>and the <code>X-MINIAPP-TOKEN</code> header</strong> to IAM: <code>POST {IAM_API}/api/external/token/verify/</code> with JSON <code>{&quot;token&quot;: &lt;jwt&gt;}</code> and the <code>X-MINIAPP-TOKEN</code> header (<code>dashboard/auth_backends.py:105-109</code>, <code>dashboard/auth_backends.py:156-171</code>). IAM&#39;s <code>VerifyAuthTokenView</code> (<code>IAM-Backend/federated_identity/views.py:447-491</code>, mounted via <code>IAM-Backend/IAM/urls.py:119</code> + <code>IAM-Backend/federated_identity/urls.py:16</code>) first calls <code>utils.verify_request_origin</code> (<code>IAM-Backend/federated_identity/utils.py:78-84</code>): it verifies <code>X-MINIAPP-TOKEN</code> as a TOTP of secret <code>ESEWA_TOTP_SECRET_KEY</code> (= env <code>CUSTOM_KEY_ESEWA</code>, <code>IAM-Backend/IAM/settings.py:207</code>) with <strong>6 digits, 20-second step, valid window 5</strong> (<code>IAM-Backend/IAM/settings.py:286-288</code>); a <em>missing</em> TOTP header is tolerated only when IAM&#39;s own <code>UAT</code>/<code>DEVELOPMENT</code> flags are true (<code>IAM-Backend/federated_identity/utils.py:81-82</code>). The frontend computes this TOTP with <code>speakeasy.totp({secret: process.env.CUSTOM_KEY, encoding: &quot;base32&quot;, step: 20})</code> (default 6 digits) on every request except <code>website/terms/web</code> (<code>miniapp-esewa/src/actions/otp.ts:5-23</code>, <code>miniapp-esewa/src/services/api.ts:47-55</code>).</li>
+<li>Non-2xx from IAM → <code>AuthenticationFailed</code>; connection error → <code>TemporaryServiceUnavailableError</code> (<code>dashboard/auth_backends.py:127-136</code>).</li>
+<li>CDXE then <strong>decodes the JWT itself</strong> (<code>TokenBackend(&quot;HS256&quot;).decode(token, verify=False)</code>) and copies claims onto the request: <code>external_identifier</code>, <code>provider_code</code>, <code>user_type</code>, <code>subscribed_services</code>, <code>user_permissions</code>, <code>tenant_root</code>, <code>username</code>, <code>product_code</code>; returns <code>user_id, tenant_id</code> — so <code>request.user = user_id</code> and <code>request.auth = tenant_id</code> (the <em>tenant</em>) (<code>dashboard/auth_backends.py:110-126</code>).</li>
+<li>Requires <code>ServiceChoices.CDXE</code> (<code>&quot;PR2700&quot;</code>) in the JWT&#39;s <code>subscribed_services</code>, else &quot;Your subscription doesn&#39;t include cdxe.&quot; (<code>dashboard/auth_backends.py:124-125</code>; <code>dashboard/choices.py:160</code>).</li>
+</ol>
+<p><strong>What the CDXE copy does extra vs canonical</strong>: it forwards the TOTP to IAM for verification (no local TOTP check, no <code>verify_request_origin</code> call, no <code>ExternalEntity</code> lookup, no <code>AnonymousUser</code> path — any auth failure is a 4xx).</p>
+<h3 id="3-2-code-hasfederatedentitypermission-code-permission-layer">3.2 <code>HasFederatedEntityPermission</code> (permission layer)</h3>
+<p><code>dashboard/auth_backends.py:139-153</code>, applied by the base class. Checks, in order:</p>
+<ol>
+<li><code>view.required_app_scope</code> (base default: <code>ExternalProviderChoices.values</code> = <code>[&quot;esewa&quot;]</code>, <code>miniapp/generics.py:16</code>; <code>dashboard/choices.py:318-319</code>) must contain the request&#39;s <code>provider_code</code>.</li>
+<li><code>view.required_user_type</code> must contain the request&#39;s <code>user_type</code> — <code>ESM</code> = eSewa merchant, <code>ESU</code> = eSewa user (<code>dashboard/choices.py:322-324</code>).</li>
+<li>Delegates to <code>HasPermission.has_permission</code> (<code>dashboard/auth_backends.py:62-94</code>): if the JWT claim <code>tenant_root</code> is true → allowed immediately (tenant roots skip the remote check). Otherwise it calls <code>GET {IAM_API}/api/internal-check-permissions/?password={INTERNAL_PASS}&amp;user_id={request.user}</code> (<code>dashboard/helpers.py:31</code>; <code>dashboard/auth_backends.py:68-70</code>) and requires the IAM permission list to contain <code>feature_ID == view.required_feature_permission</code> <strong>and</strong> the view&#39;s <code>required_action_permission</code> among that feature&#39;s actions (<code>dashboard/auth_backends.py:74-94</code>).</li>
+</ol>
+<p>Effective gate per endpoint: <em>valid federated JWT incl. CDXE subscription + TOTP accepted by IAM + provider &quot;esewa&quot; + entity type (ESM/ESU) + feature/action permission (unless tenant root)</em>. Feature codes used by the miniapp: <code>PR2701</code> (CONNECTION, <code>dashboard/choices.py:241</code>), <code>PR2705</code> (REPORT_SHARING, <code>dashboard/choices.py:251</code>), <code>PR1207</code> (CUSTOMER_PAYMENT, <code>dashboard/choices.py:235</code>), <code>PR1201</code> (SALES_INVOICE, <code>dashboard/choices.py:233</code>).</p>
+<h3 id="3-3-internal-endpoints-code-internalrequestpermission-code">3.3 Internal endpoints: <code>InternalRequestPermission</code></h3>
+<p><code>dashboard/auth_backends.py:174-189</code>. For the 4 service-to-service endpoints: <code>POST</code> requires <code>password</code> in the JSON body, <code>GET</code> requires <code>password</code> in the query string; it must equal <code>INTERNAL_PASS</code> from env (<code>dashboard/helpers.py:24</code>, <code>dashboard/helpers.py:848-851</code>). No JWT, no TOTP.</p>
+<h3 id="3-4-erp-dashboard-endpoints-code-iamauthenticationbackend-code">3.4 ERP dashboard endpoints: <code>IAMAuthenticationBackend</code></h3>
+<p><code>dashboard/auth_backends.py:14-44</code> — <code>Authorization: Bearer &lt;ERP JWT&gt;</code> → <code>POST {IAM_API}/api/token/verify/</code> (<code>dashboard/auth_backends.py:47-59</code>), then decodes claims locally; requires <code>CDXE</code> in <code>subscribed_services</code>, <code>email_verified</code>, non-expired subscription; returns <code>user_id, tenant_id</code>. Used by the <code>connections</code> ViewSet (<code>connections/views.py:20-21</code>).</p>
+<h3 id="3-5-code-signature-code-header-payment-integrity">3.5 <code>SIGNATURE</code> header (payment integrity)</h3>
+<p>For customer-initiated payment commits the client must send a <code>SIGNATURE</code> header: HMAC-SHA256 over the string <code>merchant_identifier=&lt;m&gt;-total_allocated_amount=&lt;a&gt;-transaction_id=&lt;t&gt;</code> keyed with <code>CUSTOM_KEY_ESEWA + TOTP.now()</code>, where the TOTP is <strong>10 digits, 20-second interval</strong> from CDXE&#39;s own settings (<code>miniapp/utils.py:19-42</code>; <code>core/settings.py:254-256</code>). Verified in <code>SettleOutstandingCredit.post</code> (<code>miniapp/views.py:869-884</code>) and <code>ApproveDeclinePaymentRequest.post</code> (<code>miniapp/views.py:806-824</code>). CORS allows the <code>X-MINIAPP-TOKEN</code> and <code>SIGNATURE</code> headers (<code>core/settings.py:233-237</code>). Note: the current frontend does <strong>not</strong> send <code>SIGNATURE</code> anywhere in <code>src/</code> (no call sites found) — see §11.</p>
+</section><section class="sec" data-title="4. Exposed endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-exposed-endpoint-catalog">4. Exposed endpoint catalog</h2>
+<p>Public host (dev): <code>https://dev-cdxe-api.providhy.com</code> (<code>CDXE_BACKEND_URL</code>, <code>E:\Work\CDXE-REBOOT\.env:48</code>). Miniapp URLconf mounted at <strong><code>api/miniapp/</code></strong> — <code>core/urls.py:26</code>. Other mounts: <code>api/</code> → <code>connections.urls</code> (<code>core/urls.py:23</code>), <code>api/</code> → <code>setup_panel.urls</code> (<code>core/urls.py:24</code>), <code>api/</code> → <code>report_sharing.urls</code> (<code>core/urls.py:25</code>), <code>&quot;&quot;</code> → <code>dashboard.urls</code> (<code>core/urls.py:27</code>), <code>api/system-choices/</code> (<code>core/urls.py:28</code>), admin at <code>settings.ADMIN_URL</code> (<code>core/urls.py:22</code>), swagger/redoc (<code>core/urls.py:29-39</code>).</p>
+<h3 id="4-1-public-miniapp-endpoints-federated-auth-called-by-miniapp-esewa">4.1 Public miniapp endpoints (federated auth; called by miniapp-esewa)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/create-connection/">https://dev-cdxe-api.providhy.com/api/miniapp/create-connection/</a></td>
+<td>CreateConnection</td>
+<td>miniapp/views.py:68 (urls miniapp/urls.py:11)</td>
+<td>Merchant sends a connection request to a customer&#39;s eSewa identifier</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/approve-reject-connection/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/approve-reject-connection/\</a><code>/</td>
+<td>ApproveRejectConnection</td>
+<td>miniapp/views.py:147 (urls miniapp/urls.py:12-15)</td>
+<td>Customer approves/declines the pending connection (by numeric code)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/connection/terminate/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/connection/terminate/\</a><pk>/</td>
+<td>RemoveConnection</td>
+<td>miniapp/views.py:235 (urls miniapp/urls.py:16)</td>
+<td>Terminate a connection (merchant UI; guard: no active payment request)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/connection/search/">https://dev-cdxe-api.providhy.com/api/miniapp/connection/search/</a></td>
+<td>GetConnectionListForCustomer</td>
+<td>miniapp/views.py:644 (urls miniapp/urls.py:10)</td>
+<td>Customer's list of merchant connections (frontend "Merchants" tab)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/get-credit/">https://dev-cdxe-api.providhy.com/api/miniapp/get-credit/</a></td>
+<td>GetCreditDetailsForCustomer</td>
+<td>miniapp/views.py:394 (urls miniapp/urls.py:18)</td>
+<td>Customer's credit records across all connected merchants</td>
+</tr>
+<tr>
+<td>6</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/credit/overview/">https://dev-cdxe-api.providhy.com/api/miniapp/credit/overview/</a></td>
+<td>CreditOverview</td>
+<td>miniapp/views.py:369 (urls miniapp/urls.py:26)</td>
+<td>Customer's total credit overview</td>
+</tr>
+<tr>
+<td>7</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/credit/detail/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/credit/detail/\</a><pk>/</td>
+<td>CreditDetailView</td>
+<td>miniapp/views.py:494 (urls miniapp/urls.py:27)</td>
+<td>One credit record from the customer's view</td>
+</tr>
+<tr>
+<td>8</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/credit/ledger/">https://dev-cdxe-api.providhy.com/api/miniapp/credit/ledger/</a></td>
+<td>CreditLedgerView</td>
+<td>miniapp/views.py:540 (urls miniapp/urls.py:20)</td>
+<td>Credit transaction ledger for one connection</td>
+</tr>
+<tr>
+<td>9</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/credit/ledger/overview/">https://dev-cdxe-api.providhy.com/api/miniapp/credit/ledger/overview/</a></td>
+<td>CreditLedgerOverview</td>
+<td>miniapp/views.py:592 (urls miniapp/urls.py:21-25)</td>
+<td>Ledger summary for one connection</td>
+</tr>
+<tr>
+<td>10</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/merchant/detail/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/merchant/detail/\</a><pk></td>
+<td>MerchantDetailView</td>
+<td>miniapp/views.py:1028 (urls miniapp/urls.py:34-38)</td>
+<td>Merchant profile card for the customer (name, credit logs, outstanding)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/payment/request/">https://dev-cdxe-api.providhy.com/api/miniapp/payment/request/</a></td>
+<td>RequestMiniappPayment</td>
+<td>miniapp/views.py:727 (urls miniapp/urls.py:29)</td>
+<td>Merchant initiates a payment request to a connected customer</td>
+</tr>
+<tr>
+<td>12</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/payment/request/pay/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/payment/request/pay/\</a><id>/</td>
+<td>ApproveDeclinePaymentRequest</td>
+<td>miniapp/views.py:788 (urls miniapp/urls.py:30-33)</td>
+<td>Customer completes/declines a payment request (SIGNATURE on complete)</td>
+</tr>
+<tr>
+<td>13</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/credit/pay/">https://dev-cdxe-api.providhy.com/api/miniapp/credit/pay/</a></td>
+<td>SettleOutstandingCredit</td>
+<td>miniapp/views.py:843 (urls miniapp/urls.py:19)</td>
+<td>Customer settles outstanding credit (dry-run commit=false; real commit=true + SIGNATURE)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/settlement/search/">https://dev-cdxe-api.providhy.com/api/miniapp/settlement/search/</a></td>
+<td>SettlementSearchView</td>
+<td>miniapp/views.py:920 (urls miniapp/urls.py:39)</td>
+<td>Customer's payment/settlement history</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/settlement/detail/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/settlement/detail/\</a><pk>/</td>
+<td>SettlementDetailView</td>
+<td>miniapp/views.py:978 (urls miniapp/urls.py:40)</td>
+<td>One settlement/statement detail</td>
+</tr>
+<tr>
+<td>16</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/dispute/raise/">https://dev-cdxe-api.providhy.com/api/miniapp/dispute/raise/</a></td>
+<td>RaiseCreditRecordDisputeView</td>
+<td>miniapp/views.py:1121 (urls miniapp/urls.py:41)</td>
+<td>Customer raises a dispute against a credit record</td>
+</tr>
+<tr>
+<td>17</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/dispute/cancel/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/dispute/cancel/\</a><id>/</td>
+<td>CreditDisputeCancelView</td>
+<td>miniapp/views.py:1186 (urls miniapp/urls.py:42)</td>
+<td>Customer cancels their own dispute</td>
+</tr>
+<tr>
+<td>18</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/dispute/search/">https://dev-cdxe-api.providhy.com/api/miniapp/dispute/search/</a></td>
+<td>SearchCreditRecordDisputeView</td>
+<td>miniapp/views.py:1245 (urls miniapp/urls.py:43)</td>
+<td>Customer's dispute list</td>
+</tr>
+<tr>
+<td>19</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/dispute/detail/%5C">https://dev-cdxe-api.providhy.com/api/miniapp/dispute/detail/\</a><id>/</td>
+<td>CreditDisputeDetailView</td>
+<td>miniapp/views.py:1289 (urls miniapp/urls.py:44)</td>
+<td>One dispute detail</td>
+</tr>
+</tbody></table>
+<p>Auth: endpoints 1, 3, 11 require <code>user_type=ESM</code>; endpoints 2, 4–10, 12–19 require <code>user_type=ESU</code> (see per-view <code>required_user_type</code>, e.g. <code>miniapp/views.py:72</code>, <code>miniapp/views.py:151</code>, <code>miniapp/views.py:648</code>).</p>
+<h3 id="4-2-internal-service-to-service-endpoints-code-internalrequestpermission-code-shared-code-password-code">4.2 Internal service-to-service endpoints (<code>InternalRequestPermission</code>, shared <code>password</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>20</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/get-connection/">https://dev-cdxe-api.providhy.com/api/miniapp/get-connection/</a></td>
+<td>GetConnectionList</td>
+<td>miniapp/views.py:288 (urls miniapp/urls.py:7)</td>
+<td>A user's non-terminated connections, keyed by the other party's identifier</td>
+</tr>
+<tr>
+<td>21</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/get-all-connection/">https://dev-cdxe-api.providhy.com/api/miniapp/get-all-connection/</a></td>
+<td>GetAllConnections</td>
+<td>miniapp/views.py:333 (urls miniapp/urls.py:8)</td>
+<td>Bulk map of all approved connections for a provider</td>
+</tr>
+<tr>
+<td>22</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/connection/delete/customer/">https://dev-cdxe-api.providhy.com/api/miniapp/connection/delete/customer/</a></td>
+<td>DeleteCustomerConnection</td>
+<td>miniapp/views.py:1076 (urls miniapp/urls.py:9)</td>
+<td>Terminate all connections of a (merchant, customer) pair — customer deletion</td>
+</tr>
+<tr>
+<td>23</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/miniapp/total-connections/">https://dev-cdxe-api.providhy.com/api/miniapp/total-connections/</a></td>
+<td>TotalConnectionsView</td>
+<td>miniapp/views.py:1332 (urls miniapp/urls.py:48-50)</td>
+<td>Connection counts by status (monitoring)</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</h3>
+<p><strong><code>connections</code> app (ERP web dashboard; <code>IAMAuthenticationBackend</code> + <code>HasPermission</code>, feature <code>PR2701</code>)</strong> — router at <code>api/</code> (<code>core/urls.py:23</code>; <code>connections/urls.py:6-11</code>). Tenant↔tenant connections, <em>not</em> the federated miniapp flow, but sharing the <code>ConnectionRequest</code> table and domain logic:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>24</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/search/?q=&status=">https://dev-cdxe-api.providhy.com/api/connections/search/?q=&amp;status=</a></td>
+<td>search action</td>
+<td>connections/views.py:193-214</td>
+<td>List the tenant's connections (approved/sent/incoming; TMS name lookup)</td>
+</tr>
+<tr>
+<td>25</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/tenant-search/?q=">https://dev-cdxe-api.providhy.com/api/connections/tenant-search/?q=</a></td>
+<td>global_search action</td>
+<td>connections/views.py:114-191</td>
+<td>Search ERP tenants to connect to (pending/connected flags)</td>
+</tr>
+<tr>
+<td>26</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/">https://dev-cdxe-api.providhy.com/api/connections/</a></td>
+<td>create</td>
+<td>connections/views.py:216-279</td>
+<td>Create a tenant↔tenant connection request (code generation; TMS + Events calls)</td>
+</tr>
+<tr>
+<td>27</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/%5C">https://dev-cdxe-api.providhy.com/api/connections/\</a><pk>/approve/</td>
+<td>approve action</td>
+<td>connections/views.py:281-312</td>
+<td>Approve by connection code</td>
+</tr>
+<tr>
+<td>28</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/%5C">https://dev-cdxe-api.providhy.com/api/connections/\</a><pk>/cancel/</td>
+<td>cancel action</td>
+<td>connections/views.py:314-332</td>
+<td>Sender cancels a pending request (row deleted)</td>
+</tr>
+<tr>
+<td>29</td>
+<td>POST</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/%5C">https://dev-cdxe-api.providhy.com/api/connections/\</a><pk>/reject/</td>
+<td>reject action</td>
+<td>connections/views.py:334-352</td>
+<td>Receiver rejects a pending request (row deleted)</td>
+</tr>
+<tr>
+<td>30</td>
+<td>DELETE</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/%5C">https://dev-cdxe-api.providhy.com/api/connections/\</a><pk>/</td>
+<td>destroy</td>
+<td>connections/views.py:354-383</td>
+<td>Delete (only approved, by a party)</td>
+</tr>
+<tr>
+<td>31</td>
+<td>GET</td>
+<td><a href="https://dev-cdxe-api.providhy.com/api/connections/">https://dev-cdxe-api.providhy.com/api/connections/</a></td>
+<td>list</td>
+<td>connections/views.py:106-112</td>
+<td><strong>Disabled</strong> — 403 "Use /api/connections/search/ instead"</td>
+</tr>
+</tbody></table>
+<p><strong><code>dashboard</code> app (mounted at <code>&quot;&quot;</code>, <code>core/urls.py:27</code>)</strong>: <code>GET /api/dashboard/connection-counts/</code> (ERP tiles; <code>IAMAuthenticationBackend</code>, <code>dashboard/views.py:63-124</code>), <code>GET /api/dashboard/log-viewer/</code> (<code>IsAdminUser</code>, <code>dashboard/views.py:127-178</code>), <code>POST /api/dashboard/tenant-data-deletion/</code> (<code>IsAdminUser</code>, deletes <code>ConnectionRequest</code> rows, <code>dashboard/views.py:181-199</code>), <code>GET /api/system-choices/</code> (no auth, cached, <code>dashboard/views.py:22-42</code>). <strong>Django admin</strong> at <code>admin/</code> with <code>ConnectionIdentityLink</code> registered (<code>miniapp/admin.py:4</code>). <code>report_sharing</code> (<code>api/reports-*</code>, <code>api/sharing</code>, <code>core/urls.py:25</code>) and <code>setup_panel</code> (<code>api/report-type</code>, <code>api/record-type</code>, <code>api/dev-setup-panel</code>, <code>api/create-api-key/</code>, <code>core/urls.py:24</code>) are ERP-internal, not miniapp surface.</p>
+<p><strong>Frontend <code>API_ENDPOINTS</code> → CDXE mapping</strong> (base <code>CDXE_BASE_URL = https://dev-cdxe-api.providhy.com/api/</code>, <code>miniapp-esewa/src/shared/constants.ts:41</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Frontend constant (constants.ts:line)</th>
+<th>In CDXE?</th>
+<th>Call site</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUSTOMER_CONNECTION_SEARCH (:58) miniapp/connection/search/</td>
+<td><strong>Yes</strong> (row 4)</td>
+<td>merchants.ts:76-81 (<code>getMerchants</code> — ESU "Merchants" list)</td>
+</tr>
+<tr>
+<td>CREATE_CONNECTION (:77) miniapp/create-connection/</td>
+<td><strong>Yes</strong> (row 1)</td>
+<td>customer.ts:146-150</td>
+</tr>
+<tr>
+<td>REMOVE_CONNECTION (:78) miniapp/connection/terminate/</td>
+<td><strong>Yes</strong> (row 3, <code>/{id}/</code> appended)</td>
+<td>customer.ts:160-164</td>
+</tr>
+<tr>
+<td>MERCHANT_DETAIL (:80) miniapp/merchant/detail/</td>
+<td><strong>Yes</strong> (row 10)</td>
+<td>merchants.ts:88-91</td>
+</tr>
+<tr>
+<td>ACCEPT_DECLINE_CONNECTION (:90) miniapp/approve-reject-connection/</td>
+<td><strong>Yes</strong> (row 2, <code>/{code}/</code> appended)</td>
+<td>connections.ts:18-21</td>
+</tr>
+<tr>
+<td>REQUEST_PAYMENT (:82) miniapp/payment/request/</td>
+<td><strong>Yes</strong> (row 11)</td>
+<td>payment.ts:36-41</td>
+</tr>
+<tr>
+<td>PAY_REQUEST_PAYMENT (:92) miniapp/payment/request/pay/</td>
+<td><strong>Yes</strong> (row 12)</td>
+<td>transactions.ts:147-150</td>
+</tr>
+<tr>
+<td>CUSTOMER_INITIATED_PAYMENT (:93) miniapp/credit/pay/</td>
+<td><strong>Yes</strong> (row 13)</td>
+<td>credit.ts:394-399, credit.ts:410-416</td>
+</tr>
+<tr>
+<td>CREDIT_SEARCH_CUSTOMER (:67) miniapp/get-credit/</td>
+<td><strong>Yes</strong> (row 5)</td>
+<td>credit.ts:305-310</td>
+</tr>
+<tr>
+<td>CREDIT_OVERVIEW (:68) miniapp/credit/overview/</td>
+<td><strong>Yes</strong> (row 6, customer variant)</td>
+<td>credit.ts:296-299 (merchant variant → SALES, credit.ts:288-292)</td>
+</tr>
+<tr>
+<td>CREDIT_DETAIL (:62) miniapp/credit/detail/</td>
+<td><strong>Yes</strong> (row 7, customer variant)</td>
+<td>credit.ts:250-253 (merchant variant → Sales)</td>
+</tr>
+<tr>
+<td>CREDIT_LOGS_LIST (:64) miniapp/credit/ledger/</td>
+<td><strong>Yes</strong> (row 8, customer variant)</td>
+<td>credit.ts:360-367</td>
+</tr>
+<tr>
+<td>CREDIT_LOGS_OVERVIEW (:63) miniapp/credit/ledger/overview/</td>
+<td><strong>Yes</strong> (row 9, customer variant)</td>
+<td>credit.ts:332-338</td>
+</tr>
+<tr>
+<td>TRANSACTION_SEARCH (:84) miniapp/settlement/search/</td>
+<td><strong>Yes</strong> (row 14, customer variant)</td>
+<td>transactions.ts:96-101, transactions.ts:131-137 (merchant variant → Sales, transactions.ts:84-89)</td>
+</tr>
+<tr>
+<td>TRANSACTION_DETAIL (:85) miniapp/settlement/detail/</td>
+<td><strong>Yes</strong> (row 15, customer variant)</td>
+<td>transactions.ts:107-113 (merchant variant → Sales, transactions.ts:119-125)</td>
+</tr>
+<tr>
+<td>DISPUTE_CREATE (:96) miniapp/dispute/raise/</td>
+<td><strong>Yes</strong> (row 16)</td>
+<td>credit.ts:450-456</td>
+</tr>
+<tr>
+<td>DISPUTE_SEARCH (:95) miniapp/dispute/search/</td>
+<td><strong>Yes</strong> (row 18, customer variant)</td>
+<td>credit.ts:469-474</td>
+</tr>
+<tr>
+<td>DISPUTE_DETAIL (:97) miniapp/dispute/detail/</td>
+<td><strong>Yes</strong> (row 19, customer variant)</td>
+<td>credit.ts:479-483</td>
+</tr>
+<tr>
+<td>MERCHANTS (:79) miniapp/merchants/search/</td>
+<td><strong>No</strong> — dead constant, no call site, no such route in CDXE (merchant list is row 4)</td>
+<td>constants.ts:79 only</td>
+</tr>
+<tr>
+<td>CUSTOMER_CONNECTION_SEARCH via SALES_BASE_URL</td>
+<td><strong>No</strong> — <code>getCustomerConnections</code> sends the same path to Sales</td>
+<td>transactions.ts:155-165</td>
+</tr>
+<tr>
+<td>CANCEL_PAYMENT_REQUEST (:100) esewa/payment/request/cancel/</td>
+<td><strong>No</strong> — Payment service</td>
+<td>payment.ts:49-51</td>
+</tr>
+</tbody></table>
+<p>The customer master endpoints (<code>miniapp/customer/search|detail|/</code>) live in <strong>ERP-Projectmaster</strong> (<code>miniapp-esewa/src/services/requests/customer.ts:85-139</code>), not CDXE.</p>
+</section><section class="sec" data-title="5. Per-endpoint flow traces"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-per-endpoint-flow-traces">5. Per-endpoint flow traces</h2>
+<p>Conventions: "auth" = the §3.1–3.3 chain; "task_runner" = parallel async calls (<code>dashboard/helpers.py:790-814</code>); "async celery" = <code>miniapp/tasks.py</code> tasks; DB table names: <code>Connection</code> = ConnectionRequest, <code>miniapp_connectionidentitylink</code> = ConnectionIdentityLink. Outbound URL lines in <code>dashboard/helpers.py</code> cited per row in §9.</p>
+<h3 id="5-1-post-api-miniapp-create-connection-createconnection-code-miniapp-views-py-68-144-code">5.1 POST /api/miniapp/create-connection/ — CreateConnection (<code>miniapp/views.py:68-144</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{receiver_identifier: str (required — customer&#39;s eSewa external id), description?: str}</code>. Auth: ESM-only, feature <code>PR2701</code>, action <code>add</code> (<code>miniapp/views.py:69-72</code>).</li>
+</ul>
+<ol>
+<li>Auth chain → <code>request.auth</code>=merchant tenant id, <code>request.external_identifier</code>=merchant eSewa id, <code>provider_code=&quot;esewa&quot;</code>.</li>
+<li><code>transaction.atomic</code> (<code>miniapp/views.py:74</code>); build <code>ConnectionIdentityLinkSerializer</code> with fixed field list (<code>miniapp/views.py:77-95</code>) and context <code>{external_identifier, provider_code, tenant_id}</code> (<code>miniapp/views.py:88-92</code>).</li>
+<li>Serializer <code>validate</code> (<code>miniapp/serializers.py:128-134</code>): sender ≠ receiver; <code>validate_connection_criteria</code> (<code>miniapp/serializers.py:179-204</code>): (a) <code>check_if_connection_exists</code> (<code>miniapp/serializers.py:136-152</code>) — any non-terminated link between the pair, either direction ⇒ 400 "Connection already exists between the users." (<code>miniapp/serializers.py:195</code>); (b) parallel IAM <code>is-registered</code> + Projectmaster <code>validate-customer-connection</code> (<code>miniapp/serializers.py:154-177</code>) ⇒ require <code>is_registered or is_provider_user</code> else 400 "The receiver user is neither a registered user nor a verified customer." (<code>miniapp/serializers.py:196-199</code>); stores <code>customer_name</code>/customer tenant id in context (<code>miniapp/serializers.py:200-203</code>).</li>
+<li><code>create</code> (<code>miniapp/serializers.py:206-221</code>): INSERT <code>Connection(sender=merchant tenant, receiver=&lt;customer ERP tenant from PM or NULL&gt;, status=pending)</code> + <code>miniapp_connectionidentitylink(provider_code, sender_identifier, receiver_identifier, connection)</code>.</li>
+<li><code>MiniAppConnectionDomain.send_connection_request</code> (inherited, <code>connections/domain.py:37-48</code>) generates the unique numeric <code>connection_code</code> (default 5 digits, <code>uuid.uuid4().int % 10**length</code> with collision retry, <code>connections/domain.py:8-33</code>).</li>
+<li>Merchant <code>full_name</code> fetched from IAM <code>is-registered</code> with <code>return_data</code> (<code>miniapp/views.py:104-106</code>).</li>
+<li>Async celery: 2× <code>send_notification_task</code> to the customer (<code>connection_request_sent</code> + <code>connection_request_received</code>) → <code>POST {EVENTS}/api/notification/miniapp/notify-user/</code> (<code>miniapp/views.py:113-128</code>; <code>miniapp/tasks.py:11-58</code>); <code>send_activity_log</code> → <code>POST {EVENTS}/api/activity_log/miniapp/log-activity/</code> (<code>miniapp/views.py:129-135</code>; <code>miniapp/tasks.py:61-103</code>).</li>
+<li><strong>DB</strong>: INSERT <code>Connection</code> (pending + code), <code>miniapp_connectionidentitylink</code>. <strong>Outbound</strong>: IAM ×2, PM ×1 (sync); Events ×3 (async).</li>
+<li><strong>Response</strong> 201: link fields (sender/receiver/connection_id=code/status…) + <code>customer_id</code>, <code>customer_name</code> (<code>miniapp/views.py:136</code>; <code>miniapp/serializers.py:256-264</code>). <strong>Errors</strong>: 400 with flattened serializer errors (<code>dashboard/helpers.py:1129-1150</code>; <code>miniapp/views.py:139-144</code>).</li>
+</ol>
+<h3 id="5-2-post-api-miniapp-approve-reject-connection-code-approverejectconnection-code-miniapp-views-py-147-232-code">5.2 POST /api/miniapp/approve-reject-connection/{code}/ — ApproveRejectConnection (<code>miniapp/views.py:147-232</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>connection_id</code> = the numeric connection code (str); body <code>{status: &quot;approved&quot;|&quot;declined&quot;}</code>. Auth: ESU-only, feature <code>PR2701</code>, action <code>decline_approve</code> (<code>miniapp/views.py:148-151</code>).</li>
+</ul>
+<ol>
+<li>Validate status value else 400 "Invalid status value." (<code>miniapp/views.py:155-164</code>).</li>
+<li>Look up link by <code>connection__connection_code</code> (<code>miniapp/views.py:165-167</code>); enforce <code>receiver_identifier == caller</code> — both failures return 404 "Connection not found." (<code>miniapp/views.py:172-175</code>, hiding existence).</li>
+<li><code>transaction.atomic</code> (<code>miniapp/views.py:176</code>): <strong>declined</strong> → <code>ConnectionDomain.reject_connection_request</code> deletes the <code>Connection</code> row; the OneToOne <code>connection</code> (on_delete=CASCADE, <code>miniapp/models.py:97</code>) cascades the link row away (<code>miniapp/views.py:178-182</code>; <code>connections/domain.py:63-68</code>). <strong>approved</strong> → <code>approve_connection_request</code>: <code>code_validated=True</code>, <code>status=approved</code>, <code>connection_code=&#39;&#39;</code> (<code>miniapp/views.py:184-187</code>; <code>connections/domain.py:50-61</code>).</li>
+<li>Parallel task_runner: PM <code>validate-customer-connection</code> (customer name) + IAM <code>is-registered</code> (merchant sender) (<code>miniapp/views.py:189-206</code>).</li>
+<li>Async: notification to merchant (<code>CONNECTION_APPROVED</code>/<code>CONNECTION_REJECTED</code>) + activity log (<code>miniapp/views.py:214-228</code>).</li>
+<li><strong>DB</strong>: UPDATE <code>Connection.status</code> (or DELETE row + cascade link). <strong>Response</strong> 200 <code>{&quot;message&quot;: &quot;Connection status updated successfully.&quot;}</code> (<code>miniapp/views.py:229-232</code>).</li>
+</ol>
+<h3 id="5-3-post-api-miniapp-connection-terminate-pk-removeconnection-code-miniapp-views-py-235-285-code">5.3 POST /api/miniapp/connection/terminate/{pk}/ — RemoveConnection (<code>miniapp/views.py:235-285</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> = <code>miniapp_connectionidentitylink</code> id (int); empty body. Auth: ESM-only per class (<code>miniapp/views.py:238</code>), feature <code>PR2701</code>, action <code>delete</code> — but <code>get_object</code> accepts either endpoint's identifier, so a connected party can terminate (<code>miniapp/views.py:240-255</code>).</li>
+</ul>
+<ol>
+<li>Look up non-terminated link where caller is sender or receiver identifier else 404 "Connection not found." (<code>miniapp/views.py:240-255</code>).</li>
+<li>Compute the customer identifier = the other endpoint (<code>miniapp/views.py:263-268</code>).</li>
+<li><strong>Guard</strong>: Payment <code>POST api/esewa/payment/request/exists/</code> (<code>dashboard/helpers.py:185-209</code>, URL :199) with <code>{password, tenant_id, customer_identifier, provider_code}</code> — if an active payment request exists ⇒ 400 "Active payment request exists..." (<code>miniapp/views.py:269-280</code>).</li>
+<li><code>MiniAppConnectionDomain.delete_connection</code> sets <code>Connection.status=terminated</code> (history kept, <code>miniapp/domain.py:11-24</code>).</li>
+<li><strong>DB</strong>: UPDATE <code>Connection.status=terminated</code>. <strong>Response</strong> 200 "Connection terminated successfully." (<code>miniapp/views.py:281-285</code>). No Events calls on this path.</li>
+</ol>
+<h3 id="5-4-get-api-miniapp-connection-search-getconnectionlistforcustomer-code-miniapp-views-py-644-724-code">5.4 GET /api/miniapp/connection/search/ — GetConnectionListForCustomer (<code>miniapp/views.py:644-724</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>q</code>, <code>connection_status</code> (<code>pending|connected|declined</code> → mapped to <code>pending/approved/declined</code>), <code>order_by</code> (<code>id</code> or <code>total_credit_amount</code>, optional <code>-</code>), <code>page</code>/<code>count</code> (100/page, <code>dashboard/pagination.py:3-6</code>). Auth: ESU-only, feature <code>PR2701</code>, action <code>view</code> (<code>miniapp/views.py:645-648</code>).</li>
+</ul>
+<ol>
+<li>Validate <code>order_by</code> else 400.</li>
+<li>Query links: <code>provider_code=&quot;esewa&quot;</code>, (<code>sender_identifier=caller AND connection__sender=tenant</code>) OR (<code>receiver_identifier=caller AND connection__receiver=tenant</code>), plus optional status filter (<code>miniapp/views.py:649-674</code>). For a customer the second branch matches (customer is the receiver).</li>
+<li>Context builds <code>connected_merchants</code> (approved-only counterpart tenant ids) for the enrichment call (<code>miniapp/views.py:690-698</code>).</li>
+<li>Paginate, then serialize with the list serializer's <strong>enrichment</strong> (<code>miniapp/serializers.py:14-84</code>): <code>user_details</code> ← IAM <code>is-registered</code> many=True (<code>miniapp/serializers.py:16</code>); <code>total_credit_amount</code> ← Sales <code>POST api/miniapp/credit/ledger/customer/</code> (<code>miniapp/serializers.py:17</code>; <code>dashboard/helpers.py:464-485</code>, URL :482) taking the first entry's <code>current_balance</code> (<code>miniapp/serializers.py:237-254</code>) — both in parallel via task_runner (<code>miniapp/serializers.py:77-84</code>).</li>
+<li>In-memory <code>q</code> filter on merchant <code>full_name</code>/contact, in-memory sort by <code>order_by</code>, re-paginate (<code>miniapp/views.py:705-724</code>).</li>
+<li><strong>DB</strong>: read links + <code>Connection</code>. <strong>Response</strong>: paginated list of <code>{id, sender/receiver(+_identifier), connection_id, status, user_details, total_credit_amount, customer_id, customer_name}</code>.</li>
+</ol>
+<h3 id="5-5-get-api-miniapp-get-credit-getcreditdetailsforcustomer-code-miniapp-views-py-394-491-code">5.5 GET /api/miniapp/get-credit/ — GetCreditDetailsForCustomer (<code>miniapp/views.py:394-491</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>connection_id</code> (optional — restricts to that link), <code>from_date</code>, <code>to_date</code>, <code>order_by</code> (default <code>-entry_date</code>), <code>over_due</code> (<code>&quot;true&quot;/&quot;True&quot;/&quot;1&quot;</code>), <code>q</code>. Auth: ESU-only, feature <code>PR2705</code> (REPORT_SHARING), action <code>view</code> (<code>miniapp/views.py:395-397</code>).</li>
+</ul>
+<ol>
+<li><code>ConnectionIdentityLink.objects.get_connected_merchant_tenant_ids</code> (<code>miniapp/models.py:9-81</code>) over <strong>approved</strong> links where the customer is receiver and <code>connection__receiver = request.auth</code> (optionally by link pk) → (merchant tenant ids, merchant identifiers).</li>
+<li>If found: parallel task_runner — Sales <code>POST api/miniapp/credit/user/search/</code> <code>{password, customer_identifier, connected_merchants, from_date, to_date, order_by, over_due}</code> (<code>dashboard/helpers.py:431-452</code>) + IAM <code>is-registered</code> many=True over merchant identifiers (<code>miniapp/views.py:417-431</code>). Each credit record gets <code>merchant_details</code> (<code>miniapp/views.py:458-461</code>).</li>
+<li>In-memory <code>q</code> filter on merchant name / external identifier / entry_date prefix (<code>miniapp/views.py:463-477</code>).</li>
+<li>If no connected merchants: <code>connection_id</code> provided ⇒ 400 "Invalid connection filter parameter." (<code>miniapp/views.py:478-483</code>); else empty list.</li>
+<li><strong>DB</strong>: read links only. <strong>Response</strong>: paginated list of credit records with embedded <code>merchant_details</code> (<code>miniapp/views.py:486-491</code>).</li>
+</ol>
+<h3 id="5-6-get-api-miniapp-credit-overview-creditoverview-code-miniapp-views-py-369-391-code">5.6 GET /api/miniapp/credit/overview/ — CreditOverview (<code>miniapp/views.py:369-391</code>)</h3>
+<ul>
+<li><strong>Request</strong>: no required params. Auth: ESU-only, feature <code>PR2705</code>, action <code>view</code> (<code>miniapp/views.py:370-372</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved, no pk) (<code>miniapp/views.py:374-385</code>).</li>
+<li>Sales <code>POST api/miniapp/credit/overview/customer/</code> <code>{password, external_identifier, connected_merchant_tenant_id}</code> (<code>dashboard/helpers.py:749-771</code>, URL :771).</li>
+<li>Response = Sales overview passed through, 200. <strong>Errors</strong>: non-2xx Sales → <code>ValidationError</code> (400) / <code>TemporaryServiceUnavailableError</code> (<code>dashboard/helpers.py:817-826</code>).</li>
+</ol>
+<h3 id="5-7-get-api-miniapp-credit-detail-pk-creditdetailview-code-miniapp-views-py-494-537-code">5.7 GET /api/miniapp/credit/detail/{pk}/ — CreditDetailView (<code>miniapp/views.py:494-537</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> = credit record id (int). Auth: ESU-only, feature <code>PR2705</code>, action <code>view</code> (<code>miniapp/views.py:495-497</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:502-510</code>).</li>
+<li>Parallel: Sales <code>POST api/miniapp/credit/detail/customer/{pk}/</code> (<code>dashboard/helpers.py:220-241</code>, URL :238) + IAM <code>is-registered</code> (merchants) (<code>miniapp/views.py:511-526</code>).</li>
+<li>Empty credit detail ⇒ 404 "Credit record not found." (<code>miniapp/views.py:529-533</code>); else attach <code>merchant_details</code> keyed by the record's <code>tenant_id</code> (<code>miniapp/views.py:534-537</code>). 200.</li>
+</ol>
+<h3 id="5-8-get-api-miniapp-credit-ledger-creditledgerview-code-miniapp-views-py-540-589-code">5.8 GET /api/miniapp/credit/ledger/ — CreditLedgerView (<code>miniapp/views.py:540-589</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query param <code>connection_id</code> (int, required). Auth: ESU-only, feature <code>PR2705</code>, action <code>view</code> (<code>miniapp/views.py:541-543</code>).</li>
+</ul>
+<ol>
+<li>Missing <code>connection_id</code> ⇒ 400 (<code>miniapp/views.py:545-555</code>).</li>
+<li>Resolve merchant tenant from that link (approved; either endpoint with tenant match) else 404 "Record not found" (<code>miniapp/views.py:556-574</code>).</li>
+<li>Sales <code>POST api/miniapp/credit/ledger/customer/</code> <code>{password, external_identifier, connected_merchants=[merchant]}</code> (<code>dashboard/helpers.py:464-485</code>, URL :482).</li>
+<li>Paginate the ledger list, 200 (<code>miniapp/views.py:579-589</code>).</li>
+</ol>
+<h3 id="5-9-get-api-miniapp-credit-ledger-overview-creditledgeroverview-code-miniapp-views-py-592-641-code">5.9 GET /api/miniapp/credit/ledger/overview/ — CreditLedgerOverview (<code>miniapp/views.py:592-641</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>connection_id</code> (required), <code>from_date</code>, <code>to_date</code>. Auth: ESU-only, feature <code>PR2705</code>, action <code>view</code> (<code>miniapp/views.py:593-595</code>).</li>
+</ul>
+<ol>
+<li>Same <code>connection_id</code> resolution as 5.8 (400 if missing; 404 if link unknown) (<code>miniapp/views.py:597-630</code>).</li>
+<li>Sales <code>POST api/miniapp/credit/ledger/customer/overview/</code> <code>{password, external_identifier, tenant_id=merchant, from_date, to_date}</code> (<code>dashboard/helpers.py:539-561</code>, URL :558).</li>
+<li>Response = overview, 200.</li>
+</ol>
+<h3 id="5-10-get-api-miniapp-merchant-detail-pk-merchantdetailview-code-miniapp-views-py-1028-1073-code">5.10 GET /api/miniapp/merchant/detail/{pk} — MerchantDetailView (<code>miniapp/views.py:1028-1073</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> = link id (int). Auth: ESU-only, feature <code>PR2701</code>, action <code>view</code> (<code>miniapp/views.py:1033-1036</code>).</li>
+</ul>
+<ol>
+<li>Look up <strong>approved</strong> link where caller is receiver (or sender) and <code>connection</code> tenant matches caller else 404 "Record not found" (<code>miniapp/views.py:1038-1061</code>).</li>
+<li><code>MerchantDetailSerializer</code> (<code>miniapp/serializers.py:499-583</code>) lazily fans out on first field access, all parallel (<code>miniapp/serializers.py:521-549</code>): Sales <code>credit/ledger/customer/</code> (<code>credit_logs</code>), IAM <code>is-registered</code> (merchant name/identifier/product), Sales <code>credit/user/search/</code> (<code>outstanding_credits</code>).</li>
+<li>Response: <code>{name, external_identifier, product_code, credit_logs[:5], outstanding_credits (remaining_amount&gt;0) [:5], total_credits = first ledger entry current_balance}</code> (<code>miniapp/serializers.py:551-583</code>).</li>
+<li><strong>DB</strong>: read link + <code>Connection</code> only. <strong>Errors</strong>: 404 unknown link.</li>
+</ol>
+<h3 id="5-11-post-api-miniapp-payment-request-requestminiapppayment-code-miniapp-views-py-727-785-code">5.11 POST /api/miniapp/payment/request/ — RequestMiniappPayment (<code>miniapp/views.py:727-785</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{customer: {id, external_identifier, …} (required object), items?: [{credit, allocated_amount}], total_allocated_amount: float&gt;0, description?}</code>. Auth: ESM-only, feature <code>PR1207</code> (CUSTOMER_PAYMENT), action <code>add</code> (<code>miniapp/views.py:728-730</code>).</li>
+</ul>
+<ol>
+<li><code>MiniappPaymentRequestSerializer</code> validation (<code>miniapp/serializers.py:277-390</code>): item shape/positivity (<code>miniapp/serializers.py:294-325</code>); sum of <code>items.allocated_amount</code> == <code>total_allocated_amount</code> else 400 (<code>miniapp/serializers.py:345-351</code>, 372-375); <strong>approved connection required</strong> <code>receiver_identifier=customer, sender_identifier=caller</code> else 400 "You can only initiate payment with connected users" (<code>miniapp/serializers.py:353-378</code>).</li>
+<li><code>create</code> → Sales <code>POST api/miniapp/payment/request/</code> <code>{password, tenant_id, external_identifier, provider_code, payment_request_data (+product_code from JWT)}</code> (<code>miniapp/serializers.py:381-390</code>; <code>dashboard/helpers.py:576-609</code>, URL :597). Sales 4xx → its error body; 5xx → "Payment Service is currently unavailable." (<code>dashboard/helpers.py:600-608</code>).</li>
+<li>Async: Events notify-user to customer (<code>CREATION</code>) + activity log (<code>miniapp/views.py:762-778</code>).</li>
+<li><strong>DB</strong>: none local (payment request stored by Sales). <strong>Response</strong> 200 <code>{message, id}</code> (<code>miniapp/views.py:779-785</code>).</li>
+</ol>
+<h3 id="5-12-post-api-miniapp-payment-request-pay-payment-request-id-approvedeclinepaymentrequest-code-miniapp-views-py-788-840-code">5.12 POST /api/miniapp/payment/request/pay/{payment_request_id}/ — ApproveDeclinePaymentRequest (<code>miniapp/views.py:788-840</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path = payment request id (int); body <code>{status: &quot;completed&quot;|&quot;declined&quot;, transaction_id? (required for completed), description?}</code>. Auth: ESU-only, feature <code>PR1207</code>, action <code>add</code> (<code>miniapp/views.py:795-797</code>).</li>
+</ul>
+<ol>
+<li>If <code>status == &quot;completed&quot;</code>: <code>SIGNATURE</code> header required; HMAC-SHA256 verified over <code>merchant_identifier=&lt;m&gt;-total_allocated_amount=&lt;a&gt;-transaction_id=&lt;t&gt;</code> (<code>miniapp/views.py:806-824</code>; key logic <code>miniapp/utils.py:30-42</code>). Missing header ⇒ 400 "Signature header is missing."; mismatch ⇒ 400 "Invalid signature."</li>
+<li><code>MiniappPaymentExecutionSerializer</code> (<code>miniapp/serializers.py:393-454</code>): status whitelist else 400 "Invalid status provided." (<code>miniapp/serializers.py:415-421</code>); completed requires <code>transaction_id</code> else 400 (<code>miniapp/serializers.py:428-432</code>); caller must have ≥1 approved connection else 400 (dev-leftover message "this customer has no existing connections.", <code>miniapp/serializers.py:433-442</code>).</li>
+<li>Outbound Payment <code>POST api/esewa/payment/request/pay/{payment_request_id}/</code> <code>{password, connected_merchants (all approved sender tenants), external_identifier, provider_code, status, transaction_id}</code> (<code>miniapp/serializers.py:447-453</code>; <code>dashboard/helpers.py:612-644</code>, URL :632).</li>
+<li><strong>DB</strong>: none local. <strong>Response</strong> 200 "Payment executed successfully." (<code>miniapp/views.py:837-840</code>).</li>
+</ol>
+<h3 id="5-13-post-api-miniapp-credit-pay-settleoutstandingcredit-code-miniapp-views-py-843-917-code">5.13 POST /api/miniapp/credit/pay/ — SettleOutstandingCredit (<code>miniapp/views.py:843-917</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{merchant_identifier: str (required), total_allocated_amount: float (required), items?: [{credit, allocated_amount}], transaction_id: str (required), commit: bool (required), description?}</code>. Auth: ESU-only, feature <code>PR1207</code>, action <strong><code>view</code></strong> (<code>miniapp/views.py:852-854</code>).</li>
+</ul>
+<ol>
+<li><code>SettleOutstandingBalanceSerailizer</code> (<code>miniapp/serializers.py:457-496</code>): <code>customer</code> field disallowed ("please remove customer from the serializer", <code>miniapp/serializers.py:482-485</code>); sum check inherited; <strong>approved connection required</strong> <code>sender_identifier=merchant_identifier, receiver_identifier=caller</code> else 400 (<code>miniapp/serializers.py:466-480</code>) — merchant's tenant id kept in context.</li>
+<li><code>commit == false</code>: 200 "Validation successful. Ready to commit." — dry-run, no outbound (<code>miniapp/views.py:906-910</code>).</li>
+<li><code>commit == true</code>: <code>SIGNATURE</code> header + HMAC check first (400 paths as in 5.12, <code>miniapp/views.py:869-884</code>); then Sales <code>POST api/miniapp/credit/pay/</code> <code>{password, tenant_id, external_identifier, provider_code, settlement_data (+merchant_tenant_id)}</code> (<code>miniapp/serializers.py:492-496</code>; <code>dashboard/helpers.py:647-667</code>, URL :655).</li>
+<li><strong>DB</strong>: none local. <strong>Response</strong> 200 <code>{message: &quot;Payment done successfully&quot;, id}</code> (<code>miniapp/views.py:911-917</code>).</li>
+</ol>
+<h3 id="5-14-get-api-miniapp-settlement-search-settlementsearchview-code-miniapp-views-py-920-975-code">5.14 GET /api/miniapp/settlement/search/ — SettlementSearchView (<code>miniapp/views.py:920-975</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>method</code> (default <code>&quot;requested&quot;</code>), <code>connection_id?</code>, <code>q</code>, <code>from_date</code>, <code>to_date</code>, <code>order_by</code> (default <code>-payment_date</code>). Auth: ESU-only, feature <code>PR1207</code>, action <code>view</code> (<code>miniapp/views.py:925-927</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (optionally by link pk; pk given but unknown ⇒ Http404 "Record not found", <code>miniapp/views.py:929-946</code>).</li>
+<li>Sales <code>POST api/miniapp/settlement/search/internal/</code> <code>{password, tenant_id=merchant tenant, merchant_identifier, user_identifier, q, from_date, to_date, order_by, method}</code> (<code>dashboard/helpers.py:670-696</code>, URL :693).</li>
+<li>Paginate, 200 (<code>miniapp/views.py:963-975</code>). No connected merchants → empty list.</li>
+</ol>
+<h3 id="5-15-get-api-miniapp-settlement-detail-pk-settlementdetailview-code-miniapp-views-py-978-1025-code">5.15 GET /api/miniapp/settlement/detail/{pk}/ — SettlementDetailView (<code>miniapp/views.py:978-1025</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> = settlement/statement id (int). Auth: ESU-only, feature <code>PR1207</code>, action <code>view</code> (<code>miniapp/views.py:983-985</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:987-998</code>).</li>
+<li>Parallel: Sales <code>POST api/miniapp/settlement/detail/customer/{pk}/</code> (<code>dashboard/helpers.py:715-731</code>, URL :732) + IAM <code>is-registered</code> (merchants) (<code>miniapp/views.py:1000-1013</code>).</li>
+<li>Empty ⇒ 404 "Record not found" (<code>miniapp/views.py:1018-1021</code>); else attach <code>merchant_details</code> via the record's <code>tenant_id</code> and return 200 (<code>miniapp/views.py:1022-1025</code>).</li>
+</ol>
+<h3 id="5-16-post-api-miniapp-dispute-raise-raisecreditrecorddisputeview-code-miniapp-views-py-1121-1183-code">5.16 POST /api/miniapp/dispute/raise/ — RaiseCreditRecordDisputeView (<code>miniapp/views.py:1121-1183</code>)</h3>
+<ul>
+<li><strong>Request</strong>: freeform JSON dispute data (passed through as <code>dispute_data</code>; <code>description</code> used for notifications). Auth: ESU-only, feature <code>PR1201</code> (SALES_INVOICE), action <code>add</code> (<code>miniapp/views.py:1122-1124</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:1127-1136</code>).</li>
+<li>Sales <code>POST api/miniapp/dispute/raise/</code> <code>{password, dispute_data, external_identifier, connected_merchant_tenant_id, provider_code}</code> (<code>dashboard/helpers.py:488-511</code>, URL :508) → returns dispute <code>{id, tenant_id, amount, …}</code>.</li>
+<li>IAM <code>is-registered</code> for the merchant name (<code>miniapp/views.py:1144-1149</code>).</li>
+<li>Async: Events notify-user to merchant + activity log (<code>miniapp/views.py:1162-1176</code>).</li>
+<li><strong>DB</strong>: none local. <strong>Response</strong> 201 <code>{message: &quot;Dispute raised successfully.&quot;, id}</code> (<code>miniapp/views.py:1178-1183</code>). Sales 4xx → 400 passthrough; 5xx → 503-ish (<code>dashboard/helpers.py:817-826</code>).</li>
+</ol>
+<h3 id="5-17-post-api-miniapp-dispute-cancel-dispute-id-creditdisputecancelview-code-miniapp-views-py-1186-1242-code">5.17 POST /api/miniapp/dispute/cancel/{dispute_id}/ — CreditDisputeCancelView (<code>miniapp/views.py:1186-1242</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>dispute_id</code> (int). Auth: ESU-only, feature <code>PR1201</code>, action <code>add</code> (<code>miniapp/views.py:1187-1189</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:1192-1201</code>).</li>
+<li>Sales <code>POST api/miniapp/dispute/cancel/{dispute_id}/</code> <code>{password, external_identifier, connected_merchant_tenant_id, provider_code}</code> (<code>dashboard/helpers.py:292-320</code>); IAM <code>is-registered</code> (merchant name).</li>
+<li>Async: Events notify-user (<code>CANCELLATION</code>) + activity log (<code>miniapp/views.py:1224-1238</code>).</li>
+<li><strong>Response</strong> 200 "Action performed successfully." (<code>miniapp/views.py:1239-1242</code>).</li>
+</ol>
+<h3 id="5-18-get-api-miniapp-dispute-search-searchcreditrecorddisputeview-code-miniapp-views-py-1245-1286-code">5.18 GET /api/miniapp/dispute/search/ — SearchCreditRecordDisputeView (<code>miniapp/views.py:1245-1286</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>q</code>, <code>page</code>/<code>count</code>. Auth: ESU-only, feature <code>PR1201</code>, action <code>view</code> (<code>miniapp/views.py:1246-1248</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:1250-1259</code>).</li>
+<li>Parallel: Sales <code>POST api/miniapp/dispute/search/customer/</code> (<code>dashboard/helpers.py:257-277</code>) + IAM <code>is-registered</code> (merchants) (<code>miniapp/views.py:1260-1273</code>).</li>
+<li>Attach <code>merchant_details</code> per dispute via its <code>tenant_id</code> (<code>miniapp/views.py:1279-1281</code>); paginate, 200 (<code>miniapp/views.py:1283-1286</code>).</li>
+</ol>
+<h3 id="5-19-get-api-miniapp-dispute-detail-dispute-id-creditdisputedetailview-code-miniapp-views-py-1289-1329-code">5.19 GET /api/miniapp/dispute/detail/{dispute_id}/ — CreditDisputeDetailView (<code>miniapp/views.py:1289-1329</code>)</h3>
+<ul>
+<li><strong>Request</strong>: path <code>dispute_id</code> (int). Auth: ESU-only, feature <code>PR1201</code>, action <code>view</code> (<code>miniapp/views.py:1290-1292</code>).</li>
+</ul>
+<ol>
+<li><code>get_connected_merchant_tenant_ids</code> (all approved) (<code>miniapp/views.py:1294-1303</code>).</li>
+<li>Parallel: Sales <code>POST api/miniapp/dispute/detail/customer/{dispute_id}/</code> (<code>dashboard/helpers.py:335-355</code>) + IAM <code>is-registered</code> (merchant) (<code>miniapp/views.py:1304-320</code>).</li>
+<li>Empty ⇒ 404 "Record not found" (<code>miniapp/views.py:1323-1326</code>); else attach <code>merchant_details</code> (<code>miniapp/views.py:1327-1328</code>), 200.</li>
+</ol>
+<h3 id="5-20-post-api-miniapp-get-connection-getconnectionlist-internal-code-miniapp-views-py-288-330-code">5.20 POST /api/miniapp/get-connection/ — GetConnectionList (INTERNAL) (<code>miniapp/views.py:288-330</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{user_identifier: str (required), provider_code: str (required), tenant_id?: str, password (internal pass)}</code>. Auth: <code>InternalRequestPermission</code> (password in body) (<code>miniapp/views.py:289-293</code>; <code>dashboard/auth_backends.py:174-189</code>).</li>
+</ul>
+<ol>
+<li>Missing <code>user_identifier</code>/<code>provider_code</code> ⇒ 400 (<code>miniapp/views.py:305-312</code>).</li>
+<li>Query non-terminated links where (<code>sender_identifier=user AND connection__sender=tenant</code>) OR (<code>receiver_identifier=user AND connection__receiver=tenant</code>) for the provider (<code>miniapp/views.py:314-319</code>).</li>
+<li>Serialize with a fixed field tuple (<code>miniapp/views.py:295-304</code>) and <strong>re-key the response by the other party's identifier</strong> → <code>{counterpart_identifier: connection…}</code> (<code>miniapp/views.py:324-330</code>).</li>
+<li><strong>DB</strong>: read links + <code>Connection</code>. <strong>Caller</strong>: ERP-Projectmaster customer-search enrichment (§10, #2).</li>
+</ol>
+<h3 id="5-21-post-api-miniapp-get-all-connection-getallconnections-internal-code-miniapp-views-py-333-366-code">5.21 POST /api/miniapp/get-all-connection/ — GetAllConnections (INTERNAL) (<code>miniapp/views.py:333-366</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{provider_code: str, password}</code>. Auth: <code>InternalRequestPermission</code>.</li>
+</ul>
+<ol>
+<li>All <strong>approved</strong> links for the provider (<code>miniapp/views.py:336-364</code>).</li>
+<li>Build a grouped dict in both directions: <code>{tenant_id: [counterpart identifiers…]}</code> (merchant→customers and customer→merchant merged) (<code>miniapp/views.py:338-364</code>).</li>
+<li><strong>DB</strong>: read links + <code>Connection</code> (approved). <strong>Caller</strong>: Sales celery reminder tasks (§10, #4).</li>
+</ol>
+<h3 id="5-22-post-api-miniapp-connection-delete-customer-deletecustomerconnection-internal-code-miniapp-views-py-1076-1118-code">5.22 POST /api/miniapp/connection/delete/customer/ — DeleteCustomerConnection (INTERNAL) (<code>miniapp/views.py:1076-1118</code>)</h3>
+<ul>
+<li><strong>Request</strong>: JSON <code>{user_identifier, customer_identifier, provider_code, password}</code>. Auth: <code>InternalRequestPermission</code>.</li>
+</ul>
+<ol>
+<li>Presence check: 400 only when <strong>all</strong> three fields are missing — the guard is <code>if not any([...])</code> (<code>miniapp/views.py:1083-1093</code>), so a single missing field passes (quirk, §11).</li>
+<li>Find links where the pair matches in either direction + provider (<code>miniapp/views.py:1095-1109</code>).</li>
+<li><code>MiniAppConnectionDomain.delete_connection(queryset)</code> → bulk <code>UPDATE status=terminated</code> (<code>miniapp/views.py:1113-1114</code>; <code>miniapp/domain.py:20-21</code>).</li>
+<li><strong>DB</strong>: UPDATE <code>Connection.status=terminated</code> (possibly many rows). <strong>No Events/notification, no active-payment guard</strong> (contrast 5.3). <strong>Caller</strong>: Projectmaster customer-deletion (§10, #3).</li>
+</ol>
+<h3 id="5-23-get-api-miniapp-total-connections-totalconnectionsview-internal-code-miniapp-views-py-1332-1368-code">5.23 GET /api/miniapp/total-connections/ — TotalConnectionsView (INTERNAL) (<code>miniapp/views.py:1332-1368</code>)</h3>
+<ul>
+<li><strong>Request</strong>: query params <code>provider_code</code> (default <code>&quot;esewa&quot;</code>), <code>password</code> (query). Auth: <code>InternalRequestPermission</code> (GET → query password, <code>dashboard/auth_backends.py:185-188</code>).</li>
+</ul>
+<ol>
+<li>Count links for the provider, plus per-status counts: valid (pending+approved), active (approved), pending, declined, terminated (<code>miniapp/views.py:1335-1357</code>).</li>
+<li><strong>DB</strong>: read links + <code>Connection</code>. <strong>Response</strong> 200 JSON of 6 counters. <strong>Caller</strong>: none found in any repo (likely ops/monitoring; §11).</li>
+</ol>
+</section><section class="sec" data-title="6. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model">6. Data model</h2>
+<p>CDXE's miniapp stores only the <strong>relationship</strong>; money/credit data lives in Sales. Both tables in one Postgres DB (<code>Cdxe</code>).</p>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CONNECTIONREQUEST ||--o| CONNECTIONIDENTITYLINK : &quot;one-to-one (connection_id)&quot;
+    CONNECTIONREQUEST {
+        int id PK
+        string sender &quot;merchant tenant id (CharField 10, indexed, nullable)&quot;
+        string receiver &quot;customer ERP tenant id or NULL (CharField 10, indexed, nullable)&quot;
+        string status &quot;pending|approved|declined|terminated (CharField 10, default pending)&quot;
+        bool code_validated &quot;set true when connection code approved&quot;
+        string connection_code &quot;unique numeric code, default 5 digits (CharField 6)&quot;
+        string initiated_by &quot;CharField 100 nullable&quot;
+        datetime created &quot;TimeModel&quot;
+        datetime modified &quot;TimeModel&quot;
+    }
+    CONNECTIONIDENTITYLINK {
+        int id PK
+        int connection_id FK &quot;OneToOne -&gt; ConnectionRequest, CASCADE, related_name connection_identity&quot;
+        string provider_code &quot;esewa (CharField 20)&quot;
+        string sender_identifier &quot;merchant eSewa external id (CharField 50)&quot;
+        string receiver_identifier &quot;customer eSewa external id (CharField 50)&quot;
+        text description &quot;nullable&quot;
+    }
+</pre></div>
+<ul>
+<li><code>ConnectionRequest</code>: <code>connections/models.py:8-23</code> (db_table <code>&quot;Connection&quot;</code>, ordering <code>-id</code>). Note <code>sender</code>/<code>receiver</code> are <strong>tenant ids as strings</strong> (max 10 chars) — for miniapp connections, <code>sender</code> = merchant tenant, <code>receiver</code> = the customer's ERP tenant id, <strong>NULL when the customer is a pure eSewa user without an ERP tenant</strong> (set from Projectmaster's <code>validate-customer-connection</code> response, <code>miniapp/serializers.py:200-218</code>).</li>
+<li><code>ConnectionIdentityLink</code>: <code>miniapp/models.py:84-107</code> (table <code>miniapp_connectionidentitylink</code>; migrations <code>miniapp/migrations/0001-0003</code>). The eSewa external identifiers live <strong>only</strong> here — that's why CDXE is the source of truth for miniapp connections even when <code>receiver</code> is NULL.</li>
+<li>Manager <code>get_connected_merchant_tenant_ids</code> (<code>miniapp/models.py:9-81</code>): the workhorse filter used by §5.5–5.19 — approved links where the customer is the receiver, optionally restricted to one link pk, returning (merchant tenant ids, merchant eSewa identifiers).</li>
+<li>Status lifecycle: <code>pending → approved | declined (row deleted) | terminated</code> (<code>dashboard/choices.py:4-8</code>).</li>
+</ul>
+</section><section class="sec" data-title="7. Sequence diagrams"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-sequence-diagrams">7. Sequence diagrams</h2>
+<h3 id="7-1-merchant-invites-a-customer-customer-approves">7.1 Merchant invites a customer; customer approves</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as &quot;Merchant (ESM) / miniapp-esewa&quot;
+    participant C as &quot;CDXE api/miniapp&quot;
+    participant I as &quot;IAM&quot;
+    participant P as &quot;Projectmaster&quot;
+    participant E as &quot;Events&quot;
+    participant U as &quot;Customer (ESU) / miniapp-esewa&quot;
+    M-&gt;&gt;C: &quot;POST create-connection/ (JWT + X-MINIAPP-TOKEN)&quot;
+    C-&gt;&gt;I: &quot;POST api/external/token/verify/ (JWT + TOTP header)&quot;
+    I--&gt;&gt;C: &quot;200 (TOTP + JWT verified)&quot;
+    C-&gt;&gt;I: &quot;POST api/external/is-registered/ (customer id)&quot;
+    C-&gt;&gt;P: &quot;POST api/miniapp/validate-customer-connection/&quot;
+    P--&gt;&gt;C: &quot;is_provider_user, customer name/tenant&quot;
+    C-&gt;&gt;C: &quot;INSERT Connection(pending, 5-digit code) + link&quot;
+    C--)E: &quot;notify-user x2 + log-activity (celery)&quot;
+    C--&gt;&gt;M: &quot;201 {connection_id: code, ...}&quot;
+    Note over E,U: &quot;customer sees the request in-app&quot;
+    U-&gt;&gt;C: &quot;POST approve-reject-connection/{code}/ {status: approved}&quot;
+    C-&gt;&gt;P: &quot;POST validate-customer-connection/ (name)&quot;
+    C-&gt;&gt;I: &quot;POST is-registered/ (merchant id)&quot;
+    C-&gt;&gt;C: &quot;Connection: approved, code_validated, code cleared&quot;
+    C--)E: &quot;notify-user (approved) + log-activity (celery)&quot;
+    C--&gt;&gt;U: &quot;200&quot;
+</pre></div>
+<h3 id="7-2-customer-initiated-credit-settlement-credit-pay">7.2 Customer-initiated credit settlement (credit/pay)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant U as &quot;Customer (ESU)&quot;
+    participant C as &quot;CDXE&quot;
+    participant S as &quot;Sales&quot;
+    U-&gt;&gt;C: &quot;POST credit/pay/ {commit:false, merchant_identifier, items, total_allocated_amount, transaction_id}&quot;
+    C-&gt;&gt;C: &quot;sum check + approved connection (sender=merchant)&quot;
+    C--&gt;&gt;U: &quot;200 Validation successful. Ready to commit.&quot;
+    U-&gt;&gt;C: &quot;POST credit/pay/ {commit:true} + SIGNATURE header&quot;
+    C-&gt;&gt;C: &quot;verify_hmac_hash (key CUSTOM_KEY_ESEWA + TOTP10)&quot;
+    C-&gt;&gt;S: &quot;POST api/miniapp/credit/pay/ (settlement_data + merchant_tenant_id)&quot;
+    S--&gt;&gt;C: &quot;200 {id}&quot;
+    C--&gt;&gt;U: &quot;200 Payment done successfully&quot;
+</pre></div>
+<h3 id="7-3-payment-request-merchant-initiates-customer-completes">7.3 Payment request: merchant initiates, customer completes</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as &quot;Merchant (ESM)&quot;
+    participant C as &quot;CDXE&quot;
+    participant S as &quot;Sales&quot;
+    participant Pa as &quot;Payment&quot;
+    participant E as &quot;Events&quot;
+    participant U as &quot;Customer (ESU)&quot;
+    M-&gt;&gt;C: &quot;POST payment/request/ {customer, items, total_allocated_amount}&quot;
+    C-&gt;&gt;C: &quot;sum check + approved connection (receiver=customer)&quot;
+    C-&gt;&gt;S: &quot;POST api/miniapp/payment/request/&quot;
+    S--&gt;&gt;C: &quot;200 {id}&quot;
+    C--)E: &quot;notify-user (CREATION) + log-activity (celery)&quot;
+    C--&gt;&gt;M: &quot;200&quot;
+    U-&gt;&gt;C: &quot;POST payment/request/pay/{id}/ {status:completed, transaction_id} + SIGNATURE&quot;
+    C-&gt;&gt;C: &quot;verify_hmac_hash&quot;
+    C-&gt;&gt;Pa: &quot;POST api/esewa/payment/request/pay/{id}/ (connected_merchants, status)&quot;
+    Pa--&gt;&gt;C: &quot;200&quot;
+    C--&gt;&gt;U: &quot;200 Payment executed successfully.&quot;
+</pre></div>
+<h3 id="7-4-customer-deletion-cascade-projectmaster-to-cdxe">7.4 Customer deletion cascade (Projectmaster to CDXE)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as &quot;Merchant (ESM)&quot;
+    participant P as &quot;Projectmaster&quot;
+    participant Pa as &quot;Payment&quot;
+    participant S as &quot;Sales&quot;
+    participant C as &quot;CDXE&quot;
+    M-&gt;&gt;P: &quot;DELETE api/miniapp/customer/detail/{id}/&quot;
+    P-&gt;&gt;Pa: &quot;POST api/esewa/payment/request/exists/ (block if active)&quot;
+    P-)S: &quot;adelete_customer_transactions (celery/parallel)&quot;
+    P-&gt;&gt;C: &quot;POST api/miniapp/connection/delete/customer/ {password, user_identifier, customer_identifier, provider_code}&quot;
+    C-&gt;&gt;C: &quot;bulk UPDATE Connection.status = terminated&quot;
+    C--&gt;&gt;P: &quot;200&quot;
+    P--&gt;&gt;M: &quot;204&quot;
+</pre></div>
+</section><section class="sec" data-title="8. Business process walkthroughs"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-process-walkthroughs">8. Business process walkthroughs</h2>
+<ol>
+<li><strong>A merchant invites a customer into their credit shop.</strong> Ramesh, a merchant, opens Sita's profile in the miniapp (her identifier came from the customer he created in Projectmaster) and taps "Send connection request" (<code>miniapp-esewa/src/shared/components/app/send-connection-request.tsx:40</code> → <code>customer.ts:146</code>). CDXE checks that Sita's identifier really belongs to an eSewa user (IAM) and that she is a verified customer of Ramesh (Projectmaster). If so, CDXE creates a pending connection with a short numeric code and notifies Sita. If the identifier is unknown to both, the request fails with a friendly error.</li>
+<li><strong>The customer approves (or declines).</strong> Sita sees the request in her app and approves. CDXE flips the connection to <em>approved</em> (declining deletes it). From that moment the two parties can see each other in their respective miniapp views, and Sita can see Ramesh's credit data.</li>
+<li><strong>The customer sees her credit and pays it back.</strong> In the "Merchants" tab (<code>merchants.ts:76</code> → <code>connection/search/</code>) Sita lists Ramesh with his current credit balance. She opens the ledger (<code>credit/ledger/</code>) and, if she wants to pay, picks which credit entries to settle, dry-runs it (<code>commit:false</code>) and then commits with a signed request (<code>credit/pay/</code>); Sales executes the settlement. (See §11 — the current frontend build does not yet wire this up.)</li>
+<li><strong>The merchant requests a payment.</strong> Ramesh can instead <em>request</em> a payment (<code>payment/request/</code>); Sita gets a notification and can complete it (wallet charge via Payment) or decline it (<code>payment/request/pay/{id}/</code>).</li>
+<li><strong>Disconnecting.</strong> Ramesh can terminate a connection (<code>connection/terminate/{id}/</code>) — CDXE refuses if there is an active payment request between them. Or he deletes Sita as a customer entirely: Projectmaster deletes her, asks Sales to delete her transactions, and asks CDXE to terminate the connection (<code>connection/delete/customer/</code>).</li>
+<li><strong>What is "dummy-customer-check"?</strong> It is <strong>not a CDXE endpoint</strong> — it lives in <strong>ERP-Projectmaster</strong> (<code>ERP-Projectmaster/miniapp/urls.py:17-21</code>, view <code>DummyCustomerCheck</code>, <code>ERP-Projectmaster/miniapp/views.py:255-262</code>): a password-protected stub that <strong>always returns is_provider_user: true</strong>. It stands in for the <em>real</em> eSewa user-verification API: each repo has an env var <code>ESEWA_USER_CHECK_API</code> that is supposed to point at that API; in Projectmaster's dev env it points at the stub itself (<code>ERP-Projectmaster/.env:49</code> → <code>http://localhost:1111/api/miniapp/dummy-customer-check/</code>), and the provider-to-URL registry is <code>ERP-Projectmaster/miniapp/registry.py:10-11</code> (defined but with no call sites found in the PM source). In <strong>CDXE's</strong> .env the same variable points at a dummyjson URL (<code>E:\Work\CDXE-REBOOT/.env:50</code>) but <strong>no CDXE code references it</strong> — CDXE verifies customers via IAM <code>is-registered</code> + Projectmaster <code>validate-customer-connection</code> instead (§5.1).</li>
+</ol>
+</section><section class="sec" data-title="9. Outbound calls (CDXE → other services)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-outbound-calls-cdxe-other-services">9. Outbound calls (CDXE → other services)</h2>
+<p>Base URLs from <code>dashboard/api_links.py</code> (env): IAM internal <code>http://iam:8000</code> (public <code>https://dev-iam-api.providhy.com</code>), TMS (<code>https://dev-tms-api.providhy.com</code>), Sales internal <code>http://sales:8000</code> (public <code>https://dev-sales-api.providhy.com</code>), Payment internal <code>http://payment:8000</code> (public <code>https://dev-payment-api.providhy.com</code>), Events internal <code>http://events:8000</code> (public <code>https://dev-events-api.providhy.com</code>), Projectmaster internal <code>http://projectmaster:8000</code> (public <code>https://dev-projectmaster-api.providhy.com</code>).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Target</th>
+<th>Method + path (helpers.py URL line)</th>
+<th>Triggered by (miniapp endpoint)</th>
+<th>Purpose</th>
+<th>Sync/Async</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>IAM</td>
+<td>POST api/external/token/verify/ (auth_backends.py:156-171)</td>
+<td><strong>every</strong> federated request</td>
+<td>JWT + X-MINIAPP-TOKEN (TOTP) verification</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IAM</td>
+<td>GET api/internal-check-permissions/ (helpers.py:31, auth_backends.py:68-70)</td>
+<td>every non-tenant-root federated request</td>
+<td>feature/action permission check (PR2701/PR2705/PR1207/PR1201)</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>3</td>
+<td>IAM</td>
+<td>POST api/external/is-registered/ (helpers.py:358-379, URL :377)</td>
+<td>create-connection, approve-reject, connection/search (enrichment), get-credit, credit/detail, credit/ledger, merchant/detail, settlement/detail, dispute/*</td>
+<td>is the identifier a registered eSewa entity? + name/product/tenant</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Projectmaster</td>
+<td>POST api/miniapp/validate-customer-connection/ (helpers.py:391-414, URL :412)</td>
+<td>create-connection, approve-reject</td>
+<td>is the customer a verified provider customer + name/tenant id</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/user/search/ (helpers.py:431-452)</td>
+<td>get-credit, merchant/detail (outstanding_credits)</td>
+<td>customer's credit records</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/detail/customer/{id}/ (helpers.py:220-241, URL :238)</td>
+<td>credit/detail/{pk}</td>
+<td>one credit record</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/ledger/customer/ (helpers.py:464-485, URL :482)</td>
+<td>connection/search (total_credit_amount), credit/ledger, merchant/detail (credit_logs)</td>
+<td>credit ledger entries</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/ledger/customer/overview/ (helpers.py:539-561, URL :558)</td>
+<td>credit/ledger/overview</td>
+<td>ledger summary</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/overview/customer/ (helpers.py:749-771, URL :771)</td>
+<td>credit/overview</td>
+<td>credit overview totals</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Sales</td>
+<td>POST api/miniapp/payment/request/ (helpers.py:576-609, URL :597)</td>
+<td>payment/request</td>
+<td>create payment request</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Sales</td>
+<td>POST api/miniapp/credit/pay/ (helpers.py:647-667, URL :655)</td>
+<td>credit/pay (commit=true)</td>
+<td>execute customer credit settlement</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Sales</td>
+<td>POST api/miniapp/settlement/search/internal/ (helpers.py:670-696, URL :693)</td>
+<td>settlement/search</td>
+<td>settlement/payment history</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Sales</td>
+<td>POST api/miniapp/settlement/detail/customer/{id}/ (helpers.py:715-731, URL :732)</td>
+<td>settlement/detail</td>
+<td>statement detail</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Sales</td>
+<td>POST api/miniapp/dispute/raise/ (helpers.py:488-511, URL :508)</td>
+<td>dispute/raise</td>
+<td>raise dispute</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Sales</td>
+<td>POST api/miniapp/dispute/cancel/{id}/ (helpers.py:292-320)</td>
+<td>dispute/cancel</td>
+<td>cancel dispute</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Sales</td>
+<td>POST api/miniapp/dispute/search/customer/ (helpers.py:257-277)</td>
+<td>dispute/search</td>
+<td>dispute list</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Sales</td>
+<td>POST api/miniapp/dispute/detail/customer/{id}/ (helpers.py:335-355)</td>
+<td>dispute/detail</td>
+<td>dispute detail</td>
+<td>sync (parallel)</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Payment</td>
+<td>POST api/esewa/payment/request/exists/ (helpers.py:185-209, URL :199)</td>
+<td>connection/terminate</td>
+<td>guard: active payment request?</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Payment</td>
+<td>POST api/esewa/payment/request/pay/{id}/ (helpers.py:612-644, URL :632)</td>
+<td>payment/request/pay/{id}</td>
+<td>complete/decline payment request (wallet charge)</td>
+<td>sync</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Events</td>
+<td>POST api/notification/miniapp/notify-user/ (tasks.py:34)</td>
+<td>create-connection (x2), approve-reject, payment/request, dispute/raise, dispute/cancel</td>
+<td>in-app notifications</td>
+<td><strong>async (celery)</strong></td>
+</tr>
+<tr>
+<td>21</td>
+<td>Events</td>
+<td>POST api/activity_log/miniapp/log-activity/ (tasks.py:77)</td>
+<td>same set as #20</td>
+<td>activity history</td>
+<td><strong>async (celery)</strong></td>
+</tr>
+</tbody></table>
+<p>Not used by the miniapp (connections/ERP app only): TMS <code>api/tenant/search-tenant/{id}/</code> + <code>api/tenant/get-organization/</code> (helpers.py:66-88, 91-124) for tenant name lookup in <code>connections/views.py</code>; Configuration <code>api/dashboard/tenant-fy-essence/</code> (helpers.py:32).</p>
+</section><section class="sec" data-title="10. Inbound calls (who calls CDXE)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-calls-who-calls-cdxe">10. Inbound calls (who calls CDXE)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Caller</th>
+<th>Method + path</th>
+<th>Purpose</th>
+<th>Evidence (file:line)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>miniapp-esewa frontend</strong> (all 19 public endpoints)</td>
+<td>see §4 mapping table</td>
+<td>full miniapp UI (merchant + customer)</td>
+<td>miniapp-esewa/src/services/requests/{connections.ts:18-21, customer.ts:146-164, merchants.ts:76-91, payment.ts:36-41, transactions.ts:96-150, credit.ts:250-483}; base src/services/api.ts:34-56</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>ERP-Projectmaster</strong> — customer search enrichment</td>
+<td>POST api/miniapp/get-connection/</td>
+<td>merchant's customer list shows connection state per customer</td>
+<td>ERP-Projectmaster/dashboard/helper.py:116, 267-288; ERP-Projectmaster/dashboard/async_func.py:61-99; called from ERP-Projectmaster/miniapp/serializers.py:152, 379 (customer search serializer enrichment)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>ERP-Projectmaster</strong> — customer deletion</td>
+<td>POST api/miniapp/connection/delete/customer/</td>
+<td>terminate the miniapp connection when a merchant deletes a customer (only if is_provider_user)</td>
+<td>ERP-Projectmaster/miniapp/views.py:183-192; ERP-Projectmaster/dashboard/helper.py:101; ERP-Projectmaster/dashboard/async_func.py:164-185</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Sales</strong> — celery reminder tasks</td>
+<td>POST api/miniapp/get-all-connection/</td>
+<td>due-date / over-due credit reminders need the full merchant-to-customer connection map</td>
+<td>Sales/dashboard/helper.py:189, 1212-1213; Sales/dashboard/async_func.py:185-197; used by shared_task send_due_date_reminder (Sales/miniapp/tasks.py:121-123) and send_over_due_reminder (Sales/miniapp/tasks.py:242-244)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>(unknown — no caller found)</td>
+<td>GET api/miniapp/total-connections/</td>
+<td>monitoring</td>
+<td>grep across E:Work found no call site</td>
+</tr>
+</tbody></table>
+<p>Frontend constants declared but <strong>not</strong> sent to CDXE: miniapp/merchants/search/ (dead constant, constants.ts:79); getCustomerConnections sends miniapp/connection/search/ to <strong>Sales</strong> (transactions.ts:155-165); customer master CRUD goes to Projectmaster (customer.ts:85-139); payment-request cancel goes to Payment (payment.ts:49-51).</p>
+</section><section class="sec" data-title="11. Unknowns &amp; assumptions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-assumptions">11. Unknowns & assumptions</h2>
+<ul>
+<li><strong>ESEWA_USER_CHECK_API / dummyjson</strong>: E:WorkCDXE-REBOOT.env:50 sets it to a dummyjson URL, but <strong>no CDXE code references it</strong> — the external eSewa user-verification call is <em>not</em> made by CDXE. The equivalent stub endpoint (dummy-customer-check) is in ERP-Projectmaster (ERP-Projectmaster/miniapp/views.py:255-262, registry ERP-Projectmaster/miniapp/registry.py:10-11, PM .env :49); that registry has no call sites found either. Treat the env var as a leftover/planned integration.</li>
+<li><strong>SIGNATURE flow not wired in frontend</strong>: no src/ file sets a SIGNATURE header, and the service functions settleCreditCustomerInitiated / customerInitiatedPaymentPay (credit.ts:394-416), payRequestedPayment (transactions.ts:140-153) and deleteDispute (credit.ts:485-501) have <strong>no call sites in views</strong> — customer-initiated commit=true payments and the customer-side dispute-cancel / payment-cancel flows appear unshipped in the current UI. deleteDispute additionally targets DELETE api/miniapp/credit/detail/{id}/ which has no DELETE handler in CDXE (would 405).</li>
+<li><strong>HMAC base-string quirk</strong>: SettleOutstandingCredit.generate_string_to_sign (miniapp/views.py:869-884) and ApproveDeclinePaymentRequest.generate_string_to_sign (miniapp/views.py:806-824) build the signed string from body fields merchant_identifier / total_allocated_amount; for payment/request/pay those fields are <strong>not declared</strong> by MiniappPaymentExecutionSerializer (fields: status, payment_request_id, transaction_id, miniapp/serializers.py:401-402), so unless the client sends undeclared extra fields the signed string is effectively "merchant_identifier=-total_allocated_amount=-transaction_id=...".</li>
+<li><strong>DeleteCustomerConnection guard</strong>: if-not-any check (miniapp/views.py:1083-1093) only 400s when <em>all</em> three fields are missing; a single missing field passes (then matches nothing).</li>
+<li><strong>multi_tenancy app</strong>: source files absent (only stale .pyc), not in INSTALLED_APPS, no references — unused by the miniapp; its (removed) provisioning behavior cannot be documented.</li>
+<li><strong>total-connections/</strong>: no in-repo caller found; assume ops/monitoring.</li>
+<li><strong>CDXE auth copy diverges from canonical</strong>: no local TOTP check, no verify_request_origin, no ExternalEntity lookup; TOTP verification is delegated to IAM (dashboard/auth_backends.py:105-109, 156-171). Whether IAM's UAT/DEVELOPMENT flags (which allow a missing TOTP) are set in a given environment is environment-dependent (IAM .env, not CDXE).</li>
+<li><strong>TOTP digit split by design</strong>: IAM verifies the request TOTP with 6 digits (IAM-Backend/IAM/settings.py:286, matching the frontend speakeasy default); CDXE's 10-digit TOTP (core/settings.py:255) is used <strong>only</strong> to build the HMAC-SHA256 key for SIGNATURE (miniapp/utils.py:19-24).</li>
+<li><strong>Frontend .env</strong>: only .env.example exists in miniapp-esewa; NEXT_PUBLIC_CDXE=dev-cdxe (hence <a href="https://dev-cdxe-api.providhy.com/api/">https://dev-cdxe-api.providhy.com/api/</a>) assumed from the example.</li>
+<li><strong>Tenant id truncation</strong>: ConnectionRequest.sender/receiver are CharField(10); assumes ERP tenant ids fit in 10 chars (TMS tenant ids, e.g. numeric strings).</li>
+<li><strong>Connection codes</strong>: default length 5 (connections/domain.py:8) although the column allows 6; the frontend appends the code from the create-connection response as the URL segment.</li>
+<li>Connections app list() is intentionally disabled (403, connections/views.py:106-112); ERP list views must use search/ or tenant-search/.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="04-sales-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">Sales Miniapp</div></a><a class="pn next" href="06-projectmaster-miniapp.html"><div class="pn-dir">Next →</div><div class="pn-name">Projectmaster Miniapp</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l3"><a href="#3-1-code-federatedidentityauthentication-code-cdxe-copy">3.1 &lt;code&gt;FederatedIdentityAuthentication&lt;/code&gt; — CDXE copy</a></li><li class="l3"><a href="#3-2-code-hasfederatedentitypermission-code-permission-layer">3.2 &lt;code&gt;HasFederatedEntityPermission&lt;/code&gt; (permission layer)</a></li><li class="l3"><a href="#3-3-internal-endpoints-code-internalrequestpermission-code">3.3 Internal endpoints: &lt;code&gt;InternalRequestPermission&lt;/code&gt;</a></li><li class="l3"><a href="#3-4-erp-dashboard-endpoints-code-iamauthenticationbackend-code">3.4 ERP dashboard endpoints: &lt;code&gt;IAMAuthenticationBackend&lt;/code&gt;</a></li><li class="l3"><a href="#3-5-code-signature-code-header-payment-integrity">3.5 &lt;code&gt;SIGNATURE&lt;/code&gt; header (payment integrity)</a></li><li class="l2"><a href="#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-endpoints-federated-auth-called-by-miniapp-esewa">4.1 Public miniapp endpoints (federated auth; called by miniapp-esewa)</a></li><li class="l3"><a href="#4-2-internal-service-to-service-endpoints-code-internalrequestpermission-code-shared-code-password-code">4.2 Internal service-to-service endpoints (&lt;code&gt;InternalRequestPermission&lt;/code&gt;, shared &lt;code&gt;password&lt;/code&gt;)</a></li><li class="l3"><a href="#4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</a></li><li class="l2"><a href="#5-per-endpoint-flow-traces">5. Per-endpoint flow traces</a></li><li class="l3"><a href="#5-1-post-api-miniapp-create-connection-createconnection-code-miniapp-views-py-68-144-code">5.1 POST /api/miniapp/create-connection/ — CreateConnection (&lt;code&gt;miniapp/views.py:68-144&lt;/code&gt;)</a></li><li class="l3"><a href="#5-2-post-api-miniapp-approve-reject-connection-code-approverejectconnection-code-miniapp-views-py-147-232-code">5.2 POST /api/miniapp/approve-reject-connection/{code}/ — ApproveRejectConnection (&lt;code&gt;miniapp/views.py:147-232&lt;/code&gt;)</a></li><li class="l3"><a href="#5-3-post-api-miniapp-connection-terminate-pk-removeconnection-code-miniapp-views-py-235-285-code">5.3 POST /api/miniapp/connection/terminate/{pk}/ — RemoveConnection (&lt;code&gt;miniapp/views.py:235-285&lt;/code&gt;)</a></li><li class="l3"><a href="#5-4-get-api-miniapp-connection-search-getconnectionlistforcustomer-code-miniapp-views-py-644-724-code">5.4 GET /api/miniapp/connection/search/ — GetConnectionListForCustomer (&lt;code&gt;miniapp/views.py:644-724&lt;/code&gt;)</a></li><li class="l3"><a href="#5-5-get-api-miniapp-get-credit-getcreditdetailsforcustomer-code-miniapp-views-py-394-491-code">5.5 GET /api/miniapp/get-credit/ — GetCreditDetailsForCustomer (&lt;code&gt;miniapp/views.py:394-491&lt;/code&gt;)</a></li><li class="l3"><a href="#5-6-get-api-miniapp-credit-overview-creditoverview-code-miniapp-views-py-369-391-code">5.6 GET /api/miniapp/credit/overview/ — CreditOverview (&lt;code&gt;miniapp/views.py:369-391&lt;/code&gt;)</a></li><li class="l3"><a href="#5-7-get-api-miniapp-credit-detail-pk-creditdetailview-code-miniapp-views-py-494-537-code">5.7 GET /api/miniapp/credit/detail/{pk}/ — CreditDetailView (&lt;code&gt;miniapp/views.py:494-537&lt;/code&gt;)</a></li><li class="l3"><a href="#5-8-get-api-miniapp-credit-ledger-creditledgerview-code-miniapp-views-py-540-589-code">5.8 GET /api/miniapp/credit/ledger/ — CreditLedgerView (&lt;code&gt;miniapp/views.py:540-589&lt;/code&gt;)</a></li><li class="l3"><a href="#5-9-get-api-miniapp-credit-ledger-overview-creditledgeroverview-code-miniapp-views-py-592-641-code">5.9 GET /api/miniapp/credit/ledger/overview/ — CreditLedgerOverview (&lt;code&gt;miniapp/views.py:592-641&lt;/code&gt;)</a></li><li class="l3"><a href="#5-10-get-api-miniapp-merchant-detail-pk-merchantdetailview-code-miniapp-views-py-1028-1073-code">5.10 GET /api/miniapp/merchant/detail/{pk} — MerchantDetailView (&lt;code&gt;miniapp/views.py:1028-1073&lt;/code&gt;)</a></li><li class="l3"><a href="#5-11-post-api-miniapp-payment-request-requestminiapppayment-code-miniapp-views-py-727-785-code">5.11 POST /api/miniapp/payment/request/ — RequestMiniappPayment (&lt;code&gt;miniapp/views.py:727-785&lt;/code&gt;)</a></li><li class="l3"><a href="#5-12-post-api-miniapp-payment-request-pay-payment-request-id-approvedeclinepaymentrequest-code-miniapp-views-py-788-840-code">5.12 POST /api/miniapp/payment/request/pay/{payment_request_id}/ — ApproveDeclinePaymentRequest (&lt;code&gt;miniapp/views.py:788-840&lt;/code&gt;)</a></li><li class="l3"><a href="#5-13-post-api-miniapp-credit-pay-settleoutstandingcredit-code-miniapp-views-py-843-917-code">5.13 POST /api/miniapp/credit/pay/ — SettleOutstandingCredit (&lt;code&gt;miniapp/views.py:843-917&lt;/code&gt;)</a></li><li class="l3"><a href="#5-14-get-api-miniapp-settlement-search-settlementsearchview-code-miniapp-views-py-920-975-code">5.14 GET /api/miniapp/settlement/search/ — SettlementSearchView (&lt;code&gt;miniapp/views.py:920-975&lt;/code&gt;)</a></li><li class="l3"><a href="#5-15-get-api-miniapp-settlement-detail-pk-settlementdetailview-code-miniapp-views-py-978-1025-code">5.15 GET /api/miniapp/settlement/detail/{pk}/ — SettlementDetailView (&lt;code&gt;miniapp/views.py:978-1025&lt;/code&gt;)</a></li><li class="l3"><a href="#5-16-post-api-miniapp-dispute-raise-raisecreditrecorddisputeview-code-miniapp-views-py-1121-1183-code">5.16 POST /api/miniapp/dispute/raise/ — RaiseCreditRecordDisputeView (&lt;code&gt;miniapp/views.py:1121-1183&lt;/code&gt;)</a></li><li class="l3"><a href="#5-17-post-api-miniapp-dispute-cancel-dispute-id-creditdisputecancelview-code-miniapp-views-py-1186-1242-code">5.17 POST /api/miniapp/dispute/cancel/{dispute_id}/ — CreditDisputeCancelView (&lt;code&gt;miniapp/views.py:1186-1242&lt;/code&gt;)</a></li><li class="l3"><a href="#5-18-get-api-miniapp-dispute-search-searchcreditrecorddisputeview-code-miniapp-views-py-1245-1286-code">5.18 GET /api/miniapp/dispute/search/ — SearchCreditRecordDisputeView (&lt;code&gt;miniapp/views.py:1245-1286&lt;/code&gt;)</a></li><li class="l3"><a href="#5-19-get-api-miniapp-dispute-detail-dispute-id-creditdisputedetailview-code-miniapp-views-py-1289-1329-code">5.19 GET /api/miniapp/dispute/detail/{dispute_id}/ — CreditDisputeDetailView (&lt;code&gt;miniapp/views.py:1289-1329&lt;/code&gt;)</a></li><li class="l3"><a href="#5-20-post-api-miniapp-get-connection-getconnectionlist-internal-code-miniapp-views-py-288-330-code">5.20 POST /api/miniapp/get-connection/ — GetConnectionList (INTERNAL) (&lt;code&gt;miniapp/views.py:288-330&lt;/code&gt;)</a></li><li class="l3"><a href="#5-21-post-api-miniapp-get-all-connection-getallconnections-internal-code-miniapp-views-py-333-366-code">5.21 POST /api/miniapp/get-all-connection/ — GetAllConnections (INTERNAL) (&lt;code&gt;miniapp/views.py:333-366&lt;/code&gt;)</a></li><li class="l3"><a href="#5-22-post-api-miniapp-connection-delete-customer-deletecustomerconnection-internal-code-miniapp-views-py-1076-1118-code">5.22 POST /api/miniapp/connection/delete/customer/ — DeleteCustomerConnection (INTERNAL) (&lt;code&gt;miniapp/views.py:1076-1118&lt;/code&gt;)</a></li><li class="l3"><a href="#5-23-get-api-miniapp-total-connections-totalconnectionsview-internal-code-miniapp-views-py-1332-1368-code">5.23 GET /api/miniapp/total-connections/ — TotalConnectionsView (INTERNAL) (&lt;code&gt;miniapp/views.py:1332-1368&lt;/code&gt;)</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-sequence-diagrams">7. Sequence diagrams</a></li><li class="l3"><a href="#7-1-merchant-invites-a-customer-customer-approves">7.1 Merchant invites a customer; customer approves</a></li><li class="l3"><a href="#7-2-customer-initiated-credit-settlement-credit-pay">7.2 Customer-initiated credit settlement (credit/pay)</a></li><li class="l3"><a href="#7-3-payment-request-merchant-initiates-customer-completes">7.3 Payment request: merchant initiates, customer completes</a></li><li class="l3"><a href="#7-4-customer-deletion-cascade-projectmaster-to-cdxe">7.4 Customer deletion cascade (Projectmaster to CDXE)</a></li><li class="l2"><a href="#8-business-process-walkthroughs">8. Business process walkthroughs</a></li><li class="l2"><a href="#9-outbound-calls-cdxe-other-services">9. Outbound calls (CDXE → other services)</a></li><li class="l2"><a href="#10-inbound-calls-who-calls-cdxe">10. Inbound calls (who calls CDXE)</a></li><li class="l2"><a href="#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

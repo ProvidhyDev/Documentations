@@ -1,0 +1,268 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Customer Side - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc current" href="C-customer-side.html"><span>Customer Side</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="C-customer-side.html#1-register-log-in">1. Register &amp; log in</a><a class="sb-item sb-sub" href="C-customer-side.html#2-connection-requests-merchant-invites-customer-decides">2. Connection requests (merchant invites, customer decides)</a><a class="sb-item sb-sub" href="C-customer-side.html#3-see-my-credit">3. See my credit</a><a class="sb-item sb-sub" href="C-customer-side.html#4-raise-an-issue-dispute">4. Raise an issue (dispute)</a><a class="sb-item sb-sub" href="C-customer-side.html#5-payment-requests-merchant-asks-customer-pays-or-declines">5. Payment requests (merchant asks, customer pays or declines)</a><a class="sb-item sb-sub" href="C-customer-side.html#6-settle-by-myself-customer-initiated-payment">6. Settle by myself (customer-initiated payment)</a><a class="sb-item sb-sub" href="C-customer-side.html#7-notifications">7. Notifications</a><a class="sb-item sb-sub" href="C-customer-side.html#appendix-a-the-customer-facing-api-surface-what-the-wallet-app-calls">Appendix A — the customer-facing API surface (what the wallet app calls)</a><a class="sb-item sb-sub" href="C-customer-side.html#appendix-b-honest-caveats">Appendix B — honest caveats</a></div></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>The Customer (eSewa User) Side — Feature Guide</h1>
+<blockquote>
+<p>For the business person AND the engineer. The customer app runs <strong>inside the eSewa wallet app</strong> — it is NOT in the miniapp-esewa repo (verified on the production branch: that repo contains only the merchant UI). Everything in this guide is the <strong>customer-facing backend surface</strong> the wallet app calls, traced from the code (docs 03–10). Where a flow is not wired anywhere yet, it says so honestly.</p>
+</blockquote>
+<p>Identity: a customer is an <strong>eSewa wallet user</strong> (entity type ESU). Their wallet id is their login. They only see a merchant&#39;s credit data after the merchant <strong>connected</strong> them (section 2).</p>
+<p>Every call carries the customer&#39;s JWT + a fresh 6-digit TOTP code, verified by each service against IAM (doc 02). Internal hops between services use the shared internal password.</p>
+</section><section class="sec" data-title="1. Register &amp; log in"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-register-log-in">1. Register &amp; log in</h2>
+<p><strong>What it is.</strong> Same door as the merchant: first time → accept terms → registered; after that → login. Their eSewa identity (wallet id) is the account.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Wallet app → <strong>IAM</strong> <code>POST /api/external/register/</code> (eSewa token + wallet id + provider esewa) — one time; IAM links the identity, <strong>TMS</strong> provisions/links the tenant side, <strong>Configuration</strong> copies default rules (docs 03 §5.1, 08 §5.5, 09 §6.3).</li>
+<li>Login → <strong>IAM</strong> <code>POST /api/external/token/</code> → JWT (user, tenant, type ESU, permissions) + refresh (doc 03 §5.2).</li>
+<li>Auto-refresh on expiry via <code>POST /api/external/token/refresh/</code> (doc 07 Part B §B.3).</li>
+</ol>
+<p><strong>Rules &amp; edge cases.</strong> Same as merchant (M-doc §1): unique per provider, idempotent provisioning, funnel event + welcome notification recorded.</p>
+</section><section class="sec" data-title="2. Connection requests (merchant invites, customer decides)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-connection-requests-merchant-invites-customer-decides">2. Connection requests (merchant invites, customer decides)</h2>
+<p><strong>What it is.</strong> When a merchant sends a connection request, the customer gets an in-app notification. Approving it is what unlocks seeing the merchant&#39;s credit, disputes and payment requests.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Merchant side creates the pending connection with a <strong>5-digit code</strong> (CDXE — merchant guide §3).</li>
+<li>Customer opens the request → wallet app → <strong>CDXE</strong> <code>POST /api/miniapp/approve-reject-connection/{code}/</code> (doc 05 §5.6):<ul>
+<li><strong>Approve</strong>: connection becomes approved (code validated, code cleared), both sides notified.</li>
+<li><strong>Decline</strong>: both connection rows are <strong>deleted</strong> — the invitation disappears, nothing is stored.</li>
+</ul>
+</li>
+<li>Customer lists their merchants: <strong>CDXE</strong> <code>GET /api/miniapp/connection/search/</code> (their connections) and <code>GET /api/miniapp/merchant/detail/{pk}</code> (merchant info incl. outstanding credit owed — internally enriched from the Sales ledger, doc 05 §5.16/§5.4).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+ participant M as Merchant
+ participant C as CDXE
+ participant U as Customer (wallet app)
+ M-&gt;&gt;C: create-connection (pending + code)
+ C--)U: notification: merchant X wants to connect
+ U-&gt;&gt;C: approve-reject-connection/{code} (approved)
+ C-&gt;&gt;C: approved
+ C--)M: notification: customer accepted
+ Note over U,C: decline = rows deleted, invitation gone
+ U-&gt;&gt;C: connection/search + merchant/detail/{pk}
+ C--&gt;&gt;U: my merchants + what I owe each
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li>No connection = no credit visibility. The customer&#39;s app only surfaces merchants they approved.</li>
+<li>Decline is a hard delete (no history) — doc 05 §5.6.</li>
+<li>If the merchant later terminates the connection, it becomes terminated (history kept) — doc 05 §5.7.</li>
+</ul>
+</section><section class="sec" data-title="3. See my credit"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-see-my-credit">3. See my credit</h2>
+<p><strong>What it is.</strong> Everything the customer owes: per-merchant totals, each credit entry, the running ledger (credits + payments) and statements.</p>
+<p><strong>How it works (all via CDXE, which pulls live data from Sales internally):</strong></p>
+<ol>
+<li><strong>My credits</strong> (for a merchant): <strong>CDXE</strong> <code>GET /api/miniapp/get-credit/</code> — the customer&#39;s credit records for connected merchants (internally: Sales <code>credit/user/search/</code> + <code>credit/detail/customer/</code> over the connected merchant tenant ids — doc 05 §5.8).</li>
+<li><strong>Totals</strong>: <code>GET /api/miniapp/credit/overview/</code> (outstanding, paid) (doc 05 §5.12).</li>
+<li><strong>Ledger</strong>: <code>GET /api/miniapp/credit/ledger/</code> + <code>/credit/ledger/overview/</code> (by connection + dates) (doc 05 §5.10/5.11).</li>
+<li><strong>One credit entry</strong>: <code>GET /api/miniapp/credit/detail/{id}/</code> (doc 05 §5.13).</li>
+<li><strong>Statements/history</strong>: <code>GET /api/miniapp/settlement/search/</code> + <code>/detail/{id}/</code> (doc 05 §5.17/5.18).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart LR
+ A[My merchants] --&gt; B[Credits list]
+ B --&gt; C[Credit entry]
+ A --&gt; D[Totals / ledger / statements]
+ B --&gt; E[Pay - sections 5 and 6]
+ C --&gt; E
+ B --&gt; F[Dispute - section 4]
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li>All reads are scoped by the approved connections of <em>this</em> customer (CDXE manager get_connected_merchant_tenant_ids — doc 05 §3/§6) — a customer can never see another customer&#39;s numbers.</li>
+<li>Data lives in <strong>Sales</strong>; CDXE is the customer-facing proxy (merchant side reads Sales directly — merchant guide §4).</li>
+</ul>
+</section><section class="sec" data-title="4. Raise an issue (dispute)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-raise-an-issue-dispute">4. Raise an issue (dispute)</h2>
+<p><strong>What it is.</strong> The customer flags a credit entry — wrong amount, already paid, not their purchase. The merchant then fixes (edits) or cancels (deletes) the credit (merchant guide §7).</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Raise → wallet app → <strong>CDXE</strong> <code>POST /api/miniapp/dispute/raise/</code> → internally <strong>Sales</strong> <code>POST /api/miniapp/dispute/raise/</code> (doc 05 §5.19 → doc 04 §5.7).</li>
+<li>Sales guards: the credit must be <strong>unpaid</strong>, have <strong>no settlement</strong> yet, and have <strong>no other pending dispute</strong> — otherwise 400 (doc 04 §5.7).</li>
+<li>List/detail: CDXE <code>dispute/search/</code> + <code>dispute/detail/{id}/</code> (internally Sales customer variants, doc 04 §5.27/5.28).</li>
+<li>Withdraw: CDXE <code>POST /api/miniapp/dispute/cancel/{id}/</code> (doc 04 §5.8).</li>
+<li>Merchant resolution (edit/delete) updates the dispute to resolved — the customer sees the result via their credit list/detail again; every step notifies <strong>Events</strong>.</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+ [*] --&gt; UnpaidCredit
+ UnpaidCredit --&gt; Disputed: customer raises
+ Disputed --&gt; Resolved: merchant edits the credit
+ Disputed --&gt; Cancelled: merchant deletes the credit
+ Disputed --&gt; UnpaidCredit: customer withdraws
+ Resolved --&gt; [*]
+ Cancelled --&gt; [*]
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li>While a dispute is pending the credit can&#39;t be settled (either side).</li>
+<li>The server side is complete and live; the customer-side raise UI belongs to the wallet app, not the miniapp-esewa repo (doc 07 §C.5).</li>
+<li>Known code quirk: one dispute-delete path writes the wrong status field (resolved flag may not persist) — doc 04 §11.7.</li>
+</ul>
+</section><section class="sec" data-title="5. Payment requests (merchant asks, customer pays or declines)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-payment-requests-merchant-asks-customer-pays-or-declines">5. Payment requests (merchant asks, customer pays or declines)</h2>
+<p><strong>What it is.</strong> The merchant sends a pay request (for one credit or the full amount owed). The customer gets a notification and chooses: <strong>pay</strong> from the eSewa wallet or <strong>decline</strong>.</p>
+<p><strong>How it works (customer side):</strong></p>
+<ol>
+<li>Request arrives (created merchant-side — merchant guide §6); customer is notified by <strong>Events</strong> (doc 10 §7.3).</li>
+<li>Customer opens it → wallet app → <strong>CDXE</strong> <code>POST /api/miniapp/payment/request/pay/{id}/</code> with status completed + wallet transaction_id (or declined). For completed, the payload must carry a <strong>signature</strong> — HMAC-SHA256 over the request keyed with the shared eSewa key + a 10-digit TOTP (doc 05 §5.15, miniapp/utils.py:19-42).</li>
+<li>CDXE → <strong>Payment</strong> <code>POST /api/esewa/payment/request/pay/{settlement_id}/</code> (marks the record completed/declined; guards: must be requested, must belong to a merchant connected to this customer — doc 07 A.4).</li>
+<li>Payment → <strong>Sales</strong> <code>POST /api/miniapp/payment/request/settle/</code> (doc 07 C.1; doc 04 §5.21):<ul>
+<li>completed → settlement <strong>approved</strong>, the credit(s) reduced → customer sees it in their ledger/statement;</li>
+<li>declined → <strong>rejected</strong>, credits untouched;</li>
+<li>(merchant cancel → draft — customer just sees the request disappear, merchant guide §6).</li>
+</ul>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+ participant U as Customer (wallet app)
+ participant C as CDXE
+ participant P as Payment
+ participant S as Sales
+ participant E as Events
+ U-&gt;&gt;C: payment/request/pay/{id} (completed + txn id + SIGNATURE)
+ C-&gt;&gt;C: verify HMAC signature
+ C-&gt;&gt;P: payment/request/pay/{settlement_id}
+ P-&gt;&gt;S: payment/request/settle (completed)
+ S-&gt;&gt;S: settlement approved, credits reduced
+ C--)E: notify both sides
+ Note over U,S: declined = same path -&gt; rejected, credits untouched
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li>One pending request per customer at a time (blocks delete/terminate on the merchant side — doc 05 §5.7).</li>
+<li>In this code build the wallet charge itself is mocked (no live ePay call in these repos — doc 07 §C.5); the flow above is exactly what happens around it.</li>
+<li>The miniapp-esewa repo contains the customer pay function (payRequestedPayment) but it is <strong>not wired to any page</strong> and doesn&#39;t produce the signature — evidence the customer UI lives in the wallet app, not this repo (doc 07 §B.5/§C.5).</li>
+</ul>
+</section><section class="sec" data-title="6. Settle by myself (customer-initiated payment)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-settle-by-myself-customer-initiated-payment">6. Settle by myself (customer-initiated payment)</h2>
+<p><strong>What it is.</strong> Without waiting for a request, the customer can pay on their own: (a) <strong>one specific credit</strong> in full or part, or (b) <strong>anything pending with a chosen merchant</strong> — the payment is allocated across that merchant&#39;s open credits.</p>
+<p><strong>How it works (both variants are the same call with different allocations):</strong></p>
+<ol>
+<li>Customer picks a merchant + amount → wallet app → <strong>CDXE</strong> <code>POST /api/miniapp/credit/pay/</code> with merchant_identifier, total_allocated_amount, and items (credit id + allocated amount per entry) (doc 05 §5.9).<ul>
+<li>variant (a): items = the single credit;</li>
+<li>variant (b): items = that merchant&#39;s open credits (the app allocates the amount across them).</li>
+</ul>
+</li>
+<li>CDXE first does a <strong>dry run</strong> (commit=false) — validates sums + the approved connection, and answers: Validation successful. Ready to commit. (doc 05 §7.2).</li>
+<li>Then the real commit (commit=true) with the <strong>SIGNATURE</strong> header (HMAC, same scheme as section 5) → CDXE → <strong>Sales</strong> <code>POST /api/miniapp/credit/pay/</code> (doc 04 §5.6).</li>
+<li>Sales creates an <strong>approved settlement</strong> in one atomic step: reduces the credits, records the payment, and registers the completed request with <strong>Payment</strong> (transaction id from the wallet) (doc 04 §5.6).</li>
+<li><strong>Events</strong> notifies the merchant that the customer paid (doc 10 §7.2).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+ A[Customer picks merchant + amount] --&gt; B[Dry run commit=false]
+ B --&gt;|invalid| X[Error - nothing changed]
+ B --&gt;|OK Ready to commit| C[Commit commit=true + SIGNATURE]
+ C --&gt; D[Sales: approved settlement]
+ D --&gt; E[Selected credits reduced]
+ D --&gt; F[Payment record completed]
+ D --&gt; G[Merchant notified]
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li>Only <strong>connected</strong> merchants can be paid this way; only credits that are unpaid and not in dispute qualify.</li>
+<li>The signature check means the wallet must be the one committing — a plain app without the shared key can&#39;t forge a payment (doc 05 §3).</li>
+<li>This flow&#39;s frontend functions exist in miniapp-esewa (settleCreditCustomerInitiated, customerInitiatedPaymentPay) but are <strong>exported, unused stubs</strong> — again pointing to the wallet app as the real client (doc 07 §B.5).</li>
+</ul>
+</section><section class="sec" data-title="7. Notifications"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-notifications">7. Notifications</h2>
+<p><strong>What it is.</strong> The bell: connection requests, credits added, payment requests, payment results, dispute outcomes, due-date reminders.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Backends push via <strong>Events</strong> <code>notify-user/</code> (internal, queued, per user, gated by the customer&#39;s notification preferences) (doc 10 §7.1).</li>
+<li>Wallet app polls <code>GET /api/notification/miniapp/list/</code> (federated) and can mark read / change preferences (mark-read/, notification/preference/) (doc 10 §4/§5).</li>
+</ol>
+<p><strong>Rules &amp; edge cases.</strong> In-app only (no email/SMS) — doc 10 §11. Daily 6:00 AM due-date/overdue reminders for the customer&#39;s credits are generated by Sales/CDXE scheduled jobs (doc 04 §8; doc 05 §9).</p>
+</section><section class="sec" data-title="Appendix A — the customer-facing API surface (what the wallet app calls)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="appendix-a-the-customer-facing-api-surface-what-the-wallet-app-calls">Appendix A — the customer-facing API surface (what the wallet app calls)</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Method + path (service)</th>
+<th>Status in this checkout</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Login</td>
+<td>POST /api/external/token/ (IAM)</td>
+<td>live (shared)</td>
+</tr>
+<tr>
+<td>Register</td>
+<td>POST /api/external/register/ (IAM)</td>
+<td>live (shared)</td>
+</tr>
+<tr>
+<td>Refresh</td>
+<td>POST /api/external/token/refresh/ (IAM)</td>
+<td>live (shared)</td>
+</tr>
+<tr>
+<td>My connections</td>
+<td>GET /api/miniapp/connection/search/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Approve/decline request</td>
+<td>POST /api/miniapp/approve-reject-connection/{code}/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Merchant detail</td>
+<td>GET /api/miniapp/merchant/detail/{pk} (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>My credits</td>
+<td>GET /api/miniapp/get-credit/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Credit totals</td>
+<td>GET /api/miniapp/credit/overview/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Ledger</td>
+<td>GET /api/miniapp/credit/ledger/ + /overview/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Credit entry</td>
+<td>GET /api/miniapp/credit/detail/{id}/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Statements</td>
+<td>GET /api/miniapp/settlement/search/ + /detail/{id}/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Raise dispute</td>
+<td>POST /api/miniapp/dispute/raise/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Cancel dispute</td>
+<td>POST /api/miniapp/dispute/cancel/{id}/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Disputes list/detail</td>
+<td>GET /api/miniapp/dispute/search/ + /detail/{id}/ (CDXE)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Pay/decline payment request</td>
+<td>POST /api/miniapp/payment/request/pay/{id}/ (CDXE; SIGNATURE for completed)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Self-settlement</td>
+<td>POST /api/miniapp/credit/pay/ (CDXE; dry-run then signed commit)</td>
+<td>server live; wallet UI</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>GET /api/notification/miniapp/list/ + mark-read + preference (Events)</td>
+<td>server live; wallet UI</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Appendix B — honest caveats"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="appendix-b-honest-caveats">Appendix B — honest caveats</h2>
+<ul>
+<li><strong>The customer UI is not in any repo we have</strong>: miniapp-esewa (production branch, verified 2026-11-04) contains only merchant pages; the customer app ships inside the eSewa wallet app. This document therefore describes the backend contract the wallet app implements.</li>
+<li>In the merchant repo, all customer-side request functions are <strong>exported but unused</strong> (no page sends them, and the SIGNATURE header is never produced by that repo) — consistent with the wallet app being the real caller (doc 07 §B.5/§C.5).</li>
+<li><strong>Mock ePay</strong>: no live eSewa ePay integration in the backend repos of this build — wallet charges are status records / env-mocked (doc 07 §C.5).</li>
+<li>Dispute-status field quirk on one delete path (doc 04 §11.7); mark-read implementation quirk (doc 10 §11a).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="M-merchant-side.html"><div class="pn-dir">← Previous</div><div class="pn-name">Merchant Side</div></a><a class="pn next" href="02-authentication-deep-dive.html"><div class="pn-dir">Next →</div><div class="pn-name">Authentication</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-register-log-in">1. Register &amp; log in</a></li><li class="l2"><a href="#2-connection-requests-merchant-invites-customer-decides">2. Connection requests (merchant invites, customer decides)</a></li><li class="l2"><a href="#3-see-my-credit">3. See my credit</a></li><li class="l2"><a href="#4-raise-an-issue-dispute">4. Raise an issue (dispute)</a></li><li class="l2"><a href="#5-payment-requests-merchant-asks-customer-pays-or-declines">5. Payment requests (merchant asks, customer pays or declines)</a></li><li class="l2"><a href="#6-settle-by-myself-customer-initiated-payment">6. Settle by myself (customer-initiated payment)</a></li><li class="l2"><a href="#7-notifications">7. Notifications</a></li><li class="l2"><a href="#appendix-a-the-customer-facing-api-surface-what-the-wallet-app-calls">Appendix A — the customer-facing API surface (what the wallet app calls)</a></li><li class="l2"><a href="#appendix-b-honest-caveats">Appendix B — honest caveats</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

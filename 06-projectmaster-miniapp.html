@@ -1,0 +1,782 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Projectmaster Miniapp - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc current" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#3-authentication-authorization">3. Authentication &amp; authorization</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#6-data-model">6. Data model</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#7-key-sequence-diagrams">7. Key sequence diagrams</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></div><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Projectmaster — Federated Miniapp Documentation</h1>
+<p>Scope: the <code>miniapp</code> app of <code>E:\Work\ERP-Projectmaster</code> (Django service <code>projectmaster</code>, DB <code>Master</code>) — the eSewa miniapp surface for merchant customer master data (add / search / detail / edit / delete) plus three password-protected internal endpoints used by sibling services.
+Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, models.py, mixins.py, filters.py, registry.py, tasks.py, admin.py}</code>, <code>ERP-Projectmaster\core\{urls.py, settings.py}</code>, <code>ERP-Projectmaster\dashboard\{auth_backends.py, helper.py, async_func.py, send_requests.py, mixins.py, pagination.py, choices.py, messages.py, exception.py, api_links.py, kafka_function.py}</code>, <code>ERP-Projectmaster\customer\models.py</code>, <code>ERP-Projectmaster\supplier\models.py</code>, <code>ERP-Projectmaster\employee\models.py</code>, <code>ERP-Projectmaster\payment_term\models.py</code>, <code>ERP-Projectmaster\dashboard\models.py</code>, <code>ERP-Projectmaster\.env</code>, <code>ERP-Projectmaster\Dockerfile</code>, <code>ERP-Projectmaster\Jenkinsfile</code>, <code>ERP-Projectmaster\requirements.txt</code>; call sites in <code>Sales</code>, <code>CDXE-REBOOT</code>, <code>Payment-Service</code>, <code>miniapp-esewa</code>; installed DRF 3.18.3 source in <code>ERP-Projectmaster\.venv</code>.</p>
+<p>Base host (dev, public): <code>https://dev-projectmaster-api.providhy.com</code> — from frontend <code>.env.example</code> (<code>NEXT_PUBLIC_PROJECT_MASTER=&quot;dev-projectmaster&quot;</code>, <code>NEXT_PUBLIC_DOMAIN=&quot;-api.providhy.com/api/&quot;</code>, <code>miniapp-esewa\.env.example</code>) and SHARED-CONTEXT.md; the repo&#39;s own <code>.env</code> has <code>PROJECTMASTER_BACKEND_URL = localhost:8005</code> with the dev value commented out (<code>.env:31-32</code>). Internal (docker) base: <code>http://projectmaster:8000</code> (<code>.env:21</code>, <code>dashboard\api_links.py:10</code>).</p>
+</section><section class="sec" data-title="1. Business overview (plain language for a NON-technical reader)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</h2>
+<p>Projectmaster is the &quot;company directory&quot; of the Providhy ERP. For every business (tenant) that uses the platform it keeps the master lists of the people and terms the business deals with: its <strong>customers</strong> (who it sells to on credit), <strong>suppliers</strong>, <strong>employees</strong>, and <strong>payment terms</strong> (how many days a buyer gets to pay). Everything else in the ERP — sales invoices, credit, payments — hangs off these lists, which is why the service is called &quot;project master&quot;.</p>
+<p>On top of the normal ERP screens, Projectmaster serves a special, smaller surface for the <strong>eSewa miniapp</strong> — the wallet/credit app that eSewa merchants (called ESM, eSewa Merchant) use. A merchant who runs a small shop can extend credit to a regular customer (&quot;buy now, pay later&quot;). To do that inside the miniapp, the merchant: adds the customer (name, phone, and optionally a link to that person&#39;s eSewa wallet), searches their customer list (with each customer&#39;s current credit balance and whether the wallet link is connected), opens a customer to see their balance and the five most recent credit records, edits basic details, or removes the customer. Behind the scenes the app assembles that balance and connection status from sibling services (Sales keeps the credit records, CDXE keeps the &quot;connection&quot; between a merchant and a wallet user, Payment tracks pending payment requests).</p>
+<p>The same surface also answers quick yes/no questions from other Providhy services: &quot;for this merchant&#39;s company, is this eSewa wallet identifier a real, active customer of theirs (and a wallet user we may connect to)?&quot; Sales asks this when listing or creating credit, CDXE when a connection is requested or approved, and Payment keeps the same check available for payment flows. Those internal questions are protected not by a login token but by a shared service password — an internal, service-to-service channel.</p>
+<p>The business value: a merchant&#39;s credit book (who they are lending to and how much is owed) is managed in exactly one place, isolated per company, and safely linked to eSewa wallet identities so credit can be settled through the wallet.</p>
+</section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
+<ul>
+<li><strong>Stack</strong>: Django (5.x per comment in <code>core\settings.py:16</code>), Django REST Framework <strong>3.18.3</strong> (<code>.venv\Lib\site-packages\djangorestframework-3.18.3.dist-info</code>; unpinned in <code>requirements.txt</code>), Python 3.11 (<code>Dockerfile:2</code>), PostgreSQL via <code>django_prometheus.db.backends.postgresql</code> (<code>core\settings.py:97-107</code>), DB name <code>Master</code> (<code>.env:10</code>), django-prometheus metrics (<code>core\settings.py:40,57,67</code>, <code>core\urls.py:14</code>), CORS with <code>Authorization</code> + <code>X-MINIAPP-TOKEN</code> allowed headers (<code>core\settings.py:160-163</code>), <code>python-decouple</code> config (<code>.env</code>).</li>
+<li><strong>Apps</strong> (<code>core\settings.py:39-54</code>): <code>dashboard</code> (shared infrastructure: auth backends, helpers, outbound-call functions, pagination, mixins, choices, messages), <code>customer</code>, <code>supplier</code>, <code>employee</code>, <code>payment_term</code> (domain apps, each with its own dashboard-facing <code>/api/...</code> URL mount), <code>miniapp</code> (this surface). Note: the shared-context repo map mentions an <code>mcp_tools</code> app — it is <strong>not present</strong> in this checkout.</li>
+<li><strong>URL layout</strong> (<code>core\urls.py:7-16</code>): <code>api/dashboard/</code>, <code>api/payment-term/</code>, <code>api/supplier/</code>, <code>api/employee/</code>, <code>api/customer/</code>, and <strong><code>api/miniapp/</code></strong> (<code>core\urls.py:13</code>) — the miniapp mount. Admin is appended unconditionally (<code>core\urls.py:18-19</code>, URL from <code>PROJECTMASTER_ADMIN_URL</code>, <code>.env:50</code>).</li>
+<li><strong>Async/celery/kafka</strong>: one Celery <code>shared_task</code> exists — <code>send_activity_log</code> (<code>miniapp\tasks.py:11-53</code>) — but <code>core\settings.py</code> defines <strong>no</strong> <code>CELERY_BROKER_URL</code>/celery app config, and the <code>Dockerfile:12</code> CMD only runs <code>runserver</code> (no worker). The view calls the task directly (not <code>.delay()</code>), so it executes <strong>inline/synchronously</strong> inside the request (<code>miniapp\views.py:61,143,200</code>). <code>Redis</code> (<code>core\settings.py:184</code>, db 6) and a Kafka broker (<code>core\settings.py:185</code>) are configured; <code>dashboard\kafka_function.py:7-38</code> can produce to <code>master_events</code> via an HTTP producer, but <strong>nothing in the <code>miniapp</code> app touches Kafka</strong> (grep: no kafka references in <code>miniapp\</code>).</li>
+<li><strong>Deployment</strong>: <code>Dockerfile</code> (python:3.11-slim, <code>migrate</code> + <code>runserver 0.0.0.0:8000</code>); Jenkins builds/pushes <code>registry.f1soft.com/providhy/erp-projectmaster:$BUILD_NUMBER</code> (<code>Jenkinsfile:9-35</code>).</li>
+<li><strong>Config quirks</strong>: with <code>LOCAL=True</code> (<code>.env:13</code>), <code>dashboard\helper.py:51-68</code> rewrites the service base URLs to the <code>dev-*-api.providhy.com</code> HTTPS hosts, and finally forces <code>PROJECT_MASTER_API = &quot;http://127.0.0.1:8009/&quot;</code> (<code>helper.py:67</code>) — a dev-only override.</li>
+</ul>
+</section><section class="sec" data-title="3. Authentication &amp; authorization"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-authentication-authorization">3. Authentication &amp; authorization</h2>
+<p><strong>Mount</strong>: single prefix <code>api/miniapp/</code> (<code>core\urls.py:13</code>). There is <strong>no public vs internal URL split</strong>; the split is per-view by permission class (3 federated-auth views, 3 internal-password views).</p>
+<p><strong>FederatedIdentityAuthentication — local copy</strong> at <code>dashboard\auth_backends.py:166-203</code> (diff vs canonical <code>IAM-Backend\federated_identity\auth_backends.py</code>):</p>
+<ol>
+<li>Token extraction: <code>helper.get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;)</code> (<code>auth_backends.py:169-171</code>; <code>helper.py:361-390</code>) — checks, in order: cookie <code>miniAppAccessToken</code> → <code>Authorization: Bearer &lt;jwt&gt;</code> header → JSON body field <code>miniAppAccessToken</code>.</li>
+<li><strong>Outbound verification</strong>: <code>POST {IAM_API}/api/external/token/verify/</code> with <code>{token}</code> and the <strong><code>X-MINIAPP-TOKEN</code> header forwarded</strong> (<code>auth_backends.py:174-178, 206-219</code>). IAM validates the token and the TOTP. <strong>This repo performs NO local TOTP check</strong> (no speakeasy/TOTP code anywhere — grep <code>totp|speakeasy</code> hits only <code>core\settings.py:162</code> and <code>auth_backends.py:176</code>); TOTP verification happens on the IAM side (IAM internals out of scope).</li>
+<li>The JWT is decoded <strong>without signature verification</strong> (<code>TokenBackend(algorithm=&quot;HS256&quot;).decode(token, verify=False)</code>, <code>auth_backends.py:179</code>) and its claims are trusted after step 2: <code>user_id</code>, <code>tenant_id</code>, <code>subscribed_services</code>, <code>user_permissions</code>, <code>provider_code</code>, <code>user_type</code>, <code>tenant_root</code>, <code>username</code>, <code>product_code</code>, <code>external_identifier</code>, <code>subscription_expired</code> (<code>auth_backends.py:180-193</code>) → attached to the request; returns <code>(user_id, tenant_id)</code> (<code>auth_backends.py:194</code>), so <strong><code>request.user = user_id</code>, <code>request.auth = tenant_id</code></strong>.</li>
+<li>Failures: IAM connection timeout/error → <code>TemporaryServiceUnavailableError</code> (<code>auth_backends.py:196-200</code>; a plain <code>Exception</code>, <code>exception.py:9-12</code> — unhandled by DRF since the <code>EXCEPTION_HANDLER</code> config is commented out, <code>core\settings.py:91-94</code> → Django 500); anything else → <code>CustomAuthenticationFailed</code> = HTTP 401 (<code>auth_backends.py:202-203</code>, <code>exception.py:4-6</code>).</li>
+</ol>
+<p><strong>Permission classes</strong>:</p>
+<ul>
+<li><code>HasFederatedEntityPermission</code> (<code>auth_backends.py:222-229</code>), used by all three public miniapp views:<ol>
+<li><code>request.user_type</code> must equal the view&#39;s <code>required_user_type</code> — all three views require <strong><code>ESM</code> (eSewa Merchant)</strong> (<code>views.py:23, 84, 215</code>; <code>choices.py:349-351</code>).</li>
+<li>Delegates to <code>HasPermission</code> (<code>auth_backends.py:123-154</code>): POST + <code>subscription_expired</code> → <code>PermissionError</code> (125-126); <code>tenant_root</code> users are allowed without a call (127-128); otherwise <code>GET {IAM_API}api/internal-check-permissions/?password=&lt;INTERNAL_PASS&gt;&amp;user_id=&lt;user_id&gt;</code> (<code>auth_backends.py:131-133</code>; <code>helper.py:71</code>) and the response must contain the view&#39;s <code>required_feature_permission</code> <strong>PR301 &quot;Customer Creation&quot;</strong> (<code>views.py:21,82,213</code>; <code>choices.py:113</code>) with the required action: <strong><code>add_edit</code></strong> for create/edit/detail (views.py:22,83) and <strong><code>view</code></strong> for search (views.py:214; <code>choices.py:269-275</code>). IAM call failure → <code>TemporaryServiceUnavailableError</code> (134-135).</li>
+</ol>
+</li>
+<li><code>InternalRequestPermission</code> (<code>auth_backends.py:157-163</code>), used by the three internal views: <strong>static shared password</strong> — POST compares <code>request.data[&quot;password&quot;]</code>, GET compares <code>request.GET[&quot;password&quot;]</code> against <code>INTERNAL_PASS</code> (<code>helper.py:125-128, 33</code>; <code>.env:11</code>). No <code>authentication_classes</code> is set on these views and no <code>REST_FRAMEWORK</code> default exists (<code>core\settings.py:91-94</code> commented out), so they run as <strong>anonymous + shared secret</strong>; there is no per-tenant authorization beyond the <code>tenant_id</code> the caller puts in the body.</li>
+</ul>
+<p><strong>Tenant scoping</strong>: <code>tenant_id</code> from the JWT (<code>request.auth</code>) is injected into the filterset data (<code>dashboard\mixins.py:21-23</code>) and into every serializer context (<code>views.py:30,109,229</code>); every Customer query also filters <code>customer_identity__provider_code = request.provider_code</code> (<code>views.py:93, 299; filters.py:22-24</code>) and excludes <code>active_status = &quot;inactive&quot;</code> (<code>filters.py:26-27; views.py:94, 300</code>). <code>MiniAppFilterMixin</code> injects <code>provider_code</code> into the filterset kwargs (<code>miniapp\mixins.py:11-21</code>); <code>FilteredAPIViewMixin</code> adds <code>tenant_id</code> + fiscal-year date bounds (<code>dashboard\mixins.py:14-45</code>; the date bounds are unused by <code>CustomerFilterSet</code>).</p>
+<p><strong>Which endpoints use what</strong>: all 5 federated endpoints (create/search/detail×3) use <code>FederatedIdentityAuthentication</code> + <code>HasFederatedEntityPermission</code> (views.py:19-23, 80-84, 211-215); the 3 internal endpoints use only <code>InternalRequestPermission</code> (views.py:256, 274, 324). No endpoint in the miniapp app uses different/extra auth.</p>
+</section><section class="sec" data-title="4. Exposed endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-exposed-endpoint-catalog">4. Exposed endpoint catalog</h2>
+<p>Base: <code>https://dev-projectmaster-api.providhy.com</code> + mount <code>api/miniapp/</code> (<code>core\urls.py:13</code>).</p>
+<h3 id="4-1-public-miniapp-endpoints">4.1 Public miniapp endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer/</a></td>
+<td><code>AddCustomer</code></td>
+<td><code>miniapp\urls.py:6</code>, <code>miniapp\views.py:18</code></td>
+<td>Merchant adds a customer (optionally linked to an eSewa wallet user)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>GET</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer/search/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer/search/</a></td>
+<td><code>CustomerSearchView</code></td>
+<td><code>miniapp\urls.py:7-11</code>, <code>miniapp\views.py:210</code></td>
+<td>List the merchant&#39;s customers with credit balance + connection status</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/</a><a href="int:pk">int:pk</a>/</td>
+<td><code>RetrieveEditCustomer.get</code></td>
+<td><code>miniapp\urls.py:12-16</code>, <code>miniapp\views.py:71</code> (get at :100)</td>
+<td>Customer detail incl. credit balance, recent credit logs, connection</td>
+</tr>
+<tr>
+<td>4</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/</a><a href="int:pk">int:pk</a>/</td>
+<td><code>RetrieveEditCustomer.post</code></td>
+<td><code>miniapp\urls.py:12-16</code>, <code>miniapp\views.py:116</code></td>
+<td>Edit customer name/description (mobile immutable)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>DELETE</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer/detail/</a><a href="int:pk">int:pk</a>/</td>
+<td><code>RetrieveEditCustomer.delete</code></td>
+<td><code>miniapp\urls.py:12-16</code>, <code>miniapp\views.py:152</code></td>
+<td>Soft-delete a customer (after payment/sales/cdxe cleanup)</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-internal-service-to-service-endpoints-same-service-called-by-other-services">4.2 Internal service-to-service endpoints (same service, called by OTHER services)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/dummy-customer-check/">https://dev-projectmaster-api.providhy.com/api/miniapp/dummy-customer-check/</a></td>
+<td><code>DummyCustomerCheck</code></td>
+<td><code>miniapp\urls.py:17-21</code>, <code>miniapp\views.py:255</code></td>
+<td>Stub &quot;is this an eSewa user&quot; check — always returns <code>{&quot;is_provider_user&quot;: true}</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/validate-customer-connection/">https://dev-projectmaster-api.providhy.com/api/miniapp/validate-customer-connection/</a></td>
+<td><code>ValidateCustomerConnection</code></td>
+<td><code>miniapp\urls.py:22-26</code>, <code>miniapp\views.py:265</code></td>
+<td>Verify an identifier is an active customer + provider user (optionally return its data)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/miniapp/customer-check/">https://dev-projectmaster-api.providhy.com/api/miniapp/customer-check/</a></td>
+<td><code>ValidateMiniAppCustomer</code></td>
+<td><code>miniapp\urls.py:27-31</code>, <code>miniapp\views.py:318</code></td>
+<td>Verify customer(s) exist for a tenant/provider (multi-tenant, search-capable)</td>
+</tr>
+</tbody></table>
+<p>Internal auth = <code>password</code> field equal to <code>INTERNAL_PASS</code> in the JSON body (<code>auth_backends.py:157-163</code>).</p>
+<h3 id="4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>9</td>
+<td>GET/POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/">https://dev-projectmaster-api.providhy.com/</a><PROJECTMASTER_ADMIN_URL>/ (e.g. <code>hhhhhhh</code> per <code>.env:50</code>)</td>
+<td>Django admin, <code>CustomerIdentityLink</code> registered</td>
+<td><code>core\urls.py:18-19</code>, <code>miniapp\admin.py:2-4</code></td>
+<td>Manual inspection of the customer↔eSewa-identity link (Django admin auth, out of federated scope)</td>
+</tr>
+</tbody></table>
+<p>The domain apps&#39; own mounts (<code>api/customer/</code>, <code>api/supplier/</code>, <code>api/employee/</code>, <code>api/payment-term/</code>, <code>core\urls.py:8-12</code>) serve the regular ERP dashboard UI with IAM JWT auth — <strong>out of scope</strong> for this document.</p>
+</section><section class="sec" data-title="5. Per-endpoint flow trace"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-per-endpoint-flow-trace">5. Per-endpoint flow trace</h2>
+<p>Common pre-step for endpoints 1-5 (federated auth + permission): DRF authenticates via <code>FederatedIdentityAuthentication</code> (<code>dashboard\auth_backends.py:167-203</code>) → IAM <code>POST /api/external/token/verify/</code> (<code>auth_backends.py:178, 206-219</code>) → JWT claims onto request (<code>auth_backends.py:180-194</code>) → <code>HasFederatedEntityPermission</code> (<code>auth_backends.py:223-229</code> → <code>HasPermission:124-154</code>, IAM <code>GET api/internal-check-permissions/</code> for non-<code>tenant_root</code> users). Errors: 401 (<code>exception.py:4-6</code>), <code>PermissionError</code> → 403, <code>TemporaryServiceUnavailableError</code> → unhandled 500 (see §3).</p>
+<h3 id="5-1-post-api-miniapp-customer-merchant-adds-a-customer">5.1 POST /api/miniapp/customer/ — merchant adds a customer</h3>
+<ul>
+<li><strong>Request</strong>: JSON body — <code>name</code> (str, <strong>required</strong>, <code>views.py:27</code>), <code>mobile</code> (str, optional; 10 digits if present), <code>external_identifier</code> (str ≤100, optional; eSewa wallet identifier to link), <code>description</code> (str ≤500, optional), <code>is_provider_user</code> (bool, default false). Response fields restricted by the <code>fields</code> tuple (<code>views.py:35-43</code>): <code>id, unique_id, name, mobile, external_identifier, description, is_provider_user</code> (<code>serializers.py:28-35</code>).</li>
+<li><strong>Auth</strong>: ESM + feature PR301 + action <code>add_edit</code> (<code>views.py:19-24</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth/permission pre-step (§3).</li>
+<li><code>helper.valid_required_data([&quot;name&quot;], request.data)</code> (<code>views.py:27</code>; <code>helper.py:180-193</code>) → <code>FieldError</code> → 400 if missing/empty.</li>
+<li>Serializer context <code>{tenant_id: request.auth, provider_code, user: request.username, user_identifier: request.external_identifier}</code> (<code>views.py:29-34</code>).</li>
+<li><code>CustomerAddEditMiniAppSerializer</code> built with <code>fields=</code> (<code>views.py:44-46</code>; dynamic field pruning in <code>miniapp\mixins.py:24-49</code>).</li>
+<li><code>to_internal_value</code> (<code>serializers.py:37-41</code>): sets <code>skip_mobile_validation=True</code> when <code>mobile</code> absent — <strong>observation</strong>: this flag is never read anywhere in the serializer (validate_mobile simply isn&#39;t invoked when mobile is absent).</li>
+<li><code>validate_external_identifier</code> (<code>serializers.py:43-75</code>): on edit, identifier must be unchanged (:44-50); context must contain provider_code/tenant_id/user_identifier (:51-57); <strong>self-add forbidden</strong> (&quot;You cannot add yourself as a customer&quot;, :58-59); duplicate check on <code>CustomerIdentityLink(provider_code, external_identifier, customer__tenant_id, customer active)</code> → &quot;You have already added this customer.&quot; (:60-74; a leftover <code>print()</code> debug at :72).</li>
+<li><code>validate_mobile</code> (<code>serializers.py:77-82</code>): must be 10 digits when changed.</li>
+<li>Invalid → 400 <code>{&quot;error&quot;: &lt;first error&gt;}</code> via <code>helper.parse_serializer_errors</code> (<code>views.py:47-51</code>; <code>helper.py:397-417</code>).</li>
+<li><code>serializer.save()</code> → <code>create()</code> (<code>serializers.py:87-106</code>): inject <code>tenant_id</code> + <code>entry_by</code> = <code>helper.get_username(username)</code> (<code>helper.py:196-201</code> — strips the last <code>_&lt;segment&gt;</code> of the username) (:88-91); <strong><code>set_gl_data</code></strong> (:108-126) — gl_mapping is never in the miniapp fields, so this runs on <strong>every</strong> create: <code>get_configuration</code> → <code>POST {CONFIGURATION}api/service-configuration/tenant/expose/</code> with <code>configuration_type=&quot;gl_mapping&quot;</code>, <code>configuration_status=&quot;customer&quot;</code> (<code>helper.py:84</code>; <code>send_requests.py:28-42</code>; <code>choices.py:284, 296</code>) — if the config contains &quot;Account Receivable&quot; (<code>choices.py:315</code>), sets <code>gl_mapping</code> to that account&#39;s id; then <code>Customer.objects.create</code> — <code>unique_id</code> auto-generated <code>CUS&lt;n&gt;</code> via the ID counter table (<code>customer\models.py:78-81</code>; <code>dashboard\models.py:24-41</code>); then <code>CustomerIdentityLink.objects.create(customer, provider_code, is_provider_user, external_identifier, description)</code> (<code>serializers.py:99-105</code>).</li>
+<li><code>tasks.send_activity_log(...)</code> called <strong>directly (inline, not <code>.delay()</code>)</strong> (<code>views.py:61-67</code>; task body <code>miniapp\tasks.py:12-53</code>) → <code>POST {EVENTS}api/activity_log/miniapp/log-activity/</code> with <code>{password, user, entry_type: &quot;PR301&quot;, service_type: &quot;creation&quot;, entry_id, message_data}</code> (<code>tasks.py:27-43</code>).</li>
+<li>200 with <code>serializer.data</code> (<code>views.py:54-58, 68</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>CustomerIdentityLink</code> (dup check); write <code>Customer</code>, <code>CustomerIdentityLink</code>, <code>ID</code> (counter).</li>
+<li><strong>Outbound calls</strong>:<ul>
+<li>IAM <code>POST /api/external/token/verify/</code> — every request (auth).</li>
+<li>IAM <code>GET /api/internal-check-permissions/</code> — non-root users (permission).</li>
+<li>Configuration <code>POST api/service-configuration/tenant/expose/</code> — always on create (GL mapping); non-200/timeout → <code>TemporaryServiceUnavailableError</code> (<code>send_requests.py:41-42</code>); otherwise the customer is created without gl_mapping.</li>
+<li>Events <code>POST api/activity_log/miniapp/log-activity/</code> — after save; non-200 only logged, never fails the request (<code>tasks.py:44-48</code>).</li>
+</ul>
+</li>
+<li><strong>Errors</strong>: 400 (missing name; self-add; duplicate identifier; bad mobile; missing serializer context); 401/403; 500 on IAM connection failure. Note: create returns <strong>200</strong>, not 201 (<code>views.py:68</code>).</li>
+</ul>
+<h3 id="5-2-get-api-miniapp-customer-search-list-customers-with-credit-connection">5.2 GET /api/miniapp/customer/search/ — list customers with credit + connection</h3>
+<ul>
+<li><strong>Request</strong>: query params — <code>q</code> (str; free text on name/mobile), <code>page</code> (int), <code>count</code> (int, default 100, max 100 — <code>dashboard\pagination.py:4-7</code>), <code>order_by</code> (str, default <code>-total_credit_amount</code>, <code>views.py:223</code>), <code>connection_status</code> (str: <code>all|connected|pending|offline</code>, default <code>all</code>, <code>views.py:225</code>).</li>
+<li><strong>Auth</strong>: ESM + PR301 + action <code>view</code> (<code>views.py:211-215</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth/permission pre-step.</li>
+<li><code>filter_queryset</code> (<code>views.py:222</code>): <code>MiniAppFilterMixin</code> injects <code>provider_code</code> into the filterset data (<code>miniapp\mixins.py:17-21</code>); <code>FilteredAPIViewMixin</code> injects <code>tenant_id = request.auth</code> plus fiscal-year date bounds (<code>dashboard\mixins.py:14-45</code>; the date fields are ignored by <code>CustomerFilterSet</code>).</li>
+<li><code>CustomerFilterSet</code> (<code>miniapp\filters.py:8-27</code>): <code>tenant_id</code> exact (:14); <code>q</code> → <code>name__icontains | mobile__icontains</code> (:16-20 — raises a bare <code>Exception</code> if <code>q</code> is present but empty); <code>provider_code</code> → <code>customer_identity__provider_code</code> (:22-24); <code>filter_queryset</code> excludes inactive (:26-27). Invalid filterset → <code>filter_queryset</code> returns <code>None</code> (<code>dashboard\mixins.py:56-58</code>) — downstream handling of a <code>None</code> queryset is not defensive in the view (edge case, see §11).</li>
+<li>Serialize with <code>CustomerViewMiniAppSerializer</code> + <code>CustomerViewMiniAppListSerializer</code> (<code>views.py:241-243</code>; <code>serializers.py:262-283, 150-259</code>):<ul>
+<li><code>to_representation</code> (<code>serializers.py:198-229</code>): context must contain tenant_id/user_identifier/provider_code else <code>ValidationError</code> (:204-210); for each enrichment present in <code>child.fields</code> (:151-155, :172-196):<ul>
+<li><code>connection_details</code> → <code>async_func.afetch_connection_data</code> (<code>async_func.py:61-99</code>) → <strong><code>POST {CDXE}api/miniapp/get-connection/</code></strong> with <code>{customer_ids, user_identifier, tenant_id, password, provider_code}</code> (<code>helper.py:116</code>); 4xx → <code>ValidationError</code>, 5xx → <code>TemporaryServiceUnavailableError</code>, network error → <code>{}</code> (<code>async_func.py:91-99</code>).</li>
+<li><code>total_credit_amount</code> → <code>async_func.afetch_credit_ledger</code> (<code>async_func.py:102-130</code>) → <strong><code>POST {SALES}api/miniapp/credit/ledger/internal/</code></strong> with <code>{password, tenant_id, customer_id: [ids]}</code> (<code>helper.py:96</code>).</li>
+<li>Both executed by <code>helper.task_runner</code> (<code>helper.py:303-315</code>) — <strong>sequentially</strong> in one <code>requests.Session</code>; exceptions per task are swallowed into <code>{&quot;error&quot;: str(e)}</code> (:313-314). Despite the <code>a*</code>/<code>client: httpx.Client</code> names, these functions are synchronous.</li>
+</ul>
+</li>
+<li>Connection-status filtering <strong>after</strong> enrichment (<code>serializers.py:231-259</code>): <code>connected</code> → customers whose <code>receiver_identifier</code> appears with <code>status == &quot;approved&quot;</code> (:235-240); <code>pending</code> → <code>status == &quot;pending&quot;</code> (:241-246); <code>offline</code> → <code>customer_identity__external_identifier</code> <strong>not</strong> in the connection map keys (:247-254); <code>all</code> → no filter (:233-234).</li>
+<li>Row fields (<code>serializers.py:285-303</code>): <code>id, name, mobile, is_provider_user</code> (from <code>customer_identity</code>), <code>connection_details</code> (map keyed by external_identifier, default <code>{&quot;status&quot;: &quot;offline&quot;}</code>), <code>total_credit_amount</code> (<code>current_balance</code> of <code>ledger[0]</code>, 0 if none), <code>external_identifier</code>.</li>
+</ul>
+</li>
+<li>In-memory sort of the serialized list by <code>order_by</code> (<code>views.py:244-249</code>).</li>
+<li>Page-number pagination → standard DRF page response (<code>views.py:250-252</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>Customer</code> (joined <code>customer_identity</code>) only; no writes.</li>
+<li><strong>Outbound calls</strong>: CDXE <code>POST api/miniapp/get-connection/</code>; Sales <code>POST api/miniapp/credit/ledger/internal/</code>; IAM (auth + permission). CDXE/Sales failure → <code>{&quot;error&quot;}</code> map → connection shows <code>offline</code>, credit 0.</li>
+<li><strong>Errors</strong>: 401/403; enrichment failures degrade to defaults (no hard error).</li>
+</ul>
+<h3 id="5-3-get-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-customer-detail-with-credits">5.3 GET /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — customer detail with credits</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> (int).</li>
+<li><strong>Auth</strong>: ESM + PR301 + action <strong><code>add_edit</code></strong> (<code>views.py:80-84</code>) — note: the read endpoint checks the write action, not <code>view</code> (observation).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Auth/permission pre-step.</li>
+<li><code>get_query</code> (<code>views.py:100-101</code>, impl :88-98): <code>Customer.objects.select_related(&quot;customer_identity&quot;).get(tenant_id=request.auth, pk=pk, customer_identity__provider_code=..., active_status=&quot;active&quot;)</code> → <code>DoesNotExist</code> → 404 <code>{&quot;error&quot;: &quot;Record not found.&quot;}</code> (<code>views.py:103-107</code>; <code>messages.py:25</code> — second definition of <code>RECORD_NOT_FOUND</code> in <code>messages.py</code> wins).</li>
+<li><code>CustomerDetailMiniAppSerializer</code> (<code>views.py:108-113</code>; <code>serializers.py:306-391</code>) — each computed field lazily triggers <code>get_external_data</code> (<code>serializers.py:358-391</code>) once per request:<ul>
+<li><code>outstanding_credits</code> → <code>async_func.aget_customer_credits</code> (<code>async_func.py:26-58</code>) → <strong><code>POST {SALES}api/miniapp/credit/merchant/search/</code></strong> with <code>{password, tenant_id, customer_id: [pk], payment_status: [&quot;unpaid&quot;,&quot;partially_paid&quot;]}</code> (<code>helper.py:95</code>, <code>serializers.py:362-368</code>); returns <code>[]</code>-safe default on failure (<code>serializers.py:332-335</code>).</li>
+<li><code>credit_logs</code> → <code>async_func.afetch_credit_ledger</code> (<code>serializers.py:369-374</code>; <code>async_func.py:102-130</code>) → last 5 returned (<code>serializers.py:353-356</code>).</li>
+<li><code>connection_details</code> → <strong>only if <code>is_provider_user</code></strong> → <code>afetch_connection_data</code> (<code>serializers.py:376-387</code>) → default <code>{&quot;status&quot;: &quot;offline&quot;}</code> (<code>serializers.py:345-351</code>).</li>
+<li><code>total_credit_amount</code> → <code>current_balance</code> of <code>ledger[0]</code> (<code>serializers.py:337-343</code>).</li>
+</ul>
+</li>
+<li>200 with <code>{id, name, mobile, is_provider_user, connection_details, total_credit_amount, credit_logs, outstanding_credits}</code> (<code>serializers.py:315-326</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>Customer</code> (+ <code>customer_identity</code>); no writes.</li>
+<li><strong>Outbound calls</strong>: Sales ×2 (merchant credit search + ledger internal), CDXE ×1 (conditional), IAM (auth + permission).</li>
+<li><strong>Errors</strong>: 404 (not found / inactive / other tenant / other provider); 401/403.</li>
+<li><strong>Frontend quirk</strong>: <code>getCustomerDetails</code> calls the URL <strong>without</strong> a trailing slash (<code>miniapp-esewa\src\services\requests\customer.ts:98</code>) → Django <code>APPEND_SLASH</code> 301 on GET; <code>editCustomer</code>/<code>deleteCustomer</code> append the slash (<code>customer.ts:123, 136</code>).</li>
+</ul>
+<h3 id="5-4-post-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-edit-customer">5.4 POST /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — edit customer</h3>
+<ul>
+<li><strong>Request</strong>: JSON body — <code>name</code> (str), <code>mobile</code> (str — <strong>cannot be changed</strong>), <code>description</code> (str ≤500); <code>external_identifier</code> / <code>is_provider_user</code> are accepted into validation then discarded.</li>
+<li><strong>Auth</strong>: ESM + PR301 + <code>add_edit</code> (<code>views.py:80-84</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li><code>get_query</code> → 404 as in 5.3 (<code>views.py:116-124</code>).</li>
+<li><code>CustomerAddEditMiniAppSerializer(instance=query, data, context)</code> (<code>views.py:130-132</code>).</li>
+<li><code>validate_external_identifier</code> still runs: passing a different identifier → &quot;You cannot change the identifier of an existing customer.&quot; (<code>serializers.py:44-50</code>); the value is later popped in <code>update()</code> (<code>serializers.py:133-135</code>).</li>
+<li><code>update</code> (<code>serializers.py:128-139</code>): changed mobile → <code>ValidationError</code> &quot;You cannot change the mobile number of an existing customer.&quot;; <code>external_identifier</code> and <code>is_provider_user</code> popped (immutable via edit).</li>
+<li>Invalid → 400 (<code>views.py:133-137</code>).</li>
+<li><code>serializer.save()</code> (<code>views.py:138</code>); <code>tasks.send_activity_log(... service_type=&quot;edition&quot; ...)</code> inline (<code>views.py:143-149; tasks.py:12-53</code>).</li>
+<li>200 with <code>serializer.data</code> (<code>views.py:150</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: update <code>Customer</code> (name/description); no write to <code>CustomerIdentityLink</code>.</li>
+<li><strong>Outbound calls</strong>: IAM (auth + permission), Events (activity log). No Configuration call (<code>set_gl_data</code> runs in <code>create()</code> only, <code>serializers.py:92</code>).</li>
+<li><strong>Errors</strong>: 400 (mobile change; identifier change; bad name/mobile); 401/403.</li>
+</ul>
+<h3 id="5-5-delete-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-soft-delete-customer">5.5 DELETE /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — soft-delete customer</h3>
+<ul>
+<li><strong>Request</strong>: path <code>pk</code> (int); no body.</li>
+<li><strong>Auth</strong>: ESM + PR301 + <code>add_edit</code> (<code>views.py:80-84</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li><code>get_query</code> → 404 (<code>views.py:152-158</code>).</li>
+<li><code>customer_identifier = query.customer_identity.external_identifier</code> (<code>views.py:159</code>) — may be <code>None</code> for customers added without an eSewa link (edge case: the downstream checks receive <code>null</code>).</li>
+<li><strong>Payment guard</strong>: <code>helper.check_existing_payment_request</code> (<code>views.py:161-165</code>; <code>helper.py:291-300</code>) → <code>acheck_existing_payment_request</code> (<code>async_func.py:133-161</code>) → <strong><code>POST {PAYMENT}api/esewa/payment/request/exists/</code></strong> with <code>{password, tenant_id, customer_identifier, provider_code}</code> (<code>helper.py:104</code>). If the response has <code>exists: true</code> → 400 <code>{&quot;error&quot;: &quot;&lt;name&gt; (&lt;identifier&gt;) cannot be deleted right now.&quot;, **condition}</code> (<code>views.py:166-175</code>; <code>messages.py:26</code>).</li>
+<li>Cleanup fan-out via <code>helper.task_runner</code> (<code>views.py:176-192</code>; <code>helper.py:303-315</code>):<ul>
+<li><code>delete_transactions</code> → <code>adelete_customer_transactions</code> (<code>async_func.py:188-212</code>) → <strong><code>POST {SALES}api/miniapp/records/delete/customer/</code></strong> with <code>{password, tenant_id, customer_identifier}</code> (<code>helper.py:97</code>).</li>
+<li><code>delete_connection</code> — <strong>only if <code>is_provider_user</code></strong> (<code>views.py:183-191</code>) → <code>adelete_miniapp_customer_connection</code> (<code>async_func.py:164-185</code>) → <strong><code>POST {CDXE}api/miniapp/connection/delete/customer/</code></strong> with <code>{password, user_identifier: request.external_identifier, customer_identifier, provider_code}</code> (<code>helper.py:101</code>).</li>
+<li>Note: <code>task_runner</code> swallows per-task exceptions into <code>{&quot;error&quot;: ...}</code> (<code>helper.py:313-314</code>) — the soft-delete proceeds <strong>even if an external cleanup fails</strong> (consistency risk, §11).</li>
+</ul>
+</li>
+<li><code>query.active_status = &quot;inactive&quot;; query.save()</code> (<code>views.py:194-195</code>) — soft delete; <code>CustomerIdentityLink</code> row is kept.</li>
+<li><code>tasks.send_activity_log(... service_type=&quot;inactive&quot; ...)</code> inline (<code>views.py:200-206</code>).</li>
+<li>204 No Content (<code>views.py:207</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>Customer</code>; update <code>Customer.active_status</code>.</li>
+<li><strong>Outbound calls</strong>: Payment (exists-check, always), Sales (delete transactions, always), CDXE (delete connection, conditional), Events (activity), IAM (auth + permission).</li>
+<li><strong>Errors</strong>: 400 (pending payment request exists); 404; 401/403.</li>
+</ul>
+<h3 id="5-6-post-api-miniapp-dummy-customer-check-stub-esewa-user-check-internal">5.6 POST /api/miniapp/dummy-customer-check/ — stub eSewa-user check (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body — <code>password</code> (str, must equal <code>INTERNAL_PASS</code>).</li>
+<li><strong>Auth</strong>: <code>InternalRequestPermission</code> only (<code>views.py:256</code>; <code>auth_backends.py:157-163</code>); no token auth, anonymous.</li>
+<li><strong>Flow</strong>:<ol>
+<li>Password check (auth_backends.py:159-160).</li>
+<li>Immediately <code>return Response({&quot;is_provider_user&quot;: True})</code> — hardcoded; a randomized True/False branch is commented out (<code>views.py:258-262</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: none. <strong>Outbound calls</strong>: none.</li>
+<li><strong>Purpose/origin</strong>: this repo&#39;s <code>.env:49</code> sets <code>ESEWA_USER_CHECK_API= http://localhost:1111/api/miniapp/dummy-customer-check/</code>, and <code>miniapp\registry.py:10-12</code> maps provider <code>esewa</code> → that env var — i.e. the design is &quot;a service asking &#39;is this identifier a real eSewa user?&#39; calls this endpoint&quot;. <strong>However</strong>: <code>check_user_url_registry</code> is referenced nowhere in this checkout (grep), and no caller of <code>dummy-customer-check</code> was found in the other repos scanned (CDXE-REBOOT defines its own <code>ESEWA_USER_CHECK_API</code> in <code>.env:50</code> pointing at a dummyjson.com URL, also unreferenced by code). Treated as a <strong>stub/placeholder</strong> whose real consumer is unknown.</li>
+<li><strong>Errors</strong>: 403 on wrong/missing password.</li>
+</ul>
+<h3 id="5-7-post-api-miniapp-validate-customer-connection-is-this-an-active-provider-user-customer-internal">5.7 POST /api/miniapp/validate-customer-connection/ — is this an active provider-user customer? (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body — <code>password</code> (required), <code>customer_identifier</code> (str ≤100, required), <code>provider_code</code> (str ≤50, required), <code>tenant_id</code> (str ≤100, required), <code>return_data</code> (bool, optional, <code>views.py:288</code>).</li>
+<li><strong>Auth</strong>: <code>InternalRequestPermission</code> (<code>views.py:274</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li><code>ValidateCustomerConnectionSerializer</code> validation (<code>views.py:277-286</code>; <code>serializers.py:394-413</code>): <code>CustomerIdentityLink.filter(provider_code, external_identifier=customer_identifier, customer__tenant_id=tenant_id, customer__active_status=&quot;active&quot;).first()</code> (<code>serializers.py:403-408</code>); not found → <code>ValidationError</code> &quot;Customer with given identifier does not exist.&quot;; found but <code>is_provider_user is False</code> → &quot;The customer is not a registered provider user.&quot; (<code>serializers.py:411-412</code>).</li>
+<li>Invalid → <strong>HTTP 200</strong> (no status argument) with <code>{&quot;is_provider_user&quot;: false, &quot;error&quot;: &quot;Request Failed. Try again with valid data&quot;, &quot;details&quot;: &lt;errors&gt;}</code> (<code>views.py:280-286</code>; <code>messages.py:13</code>) — callers must inspect the body, not the status.</li>
+<li>Valid → <code>data = {&quot;is_provider_user&quot;: true}</code> (<code>views.py:287</code>); if <code>return_data</code>: fetch <code>CustomerIdentityLink.select_related(&quot;customer&quot;)</code> (re-filtered, <code>views.py:293-303</code>) and add <code>id, name, external_identifier, mobile</code> (<code>views.py:304-314</code>).</li>
+<li>200 (<code>views.py:315</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>CustomerIdentityLink</code> (+ <code>Customer</code> when <code>return_data</code>); no writes.</li>
+<li><strong>Outbound calls</strong>: none (no auth round-trips — this is a pure internal check).</li>
+<li><strong>Errors</strong>: 403 (bad password); 200-with-error-body (validation failure — by design, see above).</li>
+<li><strong>Known callers</strong>: CDXE-REBOOT (connection creation + approve/reject, §10); Sales and Payment define the client function but have no active call site in the current trees.</li>
+</ul>
+<h3 id="5-8-post-api-miniapp-customer-check-do-these-customers-exist-internal">5.8 POST /api/miniapp/customer-check/ — do these customers exist? (internal)</h3>
+<ul>
+<li><strong>Request</strong>: JSON body — <code>password</code> (required), <code>tenant_id</code> (str; <strong>defaults to <code>&quot;all&quot;</code></strong> when absent, <code>views.py:331</code>), <code>provider_code</code> (str, required by serializer), <code>customer_id</code> (list of str, optional), <code>return_data</code> (bool), <code>multiple_tenants</code> (bool), <code>all</code> (bool), <code>q</code> (str, used when <code>all=true</code>).</li>
+<li><strong>Auth</strong>: <code>InternalRequestPermission</code> (<code>views.py:324</code>).</li>
+<li><strong>Flow</strong>:<ol>
+<li>Context build: <code>tenant_id = request.data.get(&quot;tenant_id&quot;) or &quot;all&quot;</code> (<code>views.py:330-336</code>); if <code>all=true</code> → <code>context += {all: True, q}</code> (<code>views.py:338-340</code>).</li>
+<li><code>ValidateMiniAppCustomerSerializer</code> (<code>views.py:341</code>; <code>serializers.py:416-441</code>): fields <code>tenant_id</code> (write_only), <code>provider_code</code>, <code>external_identifier</code> (model field, optional), <code>customer_id</code> (ListField of str, optional) (:417-426). <code>validate()</code> (:428-441): if <code>context.all</code> → skip existence check; otherwise <code>Q(customer__tenant_id=..., provider_code=..., customer__id__in=customer_id)</code> must match at least one <code>CustomerIdentityLink</code>, else <code>ValidationError</code> &quot;Customer with given identifier does not exist.&quot;</li>
+<li>Invalid → 400 <code>{&quot;customer_exists&quot;: false, &quot;error&quot;: ...}</code> (<code>views.py:342-350</code>).</li>
+<li><code>return_data</code> → <code>serializer.data</code> (<code>views.py:351-353</code>). <strong>Mechanism verified against installed DRF 3.18.3</strong> (<code>.venv\Lib\site-packages\rest_framework\serializers.py:249-255</code>): with no instance, <code>data</code> falls back to <code>to_representation(self.validated_data)</code> — a dict — which is exactly what the overridden <code>to_representation(instance)</code> expects (<code>serializers.py:443-467</code>):<ul>
+<li>lookup built on <strong><code>Customer</code></strong>: <code>Q(tenant_id=...)</code> unless <code>multiple_tenants</code> (:446-447); if not <code>all</code>: <code>Q(id__in=customer_id list)</code> (:448-449); else <code>Q(name__icontains=q) | Q(mobile__icontains=q)</code> (:450-452).</li>
+<li><code>Customer.objects.select_related(&quot;customer_identity&quot;).filter(lookup).annotate(external_identifier=F(customer_identity__external_identifier), is_provider_user=F(...)).values(&quot;id&quot;,&quot;name&quot;,&quot;mobile&quot;,&quot;external_identifier&quot;,&quot;is_provider_user&quot;)</code> (:455-463) → response is a <strong>dict keyed by customer id</strong> (:464-467).</li>
+</ul>
+</li>
+<li>Otherwise 200 <code>{&quot;customer_exists&quot;: true}</code> (<code>views.py:354</code>).</li>
+</ol>
+</li>
+<li><strong>DB</strong>: read <code>CustomerIdentityLink</code> (existence), <code>Customer</code> (representation); no writes.</li>
+<li><strong>Outbound calls</strong>: none.</li>
+<li><strong>Errors</strong>: 403 (bad password); 400 (serializer invalid / no matching customer).</li>
+<li><strong>Known caller pattern</strong>: Sales batch jobs call with <code>tenant_id=None → &quot;all&quot;</code>, <code>multiple_tenants=True</code>, <code>all=True</code>, <code>return_data=True</code> to fetch customer data across all tenants in one shot (<code>Sales\miniapp\tasks.py:162-170, 277-285</code>).</li>
+</ul>
+</section><section class="sec" data-title="6. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model">6. Data model</h2>
+<p>Models in scope (everything the traced code touches): <code>Customer</code>, <code>CustomerCategory</code>, <code>CustomerIdentityLink</code> (miniapp), plus <code>Supplier</code>, <code>SupplierCategory</code>, <code>Employee</code>, <code>PaymentTerm</code>, and the <code>ID</code> counter table for the ER context. All concrete models extend abstract <code>TimeModel</code> (<code>created</code>/<code>modified</code>, <code>dashboard\models.py:8-13</code>) and carry a soft-tenant <code>tenant_id</code> CharField.</p>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CUSTOMER ||--o{ CUSTOMER_CATEGORY : &quot;customer_category FK (PROTECT)&quot;
+    CUSTOMER ||--|| CUSTOMER_IDENTITY_LINK : &quot;customer_identity OneToOne&quot;
+    SUPPLIER ||--o{ SUPPLIER_CATEGORY : &quot;supplier_category FK (PROTECT)&quot;
+    CUSTOMER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    SUPPLIER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+
+    CUSTOMER {
+        bigint id PK
+        string tenant_id &quot;soft tenancy&quot;
+        string unique_id &quot;auto CUS&lt;n&gt; via ID table&quot;
+        string name
+        string customer_type &quot;individual|company|partnership&quot;
+        bigint customer_category FK
+        string country
+        string district
+        string province
+        string pan_number
+        json contact_details
+        string email
+        string address
+        string landline
+        string mobile &quot;10-digit, immutable via miniapp edit&quot;
+        json bank_account
+        float opening
+        date opening_date
+        float remain_opening
+        string opening_cr_dr &quot;cr|dr&quot;
+        string payment_term &quot;CharField, not an FK&quot;
+        string gl_mapping &quot;set from Configuration svc on miniapp create&quot;
+        string active_status &quot;active|inactive&quot;
+        string entry_by
+        bool as_supplier
+        float credit_limit
+        datetime created
+        datetime modified
+    }
+    CUSTOMER_CATEGORY {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;CCT&lt;n&gt;&quot;
+        string name
+        string active_status
+        string entry_by
+    }
+    CUSTOMER_IDENTITY_LINK {
+        bigint id PK
+        bigint customer PK_FK &quot;OneToOne, related_name customer_identity&quot;
+        string provider_code &quot;esewa&quot;
+        bool is_provider_user
+        string external_identifier &quot;eSewa wallet id, nullable&quot;
+        text description
+    }
+    SUPPLIER {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;SUP&lt;n&gt;&quot;
+        string name
+        string supplier_type
+        bigint supplier_category FK
+        string pan_number
+        string company_email
+        string mobile
+        json bank_account
+        float opening
+        string payment_term &quot;CharField, not an FK&quot;
+        string gl_mapping
+        string active_status
+        bool as_customer
+    }
+    SUPPLIER_CATEGORY {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;SCT&lt;n&gt;&quot;
+        string name
+        string active_status
+    }
+    EMPLOYEE {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;EMP&lt;n&gt;&quot;
+        string name
+        string designation
+        date joining_date
+        string pan_number
+        json email
+        string mobile
+        float opening
+        string gl_mapping
+        string active_status
+    }
+    PAYMENT_TERM {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;PTM&lt;n&gt;&quot;
+        string title
+        string credit_period
+        text description
+        string active_status
+        bool default
+    }
+    ID {
+        bigint id PK
+        string name &quot;CUS|SUP|EMP|PTM|CCT|SCT&quot;
+        string tenant_id
+        int unique_id &quot;per-name, per-tenant counter&quot;
+    }
+</pre></div>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Key fields</th>
+<th>Notes (tenant field? provider_code? unique constraints?)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Customer</code> (<code>customer\models.py:30-100</code>)</td>
+<td><code>tenant_id</code>, <code>unique_id</code> (<code>CUS&lt;n&gt;</code>, :78-81), <code>name</code>, <code>mobile</code>, <code>pan_number</code>, <code>gl_mapping</code>, <code>credit_limit</code>, <code>active_status</code>, <code>entry_by</code>, <code>as_supplier</code>, <code>payment_term</code></td>
+<td>Soft tenancy via <code>tenant_id</code> CharField; <strong>no DB unique constraint</strong> on (tenant_id, name/mobile) — uniqueness is enforced in serializers/views only; <code>payment_term</code> is a plain CharField (no FK to <code>PaymentTerm</code>); <code>locked_fields</code> property locks <code>pan_number</code> when synced transactions exist (:86-100, calls Sales)</td>
+</tr>
+<tr>
+<td><code>CustomerCategory</code> (<code>customer\models.py:8-28</code>)</td>
+<td><code>tenant_id</code>, <code>unique_id</code> (<code>CCT&lt;n&gt;</code>), <code>name</code>, <code>active_status</code></td>
+<td>Not touched by the miniapp app (referenced by the Customer FK only)</td>
+</tr>
+<tr>
+<td><code>CustomerIdentityLink</code> (<code>miniapp\models.py:8-17</code>)</td>
+<td><code>customer</code> OneToOne (<code>related_name=&quot;customer_identity&quot;</code>, CASCADE), <code>provider_code</code> (choices: <code>esewa</code> — <code>choices.py:345-346</code>), <code>is_provider_user</code>, <code>external_identifier</code> (nullable), <code>description</code></td>
+<td>The miniapp&#39;s core join: one eSewa identity per customer row; no unique constraint on (provider_code, external_identifier, customer) — the &quot;already added&quot; check is application-level (<code>serializers.py:60-74</code>); registered in Django admin (<code>miniapp\admin.py:4</code>)</td>
+</tr>
+<tr>
+<td><code>Supplier</code> (<code>supplier\models.py:30-97</code>)</td>
+<td><code>tenant_id</code>, <code>unique_id</code> (<code>SUP&lt;n&gt;</code>), <code>name</code>, <code>as_customer</code>, <code>payment_term</code> (CharField)</td>
+<td>Not touched by the miniapp app; listed for ER context</td>
+</tr>
+<tr>
+<td><code>SupplierCategory</code> (<code>supplier\models.py:8-28</code>)</td>
+<td><code>tenant_id</code>, <code>name</code></td>
+<td>Not touched by the miniapp app</td>
+</tr>
+<tr>
+<td><code>Employee</code> (<code>employee\models.py:7-44</code>)</td>
+<td><code>tenant_id</code>, <code>unique_id</code> (<code>EMP&lt;n&gt;</code>), <code>name</code>, <code>gl_mapping</code></td>
+<td>Not touched by the miniapp app</td>
+</tr>
+<tr>
+<td><code>PaymentTerm</code> (<code>payment_term\models.py:7-29</code>)</td>
+<td><code>tenant_id</code>, <code>unique_id</code> (<code>PTM&lt;n&gt;</code>), <code>title</code>, <code>credit_period</code>, <code>default</code></td>
+<td>Soft-linked to Customer/Supplier via CharField <code>payment_term</code> (id/title as text) — <strong>no FK</strong>; the miniapp endpoints never read/write it (customer&#39;s <code>payment_term</code> stays empty in miniapp-created records)</td>
+</tr>
+<tr>
+<td><code>ID</code> (<code>dashboard\models.py:16-53</code>)</td>
+<td><code>name</code>, <code>tenant_id</code>, <code>unique_id</code> (int)</td>
+<td>Per-tenant, per-prefix counter used by <code>save()</code> hooks to mint <code>CUS&lt;n&gt;</code>/<code>SUP&lt;n&gt;</code>/…; not row-locked (concurrency risk in theory)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="7. Key sequence diagrams"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-key-sequence-diagrams">7. Key sequence diagrams</h2>
+<h3 id="7-1-merchant-adds-a-customer-frontend-projectmaster-iam-configuration-events">7.1 Merchant adds a customer (frontend → Projectmaster → IAM / Configuration / Events)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant PM as Projectmaster
+    participant IAM as IAM
+    participant CFG as Configuration
+    participant EV as Events
+
+    FE-&gt;&gt;PM: POST /api/miniapp/customer/ (Bearer JWT + X-MINIAPP-TOKEN)
+    PM-&gt;&gt;IAM: POST /api/external/token/verify/ (token, X-MINIAPP-TOKEN)
+    IAM--&gt;&gt;PM: token valid
+    PM-&gt;&gt;IAM: GET /api/internal-check-permissions/ (non-root users only)
+    IAM--&gt;&gt;PM: feature PR301 + action add_edit
+    PM-&gt;&gt;PM: validate name/identifier/mobile; duplicate check (CustomerIdentityLink)
+    PM-&gt;&gt;CFG: POST /api/service-configuration/tenant/expose/ (gl_mapping, customer)
+    CFG--&gt;&gt;PM: account_receivable id (or none)
+    PM-&gt;&gt;PM: create Customer (unique_id CUS&lt;n&gt;) + CustomerIdentityLink
+    PM-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ (inline task)
+    EV--&gt;&gt;PM: 200
+    PM--&gt;&gt;FE: 200 {id, unique_id, name, mobile, external_identifier, is_provider_user}
+</pre></div>
+<h3 id="7-2-merchant-searches-customers-projectmaster-enriches-from-cdxe-sales">7.2 Merchant searches customers (Projectmaster enriches from CDXE + Sales)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant PM as Projectmaster
+    participant IAM as IAM
+    participant CDXE as CDXE
+    participant SALES as Sales
+
+    FE-&gt;&gt;PM: GET /api/miniapp/customer/search/?q=&amp;connection_status=&amp;page=
+    PM-&gt;&gt;IAM: POST /api/external/token/verify/ + permission check
+    IAM--&gt;&gt;PM: tenant_id, provider_code, user claims
+    PM-&gt;&gt;PM: filter Customer (tenant_id, provider_code, q, active)
+    PM-&gt;&gt;CDXE: POST /api/miniapp/get-connection/ (customer_ids, user_identifier, provider_code)
+    CDXE--&gt;&gt;PM: connection map (status pending/approved...)
+    PM-&gt;&gt;SALES: POST /api/miniapp/credit/ledger/internal/ (tenant_id, customer_id[])
+    SALES--&gt;&gt;PM: credit ledger per customer (current_balance...)
+    PM-&gt;&gt;PM: filter by connection_status; sort (order_by); paginate (100)
+    PM--&gt;&gt;FE: 200 paged list (id, name, mobile, total_credit_amount, connection_details, external_identifier)
+</pre></div>
+<h3 id="7-3-merchant-deletes-a-customer-payment-guard-sales-cdxe-cleanup-soft-delete">7.3 Merchant deletes a customer (Payment guard → Sales/CDXE cleanup → soft delete)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant SALES as Sales
+    participant CDXE as CDXE
+    participant EV as Events
+
+    FE-&gt;&gt;PM: DELETE /api/miniapp/customer/detail/{pk}/
+    PM-&gt;&gt;PAY: POST /api/esewa/payment/request/exists/ (tenant_id, customer_identifier, provider_code)
+    alt payment request in flight
+        PAY--&gt;&gt;PM: {&quot;exists&quot;: true, ...}
+        PM--&gt;&gt;FE: 400 &quot;cannot be deleted right now&quot;
+    else no pending payment request
+        PAY--&gt;&gt;PM: {&quot;exists&quot;: false}
+        PM-&gt;&gt;SALES: POST /api/miniapp/records/delete/customer/ (tenant_id, customer_identifier)
+        SALES--&gt;&gt;PM: ok (errors swallowed per-task)
+        opt customer is a provider user
+            PM-&gt;&gt;CDXE: POST /api/miniapp/connection/delete/customer/ (user_identifier, customer_identifier, provider_code)
+            CDXE--&gt;&gt;PM: ok
+        end
+        PM-&gt;&gt;PM: Customer.active_status = &quot;inactive&quot;
+        PM-&gt;&gt;EV: POST /api/activity_log/miniapp/log-activity/ (service_type=inactive)
+        PM--&gt;&gt;FE: 204 No Content
+    end
+</pre></div>
+<h3 id="7-4-cross-service-cdxe-connection-creation-validates-the-customer-at-projectmaster-internal-endpoint">7.4 Cross-service: CDXE connection creation validates the customer at Projectmaster (internal endpoint)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant CDXE as CDXE-REBOOT
+    participant PM as Projectmaster
+
+    FE-&gt;&gt;CDXE: POST /api/miniapp/create-connection/ (receiver_identifier, Bearer JWT)
+    CDXE-&gt;&gt;PM: POST /api/miniapp/validate-customer-connection/ (password, tenant_id, customer_identifier, provider_code, return_data=true)
+    PM-&gt;&gt;PM: CustomerIdentityLink lookup (active + provider user)
+    PM--&gt;&gt;CDXE: 200 {is_provider_user, id, name, mobile, external_identifier} (or 200 with error body)
+    CDXE-&gt;&gt;CDXE: receiver must be registered user OR provider-user customer; no existing connection
+    CDXE-&gt;&gt;CDXE: save Connection + ConnectionIdentityLink; notify both parties
+    CDXE--&gt;&gt;FE: 201 connection created
+</pre></div>
+<p>(Also used by CDXE <code>ApproveRejectConnection.post</code> on approve/reject to fetch the customer name for the notification/activity log — <code>CDXE-REBOOT\miniapp\views.py:189-207</code>.)</p>
+</section><section class="sec" data-title="8. Business process walkthrough (non-technical)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</h2>
+<h3 id="8-1-bikash-a-merchant-adds-a-customer-and-watches-the-credit-book">8.1 Bikash, a merchant, adds a customer and watches the credit book</h3>
+<p>Bikash runs a hardware shop and lends tools to regular customers before they pay. In his eSewa miniapp he opens &quot;Customers&quot; and adds &quot;Sita&#39;s Kitchen&quot; — a name, the customer&#39;s phone number, and, because Sita also has an eSewa wallet, he pastes Sita&#39;s wallet ID so the two accounts are linked. The system (Projectmaster) first checks that his login is a genuine eSewa merchant belonging to his company, and that his company&#39;s subscription allows creating customers. It stores the customer under his company alone — other companies in the platform can never see or touch this record — and, because the company has an &quot;accounts receivable&quot; default configured, it quietly tags the customer with the right accounting account so later invoices post correctly. A short activity note (&quot;Bikash created customer Sita&#39;s Kitchen&quot;) is written to the company&#39;s activity log.</p>
+<p>From then on, the customer list shows Sita&#39;s Kitchen with two live numbers assembled from other services: the <strong>credit balance</strong> (from the Sales service, which owns the credit records) and the <strong>connection status</strong> (from CDXE, which manages the link between Bikash and Sita&#39;s wallet). Bikash can filter the list by &quot;connected&quot;, &quot;pending&quot;, or &quot;offline&quot; customers, search by name or phone, and tap a customer to see the last five credit entries and the outstanding unpaid amounts. He may correct the name or add a note, but the phone number and the wallet link are fixed once set.</p>
+<h3 id="8-2-sita-gets-connected-to-bikash-a-cross-company-handshake">8.2 Sita gets &quot;connected&quot; to Bikash — a cross-company handshake</h3>
+<p>For Sita&#39;s wallet to settle credit through the miniapp, a <strong>connection</strong> must exist between Bikash (the merchant) and Sita (the wallet user). When Bikash sends the connection request, the connection service (CDXE) does not trust the name alone: it asks Projectmaster, &quot;in Bikash&#39;s company, is this wallet ID a real, active customer of his, and is it flagged as a wallet user?&quot; Projectmaster answers from its customer-identity table. Only if the answer is yes (or the receiver is already a registered platform user) does the connection proceed, and both sides get notified. Later, when Sita approves or declines the request, CDXE asks Projectmaster the same question once more to fetch the customer&#39;s name for the notification. In plain terms: Projectmaster is the referee that confirms &quot;this wallet really belongs to a customer of this shop&quot; before any money link is created.</p>
+<h3 id="8-3-removing-a-customer-safely">8.3 Removing a customer safely</h3>
+<p>When a customer relationship ends, Bikash deletes the customer from the miniapp. The system first asks the Payment service whether any payment request is still in flight for that customer — if so, deletion is refused with a clear message, because the money flow would dangle. Otherwise it asks Sales to clean up the customer&#39;s miniapp transaction records, and — only if the customer was a linked wallet user — asks CDXE to remove the connection. After that, the customer is marked inactive (not physically erased, so historical records stay consistent) and an activity note is written. Because each company&#39;s records are isolated by tenant, Bikash can only ever delete his own customers; a customer that belongs to another company or another provider simply doesn&#39;t exist to him.</p>
+</section><section class="sec" data-title="9. Cross-service call map (outbound calls from this service)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</h2>
+<p>Base URLs: internal docker names from <code>.env:15-30</code> via <code>dashboard\api_links.py</code>; rewritten to <code>https://dev-*-api.providhy.com/</code> when <code>LOCAL=True</code> (<code>dashboard\helper.py:51-68</code>). &quot;Sync&quot; = blocking <code>requests</code>/<code>httpx</code> call inside the request; &quot;inline task&quot; = Celery <code>shared_task</code> invoked directly (no worker configured).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Target service</th>
+<th>Method+path</th>
+<th>Triggered by (local endpoint)</th>
+<th>Purpose</th>
+<th>Sync/Async</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>IAM</td>
+<td><code>POST http://iam:8000/api/external/token/verify/</code> (auth_backends.py:207)</td>
+<td>All 5 public endpoints (auth step)</td>
+<td>Validate miniapp JWT + forwarded <code>X-MINIAPP-TOKEN</code> TOTP</td>
+<td>Sync (auth)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IAM</td>
+<td><code>GET http://iam:8000/api/internal-check-permissions/?password=&amp;user_id=</code> (auth_backends.py:131-133; helper.py:71)</td>
+<td>All 5 public endpoints (non-<code>tenant_root</code> users)</td>
+<td>Feature PR301 + action check</td>
+<td>Sync (permission)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Configuration</td>
+<td><code>POST http://configuration:8000/api/service-configuration/tenant/expose/</code> (helper.py:84; send_requests.py:28-42)</td>
+<td><code>POST /api/miniapp/customer/</code> (create → <code>set_gl_data</code>, serializers.py:108-126)</td>
+<td>Fetch tenant GL mapping (Account Receivable) for the new customer</td>
+<td>Sync</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Events</td>
+<td><code>POST http://events:8000/api/activity_log/miniapp/log-activity/</code> (miniapp\tasks.py:27)</td>
+<td><code>POST customer/</code>, <code>POST</code>/<code>DELETE customer/detail/</code> (views.py:61, 143, 200)</td>
+<td>Activity-log entry (creation/edition/inactive)</td>
+<td>Inline task (called synchronously; no worker configured)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CDXE</td>
+<td><code>POST http://cdxe:9009/api/miniapp/get-connection/</code> (helper.py:116; async_func.py:81)</td>
+<td><code>GET customer/search/</code>; <code>GET customer/detail/&lt;pk&gt;/</code> (if <code>is_provider_user</code>)</td>
+<td>Connection status per customer (pending/approved)</td>
+<td>Sync</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sales</td>
+<td><code>POST http://sales:8000/api/miniapp/credit/ledger/internal/</code> (helper.py:96; async_func.py:117)</td>
+<td><code>GET customer/search/</code>; <code>GET customer/detail/&lt;pk&gt;/</code></td>
+<td>Credit ledger / current balance per customer</td>
+<td>Sync</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sales</td>
+<td><code>POST http://sales:8000/api/miniapp/credit/merchant/search/</code> (helper.py:95; async_func.py:44)</td>
+<td><code>GET customer/detail/&lt;pk&gt;/</code> (<code>outstanding_credits</code>)</td>
+<td>Unpaid/partially-paid credit records</td>
+<td>Sync</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Sales</td>
+<td><code>POST http://sales:8000/api/miniapp/records/delete/customer/</code> (helper.py:97; async_func.py:199)</td>
+<td><code>DELETE customer/detail/&lt;pk&gt;/</code></td>
+<td>Delete the customer&#39;s miniapp transactions</td>
+<td>Sync (error swallowed by task_runner)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>CDXE</td>
+<td><code>POST http://cdxe:9009/api/miniapp/connection/delete/customer/</code> (helper.py:101; async_func.py:171)</td>
+<td><code>DELETE customer/detail/&lt;pk&gt;/</code> (only if <code>is_provider_user</code>)</td>
+<td>Remove merchant↔wallet connection</td>
+<td>Sync (error swallowed)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Payment</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/exists/</code> (helper.py:104; async_func.py:147)</td>
+<td><code>DELETE customer/detail/&lt;pk&gt;/</code></td>
+<td>Block deletion while a payment request is in flight</td>
+<td>Sync</td>
+</tr>
+</tbody></table>
+<p>No Kafka, no IAM token issuance, no TMS/accounting/reporting calls from the miniapp app. (Kafka producer exists in <code>dashboard\kafka_function.py</code> for the non-miniapp dashboard flows.)</p>
+</section><section class="sec" data-title="10. Inbound calls (who calls THIS service's miniapp/internal endpoints)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service&#39;s miniapp/internal endpoints)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Caller service/frontend</th>
+<th>Method+path</th>
+<th>Purpose</th>
+<th>Evidence (call site, file:line)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>miniapp-esewa frontend</td>
+<td><code>GET https://dev-projectmaster-api.providhy.com/api/miniapp/customer/search/</code></td>
+<td>Customer list page (with <code>q</code>, <code>connection_status</code>, <code>page</code>, <code>count</code>)</td>
+<td><code>miniapp-esewa\src\services\requests\customer.ts:82-92</code> (<code>getCustomers</code>); endpoint const <code>constants.ts:72</code>; used by <code>src\views\customers\index.tsx:5</code>, <code>src\views\credit\form.tsx:26</code>, <code>src\views\credit\credit-history.tsx:26</code>, <code>src\views\transaction-history\index.tsx:25</code>, <code>src\views\profile\index.tsx:22</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>miniapp-esewa frontend</td>
+<td><code>GET .../api/miniapp/customer/detail/&lt;id&gt;/</code></td>
+<td>Customer detail (balance, credit logs, connection)</td>
+<td><code>customer.ts:94-101</code> (<code>getCustomerDetails</code>); <code>constants.ts:74</code>; used by <code>src\views\customers\details.tsx:4</code>, <code>src\shared\components\app\delete-customer-modal.tsx:4</code>, <code>src\shared\components\app\settle-credit-for-customer.tsx:9</code>, <code>src\shared\components\app\manage-payment-allocation-nocredit-modal.tsx:2</code>, <code>src\views\payment\request-payment-form.tsx:11</code> (note: URL lacks trailing slash → 301)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>miniapp-esewa frontend</td>
+<td><code>POST .../api/miniapp/customer/</code></td>
+<td>Add customer (also &quot;add merchant&quot;: a customer record carrying an eSewa wallet identifier)</td>
+<td><code>customer.ts:103-113</code> (<code>addCustomer</code>) via <code>src\views\customers\form.tsx:12</code>; <code>merchants.ts:94-104</code> (<code>addMerchant</code>); <code>constants.ts:75</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>miniapp-esewa frontend</td>
+<td><code>POST .../api/miniapp/customer/detail/&lt;id&gt;/</code></td>
+<td>Edit customer</td>
+<td><code>customer.ts:115-127</code> (<code>editCustomer</code>); <code>merchants.ts:106-117</code> (<code>editMerchant</code>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>miniapp-esewa frontend</td>
+<td><code>DELETE .../api/miniapp/customer/detail/&lt;id&gt;/</code></td>
+<td>Delete (soft) customer</td>
+<td><code>customer.ts:129-139</code> (<code>deleteCustomer</code>) via <code>src\shared\components\app\delete-customer-modal.tsx:4</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>CDXE-REBOOT (backend)</td>
+<td><code>POST .../api/miniapp/validate-customer-connection/</code></td>
+<td>On <strong>create-connection</strong>: receiver must be a registered user OR an active provider-user customer; on <strong>approve/reject</strong>: fetch customer name for notification/activity</td>
+<td><code>CDXE-REBOOT\dashboard\helpers.py:391-414</code> (call at :409); <code>CDXE-REBOOT\miniapp\serializers.py:167</code> (inside <code>check_and_validate</code> :154-177, used by <code>validate_connection_criteria</code> :179-199, from <code>CreateConnection</code> <code>miniapp\views.py:68-97</code>); <code>CDXE-REBOOT\miniapp\views.py:190</code> (in <code>ApproveRejectConnection.post</code>, class at :147, post at :153)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sales (backend)</td>
+<td><code>POST .../api/miniapp/customer-check/</code></td>
+<td>Enrich/filter credit records with customer data (miniapp credit list, credit create context, settlement list, dispute list; due-date &amp; overdue reminder batch jobs — the latter with <code>tenant_id=&quot;all&quot;</code>, <code>multiple_tenants=True</code>, <code>all=True</code>)</td>
+<td><code>Sales\dashboard\helper.py:81</code> (<code>MINIAPP_CUSTOMER_CHECK</code>), <code>Sales\dashboard\async_func.py:61-89</code> (client fn; non-200 → <code>ValidationError</code> CUSTOMER_NOT_FOUND :88-89); call sites: <code>Sales\miniapp\views.py:227</code> (<code>CreditRecordListView</code>, class :177), <code>Sales\miniapp\serializers.py:162, 299, 545, 979</code> (+ wrapper calls :410, :758, :799, :1166, :1465), <code>Sales\miniapp\tasks.py:162, 277</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Sales (backend)</td>
+<td><code>POST .../api/miniapp/validate-customer-connection/</code></td>
+<td><strong>Defined but no active call site found in the Sales tree</strong> (dead code)</td>
+<td><code>Sales\dashboard\async_func.py:38-58</code> (URL at :54)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Payment-Service (backend)</td>
+<td><code>POST .../api/miniapp/customer-check/</code></td>
+<td><strong>Defined but no active call site found in the current Payment tree</strong> (dead code)</td>
+<td><code>Payment-Service\dashboard\helpers.py:41</code> (const), <code>Payment-Service\dashboard\async_func.py:31</code> (client fn), wrapper <code>Payment-Service\dashboard\helpers.py:99-111</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Payment-Service (backend)</td>
+<td><code>POST .../api/miniapp/validate-customer-connection/</code></td>
+<td><strong>Defined but no active call site found</strong> (dead code)</td>
+<td><code>Payment-Service\dashboard\async_func.py:8-28</code> (URL at :24)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Unknown / none found</td>
+<td><code>POST .../api/miniapp/dummy-customer-check/</code></td>
+<td>Stub eSewa-user check; no caller found in any scanned repo (<code>Sales</code>, <code>CDXE-REBOOT</code>, <code>Payment-Service</code>, <code>TMS-service</code>, <code>Configuration-Service</code>, <code>ProductManagement</code>, <code>ERP-Project-Package</code>, <code>Website-Service</code>, <code>Migration-service</code>, <code>events</code>, <code>Accounting</code>, <code>Purchase</code>, <code>reporting</code>, <code>IAM-Backend</code>, <code>Document-Service</code>, <code>miniapp-esewa</code>)</td>
+<td>Registry (unused in-repo): <code>ERP-Projectmaster\miniapp\registry.py:10-12</code>; env pointing here: <code>ERP-Projectmaster\.env:49</code>; analogous unused env: <code>CDXE-REBOOT\.env:50</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="11. Unknowns &amp; assumptions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-assumptions">11. Unknowns &amp; assumptions</h2>
+<ul>
+<li><strong><code>dummy-customer-check</code> has no discoverable caller.</strong> The endpoint always returns <code>{&quot;is_provider_user&quot;: true}</code> (<code>views.py:258-262</code>) — a stub. <code>check_user_url_registry</code> (<code>miniapp\registry.py:10-12</code>) is defined but referenced nowhere in this checkout, and the <code>ESEWA_USER_CHECK_API</code> env var (<code>.env:49</code>) is not read by any view. The CDXE-REBOOT repo has its own <code>ESEWA_USER_CHECK_API</code> (<code>.env:50</code>, pointing at a dummyjson.com URL) that is likewise unreferenced by code. <strong>Inferred</strong>: the design intent is &quot;service X asks Projectmaster whether an external identifier is a real eSewa user&quot;; the actual consumer is unverified.</li>
+<li><strong>TOTP verification location</strong>: this service forwards <code>X-MINIAPP-TOKEN</code> to IAM&#39;s <code>/api/external/token/verify/</code> (<code>auth_backends.py:174-178, 206-219</code>) and decodes the JWT with <code>verify=False</code> (line 179). Whether/how IAM validates the TOTP and the signature is out of scope (IAM tracer&#39;s document) — <strong>assumed</strong> enforced there.</li>
+<li><strong>JWT trust model</strong>: after IAM verification, all claims (<code>tenant_id</code>, <code>provider_code</code>, <code>user_type</code>, <code>external_identifier</code>, …) are taken from the unsigned local decode (<code>auth_backends.py:179-194</code>). This is by design but means every security property rests on the IAM verify call + network trust.</li>
+<li><strong>Internal endpoints authorize by shared secret only</strong> (<code>auth_backends.py:157-163</code>, <code>INTERNAL_PASS</code> <code>.env:11</code>); the caller-supplied <code>tenant_id</code> is trusted verbatim (e.g. <code>customer-check</code> with <code>tenant_id=&quot;all&quot;</code> spans all tenants — <code>views.py:331</code>, <code>serializers.py:446-454</code>). Whether that exposure is acceptable is a design judgment, not something the code answers.</li>
+<li><strong>Delete cleanup failures are swallowed</strong>: <code>task_runner</code> converts per-task exceptions to <code>{&quot;error&quot;: ...}</code> (<code>helper.py:313-314</code>), so the customer is soft-deleted even if the Sales/CDXE/Payment calls failed (inferred risk, not a documented behavior).</li>
+<li><strong>Celery is nominal</strong>: <code>send_activity_log</code> is a <code>shared_task</code> but invoked inline (<code>views.py:61,143,200</code>), no broker/worker is configured in <code>core\settings.py</code> or <code>Dockerfile</code>. Whether a separate worker deployment exists in the cluster is <strong>unknown</strong> from this repo.</li>
+<li><strong><code>task_runner</code> is sequential, not concurrent</strong>, and the <code>a*</code>-named helpers are synchronous despite <code>httpx.Client</code> type hints (<code>helper.py:303-315</code>, <code>async_func.py:26-212</code>). A commented-out async <code>runner</code> exists (<code>async_func.py:215-223</code>, <code>helper.py:318-331</code>).</li>
+<li><strong>Search-view edge case</strong>: if <code>CustomerFilterSet</code> is invalid, <code>filter_queryset</code> returns <code>None</code> (<code>dashboard\mixins.py:56-58</code>) and the view passes it straight to the serializer (<code>views.py:222</code>); the resulting behavior (DRF error/500) was not executed and is <strong>unverified</strong>.</li>
+<li><strong><code>q</code> filter</strong>: optional (only applied when present); passing an <strong>empty</strong> <code>q</code> raises a bare <code>Exception</code> (<code>filters.py:16-20</code>) → unhandled 500 (inferred from the code path).</li>
+<li><strong>Frontend GET detail URL lacks a trailing slash</strong> (<code>customer.ts:98</code>) → relies on Django&#39;s <code>APPEND_SLASH</code> 301 redirect (verified by reading the URL strings; redirect behavior is Django default, not repo code).</li>
+<li><strong><code>messages.py</code> defines <code>RECORD_NOT_FOUND</code> twice</strong> (line 6 &quot;Record not found&quot; and line 25 &quot;Record not found.&quot;); the later binding (line 25) is the value actually served.</li>
+<li><strong><code>customer-check</code> <code>return_data</code> mechanism</strong> was a suspected bug (<code>serializer.data</code> with no instance) — <strong>verified NOT a bug</strong> in installed DRF 3.18.3: the <code>data</code> property falls back to <code>to_representation(self.validated_data)</code> (<code>.venv\...\rest_framework\serializers.py:249-255</code>), matching the overridden <code>to_representation</code> (<code>serializers.py:443-467</code>).</li>
+<li><strong>Sales <code>payment_term</code>/GL handling in miniapp create</strong>: <code>gl_mapping</code> is only auto-set from the Configuration service&#39;s &quot;Account Receivable&quot; entry (<code>serializers.py:108-126</code>); if the tenant has no such configuration the customer is created with <code>gl_mapping=null</code> (code path verified; the accounting consequences are outside this repo).</li>
+<li><strong><code>entry_by</code> username mangling</strong>: <code>helper.get_username</code> strips the last <code>_segment</code> from the JWT <code>username</code> (<code>helper.py:196-201</code>) — presumably to normalize <code>name_suffix</code> style identities; the exact convention is <strong>inferred</strong>.</li>
+<li><strong><code>skip_mobile_validation</code></strong> (<code>serializers.py:37-41</code>) is set but never read in this serializer (observation).</li>
+<li><strong><code>mcp_tools</code> app</strong> listed in the shared-context repo map does not exist in this checkout (verified by directory listing).</li>
+<li><strong>Line-number note</strong>: <code>miniapp\views.py</code> is 354 lines in this checkout (the task brief mentioned 320 — the file has since grown; all citations here use the current file).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="05-cdxe-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">CDXE Miniapp</div></a><a class="pn next" href="07-payment-esewa.html"><div class="pn-dir">Next →</div><div class="pn-name">Payment + Frontend</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l2"><a href="#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-endpoints">4.1 Public miniapp endpoints</a></li><li class="l3"><a href="#4-2-internal-service-to-service-endpoints-same-service-called-by-other-services">4.2 Internal service-to-service endpoints (same service, called by OTHER services)</a></li><li class="l3"><a href="#4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</a></li><li class="l2"><a href="#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a></li><li class="l3"><a href="#5-1-post-api-miniapp-customer-merchant-adds-a-customer">5.1 POST /api/miniapp/customer/ — merchant adds a customer</a></li><li class="l3"><a href="#5-2-get-api-miniapp-customer-search-list-customers-with-credit-connection">5.2 GET /api/miniapp/customer/search/ — list customers with credit + connection</a></li><li class="l3"><a href="#5-3-get-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-customer-detail-with-credits">5.3 GET /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — customer detail with credits</a></li><li class="l3"><a href="#5-4-post-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-edit-customer">5.4 POST /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — edit customer</a></li><li class="l3"><a href="#5-5-delete-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-soft-delete-customer">5.5 DELETE /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — soft-delete customer</a></li><li class="l3"><a href="#5-6-post-api-miniapp-dummy-customer-check-stub-esewa-user-check-internal">5.6 POST /api/miniapp/dummy-customer-check/ — stub eSewa-user check (internal)</a></li><li class="l3"><a href="#5-7-post-api-miniapp-validate-customer-connection-is-this-an-active-provider-user-customer-internal">5.7 POST /api/miniapp/validate-customer-connection/ — is this an active provider-user customer? (internal)</a></li><li class="l3"><a href="#5-8-post-api-miniapp-customer-check-do-these-customers-exist-internal">5.8 POST /api/miniapp/customer-check/ — do these customers exist? (internal)</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-key-sequence-diagrams">7. Key sequence diagrams</a></li><li class="l3"><a href="#7-1-merchant-adds-a-customer-frontend-projectmaster-iam-configuration-events">7.1 Merchant adds a customer (frontend → Projectmaster → IAM / Configuration / Events)</a></li><li class="l3"><a href="#7-2-merchant-searches-customers-projectmaster-enriches-from-cdxe-sales">7.2 Merchant searches customers (Projectmaster enriches from CDXE + Sales)</a></li><li class="l3"><a href="#7-3-merchant-deletes-a-customer-payment-guard-sales-cdxe-cleanup-soft-delete">7.3 Merchant deletes a customer (Payment guard → Sales/CDXE cleanup → soft delete)</a></li><li class="l3"><a href="#7-4-cross-service-cdxe-connection-creation-validates-the-customer-at-projectmaster-internal-endpoint">7.4 Cross-service: CDXE connection creation validates the customer at Projectmaster (internal endpoint)</a></li><li class="l2"><a href="#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a></li><li class="l3"><a href="#8-1-bikash-a-merchant-adds-a-customer-and-watches-the-credit-book">8.1 Bikash, a merchant, adds a customer and watches the credit book</a></li><li class="l3"><a href="#8-2-sita-gets-connected-to-bikash-a-cross-company-handshake">8.2 Sita gets &quot;connected&quot; to Bikash — a cross-company handshake</a></li><li class="l3"><a href="#8-3-removing-a-customer-safely">8.3 Removing a customer safely</a></li><li class="l2"><a href="#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a></li><li class="l2"><a href="#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

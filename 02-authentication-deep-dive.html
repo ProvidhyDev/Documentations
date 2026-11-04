@@ -1,0 +1,230 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Authentication - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc current" href="02-authentication-deep-dive.html"><span>Authentication</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#1-what-is-federated-identity-here-plain-language">1. What is &quot;federated identity&quot; here? (plain language)</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#2-the-three-actors-and-their-credentials">2. The three actors and their credentials</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#3-two-different-classes-with-the-same-name">3. Two different classes with the same name</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#4-other-auth-schemes-in-the-same-surface">4. Other auth schemes in the same surface</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#5-request-anatomy-what-a-live-miniapp-request-looks-like">5. Request anatomy (what a live miniapp request looks like)</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#6-security-properties-observed-weaknesses-as-found-in-code">6. Security properties &amp; observed weaknesses (as found in code)</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#7-sequence-authentication-of-one-miniapp-request">7. Sequence: authentication of one miniapp request</a><a class="sb-item sb-sub" href="02-authentication-deep-dive.html#8-cross-references">8. Cross-references</a></div><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>02 — Federated Identity Authentication: Deep Dive</h1>
+<blockquote>
+<p>How a request from the eSewa miniapp becomes &quot;a known user of a known tenant&quot; inside any Providhy service.
+Audience: technical readers first, but each concept is also explained in plain language.
+All claims cite source:line. Evidence gathered 2026-11-03.</p>
+</blockquote>
+</section><section class="sec" data-title="1. What is &quot;federated identity&quot; here? (plain language)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-what-is-federated-identity-here-plain-language">1. What is &quot;federated identity&quot; here? (plain language)</h2>
+<p>A <em>federation</em> is an agreement between systems about &quot;who is who&quot;.
+The eSewa miniapp does not run on Providhy&#39;s servers and does not know Providhy&#39;s
+user accounts. Instead:</p>
+<ol>
+<li>When an eSewa merchant or user first registers in the miniapp, the <strong>IAM</strong> (Identity
+&amp; Access Management) service records them as an <strong>External Entity</strong>: &quot;this phone number,
+coming from provider &#39;esewa&#39;, maps to this Providhy user account, inside this tenant.&quot;</li>
+<li>When they log in, IAM issues a signed <strong>JWT access token</strong> (a tamper-proof digital
+ticket) that carries everything the other services need to know: user id, tenant id,
+which services they are subscribed to, their role (merchant <em>ESM</em> or customer <em>ESU</em>),
+permissions, and whether their subscription is expired.</li>
+<li>Every later API call to Sales, TMS, CDXE, Projectmaster, Payment, or Configuration
+carries that ticket (plus a short-lived OTP code as an extra lock). Each service asks
+IAM &quot;is this ticket genuine and is the OTP right?&quot;, then reads the claims from the
+ticket and serves the data for <strong>only that tenant</strong>.</li>
+</ol>
+<p>So the miniapp never stores Providhy passwords, and no single service can impersonate
+anyone: the ticket must be signed by IAM and re-verified against IAM on each request.</p>
+</section><section class="sec" data-title="2. The three actors and their credentials"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-the-three-actors-and-their-credentials">2. The three actors and their credentials</h2>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>What it holds</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eSewa miniapp frontend (Next.js, E:\Work\miniapp-esewa)</td>
+<td>JWT access+refresh tokens in sessionStorage</td>
+<td>IAM <code>external/token/</code> (login) / <code>external/token/refresh/</code></td>
+</tr>
+<tr>
+<td>Same</td>
+<td>X-MINIAPP-TOKEN header: TOTP code (speakeasy, base32 secret = env CUSTOM_KEY, step=20s)</td>
+<td>computed client-side per request (E:\Work\miniapp-esewa\src\actions\otp.ts:12-22)</td>
+</tr>
+<tr>
+<td>Providhy backend services</td>
+<td>nothing secret per-user; they hold the internal shared password (env) and IAM API URL</td>
+<td>each repo .env (IAM_API / IAM_SERVICE)</td>
+</tr>
+</tbody></table>
+<p>Token acquisition details (verified):</p>
+<ul>
+<li>Login: POST <a href="https://dev-iam-api.providhy.com/api/external/token/">https://dev-iam-api.providhy.com/api/external/token/</a> with body
+<code>{token, external_identifier, encrypted_text, provider_code}</code> → returns
+<code>{access, refresh, payload{...}}</code> (E:\Work\miniapp-esewa\src\services\requests\auth.ts:114-124;
+endpoints defined at src\shared\constants.ts:53-55).</li>
+<li>The same JWT pair is then sent as <code>Authorization: Bearer &lt;access&gt;</code> on every backend
+call (E:\Work\miniapp-esewa\src\services\api.ts:34-44) with automatic refresh via
+axios-auth-refresh (api.ts:68-109).</li>
+<li>TOTP: every outgoing request gets <code>X-MINIAPP-TOKEN</code> (api.ts:51-55).</li>
+</ul>
+</section><section class="sec" data-title="3. Two different classes with the same name"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-two-different-classes-with-the-same-name">3. Two different classes with the same name</h2>
+<p>IMPORTANT nuance: the codebase contains <strong>two distinct implementations</strong> named
+FederatedIdentityAuthentication:</p>
+<h3 id="3-1-iam-internal-version-local-lookup">3.1 IAM-internal version (local lookup)</h3>
+<ul>
+<li>File: E:\Work\IAM-Backend\federated_identity\auth_backends.py:10-25</li>
+<li>How it works:<ol>
+<li><code>utils.verify_request_origin(request)</code> must pass (federated_identity\utils.py — see 03-iam doc).</li>
+<li>Reads <code>provider_code</code> + <code>external_identifier</code> <strong>from the request body</strong>.</li>
+<li>Looks up <code>ExternalEntity(provider_code, external_identifier)</code> in IAM&#39;s own DB.</li>
+<li>Returns <code>(</code>the IAM user<code>, tenant_id)</code> or AnonymousUser.</li>
+</ol>
+</li>
+<li>Used by: IAM&#39;s own federated_identity views
+(federated_identity\views.py:87, 325) and MiniAppAuthentication (subclass, auth_backends.py:37-41).</li>
+<li>This is the &quot;resolve an external identity to a user&quot; primitive.</li>
+</ul>
+<h3 id="3-2-service-side-version-jwt-verify-claims">3.2 Service-side version (JWT verify + claims)</h3>
+<ul>
+<li>Copies in each service: Sales\dashboard\auth_backends.py:180, CDXE-REBOOT\dashboard\auth_backends.py:97,
+ERP-Projectmaster\dashboard\auth_backends.py:166, TMS-service\dashboard\auth_backends.py:147,
+Payment-Service\dashboard\auth_backends.py:30, Configuration-Service\dashboard\auth_backends.py:102.</li>
+<li>How it works (Sales copy shown; others identical in substance):<ol>
+<li><strong>Extract token</strong> — helper <code>get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;)</code>
+checks in order: cookie <code>miniAppAccessToken</code>/accessToken → <code>Authorization: Bearer</code> header →
+request body field <code>miniAppAccessToken</code>/accessToken
+(E:\Work\Configuration-Service\dashboard\helpers.py:140-168; TMS-service\dashboard\helpers.py:401-433).</li>
+<li><strong>Remote verification</strong> — <code>validate_token_with_external_iam(token, headers={&quot;X-MINIAPP-TOKEN&quot;: ...})</code>
+calls <code>POST {IAM_API}/api/external/token/verify/</code> with the token and forwards the TOTP header
+(Sales: dashboard\auth_backends.py:218-235). IAM checks signature/expiry AND the TOTP.
+On IAM unreachable: Sales raises TemporaryServiceUnavailable (auth_backends.py:208-212).</li>
+<li><strong>Local decode</strong> — <code>TokenBackend(algorithm=&quot;HS256&quot;).decode(token, verify=False)</code>
+(auth_backends.py:192): the JWT is re-decoded locally <strong>without re-verifying the signature</strong>
+(trust is delegated to IAM&#39;s verify call).</li>
+<li><strong>Attach claims to the request</strong> (auth_backends.py:193-205): user_id, tenant_id,
+subscribed_services, user_permissions, provider_code, user_type, tenant_root, username,
+external_identifier, subscription_expired.</li>
+<li>Returns <code>(</code>user_id, tenant_id)<code>— note: an *integer id*, not a Django User object. Views/serializers therefore read</code>request.user<code>as an id and use</code>request.<claim>`
+attributes for tenant scoping and role checks.</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-3-jwt-mechanics-iam-side">3.3 JWT mechanics (IAM side)</h3>
+<ul>
+<li>IAM signs with <strong>HS256</strong> using a dedicated key: <code>SIGNING_KEY = config(&quot;JWT_SIGNING_KEY&quot;, default=SECRET_KEY)</code>
+(E:\Work\IAM-Backend\IAM\settings.py:188). The comment in settings explains: a dedicated key so
+services can verify miniapp tokens locally without holding IAM&#39;s Django SECRET_KEY.</li>
+<li>Refresh tokens: rotated + blacklisted after rotation; access lifetime = env ACCESS_TOKEN_TIME minutes
+(settings.py:176-184).</li>
+<li>Default DRF authentication in IAM: CustomJWTAuthentication (settings.py:144-147); throttling
+anon 3/sec, user 5/sec (settings.py:140-143).</li>
+</ul>
+</section><section class="sec" data-title="4. Other auth schemes in the same surface"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-other-auth-schemes-in-the-same-surface">4. Other auth schemes in the same surface</h2>
+<table>
+<thead>
+<tr>
+<th>Scheme</th>
+<th>Where</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InternalRequestAuthentication</td>
+<td>each service (e.g. Sales\dashboard\auth_backends.py:144-166, TMS 120-136)</td>
+<td>Service-to-service calls: shared <code>password</code> (env) + tenant_id in body/query; <code>validate_internal_pass</code> checks it (Sales\dashboard\helper.py:383). Returns (None, tenant_id) — no user.</td>
+</tr>
+<tr>
+<td>ExternalUserPermission / HasFederatedEntityPermission</td>
+<td>service auth_backends</td>
+<td>Role gating on claims: view declares <code>required_user_type</code> (e.g. [&quot;ESM&quot;]); checked against <code>request.user_type</code> (TMS auth_backends.py:178-185; Sales auth_backends.py:238-247).</td>
+</tr>
+<tr>
+<td>subscription gating</td>
+<td>e.g. Sales HasEbilling (auth_backends.py:134-141) and <code>request.subscription_expired</code></td>
+<td>Feature access depends on subscribed_services claim / expiry.</td>
+</tr>
+<tr>
+<td>Tenant-root shortcut</td>
+<td>Sales auth_backends.py:130-131</td>
+<td><code>request.tenant_root</code> bypasses some checks.</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="5. Request anatomy (what a live miniapp request looks like)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-request-anatomy-what-a-live-miniapp-request-looks-like">5. Request anatomy (what a live miniapp request looks like)</h2>
+<pre><code>POST https://dev-sales-api.providhy.com/api/miniapp/credit/create/
+Authorization: Bearer &lt;JWT access&gt;          # issued by IAM external/token/
+X-MINIAPP-TOKEN: &lt;6-digit TOTP, 20s step&gt;   # proves possession of shared CUSTOM_KEY
+Content-Type: application/json
+{
+  ...business fields...,
+  &quot;provider_code&quot;: &quot;esewa&quot;,        # (some endpoints still read these for scoping/logging)
+  &quot;external_identifier&quot;: &quot;&lt;phone&gt;&quot;
+}
+</code></pre>
+<p>Server-side processing order for a miniapp endpoint:</p>
+<ol>
+<li>DRF authenticator <code>FederatedIdentityAuthentication</code> (service copy) runs → token extracted,
+IAM verify call (network hop to IAM), claims attached to request, (user_id, tenant_id) returned.</li>
+<li>Permission classes (role/subscription/tenant-root) evaluate.</li>
+<li>View logic executes with <code>request.user</code> = user id and tenant scoping via tenant_id claim.</li>
+<li>Any internal calls to <em>other</em> services use InternalRequestAuthentication on the far side
+(shared password), not the user&#39;s JWT.</li>
+</ol>
+</section><section class="sec" data-title="6. Security properties &amp; observed weaknesses (as found in code)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-security-properties-observed-weaknesses-as-found-in-code">6. Security properties &amp; observed weaknesses (as found in code)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Observation</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Token is re-verified against IAM <strong>on every request</strong> (synchronous network hop). IAM outage = all miniapps fail.</td>
+<td>Sales auth_backends.py:208-212 (TemporaryServiceUnavailable on connect errors)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Local JWT decode uses <code>verify=False</code> — signature trust fully delegated to the IAM verify call. If that call ever 200s on a bad token, forged claims pass.</td>
+<td>Sales auth_backends.py:192</td>
+</tr>
+<tr>
+<td>3</td>
+<td>TOTP secret (CUSTOM_KEY) is known to the frontend bundle env; TOTP step is a fixed 20s (short window, but shared secret is not per-user).</td>
+<td>miniapp-esewa\src\actions\otp.ts:12-22</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>get_access_token</code> accepts the token in <strong>cookies or body</strong> as well as the header — broader surface than needed.</td>
+<td>helpers.py:140-168 (Config), TMS helpers.py:401-433</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Internal service-to-service auth is a single shared password in env (no per-service keys).</td>
+<td>Sales helper.py:383; TMS auth_backends.py:120-136</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CORS locked to https://*.domain (Sales settings.py:174-177), cookies secure+SameSite=None (settings.py:169-172).</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Debug prints of full IAM response (PII-ish) left in auth path.</td>
+<td>Sales auth_backends.py:227</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="7. Sequence: authentication of one miniapp request"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-sequence-authentication-of-one-miniapp-request">7. Sequence: authentication of one miniapp request</h2>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as eSewa miniapp (Next.js)
+    participant SALES as Sales service
+    participant IAM as IAM service
+
+    FE-&gt;&gt;FE: TOTP = speakeasy.totp(CUSTOM_KEY, step=20)  (otp.ts:12)
+    FE-&gt;&gt;SALES: POST /api/miniapp/credit/create/ + Bearer JWT + X-MINIAPP-TOKEN
+    Note over SALES: get_access_token(): cookie / Bearer / body (helpers)
+    SALES-&gt;&gt;IAM: POST /api/external/token/verify/ {token} + X-MINIAPP-TOKEN
+    IAM--&gt;&gt;SALES: 200 (signature OK, expiry OK, TOTP OK)
+    Note over SALES: decode JWT (verify=False) → claims attached to request
+    Note over SALES: permission checks (user_type ESM/ESU, subscription, tenant_root)
+    SALES--&gt;&gt;FE: 200 response (tenant-scoped data)
+</pre></div>
+</section><section class="sec" data-title="8. Cross-references"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-cross-references">8. Cross-references</h2>
+<ul>
+<li>IAM endpoint flows (token mint/verify/refresh, register, OMS): 03-iam-federated-identity.md</li>
+<li>Per-service endpoint catalogs: 04 (Sales), 05 (CDXE), 06 (Projectmaster), 07 (Payment/eSewa + frontend), 08 (TMS), 09 (Configuration)</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="C-customer-side.html"><div class="pn-dir">← Previous</div><div class="pn-name">Customer Side</div></a><a class="pn next" href="03-iam-federated-identity.html"><div class="pn-dir">Next →</div><div class="pn-name">IAM Federated Identity</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-what-is-federated-identity-here-plain-language">1. What is &quot;federated identity&quot; here? (plain language)</a></li><li class="l2"><a href="#2-the-three-actors-and-their-credentials">2. The three actors and their credentials</a></li><li class="l2"><a href="#3-two-different-classes-with-the-same-name">3. Two different classes with the same name</a></li><li class="l3"><a href="#3-1-iam-internal-version-local-lookup">3.1 IAM-internal version (local lookup)</a></li><li class="l3"><a href="#3-2-service-side-version-jwt-verify-claims">3.2 Service-side version (JWT verify + claims)</a></li><li class="l3"><a href="#3-3-jwt-mechanics-iam-side">3.3 JWT mechanics (IAM side)</a></li><li class="l2"><a href="#4-other-auth-schemes-in-the-same-surface">4. Other auth schemes in the same surface</a></li><li class="l2"><a href="#5-request-anatomy-what-a-live-miniapp-request-looks-like">5. Request anatomy (what a live miniapp request looks like)</a></li><li class="l2"><a href="#6-security-properties-observed-weaknesses-as-found-in-code">6. Security properties &amp; observed weaknesses (as found in code)</a></li><li class="l2"><a href="#7-sequence-authentication-of-one-miniapp-request">7. Sequence: authentication of one miniapp request</a></li><li class="l2"><a href="#8-cross-references">8. Cross-references</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

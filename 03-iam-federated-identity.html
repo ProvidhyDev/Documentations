@@ -1,0 +1,869 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>IAM Federated Identity - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc current" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="03-iam-federated-identity.html#1-business-overview">1. Business overview</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#3-authentication-security-model">3. Authentication &amp; security model</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#4-endpoint-catalog">4. Endpoint catalog</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#5-endpoint-traces">5. Endpoint traces</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#6-data-model-er">6. Data model (ER)</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#7-key-flows-sequence">7. Key flows (sequence)</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#8-business-walkthroughs">8. Business walkthroughs</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#9-outbound-calls-what-federated-identity-calls">9. Outbound calls (what federated_identity calls)</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#10-inbound-callers-who-calls-federated-identity">10. Inbound callers (who calls federated_identity)</a><a class="sb-item sb-sub" href="03-iam-federated-identity.html#11-unknowns-and-unverified">11. Unknowns and unverified</a></div><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>03 — IAM-Backend · federated_identity (Federated Identity / Miniapp Auth)</h1>
+<p>Repo: E:\Work\IAM-Backend · App: federated_identity (Django app inside the IAM service) · DB: iam (dev: iamtest, .env:11) · Public host: <a href="https://dev-iam-api.providhy.com">https://dev-iam-api.providhy.com</a> (.env:46)
+Traced 2026-11-03 from production-branch checkout. All line refs are file:line in that checkout.</p>
+<hr>
+</section><section class="sec" data-title="1. Business overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview">1. Business overview</h2>
+<p>federated_identity is the IAM feature that lets users of <strong>external payment miniapps</strong> (eSewa merchant ESU/ESM users, FonePay, and generic OMS merchants) log into the Providhy ERP <strong>without an ERP username/password</strong>. An external identity (e.g. an eSewa merchant id) is bound 1:1 to a normal ERP user + tenant (an &quot;external entity&quot;). The app owns:</p>
+<ul>
+<li><strong>Registration / terms acceptance</strong> — when a miniapp user agrees to terms, IAM creates a CustomUser, an ExternalEntity, and a TMS tenant, then hands out ERP JWTs.</li>
+<li><strong>Login (token mint)</strong> — maps external identity to the ERP user and mints ERP access/refresh JWTs containing the claims other services rely on (tenant_id, user_type ESM/ESU, subscribed_services, external_identifier, ...).</li>
+<li><strong>Token verification proxy</strong> — every miniapp business service (Sales, CDXE, Projectmaster, Payment, TMS, Configuration, events) validates the miniapp JWT by calling this app&#39;s token/verify/ on each request.</li>
+<li><strong>Tenant/user lookups + statistics</strong> — is-registered, users search/fetch, user-statistics, activity/heatmap analytics, onboarding/funnel metrics for miniapp users.</li>
+<li><strong>OMS (third-party order systems) integration</strong> — onboard a third-party system as a TMS company, issue it an API key, let it mint/verify long-lived merchant JWTs, and auto-register merchant tenants on first order.</li>
+<li><strong>Funnel tracking</strong> — a per-entity onboarding funnel (ESM/ESU stages) with events, dedupe, status denormalization, and cross-service backfill/sync (Celery).</li>
+</ul>
+<p>Actors: eSewa/FonePay miniapp frontends (Next.js, E:\Work\miniapp-esewa), the seven ERP miniapp backend services, OMS backends (external, not in E:\Work), IAM ops (clear-cache, funnel migrate), TMS (called, not a caller of this app except token/verify).</p>
+<hr>
+</section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Tech</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>federated_identity</td>
+<td>Django 5.0 + DRF app (settings.py:38)</td>
+<td>5 models, 13 static URLs + 2 DefaultRouters (urls.py:6-8,37)</td>
+</tr>
+<tr>
+<td>heimer_auth</td>
+<td>Django app (same service)</td>
+<td>CustomUser, JWT refresh serializer/view, internal auth, helpers, choices</td>
+</tr>
+<tr>
+<td>providhy_auth</td>
+<td>Shared pip package (v0.2.0)</td>
+<td>OMS API keys + merchant JWT (PyJWT HS256); DRF authentications that call IAM back. Source in E:\Work.scratch\audit\snap\providhy-auth (IAM-Backend tree only has <strong>pycache</strong>)</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>djangorestframework-simplejwt 5.3.1 (requirements.txt:12)</td>
+<td>HS256; SIGNING_KEY = JWT_SIGNING_KEY or SECRET_KEY (settings.py:188)</td>
+</tr>
+<tr>
+<td>TOTP</td>
+<td>pyotp (requirements.txt:28)</td>
+<td>6 digits / 20 s step / ±5 window (settings.py:286-288)</td>
+</tr>
+<tr>
+<td>AES for PII handoff</td>
+<td>pycryptodome AES-256-ECB + PKCS7 (utils.py:348-394)</td>
+<td>Key derived from eSewa app token</td>
+</tr>
+<tr>
+<td>Field encryption</td>
+<td>heimer_auth.fields.EncryptedCharField</td>
+<td>PII columns (models.py:41,47,55)</td>
+</tr>
+<tr>
+<td>Opaque PKs</td>
+<td>heimer_auth.public_ids.PublicIdField + PublicIdMiddleware (settings.py:45)</td>
+<td>ExternalEntity.id, EntityActivity.id are UUID-shaped tokens (migration 0008)</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>django-redis, REDIS_HOST db 7 (utils.py:402)</td>
+<td>jti cache, activity counts, token/verify cache</td>
+</tr>
+<tr>
+<td>Celery</td>
+<td>IAM/celery.py</td>
+<td>beat: sync_funnel_activity every 900 s (celery.py:26-29); migrate_funnel_history on demand</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>heimer_auth.activity_log → kafka producer</td>
+<td>Activity logs (views.py:245,444)</td>
+</tr>
+<tr>
+<td>Internal HTTP</td>
+<td>requests via helpers.send_internal_service_request (helpers.py:236-244)</td>
+<td>Shared password INTERNAL_PASS</td>
+</tr>
+<tr>
+<td>Middleware wired</td>
+<td>settings.py:43-60</td>
+<td>EntityUserActivityTrackingMiddleware (settings.py:57), AuthAuditMiddleware (settings.py:58)</td>
+</tr>
+</tbody></table>
+<hr>
+</section><section class="sec" data-title="3. Authentication &amp; security model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-authentication-security-model">3. Authentication &amp; security model</h2>
+<h3 id="3-1-non-technical-explanation">3.1 Non-technical explanation</h3>
+<p>A miniapp user is first authenticated by the <strong>payment provider&#39;s own app</strong> (eSewa/FonePay). When the user opens the ERP miniapp, the provider passes a one-time app token plus an <strong>encrypted envelope</strong> of the user&#39;s identity (id, phone, name). The frontend sends that envelope to IAM, and IAM checks two things: (1) a fast-changing <strong>time code</strong> (TOTP, 6 digits, changes every 20 s) computed from a secret both sides share — this proves the request really comes from the legitimate miniapp, not a random website; (2) the encrypted envelope decrypts and the identity inside matches the identifier the client claims. If both pass, IAM finds (or creates, at terms-acceptance) the ERP user and issues normal ERP login tokens. Those ERP tokens then travel to every ERP backend service; each service, on every miniapp request, <strong>phones IAM to confirm the token is still valid</strong> (and re-checks the time-code header it was given). There is no password, no cookie session of the provider&#39;s — trust chains through IAM, and IAM is the single place that knows &quot;eSewa merchant #12345 = ERP user X in tenant Y&quot;.</p>
+<h3 id="3-2-technical">3.2 Technical</h3>
+<p><strong>Request gate — verify_request_origin (utils.py:78-84).</strong> Every miniapp-facing view uses FederatedIdentityAuthentication (auth_backends.py:10-25), whose first step is verify_request_origin(request):</p>
+<ul>
+<li>Reads header <strong>X-MINIAPP-TOKEN</strong>. Missing → allowed only if UAT or DEVELOPMENT env flag is set (utils.py:80-83) — a real dev/UAT bypass; otherwise 403 &quot;Invalid origin of request&quot; (auth_backends.py:12-13).</li>
+<li>Otherwise TOTP.verify(token, valid_window=5) against a module-level pyotp.TOTP built from settings.ESEWA_TOTP_SECRET_KEY (utils.py:67-75; env CUSTOM_KEY_ESEWA, .env:2), TOTP_DIGITS=6, TOTP_INTERVAL=20, TOTP_VALID_WINDOW=5 (settings.py:286-288).</li>
+<li>The frontend computes the same code client-side: speakeasy.totp({secret: CUSTOM_KEY, encoding:&#39;base32&#39;, step:20}) sent on every axios request (miniapp-esewa src/actions/otp.ts:15-21, src/services/api.ts:51-53). The TOTP secret is a <strong>client-side env var in the miniapp bundle</strong> — the gate authenticates the miniapp app, not the human.</li>
+<li>Despite the name, no HTTP Origin/Referer is checked.</li>
+</ul>
+<p><strong>Identity envelope — token + encrypted_text.</strong> Login/register bodies carry token (the provider app token) and encrypted_text (base64 AES-256-ECB/PKCS7 JSON). IAM derives the AES key as the first 32 chars of the provider token, reversed (utils.py:383-394 derive_aes_key_from_token; mirrored by the frontend&#39;s cropAndReverse, miniapp-esewa src/shared/utils/app.ts:29-30). aes_ecb_decrypt (utils.py:366-380) must yield JSON whose id or mobileNumber equals the claimed external_identifier (views.py:92-108 register, 330-346 login), else 401 &quot;Invalid request origin&quot;. Malformed input returns 401, not 500 (views.py:95-101).</p>
+<p><strong>Identity resolution — FederatedIdentityAuthentication (auth_backends.py:10-25).</strong> Looks up ExternalEntity by (provider_code, external_identifier); found → (user, user.tenant_id) where user is heimer_auth&#39;s CustomUser (auth_backends.py:22-24); not found → (AnonymousUser(), None). Permission HasExternalEntityPermission then requires a non-anonymous user who has an ExternalEntity row (auth_backends.py:28-34) → 403 for not-yet-registered identities. MiniAppAuthentication is an empty subclass kept for miniapp views (auth_backends.py:37-42).</p>
+<p><strong>Token mint (access/refresh).</strong> helpers.generate_token_with_custom_claims (helpers.py:381-390) = RefreshToken.for_user(user) plus claims; login/registration overwrite/add federated claims (views.py:361-378 login, 160-177 register):</p>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>user_id, tenant_id, is_active, tenant_root, jti, exp, iat, token_type</td>
+<td>standard</td>
+<td>simplejwt + CustomUser</td>
+</tr>
+<tr>
+<td>username</td>
+<td>username without the _<tenant_id> suffix</td>
+<td>helpers.get_username (helpers.py:367-372)</td>
+</tr>
+<tr>
+<td>provider_code</td>
+<td>esewa / fonepoint (choices.py:288-290)</td>
+<td>user.external_entities.provider_code</td>
+</tr>
+<tr>
+<td>user_type</td>
+<td>ESM / ESU / OMM (choices.py:293-296)</td>
+<td>user.external_entities.entity_type</td>
+</tr>
+<tr>
+<td>external_identifier</td>
+<td>provider-side id</td>
+<td>user.external_entities.external_identifier</td>
+</tr>
+<tr>
+<td>subscribed_services</td>
+<td>list of service codes</td>
+<td>CustomUser.subscribed_services (set from TMS)</td>
+</tr>
+<tr>
+<td>product_code</td>
+<td>eSewa product (ESM only)</td>
+<td>ExternalEntity.product_code (models.py:54)</td>
+</tr>
+<tr>
+<td>subscribed_date</td>
+<td>ISO date</td>
+<td>TMS api/tenant/subscribed-date/ via helpers.get_subscribed_date (helpers.py:188-201)</td>
+</tr>
+<tr>
+<td>email_verified</td>
+<td>always True</td>
+<td>hardcoded views.py:373,174</td>
+</tr>
+<tr>
+<td>subscription_expired</td>
+<td>always False</td>
+<td>hardcoded views.py:372,176</td>
+</tr>
+</tbody></table>
+<p>These match the frontend&#39;s LoginResponse payload type exactly (miniapp-esewa src/services/requests/auth.ts:74-97).</p>
+<p><strong>Refresh (external/token/refresh/).</strong> RefreshAuthTokenView (views.py:494-513) re-checks verify_request_origin first, then delegates to heimer_auth&#39;s CustomTokenRefreshView (views.py:231-260) + FederatedTokenRefreshSerializer (serializers.py:78-96). CustomTokenRefreshSerializer.validate (heimar_auth/serializers.py:195-232): refresh jti must exist in OutstandingToken, user must exist and be active, ROTATE_REFRESH_TOKENS=True + BLACKLIST_AFTER_ROTATION=True (settings.py:189-190) → old refresh blacklisted, new pair generated via helpers.generate_token_with_custom_claims, new access jti saved to Redis. Then the view decodes the <strong>new</strong> access token (verify=False) and updates user.last_login (views.py:507-512). <strong>Observed gap:</strong> the refreshed access token only carries tenant_id/is_active/tenant_root/username — FederatedTokenRefreshSerializer.add_custom_fields_to_token (serializers.py:84-95) adds the federated claims but is never called anywhere (grep: only definitions exist), so after a refresh the JWT loses provider_code/user_type/external_identifier/product_code/subscribed_services. (Code-level observation; runtime impact unverified.) Also note refresh passes through the default DRF auth (heimar_auth CustomJWTAuthentication, heimer_auth/auth_backends.py:15-36) which requires a still-valid access token (cookie miniAppAccessToken / Authorization header / body) and enforces the jti-cache check (auth_backends.py:26-31); the view&#39;s refresh_token_key=&quot;miniAppRefreshToken&quot; attr (views.py:496) is not used by the parent&#39;s read path.</p>
+<p><strong>Single-active-access enforcement.</strong> Every minted access jti is stored per user in Redis db 7 (AuthTokenHandler.save_access_token_jti_to_cache, heimer_auth/auth_token_handler.py:133-150); CustomJWTAuthentication rejects tokens whose jti ≠ cached jti (heimar_auth/auth_backends.py:26-31). New login invalidates the previous access token.</p>
+<p><strong>Throttling.</strong> LoginRegisterThrottle: 10/min per client IP (scope miniapp_login), keyed by IP deliberately (registration users are anonymous; login identity could be used to lock a merchant out — throttling.py:4-21); RegisterThrottle same rate, separate bucket miniapp_register (throttling.py:24-27). Applied: register (views.py:90), token (views.py:328). OMS mint: AnonRateThrottle (anon 3/sec, settings.py:141, oms_views.py:113).</p>
+<p><strong>Cookies on login/register</strong> (views.py:179-203 handle_authentication): miniAppAccessToken (max_age=access lifetime) + miniAppRefreshToken (max_age=refresh lifetime), same-site Lax in prod / None otherwise. Frontend axios sends cookies (withCredentials:true, miniapp-esewa src/services/api.ts:28-32).</p>
+<p><strong>Audit + activity middleware (wired in MIDDLEWARE, settings.py:43-60).</strong> AuthAuditMiddleware (heimar_auth/auth_audit.py:25-50) records every POST to /api/external/token/ as AuthEvent EXTERNAL_LOGIN (auth_audit.py:27) with IP/UA/reason + Prometheus counter iam_auth_events_total. EntityUserActivityTrackingMiddleware (federated_identity/middleware.py:14-20, settings.py:57) runs <strong>after</strong> the response for /api/external/token/ and /api/external/token/refresh/ and, if request.user is authenticated, calls EntityActivity.record_activity (models.py:184-192) → increments daily active-user counters (Redis, models.py:217-236) and upserts EntityActivitySummary (models.py:360-387).</p>
+<p><strong>Internal service calls.</strong> InternalRequestAuthentication (heimar_auth/auth_backends.py:111-123): shared password INTERNAL_PASS (env, .env:12) in body or ?password=; request.auth = tenant_id (or None); raises 401 if missing/invalid. Used by all internal endpoints below and by heimer_auth across the platform.</p>
+<p><strong>OMS credentials (providhy_auth).</strong> API key &quot;pk_<hex>.<secret>&quot; — secret Fernet-encrypted with CUSTOM_KEY (utils.py:390-391, models.py:430) so IAM can re-verify (models.py:435-445, hmac.compare_digest); shown once (models.py:422). Merchant JWT: PyJWT HS256 signed with OMS_TOKEN_SECRET (settings.py:255, defaults to SECRET_KEY), claims typ=merchant, company_id, provider_code, merchant_id, iat, optional exp (providhy_auth/tokens.py:27-57; snapshot source). No exp → never expires; revocation = deactivating the OMSAPIKey row (checked at verify, oms_views.py:91-97).</p>
+<hr>
+</section><section class="sec" data-title="4. Endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-endpoint-catalog">4. Endpoint catalog</h2>
+<p>All paths under <a href="https://dev-iam-api.providhy.com">https://dev-iam-api.providhy.com</a> (env IAM_BACKEND_URL, .env:46), mounted at /api/external/ (IAM/urls.py:119). 13 static paths (urls.py:10-37) + 2 routers (users: 11 actions + explicit fetch path; activities: 6 actions) = 31 URL patterns / 30 logical endpoints.</p>
+<h3 id="4-1-public-miniapp-frontend-federatedidentityauthentication-totp-identity-envelope">4.1 Public — miniapp frontend (FederatedIdentityAuthentication: TOTP + identity envelope)</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/register/">https://dev-iam-api.providhy.com/api/external/register/</a></td>
+<td>ExternalRegistrationView (views.py:81)</td>
+<td>Terms acceptance: create CustomUser + ExternalEntity + TMS tenant, return tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/token/">https://dev-iam-api.providhy.com/api/external/token/</a></td>
+<td>ExternalTokenView (views.py:319)</td>
+<td>Login: resolve identity, mint access+refresh, set cookies</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/token/refresh/">https://dev-iam-api.providhy.com/api/external/token/refresh/</a></td>
+<td>RefreshAuthTokenView (views.py:494)</td>
+<td>Rotate refresh, new access, last_login update</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-internal-service-to-service-internalrequestauthentication-shared-password-token-verify-instead-uses-totp-gate">4.2 Internal — service-to-service (InternalRequestAuthentication: shared password; token/verify instead uses TOTP gate)</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/token/verify/">https://dev-iam-api.providhy.com/api/external/token/verify/</a></td>
+<td>VerifyAuthTokenView (views.py:447)</td>
+<td>Services validate a miniapp access JWT (TOTP-gated, no shared password)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/is-registered/">https://dev-iam-api.providhy.com/api/external/is-registered/</a></td>
+<td>CheckForRegisteredUser (views.py:516)</td>
+<td>Resolve identity → tenant/user info; batch mode for events service</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/user-statistics/summary/">https://dev-iam-api.providhy.com/api/external/user-statistics/summary/</a></td>
+<td>ExternalUserStatisticsSummaryView (views.py:614)</td>
+<td>Platform-wide ESM/ESU totals + active counts over a last_login date window</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/">https://dev-iam-api.providhy.com/api/external/users/</a></td>
+<td>ExternalEntityViewSet.search (views.py:773)</td>
+<td>Search entities (default ESU) by name/identifier; funnel_status filter; restricted sorting; paginated</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/fetch/">https://dev-iam-api.providhy.com/api/external/users/fetch/</a><a href="int:pk">int:pk</a>/</td>
+<td>ExternalEntityViewSet.fetch (views.py:829)</td>
+<td>One entity (public_id pk) + tenant</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/">https://dev-iam-api.providhy.com/api/external/users/</a><a href="int:pk">int:pk</a>/</td>
+<td>ExternalEntityViewSet.fetch (router, views.py:829)</td>
+<td>Same fetch via router route</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/">https://dev-iam-api.providhy.com/api/external/users/</a><a href="int:pk">int:pk</a>/funnel/</td>
+<td>ExternalEntityViewSet.funnel (views.py:835)</td>
+<td>Funnel status + completed stages</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/">https://dev-iam-api.providhy.com/api/external/users/</a><a href="int:pk">int:pk</a>/funnel/events/</td>
+<td>ExternalEntityViewSet.record_funnel_event (views.py:873)</td>
+<td>Record funnel stage by entity pk</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/funnel/events/">https://dev-iam-api.providhy.com/api/external/users/funnel/events/</a></td>
+<td>ExternalEntityViewSet.record_funnel_event_by_identifier (views.py:877)</td>
+<td>Record funnel stage by provider+identifier</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/onboarding-metrics/">https://dev-iam-api.providhy.com/api/external/users/onboarding-metrics/</a></td>
+<td>ExternalEntityViewSet.onboarding_metrics (views.py:904)</td>
+<td>Onboarded users by type, month/year filter</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/business-metrics/">https://dev-iam-api.providhy.com/api/external/users/business-metrics/</a></td>
+<td>ExternalEntityViewSet.business_metrics (views.py:915)</td>
+<td>Active entities (per ACTIVE_REQUIREMENTS), from summary table</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/funnel/migrate/">https://dev-iam-api.providhy.com/api/external/users/funnel/migrate/</a></td>
+<td>ExternalEntityViewSet.migrate_funnel_history (views.py:927)</td>
+<td>Kick off cross-service funnel backfill (Celery)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/funnel/migrate/status/">https://dev-iam-api.providhy.com/api/external/users/funnel/migrate/status/</a></td>
+<td>ExternalEntityViewSet.migrate_funnel_history_status (views.py:937)</td>
+<td>Celery task status/result</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/summary/">https://dev-iam-api.providhy.com/api/external/users/summary/</a></td>
+<td>ExternalEntityViewSet.summary (views.py:952)</td>
+<td>Total/active/inactive entities</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/users/weekly-onboarded-users/">https://dev-iam-api.providhy.com/api/external/users/weekly-onboarded-users/</a></td>
+<td>ExternalEntityViewSet.weekly_onboarded_users (views.py:974)</td>
+<td>Weekly new-user counts</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/yearly-activity-heatmap/">https://dev-iam-api.providhy.com/api/external/activities/yearly-activity-heatmap/</a></td>
+<td>ExternalUserActivityView (views.py:666)</td>
+<td>Yearly heatmap from EntityActivitySummary</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/hourly-activity/">https://dev-iam-api.providhy.com/api/external/activities/hourly-activity/</a></td>
+<td>ExternalUserActivityView (views.py:687)</td>
+<td>Hourly active users, last 30 days</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/monthly-activity-calendar/">https://dev-iam-api.providhy.com/api/external/activities/monthly-activity-calendar/</a></td>
+<td>ExternalUserActivityView (views.py:704)</td>
+<td>Monthly active per year (calendar)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/currently-active-users/">https://dev-iam-api.providhy.com/api/external/activities/currently-active-users/</a></td>
+<td>ExternalUserActivityView (views.py:721)</td>
+<td>Active users this hour</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/weekly-active-users/">https://dev-iam-api.providhy.com/api/external/activities/weekly-active-users/</a></td>
+<td>ExternalUserActivityView (views.py:728)</td>
+<td>Active users per week, 2 weeks</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/activities/monthly-active-users/">https://dev-iam-api.providhy.com/api/external/activities/monthly-active-users/</a></td>
+<td>ExternalUserActivityView (views.py:746)</td>
+<td>Active users per month, 2 months</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/oms/api-key/verify/">https://dev-iam-api.providhy.com/api/external/oms/api-key/verify/</a></td>
+<td>OMSAPIKeyVerifyView (oms_views.py:73)</td>
+<td>Validate an OMS API key (also used remotely by providhy_auth)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/oms/merchant-token/verify/">https://dev-iam-api.providhy.com/api/external/oms/merchant-token/verify/</a></td>
+<td>OMSMerchantTokenVerifyView (oms_views.py:83)</td>
+<td>Validate a merchant JWT + key still active</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/oms/merchant/resolve/">https://dev-iam-api.providhy.com/api/external/oms/merchant/resolve/</a></td>
+<td>OMSMerchantResolveView (oms_views.py:131)</td>
+<td>tenant_id for a merchant; auto-register on first sight</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/oms/onboard/">https://dev-iam-api.providhy.com/api/external/oms/onboard/</a></td>
+<td>OMSOnboardView (oms_views.py:38)</td>
+<td>Register third party as TMS company + issue API key once</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-other-gates">4.3 Other gates</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Full path</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/clear-cache/">https://dev-iam-api.providhy.com/api/external/clear-cache/</a></td>
+<td>Django auth (admin session)</td>
+<td>Flush Redis db 7 + CACHES (utils.py:397-412); body password is ignored</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><a href="https://dev-iam-api.providhy.com/api/external/oms/merchant-token/mint/">https://dev-iam-api.providhy.com/api/external/oms/merchant-token/mint/</a></td>
+<td>X-API-Key header (no DRF auth) + AnonRateThrottle</td>
+<td>Third-party backend mints a merchant JWT (oms_views.py:107-128)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Router notes: both routers are DRF DefaultRouter (urls.py:6-8); ExternalEntityViewSet is a GenericViewSet, ExternalUserActivityView a plain ViewSet — neither defines list/create/retrieve methods, so the routers expose only the custom @action routes above (verified against DRF viewsets.py:220-246 in Sales venv). Root /api/external/ is included at IAM/urls.py:119."><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="router-notes-both-routers-are-drf-defaultrouter-urls-py-6-8-externalentityviewset-is-a-genericviewset-externaluseractivityview-a-plain-viewset-neither-defines-list-create-retrieve-methods-so-the-routers-expose-only-the-custom-action-routes-above-verified-against-drf-viewsets-py-220-246-in-sales-venv-root-api-external-is-included-at-iam-urls-py-119">Router notes: both routers are DRF DefaultRouter (urls.py:6-8); ExternalEntityViewSet is a GenericViewSet, ExternalUserActivityView a plain ViewSet — neither defines list/create/retrieve methods, so the routers expose only the custom @action routes above (verified against DRF viewsets.py:220-246 in Sales venv). Root /api/external/ is included at IAM/urls.py:119.</h2>
+</section><section class="sec" data-title="5. Endpoint traces"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-endpoint-traces">5. Endpoint traces</h2>
+<h3 id="5-1-post-api-external-register-externalregistrationview-views-py-81">5.1 POST /api/external/register/ (ExternalRegistrationView, views.py:81)</h3>
+<ol>
+<li>Auth: FederatedIdentityAuthentication (views.py:87) — TOTP origin check; unknown identity → AnonymousUser (allowed to register). Throttle 10/min/IP (views.py:90).</li>
+<li>validate_request_data (views.py:92-108): aes_ecb_decrypt(encrypted_text, token) (utils.py:366-380) must yield JSON whose id or mobileNumber equals external_identifier, else 401 &quot;Invalid request origin&quot;. Malformed input returns 401, not 500 (views.py:95-101).</li>
+<li>check_for_existing_entity (views.py:110-117): existing ExternalEntity for (provider_code, external_identifier) → 400 &quot;External entity already exists&quot; (idempotency guard; client then uses login).</li>
+<li>Serializer ExternalEntityRegistrationSerializer (serializers.py:34-75): provider_code in {esewa, fonepoint} (choices.py:288-290), entity_type in {ESM, ESU, OMM} (choices.py:293-296); ESM requires product_code, unique across all entities (serializers.py:54-62). Creates CustomUser via ExternalUserSerializer.create — username+uuid6 suffix, designation &quot;admin&quot;, unusable password, tenant_root=True (serializers.py:21-31) — then the ExternalEntity row (serializers.py:65-75).</li>
+<li>post (views.py:256-316): calls register_tenant_if_needed (views.py:119-141) BEFORE the DB commit (code comment: the TMS call is idempotent) — POST {TMS}api/tenant/external-register/ (helpers.CREATE_EXTERNAL_ENTITY_TENANT_URL, helpers.py:52-54) with name/contact/password; TMS (TMS-service/tenant_management/views.py:4784-4868) is idempotent per (provider_code, external_identifier) and returns tenant_id + serializer data (subscribed_services, ...) + fiscal_year; on failure 400.</li>
+<li>update_user (views.py:144-158): user.subscribed_services, tenant_id, username suffixed with _<tenant_id>, fiscal_year from TMS.</li>
+<li>DB commit in transaction.atomic (views.py:294-305); IntegrityError on partial unique index uniq_external_entity_identity (migration 0007, models.py:56-59) → 409 &quot;External entity already exists.&quot;</li>
+<li>_record_log (views.py:216-254): Kafka activity log via create_activity_log (activity_log.py:13-45, kafka_data=True); if ESM and tenant_root → celery send_notification_task.delay → POST {events}api/notification/miniapp/notify-user/ (tasks.py:14-67; events/notification_app/urls.py:101).</li>
+<li>Token mint _generate_token_with_custom_claims (views.py:160-177) — claims incl. provider_code, user_type, external_identifier, product_code, subscribed_services, subscribed_date (TMS api/tenant/subscribed-date/, helpers.py:188-201), email_verified=True, subscription_expired=False.</li>
+<li>handle_authentication (views.py:179-203): jti → Redis (key jti_<user_id>, settings.py:283), user.last_login, cookies miniAppAccessToken/miniAppRefreshToken (same-site Lax in prod / None otherwise).</li>
+<li>201 {access, refresh, payload{...claims}} (views.py:312-316) — AgreeTermsResponse shape (miniapp-esewa src/services/requests/auth.ts:47-72).</li>
+</ol>
+<h3 id="5-2-post-api-external-token-externaltokenview-views-py-319">5.2 POST /api/external/token/ (ExternalTokenView, views.py:319)</h3>
+<ol>
+<li>Auth FederatedIdentityAuthentication (views.py:325-327) + HasExternalEntityPermission (views.py:328) + LoginRegisterThrottle (views.py:328): identity must already be registered, else 403 (anonymous) — this is the &quot;login failed → agree terms&quot; branch the frontend uses (miniapp-esewa src/views/home/index.tsx:129-133).</li>
+<li>validate (views.py:330-346): same AES envelope check as register (token decrypts, id/mobileNumber == external_identifier), else 401.</li>
+<li>post (views.py:348-359): request.user is the resolved CustomUser from the auth backend.</li>
+<li>Token mint (views.py:361-378): RefreshToken.for_user(user) + tenant_id/is_active/provider_code/user_type/external_identifier/tenant_root/username (suffix-stripped, helpers.py:367-372)/subscribed_services/subscribed_date (TMS call)/email_verified=True/subscription_expired=False.</li>
+<li>handle_authentication (views.py:380-404): save_access_token_jti_to_cache (invalidates the previous access token for this user), user.last_login=now, set miniApp* cookies (max_age = token lifetimes).</li>
+<li>_record_log (views.py:417-444): Kafka activity log (entry_type USER_MANAGEMENT &quot;PR103&quot;, module IAM).</li>
+<li>200 {access, refresh, payload{...}} — LoginResponse shape (auth.ts:74-124). Middleware then records an EntityActivity row (middleware.py:14-20).</li>
+</ol>
+<h3 id="5-3-post-api-external-token-verify-verifyauthtokenview-views-py-447">5.3 POST /api/external/token/verify/ (VerifyAuthTokenView, views.py:447)</h3>
+<ol>
+<li>Gate: verify_request_origin (views.py:455-459) — the CALLING service must forward the X-MINIAPP-TOKEN header it received from the miniapp; services send it explicitly (e.g. Sales dashboard/auth_backends.py:188-191). Missing/bad → 401 &quot;Invalid origin of request.&quot;</li>
+<li>No DRF authentication class and no shared password — a valid current TOTP code is the only credential for this endpoint.</li>
+<li>TokenVerifySerializer (simplejwt) validates the submitted access token: HS256 signature + exp (views.py:460-468); invalid → 401 {error: &quot;Invalid token&quot;, details}.</li>
+<li>200 {&quot;message&quot;: &quot;Token is valid.&quot;} (views.py:491). A richer response (tenant_id/provider_code/... looked up from the token) exists but is commented out (views.py:469-490) — services only use the status code, then decode the JWT locally with verify=False and read claims (Sales dashboard/auth_backends.py:192-206).</li>
+</ol>
+<h3 id="5-4-post-api-external-token-refresh-refreshauthtokenview-views-py-494">5.4 POST /api/external/token/refresh/ (RefreshAuthTokenView, views.py:494)</h3>
+<ol>
+<li>verify_request_origin first (views.py:499-504) → 401 if the TOTP header is bad/missing (401 here, not the usual 403).</li>
+<li>Default DRF auth applies (CustomJWTAuthentication, heimer_auth/auth_backends.py:15-36, settings.py:144-147): a still-valid access token must be present (cookie miniAppAccessToken / Authorization header / body) and its jti must match the Redis jti cache, else 401.</li>
+<li>CustomTokenRefreshView.post (heimar_auth/views.py:231-260) with FederatedTokenRefreshSerializer (serializers.py:78): refresh jti must exist in OutstandingToken and the user must exist with is_active, else ValidationError → 400.</li>
+<li>Rotation (heimar_auth/serializers.py:210-230): old refresh blacklisted (BLACKLIST_AFTER_ROTATION=True, settings.py:182), new refresh+access via helpers.generate_token_with_custom_claims (helpers.py:381-390), new access jti cached.</li>
+<li>View decodes the new access (verify=False) and tries to update last_login by filtering username=user_id-claim (views.py:507-510) — the claim is the numeric user id (USER_ID_FIELD=&quot;id&quot;, settings.py:196), so this lookup matches nothing; last_login is effectively not updated on refresh (code observation, runtime unverified; UPDATE_LAST_LOGIN is also skipped because the custom validate() never calls super()).</li>
+<li>200 {access, refresh} — the refreshed access carries only tenant_id/is_active/tenant_root/username: FederatedTokenRefreshSerializer.add_custom_fields_to_token (serializers.py:84-96) defines the federated claims but is never invoked anywhere (grep: definitions only), so after a refresh the JWT loses provider_code/user_type/external_identifier/product_code/subscribed_services/subscribed_date.</li>
+<li>EntityUserActivityTrackingMiddleware (settings.py:57, middleware.py:15) also fires for this path and appends an EntityActivity row.</li>
+</ol>
+<h3 id="5-5-post-api-external-is-registered-checkforregistereduser-views-py-516">5.5 POST /api/external/is-registered/ (CheckForRegisteredUser, views.py:516)</h3>
+<ol>
+<li>InternalRequestAuthentication (views.py:524): shared password in body/params.</li>
+<li>Body: provider_code (required, else 400), external_identifier and/or tenant_id (400 if neither) (views.py:534-543); optional many, key (dict key, default &quot;tenant_id&quot;), search_query (many mode), fields (extra user fields to return).</li>
+<li>Single mode (views.py:585-607): 200 {is_registered: bool} plus, when registered, external_identifier, provider_code, entity_type, tenant_id, full_name, mobile, product_code (+fields). Always 200 — &quot;not registered&quot; is is_registered=false, not 404.</li>
+<li>Many mode (views.py:545-557, 568-584): tenant_id/external_identifier may be lists (in lookups), search_query icontains on user full_name/contact/username; 200 is a dict keyed by the <code>key</code> field value: {<key>: {external_identifier, entity_type, full_name, mobile, product_code, +fields}}.</li>
+<li>Callers: Sales (async_func.py:175), CDXE (helpers.py:374), TMS (helpers.py:452), events (views.py:75, many=true with key=&quot;external_identifier&quot;).</li>
+</ol>
+<h3 id="5-6-post-api-external-user-statistics-summary-views-py-614">5.6 POST /api/external/user-statistics/summary/ (views.py:614)</h3>
+<ol>
+<li>InternalRequestAuthentication (views.py:619).</li>
+<li>Body: active_from / active_to (YYYY-MM-DD, utils.parse_date_range views.py:623-625); default window = today..today.</li>
+<li>Platform-wide counts (not per-tenant): total_users = ESU entities, total_merchants = ESM entities, total_active_users / total_active_merchants = those with user.last_login inside the window (views.py:626-646).</li>
+<li>200 {total_users, total_merchants, total_active_users, total_active_merchants}.</li>
+</ol>
+<h3 id="5-7-post-api-external-users-search-views-py-773">5.7 POST /api/external/users/ — search (views.py:773)</h3>
+<ol>
+<li>InternalRequestAuthentication (views.py:769-770).</li>
+<li>Body: entity_type (default ESU, views.py:785-787), q (search), funnel_status (one or many), order_by (±field), plus pagination params.</li>
+<li>Filters: q → user__full_name icontains (and, for ESU, external_identifier icontains) (views.py:791-794); funnel_status validated against FunnelStatus.values, then activity_summary__funnel_status__in (views.py:797-806).</li>
+<li>order_by is restricted to funnel_service.LISTING_SORT_FIELDS[entity_type] (funnel_service.py:427); sorts on the activity_summary column, nulls last, tie-break -id (views.py:808-823).</li>
+<li>Paginated (self.paginate_queryset, settings.py:148) and serialized with ExternalEntitySerializer (include-fields trim via DynamicFieldSerializerMixin, mixins.py:13-22): items {id, tenant_id, external_identifier, full_name, last_login, username, onboarding_date, funnel_status{value,label}|null, repeat_usage, activity{LISTING_METRICS... (funnel_service.py:398), last_activity_at, synced_at}} (serializers.py:125-180).</li>
+<li>200 paginated {count, next, previous, results[]}.</li>
+</ol>
+<h3 id="5-8-post-api-external-users-fetch-a-href-int-pk-int-pk-a-and-router-post-users-a-href-int-pk-int-pk-a-fetch-views-py-829">5.8 POST /api/external/users/fetch/<a href="int:pk">int:pk</a>/ and router POST /users/<a href="int:pk">int:pk</a>/ — fetch (views.py:829)</h3>
+<ol>
+<li>InternalRequestAuthentication; pk is an opaque public_id UUID token (PublicIdMiddleware, settings.py:45; heimer_auth/public_ids.py; ExternalEntity id is a PublicIdField, migration 0008).</li>
+<li>self.get_object() → 404 if missing (views.py:830-832).</li>
+<li>200 single ExternalEntitySerializer item (same shape as search items, views.py:833). The explicit users/fetch/<pk> path (urls.py:26-30) and the router route (detail=True url_path=&quot;&quot;) hit the same action.</li>
+</ol>
+<h3 id="5-9-get-api-external-users-a-href-int-pk-int-pk-a-funnel-views-py-835">5.9 GET /api/external/users/<a href="int:pk">int:pk</a>/funnel/ (views.py:835)</h3>
+<ol>
+<li>InternalRequestAuthentication.</li>
+<li>funnel_service.funnel_snapshot(entity) (funnel_service.py:577): derives the FunnelStatus ladder position (funnel.py:117-165) from the entity&#39;s completed FunnelEvents and includes repeat_usage from the denormalized summary.</li>
+<li>200 snapshot {status, completed_stages, ...}.</li>
+</ol>
+<h3 id="5-10-post-api-external-users-a-href-int-pk-int-pk-a-funnel-events-and-users-funnel-events-views-py-873-877">5.10 POST /api/external/users/<a href="int:pk">int:pk</a>/funnel/events/ and /users/funnel/events/ (views.py:873, 877)</h3>
+<ol>
+<li>InternalRequestAuthentication. Detail variant: entity by pk. List variant: body must carry external_identifier + provider_code (400 if missing, views.py:885-889); unknown identity → 404 (views.py:897-901) — exists so services can report funnel stages without first resolving the IAM id.</li>
+<li>FunnelEventSerializer (serializers.py:99-103): stage (Stage choice), occurred_at?, payload?, event_key? (idempotency key for provider-webhook replays, models.py:66-67).</li>
+<li>funnel_service.record_funnel_stage (funnel_service.py:64-111): row lock (select_for_update) on the entity; event_key dedupe returns the existing event (funnel_service.py:82-85); stage must belong to the entity type&#39;s funnel, else ValueError → 400 (views.py:858-859); prerequisites unmet → IllegalTransition → 409 {error, reason:&quot;missing_prerequisites&quot;, missing[]} (funnel.py:209-233, views.py:860-868); repeat of a completed stage → 409 reason &quot;already_completed&quot; unless the funnel was already complete, when a repeat-usage marker is recorded instead (funnel_service.py:93-97, 114-130).</li>
+<li>Creates the FunnelEvent (funnel_service.py:103-109) and refreshes the denormalized EntityActivitySummary (funnel_status, repeat_usage, last_activity_at) for the affected entities (funnel_service.py:110, 133-158).</li>
+<li>200 funnel_snapshot (not 201 — views.py:869-871).</li>
+</ol>
+<h3 id="5-11-post-api-external-users-onboarding-metrics-views-py-904-and-business-metrics-views-py-915">5.11 POST /api/external/users/onboarding-metrics/ (views.py:904) and /business-metrics/ (views.py:915)</h3>
+<ol>
+<li>InternalRequestAuthentication.</li>
+<li>onboarding-metrics: body entity_type (default ESM) → funnel_service.onboarding_metrics (funnel_service.py:617) — counts of entities per funnel stage; unsupported type → 400 (views.py:909-912).</li>
+<li>business-metrics: body start_date/end_date → funnel_service.business_performance_metrics (funnel_service.py:687) — metric deltas over the period from EntityActivitySummary (LISTING_METRICS, funnel_service.py:398).</li>
+</ol>
+<h3 id="5-12-post-api-external-users-funnel-migrate-views-py-927-and-migrate-status-views-py-937">5.12 POST /api/external/users/funnel/migrate/ (views.py:927) and /migrate/status/ (views.py:937)</h3>
+<ol>
+<li>InternalRequestAuthentication.</li>
+<li>migrate: body dry_run? → tasks.migrate_funnel_history.delay (tasks.py:73-75, time_limit 3600 s, acks-late safe) → funnel_service.backfill_from_all_services (funnel_service.py:255) which pulls /funnel/history/ from projectmaster, cdxe, sales (api/miniapp/) and payment (api/esewa/) (SERVICE_APPS, funnel_service.py:189-194) and records deduped events. 202 {task_id} (views.py:935).</li>
+<li>status: body task_id required; 200 {task_id, state, result|error} from AsyncResult (views.py:939-950).</li>
+<li>Known gap: the four target services&#39; current checkouts expose no funnel/history/ or funnel/metrics/ routes (grep-verified across E:\Work 2026-11-03) — until they ship, _fetch_from_services records per-service errors (funnel_service.py:197-211) and backfill/sync report them.</li>
+</ol>
+<h3 id="5-13-post-api-external-users-summary-views-py-952-and-weekly-onboarded-users-views-py-974">5.13 POST /api/external/users/summary/ (views.py:952) and /weekly-onboarded-users/ (views.py:974)</h3>
+<ol>
+<li>InternalRequestAuthentication.</li>
+<li>summary: body entity_type (default ESU); total = entities of that type, active = user.last_login non-null, inactive = total-active (views.py:954-964); 200 {total, active, inactive}.</li>
+<li>weekly-onboarded: body year/month/group_by_entity_type → utils.get_weekly_onboarded_users (utils.py:330-345) → per-week-of-month {day-range: [{onboarded_users | onboarded_merchant/onboarded_customer}]} from ExternalEntity.user.created.</li>
+</ol>
+<h3 id="5-14-post-api-external-activities-externaluseractivityview-views-py-658">5.14 POST /api/external/activities/* (ExternalUserActivityView, views.py:658)</h3>
+<ol>
+<li>InternalRequestAuthentication (views.py:663); ReportSerializer validates the six date/flag params (serializers.py:106-122). All six actions are POST; data source is the EntityActivity table written by the login/refresh middleware (middleware.py:14-20), NOT Redis.</li>
+<li>yearly-activity-heatmap (views.py:666): utils.get_activity_heatmap (utils.py:104-143) — distinct entities per day over from_date..to_date (default last 365 days), optionally split ESM/ESU.</li>
+<li>hourly-activity (views.py:687): utils.get_today_hourly_activity (utils.py:146-207) — per-hour active counts for a date (default today) with the list of active usernames/full_names per hour.</li>
+<li>monthly-activity-calendar (views.py:704): utils.get_monthly_activity_calendar (utils.py:210-252) — calendar weeks of per-day active counts for a year/month.</li>
+<li>currently-active-users (views.py:721): body minutes (default 5) → utils.get_currently_active_users (utils.py:280-288) → 200 {&quot;count&quot;: N} (EntityActivity rows in the last N minutes).</li>
+<li>weekly-active-users (views.py:728): utils.get_weekly_activity_calendar (utils.py:255-277) — 7 days of the given ISO week. monthly-active-users (views.py:746): utils.get_monthly_active_users (utils.py:291-317) — 12 months of the given year.</li>
+</ol>
+<h3 id="5-15-post-api-external-oms-onboard-oms-views-py-38">5.15 POST /api/external/oms/onboard/ (oms_views.py:38)</h3>
+<ol>
+<li>InternalRequestAuthentication (OMSInternalView, oms_views.py:33-35).</li>
+<li>provider_code must be a known ExternalProviderChoices value and not already onboarded (OMSAPIKey exists for it) → 400 (oms_views.py:42-46).</li>
+<li>Creates the third party as a TMS company: POST {TMS}api/tenant/company/create/ (TMS_COMPANY_CREATE_URL, oms_views.py:26; TMS-service/tenant_management/urls.py:377-381) with password, company_code=provider_code, email, contact_number, address (oms_views.py:48-57); failure → 503.</li>
+<li>OMSAPIKey.issue (models.py:420-432): generate_api_key() → &quot;pk_&lt;12hex&gt;.<urlsafe32>&quot; (providhy_auth/tokens.py:22-24); the secret is Fernet-encrypted (models.py:390-391) and stored; the full key is returned ONCE in the 201 body {company_id, provider_code, api_key} (oms_views.py:62-70).</li>
+</ol>
+<h3 id="5-16-post-api-external-oms-api-key-verify-oms-views-py-73">5.16 POST /api/external/oms/api-key/verify/ (oms_views.py:73)</h3>
+<ol>
+<li>InternalRequestAuthentication; body {api_key}.</li>
+<li>OMSAPIKey.from_api_key (models.py:434-445): split on the first &quot;.&quot;; find the active key by prefix; hmac.compare_digest against the decrypted stored secret.</li>
+<li>Invalid → 401; else 200 {company_id, provider_code}. Also used remotely by providhy_auth.APIKeyAuthentication (shared package): it POSTs here with INTERNAL_PASS, caches results 300 s, and raises 503 AuthServiceUnavailable if IAM is unreachable (providhy_auth/authentication.py:35-72, snapshot source).</li>
+</ol>
+<h3 id="5-17-post-api-external-oms-merchant-token-verify-oms-views-py-83">5.17 POST /api/external/oms/merchant-token/verify/ (oms_views.py:83)</h3>
+<ol>
+<li>InternalRequestAuthentication; body {token}.</li>
+<li>verify_merchant_token (providhy_auth/tokens.py:49-57): PyJWT HS256 decode with settings.OMS_TOKEN_SECRET (settings.py:253-255, defaults to SECRET_KEY); requires typ=&quot;merchant&quot; and a merchant_id, else InvalidToken.</li>
+<li>Revocation: the (company_id, provider_code) OMSAPIKey must still exist with is_active=True, else 401 — deactivating a system&#39;s key revokes all of its merchant tokens even though they never expire (oms_views.py:91-97).</li>
+<li>401 on any failure; else 200 {company_id, provider_code, merchant_id}. Also used remotely by providhy_auth.MerchantJWTAuthentication (providhy_auth/authentication.py:75-88).</li>
+</ol>
+<h3 id="5-18-post-api-external-oms-merchant-token-mint-oms-views-py-107">5.18 POST /api/external/oms/merchant-token/mint/ (oms_views.py:107)</h3>
+<ol>
+<li>No DRF authentication (oms_views.py:111-112) — the credential is the X-API-Key header; AnonRateThrottle (3/sec, settings.py:141, oms_views.py:113) is the only rate control.</li>
+<li>X-API-Key → OMSAPIKey.from_api_key (oms_views.py:116-118); invalid → 401.</li>
+<li>Body merchant_id required (stripped; 400 if empty, oms_views.py:119-121).</li>
+<li>mint_merchant_token (providhy_auth/tokens.py:27-46): HS256 claims {typ:&quot;merchant&quot;, company_id, provider_code, merchant_id, iat} with NO exp — the token never expires (comment, oms_views.py:126).</li>
+<li>200 {token}. Called by the third party&#39;s own backend after it signs the merchant in on its side (docstring, oms_views.py:108-109).</li>
+</ol>
+<h3 id="5-19-post-api-external-oms-merchant-resolve-oms-views-py-131">5.19 POST /api/external/oms/merchant/resolve/ (oms_views.py:131)</h3>
+<ol>
+<li>InternalRequestAuthentication; body {provider_code, merchant_id, name?, contact?}; merchant_id required (oms_views.py:139-140).</li>
+<li>transaction.atomic with select_for_update on the provider&#39;s OMSAPIKey row as a per-provider serialization lock for first orders (oms_views.py:142-151; inline comment: switch to per-merchant advisory locks if this becomes a bottleneck); unknown/inactive provider → 400.</li>
+<li>Existing registered entity with a tenant → 200 {tenant_id} (oms_views.py:161-162) — steady-state path is a single lookup.</li>
+<li>First sight: ExternalEntityRegistrationSerializer with entity_type=OMS_MERCHANT, product_code=uuid4 hex placeholder, username=slugify(&quot;provider-merchant_id&quot;)[:100] (oms_views.py:164-178); serializer.save() creates the CustomUser (tenant_root, unusable password) + ExternalEntity.</li>
+<li>register_entity_tenant (views.py:42-78): POST TMS api/tenant/external-register/ with entity_type and tms_options {no_package_module: True, no_fiscal_transfer: True} (oms_views.py:179-185) — OMS tenants get no package/subscription and no fiscal-year transfer; links user.tenant_id/subscribed_services/fiscal_year, suffixes username.</li>
+<li>201 {tenant_id}.</li>
+</ol>
+<h3 id="5-20-post-api-external-clear-cache-utils-py-397">5.20 POST /api/external/clear-cache/ (utils.py:397)</h3>
+<ol>
+<li>No DRF auth classes → falls back to Django AuthenticationMiddleware user; anonymous caller → 403 (DRF default).</li>
+<li>Body password is read but NOT checked — the Django login session is the gate (comment, utils.py:397-406).</li>
+<li>Flashes the default CACHES backend (redis db 7, settings.py:165-174); 200 {&quot;message&quot;: &quot;Cache cleared successfully.&quot;} (utils.py:402-412).</li>
+</ol>
+<hr>
+</section><section class="sec" data-title="6. Data model (ER)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model-er">6. Data model (ER)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CUSTOM_USER ||--o| EXTERNAL_ENTITY : &quot;OneToOne user&quot;
+    EXTERNAL_ENTITY ||--o{ FUNNEL_EVENT : &quot;funnel_events&quot;
+    EXTERNAL_ENTITY ||--o{ ENTITY_ACTIVITY : &quot;activities&quot;
+    EXTERNAL_ENTITY ||--o| ENTITY_ACTIVITY_SUMMARY : &quot;OneToOne activity_summary&quot;
+    OMS_API_KEY ||--|| TMS_COMPANY : &quot;company_id (TMS DB, cross-service)&quot;
+
+    CUSTOM_USER {
+        int id PK &quot;DB int, exposed as public_id token&quot;
+        string username UK &quot;encrypted; suffixed _tenant_id after registration&quot;
+        string tenant_id &quot;set by TMS external-register&quot;
+        string full_name &quot;encrypted PII&quot;
+        string contact &quot;encrypted PII (phone)&quot;
+        bool tenant_root &quot;True for federated users&quot;
+        json subscribed_services &quot;from TMS&quot;
+        datetime last_login &quot;set on login/refresh&quot;
+        datetime created &quot;onboarding_date in serializer&quot;
+    }
+
+    EXTERNAL_ENTITY {
+        string id PK &quot;PublicIdField UUID token (migration 0008)&quot;
+        string external_identifier &quot;EncryptedCharField 100, null; unique per provider via partial index (migration 0007)&quot;
+        string provider_code &quot;choices esewa fonepoint (choices.py:288)&quot;
+        string product_code &quot;ESM only, unique (serializers.py:59)&quot;
+        string entity_type &quot;ESM ESU OMM (choices.py:293)&quot;
+        int user_id FK &quot;OneToOne CustomUser, related_name external_entities&quot;
+    }
+
+    FUNNEL_EVENT {
+        int id PK &quot;BigAutoField&quot;
+        int entity_id FK &quot;CASCADE, related_name funnel_events&quot;
+        string stage &quot;Stage choices (funnel.py:38)&quot;
+        datetime occurred_at &quot;event time (may predate row)&quot;
+        json payload &quot;free-form context&quot;
+        string event_key &quot;nullable idempotency key for webhook replays&quot;
+        datetime created_at &quot;auto_now_add&quot;
+    }
+    &quot;unique (entity, stage) + unique (entity, event_key) where event_key not null (models.py:86-95)&quot;
+
+    ENTITY_ACTIVITY {
+        string id PK &quot;PublicIdField (migration 0008)&quot;
+        int entity_id FK &quot;CASCADE, related_name activities&quot;
+        datetime timestamp &quot;auto_now_add; one row per login/refresh (middleware.py)&quot;
+    }
+
+    ENTITY_ACTIVITY_SUMMARY {
+        int id PK
+        int entity_id FK &quot;OneToOne, related_name activity_summary&quot;
+        string funnel_status &quot;FunnelStatus choices, db_index (funnel.py:117)&quot;
+        bool repeat_usage &quot;default False&quot;
+        datetime last_activity_at &quot;copied from owning services by sync&quot;
+        datetime synced_at
+        int connected_merchants &quot;customer metrics (ESU)&quot;
+        int connection_requests_received &quot;customer metrics&quot;
+        int connection_requests_approved &quot;customer metrics&quot;
+        int connection_requests_declined &quot;customer metrics&quot;
+        int connection_requests_pending &quot;customer metrics&quot;
+        int payment_requests_received &quot;customer metrics&quot;
+        int payment_requests_approved &quot;customer metrics&quot;
+        int successful_payment_count &quot;customer metrics&quot;
+        decimal successful_payment_amount &quot;16,2&quot;
+        int manual_settlement_count &quot;customer metrics&quot;
+        decimal manual_settlement_amount &quot;16,2&quot;
+        int connected_customers &quot;merchant metrics (ESM)&quot;
+        int customers_with_ledger_activity &quot;merchant metrics&quot;
+        int credit_entry_count &quot;merchant metrics&quot;
+        decimal credit_amount &quot;16,2&quot;
+        int payment_requests_created &quot;merchant metrics&quot;
+        int payment_requests_completed &quot;merchant metrics&quot;
+        decimal payment_requested_amount &quot;16,2&quot;
+        decimal payment_completed_amount &quot;16,2&quot;
+        int settlement_count &quot;merchant metrics&quot;
+        decimal settlement_amount &quot;16,2&quot;
+    }
+
+    OMS_API_KEY {
+        int id PK &quot;BigAutoField&quot;
+        int company_id &quot;TMS Company id&quot;
+        string provider_code UK &quot;choices (choices.py:288)&quot;
+        string prefix UK &quot;pk_ plus 12 hex chars&quot;
+        text encrypted_secret &quot;Fernet (CUSTOM_KEY); needed for merchant-JWT verify (models.py:395-399)&quot;
+        bool is_active &quot;default True; deactivating revokes merchant tokens&quot;
+        datetime created &quot;auto_now_add&quot;
+    }
+</pre></div>
+<p>Field sources: models.py:24-59 (ExternalEntity), 62-95 (FunnelEvent), 98-160 (EntityActivitySummary), 163-167 (EntityActivity), 394-408 (OMSAPIKey); public_id PKs via migration 0008_public_id_pk.py:14-23; partial unique index via migration 0007_externalentity_uniq_external_entity_identity.py:25-30; CUSTOM_USER fields from heimer_auth/models.py:138-321 (PII fields EncryptedCharField/EncryptedEmailField, heimer_auth/fields.py); EntityActivitySummary columns per models.py:121-153. Migrations 0002/0003/0004 renamed provider_name to provider_code, added product_code, and loosened the user FK to CASCADE (PROTECT in 0001).</p>
+<hr>
+</section><section class="sec" data-title="7. Key flows (sequence)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-key-flows-sequence">7. Key flows (sequence)</h2>
+<h3 id="7-1-esewa-login-token-mint">7.1 eSewa login (token mint)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (Next.js)
+    participant IAM as IAM /api/external/
+    participant REDIS as Redis db 7
+    participant KAFKA as Kafka (activity log)
+    FE-&gt;&gt;FE: compute TOTP from CUSTOM_KEY (speakeasy, step 20) - otp.ts:15-21
+    FE-&gt;&gt;IAM: POST external/token/ with token, external_identifier, encrypted_text, provider_code + X-MINIAPP-TOKEN
+    IAM-&gt;&gt;IAM: verify_request_origin TOTP check (utils.py:78-84)
+    IAM-&gt;&gt;IAM: AES-256-ECB decrypt envelope, id must match external_identifier (views.py:330-346)
+    IAM-&gt;&gt;IAM: ExternalEntity lookup by provider + identifier (auth_backends.py:18-21)
+    IAM-&gt;&gt;IAM: mint RefreshToken + custom claims (views.py:361-378)
+    IAM-&gt;&gt;REDIS: save access jti per user (jti invalidation)
+    IAM--&gt;&gt;FE: 200 access, refresh, payload + miniApp cookies
+    IAM-&gt;&gt;KAFKA: activity log (views.py:417-444)
+    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27); EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
+</pre></div>
+<h3 id="7-2-first-time-registration-terms-acceptance">7.2 First-time registration (terms acceptance)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant IAM as IAM /api/external/
+    participant TMS as TMS-service
+    participant EVT as events service
+    participant KAFKA as Kafka
+    FE-&gt;&gt;IAM: POST external/register/ (same TOTP + envelope, + entity_type, product_code, user_details) + X-MINIAPP-TOKEN
+    IAM-&gt;&gt;IAM: TOTP + envelope check; reject if entity exists (views.py:110-117)
+    IAM-&gt;&gt;IAM: create CustomUser (tenant_root, unusable password) + ExternalEntity (serializers.py:21-75)
+    IAM-&gt;&gt;TMS: POST api/tenant/external-register/ (shared password; idempotent per identity)
+    TMS--&gt;&gt;IAM: tenant_id, subscribed_services, fiscal_year
+    IAM-&gt;&gt;IAM: link user tenant_id/username/subscribed_services; commit DB (views.py:294-305)
+    IAM-&gt;&gt;KAFKA: activity log (views.py:216-254)
+    alt ESM merchant (tenant_root)
+        IAM-&gt;&gt;EVT: celery send_notification_task to api/notification/miniapp/notify-user/ (tasks.py:14-67)
+    end
+    IAM--&gt;&gt;FE: 201 access, refresh, payload + cookies
+</pre></div>
+<h3 id="7-3-service-side-bearer-validation-per-miniapp-request">7.3 Service-side Bearer validation (per miniapp request)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant SVC as ERP miniapp service (Sales/CDXE/PM/Payment/TMS/Config/events)
+    participant IAM as IAM /api/external/token/verify/
+    FE-&gt;&gt;SVC: miniapp business call + Bearer access + X-MINIAPP-TOKEN + miniApp cookies
+    SVC-&gt;&gt;SVC: FederatedIdentityAuthentication copy: read token (Sales auth_backends.py:180-215)
+    SVC-&gt;&gt;IAM: POST external/token/verify/ with token, forwarding X-MINIAPP-TOKEN (Sales auth_backends.py:218-229)
+    IAM-&gt;&gt;IAM: TOTP check + simplejwt signature/exp check (views.py:455-468)
+    IAM--&gt;&gt;SVC: 200 Token is valid (or 401)
+    SVC-&gt;&gt;SVC: decode JWT verify=False, read claims tenant_id, user_type, external_identifier, subscribed_services (Sales auth_backends.py:192-206)
+    SVC--&gt;&gt;FE: business response
+</pre></div>
+<h3 id="7-4-oms-merchant-resolution-first-order">7.4 OMS merchant resolution (first order)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant OMS as third-party OMS backend
+    participant IAM as IAM /api/external/oms/
+    participant TMS as TMS-service
+    OMS-&gt;&gt;IAM: POST oms/merchant/resolve/ with provider_code, merchant_id, name, contact + shared password
+    IAM-&gt;&gt;IAM: per-provider row lock; look up entity (oms_views.py:142-160)
+    alt first sight
+        IAM-&gt;&gt;IAM: create CustomUser + ExternalEntity (OMS_MERCHANT, product_code=uuid) (oms_views.py:164-178)
+        IAM-&gt;&gt;TMS: POST api/tenant/external-register/ with no_package_module and no_fiscal_transfer
+        TMS--&gt;&gt;IAM: tenant_id (no package, no fiscal year)
+        IAM--&gt;&gt;OMS: 201 tenant_id
+    else already registered
+        IAM--&gt;&gt;OMS: 200 tenant_id
+    end
+</pre></div>
+<hr>
+</section><section class="sec" data-title="8. Business walkthroughs"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-walkthroughs">8. Business walkthroughs</h2>
+<h3 id="8-1-esewa-merchant-onboarding-end-to-end">8.1 eSewa merchant onboarding, end to end</h3>
+<ol>
+<li>The merchant opens the Providhy miniapp inside eSewa. The eSewa app bridges INIT_APP and returns a short-lived app token + scope (miniapp-esewa src/views/home/index.tsx:160-209).</li>
+<li>A MERCHANT_DETAIL request returns encryptedData — the merchant&#39;s identity JSON AES-256-ECB encrypted under a key derived from the app token (first 32 chars, reversed) (home/index.tsx:86-100; utils/app.ts:18-30; IAM utils.py:383-394).</li>
+<li>If the user has not accepted terms, the app posts external/register/: IAM binds the eSewa identity to a brand-new ERP user+tenant (tenant_root admin, no password), creates the tenant in TMS, and issues ERP tokens (views.py:81-316). The merchant sees one ERP dashboard thereafter.</li>
+<li>On every later start, external/token/ mints fresh ERP tokens from the same binding (views.py:319-444); the 403 path is what routes the user back to terms.</li>
+<li>All subsequent miniapp business calls (credit, connections, payments) go to the ERP services with Bearer + X-MINIAPP-TOKEN; each service re-validates the token against IAM on every request (flow 7.3), so deactivating the user in IAM kills access everywhere within one request.</li>
+</ol>
+<h3 id="8-2-esewa-user-customer-flow">8.2 eSewa user (customer) flow</h3>
+<p>An ESU registers the same way (entity_type ESU, no product_code). When the customer initiates a payment to a merchant, the target service resolves both parties via external/is-registered (single and batch modes, views.py:516-611) — e.g. the events service batch-maps external_identifiers to tenant_ids in one call (events/dashboard/views.py:75-80) — then creates the connection/payment records. Activity on login/refresh feeds the analytics endpoints (activities/*) and the funnel (users/funnel/events/), which CRM lists consume through users/ search with funnel_status filters.</p>
+<h3 id="8-3-oms-integration-end-to-end">8.3 OMS integration, end to end</h3>
+<ol>
+<li>Ops onboards the third-party order system once: external/oms/onboard/ creates it as a TMS company and returns an API key shown a single time (oms_views.py:38-70).</li>
+<li>The third party&#39;s backend signs each of its merchants in on its side, then calls external/oms/merchant-token/mint/ with its X-API-Key to get a merchant JWT that never expires (oms_views.py:107-128).</li>
+<li>For each order it calls external/oms/merchant/resolve/ to get the merchant&#39;s ERP tenant_id; the first call auto-registers the merchant (tenant without package/subscription) (oms_views.py:131-188).</li>
+<li>ERP services that need to trust an OMS-issued credential use the shared providhy_auth package, which verifies API keys and merchant JWTs by calling back into IAM&#39;s oms/api-key/verify/ and oms/merchant-token/verify/ (providhy_auth/authentication.py:35-88; snapshot source). Deactivating the OMSAPIKey row revokes the system instantly (oms_views.py:91-97).</li>
+</ol>
+<h3 id="8-4-relation-to-heimer-auth-internal-registration-api-register-api-register-v2">8.4 Relation to heimer_auth internal registration (api/register/, api/register/v2/)</h3>
+<p>The classic ERP self-registration — POST /api/register/ (RegisterUser, heimer_auth/views.py:333-423) and /api/register/v2/ (RegisterUserV2, heimer_auth/views.py:427-522) — takes a full company form (username, password, company details, package_id), creates the tenant in TMS via api/tenant/create-tenant[/v2/] (TMS_URL / TMS_URL_V2, helpers.py:31,51), sends an email-verification email, transfers the fiscal year in the Configuration service, and stores a real password. The federated flow creates the SAME shape of object — a normal CustomUser linked to a TMS tenant, visible to every service through tenant_id — but with different mechanics: the identity anchor is ExternalEntity(provider_code, external_identifier) instead of username/email; the user gets an unusable password (serializers.py:28) and no email verification (email_verified is hardcoded true in the token claims, views.py:373,174); the tenant comes from the idempotent TMS external-register endpoint instead of create-tenant (views.py:119-141); and the user is immediately tenant_root. So a federated user is a first-class IAM user/tenant member that simply cannot (and need not) log in with a password — the miniapp tokens are their only credential, and internal ERP endpoints that expect CustomJWTAuthentication behave the same for them once a valid access token exists.</p>
+<hr>
+</section><section class="sec" data-title="9. Outbound calls (what federated_identity calls)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-outbound-calls-what-federated-identity-calls">9. Outbound calls (what federated_identity calls)</h2>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>URL (dev)</th>
+<th>Auth</th>
+<th>Trigger</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TMS</td>
+<td><a href="http://tms:8000/api/tenant/external-register/">http://tms:8000/api/tenant/external-register/</a> (dev public: <a href="https://dev-tms-api.providhy.com/api/tenant/external-register/">https://dev-tms-api.providhy.com/api/tenant/external-register/</a>)</td>
+<td>shared password INTERNAL_PASS</td>
+<td>register/ (views.py:119-141) and oms/merchant/resolve/ (views.py:42-78)</td>
+<td>helpers.py:52-54,236-244; TMS-side: TMS-service/tenant_management/urls.py:372-376, views.py:4784-4868</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td><a href="http://tms:8000/api/tenant/subscribed-date/">http://tms:8000/api/tenant/subscribed-date/</a></td>
+<td>shared password</td>
+<td>every token mint (login/register; refresh serializer)</td>
+<td>helpers.get_subscribed_date helpers.py:188-201; views.py:376,171; TMS-side views.py:4871-4888, urls.py:382-386</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td><a href="http://tms:8000/api/tenant/company/create/">http://tms:8000/api/tenant/company/create/</a></td>
+<td>shared password</td>
+<td>oms/onboard/</td>
+<td>oms_views.py:26,48-57; TMS-side urls.py:377-381</td>
+</tr>
+<tr>
+<td>events</td>
+<td><a href="http://events:8000/api/notification/miniapp/notify-user/">http://events:8000/api/notification/miniapp/notify-user/</a> (dev: <a href="https://dev-events-api.providhy.com/">https://dev-events-api.providhy.com/</a>...)</td>
+<td>shared password</td>
+<td>async (celery) after ESM registration</td>
+<td>tasks.py:14-67; views.py:238-244; events-side urls.py:101</td>
+</tr>
+<tr>
+<td>projectmaster / cdxe / sales</td>
+<td><a href="http://projectmaster:8000">http://projectmaster:8000</a> etc. + api/miniapp/funnel/history/ and api/miniapp/funnel/metrics/</td>
+<td>shared password</td>
+<td>sync_funnel_activity beat (15 min) + migrate_funnel_history on demand</td>
+<td>funnel_service.py:189-219,255-279,459-533; celery.py:26-29</td>
+</tr>
+<tr>
+<td>payment</td>
+<td><a href="http://payment:8000">http://payment:8000</a> + api/esewa/funnel/history/ and api/esewa/funnel/metrics/</td>
+<td>shared password</td>
+<td>same as above</td>
+<td>funnel_service.py:189-194</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>broker via heimer_auth.kafka_functions</td>
+<td>n/a</td>
+<td>register/ and token/ activity logs (kafka_data=True)</td>
+<td>views.py:245,444; activity_log.py:25-45</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>redis:6379 db 7 (celery broker same db)</td>
+<td>n/a</td>
+<td>jti cache, EntityActivity writes, cache clears</td>
+<td>settings.py:163-174,265-272; utils.py:397-412</td>
+</tr>
+</tbody></table>
+<p>Note: LOCAL=True (this checkout&#39;s .env) rewrites TMS/EVENTS base URLs to the public dev hosts (helpers.py:57-91); in docker they are the plain service names above (api_links.py:17-18; .env:20-28). The four funnel history/metrics routes do NOT exist in the current checkouts of projectmaster/cdxe/sales/payment (grep-verified 2026-11-03) — see section 11.</p>
+</section><section class="sec" data-title="10. Inbound callers (who calls federated_identity)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-callers-who-calls-federated-identity">10. Inbound callers (who calls federated_identity)</h2>
+<table>
+<thead>
+<tr>
+<th>Caller</th>
+<th>Endpoint(s)</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>miniapp-esewa frontend (Next.js)</td>
+<td>external/token/, external/token/refresh/, external/register/</td>
+<td>src/shared/constants.ts:53-55; src/services/requests/auth.ts:106-136 (bodies: LoginBody auth.ts:32-37, AgreeTermsBody auth.ts:18-30); X-MINIAPP-TOKEN added per-request in src/services/api.ts:51-53; TOTP in src/actions/otp.ts:15-21; auto-refresh via axios-auth-refresh src/services/api.ts:68-109</td>
+</tr>
+<tr>
+<td>Sales service (miniapp surface)</td>
+<td>external/token/verify/ (per request), external/is-registered/</td>
+<td>dashboard/auth_backends.py:180-235 (FederatedIdentityAuthentication copy + validate_token_with_external_iam at :218-229); dashboard/async_func.py:175</td>
+</tr>
+<tr>
+<td>CDXE service</td>
+<td>external/token/verify/, external/is-registered/</td>
+<td>dashboard/auth_backends.py:157; dashboard/helpers.py:374</td>
+</tr>
+<tr>
+<td>Projectmaster service</td>
+<td>external/token/verify/</td>
+<td>dashboard/auth_backends.py:207</td>
+</tr>
+<tr>
+<td>Payment service</td>
+<td>external/token/verify/</td>
+<td>dashboard/auth_backends.py:132</td>
+</tr>
+<tr>
+<td>TMS service (dashboard)</td>
+<td>external/token/verify/, external/is-registered/</td>
+<td>dashboard/auth_backends.py:189; dashboard/helpers.py:452</td>
+</tr>
+<tr>
+<td>Configuration service</td>
+<td>external/token/verify/</td>
+<td>dashboard/auth_backends.py:135</td>
+</tr>
+<tr>
+<td>events service</td>
+<td>external/token/verify/, external/is-registered/ (many=true, key=external_identifier)</td>
+<td>dashboard/auth_backends.py:147; dashboard/views.py:75-80</td>
+</tr>
+<tr>
+<td>OMS third-party backends (external, not in E:Work)</td>
+<td>external/oms/onboard/, api-key/verify/, merchant-token/verify/, merchant-token/mint/ (X-API-Key), merchant/resolve/</td>
+<td>by design (oms_views.py:1-2, 108-109 docstrings); remote callers use the shared providhy_auth package, which posts to api-key/verify and merchant-token/verify with INTERNAL_PASS and a 300 s cache (providhy_auth/authentication.py:35-88)</td>
+</tr>
+<tr>
+<td>IAM ops</td>
+<td>external/clear-cache/ (Django admin session), external/users/funnel/migrate[/status]/</td>
+<td>utils.py:397-406; views.py:927-950</td>
+</tr>
+</tbody></table>
+<p>Also inside IAM: AuthAuditMiddleware maps POST /api/external/token/ to AuthEvent.EXTERNAL_LOGIN (heimar_auth/auth_audit.py:27, wired settings.py:58); EntityUserActivityTrackingMiddleware keys off /api/external/token/ and /api/external/token/refresh/ (federated_identity/middleware.py:15, wired settings.py:57). All seven service copies of FederatedIdentityAuthentication forward the miniapp&#39;s X-MINIAPP-TOKEN header into the token/verify call, so the TOTP gate is enforced end-to-end on every miniapp request.</p>
+</section><section class="sec" data-title="11. Unknowns and unverified"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-and-unverified">11. Unknowns and unverified</h2>
+<ul>
+<li>Funnel sync targets: SERVICE_APPS (funnel_service.py:189-194) points at api/miniapp/funnel/history|metrics/ (projectmaster, cdxe, sales) and api/esewa/funnel/history|metrics/ (payment); no such routes exist in the current checkouts of those repos (grep across E:Work, 2026-11-03). Until they ship, the 15-minute sync and on-demand backfill record per-service errors; runtime behavior not exercised.</li>
+<li>providhy_auth: the IAM-Backend working tree contains only <strong>pycache</strong> for the package; sources were read from E:Work.scratchauditsnapprovidhy-auth (v0.2.0). Version drift vs the installed wheel is unverified.</li>
+<li>Refreshed tokens drop the federated claims (add_custom_fields_to_token is never called, serializers.py:84-96) and refresh last_login is looked up with username=user_id-integer (views.py:507-510) — both look like latent bugs; runtime impact on services reading claims after a refresh is unverified. Note the dev .env sets ACCESS_TOKEN_TIME=REFRESH_TOKEN_TIME=30 minutes (IAM-Backend/.env:55-56), which makes refresh rare in this config.</li>
+<li>OMS callers: the actual third-party OMS backends are outside E:Work; the five oms/* endpoints are documented from the IAM side and the shared providhy_auth contract only.</li>
+<li>eSewa-side contract: the app token + encryptedData come from the eSewa miniapp bridge (requestFromMiniApp INIT_APP / MERCHANT_DETAIL, home/index.tsx:60-243); eSewa&#39;s own API is out of scope. The provider token&#39;s lifetime/rotation is unknown.</li>
+<li>TOTP bypass: requests without X-MINIAPP-TOKEN are accepted when UAT or DEVELOPMENT is true (utils.py:80-83); the actual flags in deployed UAT/production envs were not inspected (only the dev .env, where DEVELOPMENT=True, LOCAL=True, PRODUCTION=False).</li>
+<li>JWT_SIGNING_KEY (settings.py:188) is not defined in this checkout&#39;s .env, so SECRET_KEY signs here; whether production sets a dedicated key is unknown (comment says it lets services verify locally).</li>
+<li>TMS response shape from external-register beyond tenant_id/subscribed_services/fiscal_year depends on TMS serializers (not traced); the register notification context reads subscription_expiry_date from that response (views.py:226-240) — field presence unverified against the TMS serializer.</li>
+<li>Kafka message payload for activity logs is built in heimer_auth.kafka_functions (not fully traced); only the kafka_data=True hand-off is verified (activity_log.py:37-41).</li>
+<li>EntityUserActivityTrackingMiddleware would 500 if an authenticated request on the token paths had no ExternalEntity row (models.py:179 uses .get); assumed unreachable because the auth backend only authenticates existing entities.</li>
+<li>The dev .env contains live-looking secrets (TOTP secrets, DB password, encryption keys) — flagged for the team; do not copy them into other docs.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="02-authentication-deep-dive.html"><div class="pn-dir">← Previous</div><div class="pn-name">Authentication</div></a><a class="pn next" href="04-sales-miniapp.html"><div class="pn-dir">Next →</div><div class="pn-name">Sales Miniapp</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview">1. Business overview</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-security-model">3. Authentication &amp; security model</a></li><li class="l3"><a href="#3-1-non-technical-explanation">3.1 Non-technical explanation</a></li><li class="l3"><a href="#3-2-technical">3.2 Technical</a></li><li class="l2"><a href="#4-endpoint-catalog">4. Endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-frontend-federatedidentityauthentication-totp-identity-envelope">4.1 Public — miniapp frontend (FederatedIdentityAuthentication: TOTP + identity envelope)</a></li><li class="l3"><a href="#4-2-internal-service-to-service-internalrequestauthentication-shared-password-token-verify-instead-uses-totp-gate">4.2 Internal — service-to-service (InternalRequestAuthentication: shared password; token/verify instead uses TOTP gate)</a></li><li class="l3"><a href="#4-3-other-gates">4.3 Other gates</a></li><li class="l2"><a href="#router-notes-both-routers-are-drf-defaultrouter-urls-py-6-8-externalentityviewset-is-a-genericviewset-externaluseractivityview-a-plain-viewset-neither-defines-list-create-retrieve-methods-so-the-routers-expose-only-the-custom-action-routes-above-verified-against-drf-viewsets-py-220-246-in-sales-venv-root-api-external-is-included-at-iam-urls-py-119">Router notes: both routers are DRF DefaultRouter (urls.py:6-8); ExternalEntityViewSet is a GenericViewSet, ExternalUserActivityView a plain ViewSet — neither defines list/create/retrieve methods, so the routers expose only the custom @action routes above (verified against DRF viewsets.py:220-246 in Sales venv). Root /api/external/ is included at IAM/urls.py:119.</a></li><li class="l2"><a href="#5-endpoint-traces">5. Endpoint traces</a></li><li class="l3"><a href="#5-1-post-api-external-register-externalregistrationview-views-py-81">5.1 POST /api/external/register/ (ExternalRegistrationView, views.py:81)</a></li><li class="l3"><a href="#5-2-post-api-external-token-externaltokenview-views-py-319">5.2 POST /api/external/token/ (ExternalTokenView, views.py:319)</a></li><li class="l3"><a href="#5-3-post-api-external-token-verify-verifyauthtokenview-views-py-447">5.3 POST /api/external/token/verify/ (VerifyAuthTokenView, views.py:447)</a></li><li class="l3"><a href="#5-4-post-api-external-token-refresh-refreshauthtokenview-views-py-494">5.4 POST /api/external/token/refresh/ (RefreshAuthTokenView, views.py:494)</a></li><li class="l3"><a href="#5-5-post-api-external-is-registered-checkforregistereduser-views-py-516">5.5 POST /api/external/is-registered/ (CheckForRegisteredUser, views.py:516)</a></li><li class="l3"><a href="#5-6-post-api-external-user-statistics-summary-views-py-614">5.6 POST /api/external/user-statistics/summary/ (views.py:614)</a></li><li class="l3"><a href="#5-7-post-api-external-users-search-views-py-773">5.7 POST /api/external/users/ — search (views.py:773)</a></li><li class="l3"><a href="#5-8-post-api-external-users-fetch-a-href-int-pk-int-pk-a-and-router-post-users-a-href-int-pk-int-pk-a-fetch-views-py-829">5.8 POST /api/external/users/fetch/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ and router POST /users/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — fetch (views.py:829)</a></li><li class="l3"><a href="#5-9-get-api-external-users-a-href-int-pk-int-pk-a-funnel-views-py-835">5.9 GET /api/external/users/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/funnel/ (views.py:835)</a></li><li class="l3"><a href="#5-10-post-api-external-users-a-href-int-pk-int-pk-a-funnel-events-and-users-funnel-events-views-py-873-877">5.10 POST /api/external/users/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/funnel/events/ and /users/funnel/events/ (views.py:873, 877)</a></li><li class="l3"><a href="#5-11-post-api-external-users-onboarding-metrics-views-py-904-and-business-metrics-views-py-915">5.11 POST /api/external/users/onboarding-metrics/ (views.py:904) and /business-metrics/ (views.py:915)</a></li><li class="l3"><a href="#5-12-post-api-external-users-funnel-migrate-views-py-927-and-migrate-status-views-py-937">5.12 POST /api/external/users/funnel/migrate/ (views.py:927) and /migrate/status/ (views.py:937)</a></li><li class="l3"><a href="#5-13-post-api-external-users-summary-views-py-952-and-weekly-onboarded-users-views-py-974">5.13 POST /api/external/users/summary/ (views.py:952) and /weekly-onboarded-users/ (views.py:974)</a></li><li class="l3"><a href="#5-14-post-api-external-activities-externaluseractivityview-views-py-658">5.14 POST /api/external/activities/* (ExternalUserActivityView, views.py:658)</a></li><li class="l3"><a href="#5-15-post-api-external-oms-onboard-oms-views-py-38">5.15 POST /api/external/oms/onboard/ (oms_views.py:38)</a></li><li class="l3"><a href="#5-16-post-api-external-oms-api-key-verify-oms-views-py-73">5.16 POST /api/external/oms/api-key/verify/ (oms_views.py:73)</a></li><li class="l3"><a href="#5-17-post-api-external-oms-merchant-token-verify-oms-views-py-83">5.17 POST /api/external/oms/merchant-token/verify/ (oms_views.py:83)</a></li><li class="l3"><a href="#5-18-post-api-external-oms-merchant-token-mint-oms-views-py-107">5.18 POST /api/external/oms/merchant-token/mint/ (oms_views.py:107)</a></li><li class="l3"><a href="#5-19-post-api-external-oms-merchant-resolve-oms-views-py-131">5.19 POST /api/external/oms/merchant/resolve/ (oms_views.py:131)</a></li><li class="l3"><a href="#5-20-post-api-external-clear-cache-utils-py-397">5.20 POST /api/external/clear-cache/ (utils.py:397)</a></li><li class="l2"><a href="#6-data-model-er">6. Data model (ER)</a></li><li class="l2"><a href="#7-key-flows-sequence">7. Key flows (sequence)</a></li><li class="l3"><a href="#7-1-esewa-login-token-mint">7.1 eSewa login (token mint)</a></li><li class="l3"><a href="#7-2-first-time-registration-terms-acceptance">7.2 First-time registration (terms acceptance)</a></li><li class="l3"><a href="#7-3-service-side-bearer-validation-per-miniapp-request">7.3 Service-side Bearer validation (per miniapp request)</a></li><li class="l3"><a href="#7-4-oms-merchant-resolution-first-order">7.4 OMS merchant resolution (first order)</a></li><li class="l2"><a href="#8-business-walkthroughs">8. Business walkthroughs</a></li><li class="l3"><a href="#8-1-esewa-merchant-onboarding-end-to-end">8.1 eSewa merchant onboarding, end to end</a></li><li class="l3"><a href="#8-2-esewa-user-customer-flow">8.2 eSewa user (customer) flow</a></li><li class="l3"><a href="#8-3-oms-integration-end-to-end">8.3 OMS integration, end to end</a></li><li class="l3"><a href="#8-4-relation-to-heimer-auth-internal-registration-api-register-api-register-v2">8.4 Relation to heimer_auth internal registration (api/register/, api/register/v2/)</a></li><li class="l2"><a href="#9-outbound-calls-what-federated-identity-calls">9. Outbound calls (what federated_identity calls)</a></li><li class="l2"><a href="#10-inbound-callers-who-calls-federated-identity">10. Inbound callers (who calls federated_identity)</a></li><li class="l2"><a href="#11-unknowns-and-unverified">11. Unknowns and unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

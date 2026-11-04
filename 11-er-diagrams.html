@@ -1,0 +1,538 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ER Diagrams - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc current" href="11-er-diagrams.html"><span>ER Diagrams</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="11-er-diagrams.html#1-cross-service-entity-map">1. Cross-service entity map</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-03-iam-source-doc-03-section-6">2.03 IAM (source: doc 03 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-04-sales-source-doc-04-section-6">2.04 Sales (source: doc 04 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-05-cdxe-source-doc-05-section-6">2.05 CDXE (source: doc 05 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-06-projectmaster-source-doc-06-section-6">2.06 Projectmaster (source: doc 06 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-07-payment-esewa-app-source-doc-07-section-6">2.07 Payment (esewa app) (source: doc 07 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-08-tms-source-doc-08-section-6">2.08 TMS (source: doc 08 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-09-configuration-source-doc-09-section-6">2.09 Configuration (source: doc 09 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-10-events-source-doc-10-section-6">2.10 Events (source: doc 10 section 6)</a></div><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>11 — Consolidated ER (cross-service + per-service)</h1>
+<blockquote>
+<p>How the miniapp&#39;s data lives across 8 databases, and how entities relate across service boundaries. Physical foreign keys exist only inside one service; <strong>dotted / LOGICAL links are cross-service correlations by string id</strong> (tenant_id, external_identifier, settlement id) — the federation&#39;s isolation model in picture form. Per-service field-level detail is in each doc&#39;s section 6 (ER).</p>
+</blockquote>
+</section><section class="sec" data-title="1. Cross-service entity map"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-cross-service-entity-map">1. Cross-service entity map</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    IAM_EXTERNAL_ENTITY ||--o| IAM_CUSTOM_USER : &quot;OneToOne user (IAM DB)&quot;
+    TMS_EXTERNAL_TENANT_LINK ||--o| IAM_EXTERNAL_ENTITY : &quot;provider_code + external_identifier (LOGICAL, cross-DB)&quot;
+    TMS_EXTERNAL_TENANT_LINK ||--|| TMS_TENANT : &quot;tenant (TMS DB)&quot;
+    IAM_CUSTOM_USER ||--o| TMS_TENANT : &quot;tenant_id claim (LOGICAL; set at external-register)&quot;
+    TMS_TENANT ||--o{ TMS_SUBSCRIPTION : &quot;subscribed modules&quot;
+    TMS_TENANT ||--o{ TMS_TENANT_PACKAGE : &quot;package modules&quot;
+    PM_CUSTOMER ||--o{ PM_CUSTOMER_IDENTITY_LINK : &quot;wallet identity links (PM DB)&quot;
+    PM_CUSTOMER }o--|| TMS_TENANT : &quot;tenant_id (merchant company) (LOGICAL)&quot;
+    CDXE_CONNECTION_REQUEST }o--|| TMS_TENANT : &quot;sender = merchant tenant (LOGICAL)&quot;
+    CDXE_CONNECTION_REQUEST }o--|| TMS_TENANT : &quot;receiver = customer tenant (LOGICAL)&quot;
+    CDXE_CONNECTION_REQUEST ||--o| CDXE_CONNECTION_IDENTITY_LINK : &quot;OneToOne (CDXE DB)&quot;
+    CDXE_CONNECTION_IDENTITY_LINK }o--|| PM_CUSTOMER_IDENTITY_LINK : &quot;receiver_identifier = customer external id (LOGICAL)&quot;
+    SALES_CREDIT_RECORD }o--|| TMS_TENANT : &quot;tenant (LOGICAL) (Sales DB)&quot;
+    SALES_CREDIT_RECORD }o..|| PM_CUSTOMER : &quot;customer JSONField - NO FK (LOGICAL)&quot;
+    SALES_CREDIT_SETTLEMENT ||--o| SALES_CREDIT_RECORD : &quot;credit_id&quot;
+    PAY_ESEWA_PAYMENT_REQUEST }o..|| SALES_CREDIT_SETTLEMENT : &quot;payment_id = settlement id (LOGICAL) (Payment DB)&quot;
+    CFG_TENANT_SERVICE_CONFIGURATION }o--|| TMS_TENANT : &quot;tenant_id (LOGICAL) (Configuration DB)&quot;
+    EVT_NOTIFICATION_CHANNEL }o..|| IAM_EXTERNAL_ENTITY : &quot;user / submit_user strings (LOGICAL) (Events DB)&quot;
+
+    TMS_EXTERNAL_TENANT_LINK {
+        string provider_code &quot;esewa ...&quot;
+        string external_identifier &quot;wallet id (encrypted)&quot;
+        string tenant_id &quot;provisioned tenant&quot;
+        json fiscal_year &quot;data-transfer done marker&quot;
+    }
+    PM_CUSTOMER_IDENTITY_LINK {
+        string external_identifier &quot;wallet user id&quot;
+        string provider_code &quot;esewa&quot;
+        bool is_provider_user &quot;stub: always true today (see doc 05/06)&quot;
+    }
+    CDXE_CONNECTION_IDENTITY_LINK {
+        string sender_identifier &quot;merchant eSewa id&quot;
+        string receiver_identifier &quot;customer eSewa id&quot;
+    }
+    SALES_CREDIT_RECORD {
+        string customer &quot;JSON (name, identifier) - no FK&quot;
+        decimal total_amount &quot;&quot;
+        string status &quot;credit states&quot;
+    }
+    PAY_ESEWA_PAYMENT_REQUEST {
+        string payment_id &quot;= Sales settlement id&quot;
+        string status &quot;requested completed declined cancelled&quot;
+        string transaction_id &quot;wallet txn&quot;
+    }
+</pre></div>
+<p>Reading guide:</p>
+<ul>
+<li><strong>Identity spine</strong>: IAM <code>ExternalEntity</code> (provider + external_identifier) is the root; TMS <code>ExternalTenantLink</code> is what turns an external identity into a tenant; IAM <code>CustomUser.tenant_id</code> is set by TMS at external-register, and every JWT carries that tenant_id.</li>
+<li><strong>Merchant-customer spine</strong>: a PM <code>Customer</code> (+ wallet <code>CustomerIdentityLink</code>) and a CDXE <code>Connection</code> (sender/receiver tenants + <code>ConnectionIdentityLink</code> eSewa ids) are the two halves of &quot;merchant X can lend to wallet user Y&quot;. Sales credit records reference the customer by <strong>JSON (no FK)</strong> — the integrity between Customer and CreditRecord is enforced in code (CDXE/Sales views), not by the database.</li>
+<li><strong>Money spine</strong>: Sales <code>CreditRecord</code> (proxy over SalesInvoice) -&gt; <code>CreditSettlement</code> (proxy over CustomerPayment) -&gt; Payment <code>EsewaPaymentRequest</code> (payment_id = the settlement id). Disputes hang off CreditRecord in Sales.</li>
+<li><strong>Perimeter</strong>: Events rows are keyed by user/submit_user <strong>strings</strong> (no FK to any identity table); Configuration rows are keyed by tenant_id string.</li>
+</ul>
+</section><section class="sec" data-title="2.03 IAM (source: doc 03 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-03-iam-source-doc-03-section-6">2.03 IAM (source: doc 03 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CUSTOM_USER ||--o| EXTERNAL_ENTITY : &quot;OneToOne user&quot;
+    EXTERNAL_ENTITY ||--o{ FUNNEL_EVENT : &quot;funnel_events&quot;
+    EXTERNAL_ENTITY ||--o{ ENTITY_ACTIVITY : &quot;activities&quot;
+    EXTERNAL_ENTITY ||--o| ENTITY_ACTIVITY_SUMMARY : &quot;OneToOne activity_summary&quot;
+    OMS_API_KEY ||--|| TMS_COMPANY : &quot;company_id (TMS DB, cross-service)&quot;
+
+    CUSTOM_USER {
+        int id PK &quot;DB int, exposed as public_id token&quot;
+        string username UK &quot;encrypted; suffixed _tenant_id after registration&quot;
+        string tenant_id &quot;set by TMS external-register&quot;
+        string full_name &quot;encrypted PII&quot;
+        string contact &quot;encrypted PII (phone)&quot;
+        bool tenant_root &quot;True for federated users&quot;
+        json subscribed_services &quot;from TMS&quot;
+        datetime last_login &quot;set on login/refresh&quot;
+        datetime created &quot;onboarding_date in serializer&quot;
+    }
+
+    EXTERNAL_ENTITY {
+        string id PK &quot;PublicIdField UUID token (migration 0008)&quot;
+        string external_identifier &quot;EncryptedCharField 100, null; unique per provider via partial index (migration 0007)&quot;
+        string provider_code &quot;choices esewa fonepoint (choices.py:288)&quot;
+        string product_code &quot;ESM only, unique (serializers.py:59)&quot;
+        string entity_type &quot;ESM ESU OMM (choices.py:293)&quot;
+        int user_id FK &quot;OneToOne CustomUser, related_name external_entities&quot;
+    }
+
+    FUNNEL_EVENT {
+        int id PK &quot;BigAutoField&quot;
+        int entity_id FK &quot;CASCADE, related_name funnel_events&quot;
+        string stage &quot;Stage choices (funnel.py:38)&quot;
+        datetime occurred_at &quot;event time (may predate row)&quot;
+        json payload &quot;free-form context&quot;
+        string event_key &quot;nullable idempotency key for webhook replays&quot;
+        datetime created_at &quot;auto_now_add&quot;
+    }
+    &quot;unique (entity, stage) + unique (entity, event_key) where event_key not null (models.py:86-95)&quot;
+
+    ENTITY_ACTIVITY {
+        string id PK &quot;PublicIdField (migration 0008)&quot;
+        int entity_id FK &quot;CASCADE, related_name activities&quot;
+        datetime timestamp &quot;auto_now_add; one row per login/refresh (middleware.py)&quot;
+    }
+
+    ENTITY_ACTIVITY_SUMMARY {
+        int id PK
+        int entity_id FK &quot;OneToOne, related_name activity_summary&quot;
+        string funnel_status &quot;FunnelStatus choices, db_index (funnel.py:117)&quot;
+        bool repeat_usage &quot;default False&quot;
+        datetime last_activity_at &quot;copied from owning services by sync&quot;
+        datetime synced_at
+        int connected_merchants &quot;customer metrics (ESU)&quot;
+        int connection_requests_received &quot;customer metrics&quot;
+        int connection_requests_approved &quot;customer metrics&quot;
+        int connection_requests_declined &quot;customer metrics&quot;
+        int connection_requests_pending &quot;customer metrics&quot;
+        int payment_requests_received &quot;customer metrics&quot;
+        int payment_requests_approved &quot;customer metrics&quot;
+        int successful_payment_count &quot;customer metrics&quot;
+        decimal successful_payment_amount &quot;16,2&quot;
+        int manual_settlement_count &quot;customer metrics&quot;
+        decimal manual_settlement_amount &quot;16,2&quot;
+        int connected_customers &quot;merchant metrics (ESM)&quot;
+        int customers_with_ledger_activity &quot;merchant metrics&quot;
+        int credit_entry_count &quot;merchant metrics&quot;
+        decimal credit_amount &quot;16,2&quot;
+        int payment_requests_created &quot;merchant metrics&quot;
+        int payment_requests_completed &quot;merchant metrics&quot;
+        decimal payment_requested_amount &quot;16,2&quot;
+        decimal payment_completed_amount &quot;16,2&quot;
+        int settlement_count &quot;merchant metrics&quot;
+        decimal settlement_amount &quot;16,2&quot;
+    }
+
+    OMS_API_KEY {
+        int id PK &quot;BigAutoField&quot;
+        int company_id &quot;TMS Company id&quot;
+        string provider_code UK &quot;choices (choices.py:288)&quot;
+        string prefix UK &quot;pk_ plus 12 hex chars&quot;
+        text encrypted_secret &quot;Fernet (CUSTOM_KEY); needed for merchant-JWT verify (models.py:395-399)&quot;
+        bool is_active &quot;default True; deactivating revokes merchant tokens&quot;
+        datetime created &quot;auto_now_add&quot;
+    }
+</pre></div>
+</section><section class="sec" data-title="2.04 Sales (source: doc 04 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-04-sales-source-doc-04-section-6">2.04 Sales (source: doc 04 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    ID {
+        string tenant_id
+        string name &quot;CID / TID / CD&quot;
+        int unique_id &quot;per-tenant counter&quot;
+    }
+    CreditRecord {
+        int id PK
+        string tenant_id
+        string unique_id &quot;CID-####&quot;
+        date entry_date
+        date invoice_date
+        date transaction_date &quot;due date&quot;
+        json customer
+        float grand_total
+        float remaining_amount
+        int payment_term
+        string status &quot;approved / cancelled&quot;
+        string payment_status &quot;unpaid / partially_paid / fully_paid&quot;
+        text description
+    }
+    CreditSettlement {
+        int id PK
+        string tenant_id
+        string unique_id &quot;TID-####&quot;
+        json customer
+        date payment_date
+        string payment_method
+        float total_allocated_amount
+        string status &quot;pending / approved / rejected / draft / cancelled&quot;
+        text description
+    }
+    CreditSettlementItem {
+        int id PK
+        int payment FK &quot;CustomerPayment&quot;
+        int sales_invoice FK &quot;SalesInvoice&quot;
+        float allocated_amount
+        float total_amount
+        float remaining_amount
+    }
+    CreditDispute {
+        int id PK
+        string tenant_id
+        string unique_id &quot;CD-####&quot;
+        int credit FK &quot;SalesInvoice&quot;
+        text description
+        string dispute_status &quot;issued / resolved / cancelled&quot;
+        string resolution_method &quot;resolution_by_edition / resolution_by_deletion&quot;
+        string entry_by
+    }
+    CreditLedger {
+        int id &quot;view row&quot;
+        string tenant_id
+        string customer_id
+        date txn_date
+        string txn_type &quot;credit / settlement&quot;
+        decimal txn_amount
+        decimal current_balance
+    }
+    CreditLedgerCustomer {
+        int id &quot;view row&quot;
+        string tenant_id
+        string customer_id
+        string customer_identifier
+        date txn_date
+        string txn_type
+        decimal txn_amount
+        decimal current_balance
+    }
+    ID ||--o{ CreditRecord : &quot;issues&quot;
+    ID ||--o{ CreditSettlement : &quot;issues&quot;
+    ID ||--o{ CreditDispute : &quot;issues&quot;
+    CreditRecord ||--o{ CreditDispute : &quot;disputed by&quot;
+    CreditRecord ||--o{ CreditSettlementItem : &quot;settled via&quot;
+    CreditSettlement ||--o{ CreditSettlementItem : &quot;contains&quot;
+    CreditRecord ||--o{ CreditLedger : &quot;credit rows&quot;
+    CreditSettlement ||--o{ CreditLedger : &quot;settlement rows&quot;
+    CreditRecord ||--o{ CreditLedgerCustomer : &quot;credit rows&quot;
+    CreditSettlement ||--o{ CreditLedgerCustomer : &quot;settlement rows&quot;
+</pre></div>
+</section><section class="sec" data-title="2.05 CDXE (source: doc 05 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-05-cdxe-source-doc-05-section-6">2.05 CDXE (source: doc 05 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CONNECTIONREQUEST ||--o| CONNECTIONIDENTITYLINK : &quot;one-to-one (connection_id)&quot;
+    CONNECTIONREQUEST {
+        int id PK
+        string sender &quot;merchant tenant id (CharField 10, indexed, nullable)&quot;
+        string receiver &quot;customer ERP tenant id or NULL (CharField 10, indexed, nullable)&quot;
+        string status &quot;pending|approved|declined|terminated (CharField 10, default pending)&quot;
+        bool code_validated &quot;set true when connection code approved&quot;
+        string connection_code &quot;unique numeric code, default 5 digits (CharField 6)&quot;
+        string initiated_by &quot;CharField 100 nullable&quot;
+        datetime created &quot;TimeModel&quot;
+        datetime modified &quot;TimeModel&quot;
+    }
+    CONNECTIONIDENTITYLINK {
+        int id PK
+        int connection_id FK &quot;OneToOne -&gt; ConnectionRequest, CASCADE, related_name connection_identity&quot;
+        string provider_code &quot;esewa (CharField 20)&quot;
+        string sender_identifier &quot;merchant eSewa external id (CharField 50)&quot;
+        string receiver_identifier &quot;customer eSewa external id (CharField 50)&quot;
+        text description &quot;nullable&quot;
+    }
+</pre></div>
+</section><section class="sec" data-title="2.06 Projectmaster (source: doc 06 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-06-projectmaster-source-doc-06-section-6">2.06 Projectmaster (source: doc 06 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    CUSTOMER ||--o{ CUSTOMER_CATEGORY : &quot;customer_category FK (PROTECT)&quot;
+    CUSTOMER ||--|| CUSTOMER_IDENTITY_LINK : &quot;customer_identity OneToOne&quot;
+    SUPPLIER ||--o{ SUPPLIER_CATEGORY : &quot;supplier_category FK (PROTECT)&quot;
+    CUSTOMER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    SUPPLIER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+
+    CUSTOMER {
+        bigint id PK
+        string tenant_id &quot;soft tenancy&quot;
+        string unique_id &quot;auto CUS&lt;n&gt; via ID table&quot;
+        string name
+        string customer_type &quot;individual|company|partnership&quot;
+        bigint customer_category FK
+        string country
+        string district
+        string province
+        string pan_number
+        json contact_details
+        string email
+        string address
+        string landline
+        string mobile &quot;10-digit, immutable via miniapp edit&quot;
+        json bank_account
+        float opening
+        date opening_date
+        float remain_opening
+        string opening_cr_dr &quot;cr|dr&quot;
+        string payment_term &quot;CharField, not an FK&quot;
+        string gl_mapping &quot;set from Configuration svc on miniapp create&quot;
+        string active_status &quot;active|inactive&quot;
+        string entry_by
+        bool as_supplier
+        float credit_limit
+        datetime created
+        datetime modified
+    }
+    CUSTOMER_CATEGORY {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;CCT&lt;n&gt;&quot;
+        string name
+        string active_status
+        string entry_by
+    }
+    CUSTOMER_IDENTITY_LINK {
+        bigint id PK
+        bigint customer PK_FK &quot;OneToOne, related_name customer_identity&quot;
+        string provider_code &quot;esewa&quot;
+        bool is_provider_user
+        string external_identifier &quot;eSewa wallet id, nullable&quot;
+        text description
+    }
+    SUPPLIER {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;SUP&lt;n&gt;&quot;
+        string name
+        string supplier_type
+        bigint supplier_category FK
+        string pan_number
+        string company_email
+        string mobile
+        json bank_account
+        float opening
+        string payment_term &quot;CharField, not an FK&quot;
+        string gl_mapping
+        string active_status
+        bool as_customer
+    }
+    SUPPLIER_CATEGORY {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;SCT&lt;n&gt;&quot;
+        string name
+        string active_status
+    }
+    EMPLOYEE {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;EMP&lt;n&gt;&quot;
+        string name
+        string designation
+        date joining_date
+        string pan_number
+        json email
+        string mobile
+        float opening
+        string gl_mapping
+        string active_status
+    }
+    PAYMENT_TERM {
+        bigint id PK
+        string tenant_id
+        string unique_id &quot;PTM&lt;n&gt;&quot;
+        string title
+        string credit_period
+        text description
+        string active_status
+        bool default
+    }
+    ID {
+        bigint id PK
+        string name &quot;CUS|SUP|EMP|PTM|CCT|SCT&quot;
+        string tenant_id
+        int unique_id &quot;per-name, per-tenant counter&quot;
+    }
+</pre></div>
+</section><section class="sec" data-title="2.07 Payment (esewa app) (source: doc 07 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-07-payment-esewa-app-source-doc-07-section-6">2.07 Payment (esewa app) (source: doc 07 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    ESEWA_PAYMENT_REQUEST {
+        bigint id PK
+        char tenant_id
+        char initiated_by
+        char paid_to
+        char unique_id
+        json customer
+        char transaction_id UK
+        decimal amount
+        char status
+        char payment &quot;Sales settlement id (logical FK)&quot;
+        datetime created
+        datetime modified
+    }
+    ESEWA_PAYMENT_REQUEST ||--o| SALES_CREDIT_SETTLEMENT : &quot;payment = settlement id (cross-DB, not enforced)&quot;
+</pre></div>
+</section><section class="sec" data-title="2.08 TMS (source: doc 08 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-08-tms-source-doc-08-section-6">2.08 TMS (source: doc 08 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    Company ||--o{ Tenant : &quot;company FK (PROTECT)&quot;
+    Tenant ||--o{ TenantPackage : &quot;tenant_id&quot;
+    TenantPackage ||--o{ TenantPackageModule : &quot;tenant_package&quot;
+    Tenant ||--o{ TenantContract : &quot;tenant_id&quot;
+    TenantPackage ||--o{ TenantContract : &quot;tenant_package&quot;
+    Tenant ||--o{ Subscription : &quot;tenant_id&quot;
+    TenantPackage ||--o{ Subscription : &quot;package_type&quot;
+    TenantPackageModule ||--o{ Subscription : &quot;module_type&quot;
+    Tenant ||--o{ SubscriptionLog : &quot;tenant_id&quot;
+    Tenant ||--o{ ExternalTenantLink : &quot;tenant (provider_code + external_identifier)&quot;
+    Payment ||--o{ BillItem : &quot;payment&quot;
+    Tenant ||--o{ Payment : &quot;tenant_id (string, no FK)&quot;
+    Subscription ||--o{ Payment : &quot;subscription_id (string, no FK)&quot;
+
+    Tenant {
+        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:79)&quot;
+        string name &quot;encrypted&quot;
+        string email &quot;encrypted&quot;
+        string contact &quot;encrypted&quot;
+        string verification &quot;default pending (models.py:45)&quot;
+        bool complete
+        string active_status &quot;default inactive (models.py:53)&quot;
+        json product_tour &quot;8 tour flags incl miniapp (models.py:58)&quot;
+    }
+    Company {
+        string company_code &quot;provider code e.g. esewa (multicompany app)&quot;
+    }
+    ExternalTenantLink {
+        string provider_code &quot;unique together (models.py:465)&quot;
+        string external_identifier &quot;wallet id&quot;
+        json fiscal_year &quot;marks config transferred (models.py:455)&quot;
+    }
+    TenantPackage {
+        string package_id &quot;PublicId of package-service id (models.py:105)&quot;
+        string name
+        string payment_period
+        string user_range
+        int price
+        bool trial
+        string active_status &quot;default active (models.py:124)&quot;
+    }
+    TenantPackageModule {
+        string module_id &quot;PublicId (models.py:150)&quot;
+        string name
+        json services
+        json services_show
+    }
+    Subscription {
+        string unique_id &quot;SUBxxx (models.py:321)&quot;
+        int users
+        string payment_period
+        date subscribe_date
+        date expire_date
+        int price
+        string payment_status &quot;credit/paid/failed/pending (models.py:306)&quot;
+        string active_status &quot;default inactive (models.py:310)&quot;
+        bool is_expired &quot;property (models.py:341)&quot;
+    }
+    SubscriptionLog {
+        int users
+        string payment_period
+        date subscribe_date
+        date expire_date
+        int price
+        string action
+        string payment_status
+        string subscription_type
+    }
+    Payment {
+        string tenant_id &quot;string (payment/models.py:11)&quot;
+        string subscription_id &quot;string (payment/models.py:12)&quot;
+        string transaction_id &quot;unique (payment/models.py:14)&quot;
+        string product_name
+        string service_type
+        decimal total_amount
+        int payment_status &quot;0..5 (payment/models.py:19)&quot;
+        string payment_method
+    }
+    BillItem {
+        string package_id
+        string module_id
+        int quantity
+        float rate
+        float amount
+    }
+</pre></div>
+</section><section class="sec" data-title="2.09 Configuration (source: doc 09 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-09-configuration-source-doc-09-section-6">2.09 Configuration (source: doc 09 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    DefaultServiceConfiguration {
+        string unique_id
+        string configuration_type &quot;ConfigurationTypeChoices (models.py:8)&quot;
+        json value
+        string configuration_status &quot;ConfigurationStatus (models.py:10)&quot;
+        string active_status &quot;default active (models.py:11)&quot;
+        string entry_by
+    }
+    TenantServiceConfiguration {
+        string tenant_id &quot;TMS tenant id string (models.py:23)&quot;
+        string unique_id &quot;TSCxxx via ID table (models.py:37-40)&quot;
+        string configuration_type
+        json value
+        string configuration_status
+        bool discount
+        bool amount
+        string active_status
+        string entry_by
+    }
+    ID {
+        int unique_id &quot;counter per (tenant_id, name)&quot;
+        string name &quot;3-char prefix&quot;
+        string tenant_id
+    }
+    TenantServiceConfiguration ||--o{ ID : &quot;unique_id counters&quot;
+</pre></div>
+</section><section class="sec" data-title="2.10 Events (source: doc 10 section 6)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-10-events-source-doc-10-section-6">2.10 Events (source: doc 10 section 6)</h2>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    NotificationChannel {
+        int id PK &quot;public-id token&quot;
+        string tenant_id &quot;NULL for miniapp rows (notify-user does not set it)&quot;
+        string user &quot;sender: external_identifier or tenant_id&quot;
+        string submit_user &quot;recipient: external_identifier or tenant_id&quot;
+        string module_type &quot;MainModule, e.g. sales/cdxe/iam&quot;
+        string service_type &quot;ServiceType, e.g. creation/approval&quot;
+        string entry_type &quot;EntryType code, e.g. PR1208&quot;
+        string adjustment_type &quot;optional&quot;
+        int entry_id &quot;typed public id by entry_type&quot;
+        string title &quot;set only by notify-user path&quot;
+        text message
+        bool tag &quot;false = unread&quot;
+        string notification_type &quot;success/error/warning/basic&quot;
+    }
+    NotificationPreference {
+        int id PK
+        string tenant_id &quot;from JWT (request.auth)&quot;
+        string external_identifier &quot;from JWT claim&quot;
+        string user &quot;user_id from JWT&quot;
+        string preference_type &quot;payment_request/credit_added/credit_overdue/due_date_reminder&quot;
+        string channel &quot;in_app (only choice)&quot;
+        bool enabled &quot;default true&quot;
+    }
+    ActivityLog {
+        int id PK
+        string tenant_id &quot;NULL for miniapp rows&quot;
+        string user &quot;external_identifier/tenant string&quot;
+        string module_type
+        string service_type
+        string entry_type
+        int entry_id &quot;typed public id&quot;
+        string entry_unique_id &quot;business unique id&quot;
+        text message
+        datetime log_date_time
+        string device
+        string ip_address
+        string description
+        string device_info
+        bool check_login &quot;default false&quot;
+    }
+    NotificationPreference ||--o{ NotificationChannel : &quot;gates notify-user creation by preference_type (logical, no FK)&quot;
+    NotificationPreference ||--o{ ActivityLog : &quot;same user/tenant identity (logical, no FK)&quot;
+</pre></div>
+</section></article><div class="pagenav"><a class="pn" href="10-events-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">Events Miniapp</div></a><a class="pn next" href="12-sequence-diagrams.html"><div class="pn-dir">Next →</div><div class="pn-name">Sequence Diagrams</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-cross-service-entity-map">1. Cross-service entity map</a></li><li class="l2"><a href="#2-03-iam-source-doc-03-section-6">2.03 IAM (source: doc 03 section 6)</a></li><li class="l2"><a href="#2-04-sales-source-doc-04-section-6">2.04 Sales (source: doc 04 section 6)</a></li><li class="l2"><a href="#2-05-cdxe-source-doc-05-section-6">2.05 CDXE (source: doc 05 section 6)</a></li><li class="l2"><a href="#2-06-projectmaster-source-doc-06-section-6">2.06 Projectmaster (source: doc 06 section 6)</a></li><li class="l2"><a href="#2-07-payment-esewa-app-source-doc-07-section-6">2.07 Payment (esewa app) (source: doc 07 section 6)</a></li><li class="l2"><a href="#2-08-tms-source-doc-08-section-6">2.08 TMS (source: doc 08 section 6)</a></li><li class="l2"><a href="#2-09-configuration-source-doc-09-section-6">2.09 Configuration (source: doc 09 section 6)</a></li><li class="l2"><a href="#2-10-events-source-doc-10-section-6">2.10 Events (source: doc 10 section 6)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

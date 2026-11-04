@@ -1,0 +1,317 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Overview - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc current" href="01-overview.html"><span>Overview</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="01-overview.html#1-what-is-this-in-one-paragraph">1. What is this, in one paragraph</a><a class="sb-item sb-sub" href="01-overview.html#2-who-are-the-actors-non-technical">2. Who are the actors (non-technical)</a><a class="sb-item sb-sub" href="01-overview.html#3-system-landscape">3. System landscape</a><a class="sb-item sb-sub" href="01-overview.html#4-how-a-request-gets-through-the-door-30-second-version">4. How a request gets through the door (30-second version)</a><a class="sb-item sb-sub" href="01-overview.html#5-the-money-flows-what-actually-happens">5. The money flows (what actually happens)</a><a class="sb-item sb-sub" href="01-overview.html#6-cross-service-wiring-who-calls-whom-miniapp-surface-only">6. Cross-service wiring (who calls whom, miniapp surface only)</a><a class="sb-item sb-sub" href="01-overview.html#7-key-findings-a-business-person-should-know">7. Key findings a business person should know</a><a class="sb-item sb-sub" href="01-overview.html#8-reading-guide-for-the-rest-of-this-documentation-set">8. Reading guide for the rest of this documentation set</a><a class="sb-item sb-sub" href="01-overview.html#9-scope-boundaries-what-is-not-documented">9. Scope boundaries (what is NOT documented)</a></div></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>01 — Full Overview: The eSewa Miniapp on the Providhy ERP Platform</h1>
+<blockquote>
+<p>Reverse-engineered from the code on 2026-11-03 (branch checked out in E:\Work). Every service doc (03-10) contains the endpoint-by-endpoint detail; this file is the map of the territory.</p>
+</blockquote>
+</section><section class="sec" data-title="1. What is this, in one paragraph"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-what-is-this-in-one-paragraph">1. What is this, in one paragraph</h2>
+<p>Providhy runs a multi-tenant ERP (sales, purchase, accounting, tenant management, identity, payments, notifications, configuration, master data) as a fleet of Django microservices. On top of it sits a <strong>federation</strong> for the <strong>eSewa miniapp</strong> — a wallet-style credit app used by eSewa merchants (entity type <strong>ESM</strong>) and eSewa customers/wallet users (<strong>ESU</strong>). The miniapp does not log in with ERP credentials: IAM keeps a table of <em>external entities</em> (provider + external identifier, e.g. a phone number, mapped to an IAM user inside a tenant). Login against IAM mints a short-lived JWT carrying the user&#39;s tenant, subscriptions, role and permissions; every subsequent call to the ERP services carries that JWT plus a per-request TOTP code, each service re-validates it with IAM, and then serves only that tenant&#39;s data. The miniapp&#39;s business is the merchant&#39;s <strong>credit book</strong>: adding customers, extending credit (buy now, pay later), requesting payment through the eSewa wallet, settling, disputing, and managing the merchant&#39;s own subscription.</p>
+</section><section class="sec" data-title="2. Who are the actors (non-technical)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-who-are-the-actors-non-technical">2. Who are the actors (non-technical)</h2>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>Who</th>
+<th>What they do in the miniapp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eSewa merchant (ESM)</td>
+<td>A shop/business with an eSewa merchant account, subscribed to Providhy</td>
+<td>Sees credit overview, adds customers, creates credit, requests payment, settles, raises/manages disputes, upgrades the subscription, configures credit limit/period</td>
+</tr>
+<tr>
+<td>eSewa customer (ESU)</td>
+<td>A wallet user connected to a merchant</td>
+<td>Sees what they owe, pays (settlement), responds to payment requests, raises/cancels disputes, sees notifications</td>
+</tr>
+<tr>
+<td>Providhy platform (ops/CMS)</td>
+<td>The SaaS operator</td>
+<td>Manages packages/modules, sees registration funnel metrics (funnel events, onboarding metrics, activity heatmaps via IAM external API), provisions tenants</td>
+</tr>
+<tr>
+<td>eSewa (external)</td>
+<td>The wallet provider</td>
+<td>Identity source for registration/login identifiers; in production the payment rail for wallet settlement. NOTE: in this code checkout there is <strong>no direct ePay API integration</strong> — see 7.1</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="3. System landscape"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-system-landscape">3. System landscape</h2>
+<h3 id="3-1-context-diagram">3.1 Context diagram</h3>
+<div class="diagram"><pre class="mermaid-src">flowchart LR
+  subgraph WalletWorld[eSewa world - external]
+    W[ESM merchant / ESU customer]
+  end
+  subgraph Frontend
+    MA[miniapp-esewa - Next.js wallet/credit app]
+  end
+  subgraph ProvidhyPlatform[Providhy platform - dev-*-api.providhy.com]
+    IAM[IAM - identity + federated tokens]
+    TMS[TMS - tenants + subscriptions]
+    CFG[Configuration - per-tenant settings]
+    PM[Projectmaster - customer master data]
+    CDXE[CDXE - merchant-customer connections]
+    SALES[Sales - credit ledger + settlements]
+    PAY[Payment - eSewa payment-request records]
+    EVT[Events - notifications + activity log]
+    PKG[Package - module catalog - not in scope]
+    WEB[Website/Landing - terms page - not in scope]
+  end
+  W --&gt;|identity: phone/wallet id| MA
+  MA --&gt;|login, JWT + TOTP| IAM
+  MA --&gt;|credit, connections, customers, payments, subscriptions, config, notifications| CDXE &amp; PM &amp; SALES &amp; PAY &amp; TMS &amp; CFG &amp; EVT
+  MA --&gt;|module catalog| PKG
+  MA --&gt;|terms text| WEB
+  TMS --&gt;|registration: create/link user+tenant| IAM
+  TMS --&gt;|config transfer on registration| CFG
+  CDXE --&gt;|ledger + payments| SALES
+  CDXE --&gt;|payment-request lifecycle| PAY
+  CDXE --&gt;|validate customer| PM
+  SALES --&gt;|payment request + settle callback| PAY
+  PM --&gt;|pending-payment guard| PAY
+  IAM &amp; TMS &amp; CDXE &amp; SALES &amp; PM --&gt;|verify every request| IAM
+  SALES &amp; CDXE &amp; TMS &amp; PM &amp; IAM --&gt;|notify + activity log| EVT
+  TMS &amp; IAM &amp; SALES &amp; CDXE &amp; PAY &amp; PM --&gt;|FY + config reads| CFG
+</pre></div>
+<h3 id="3-2-service-map-the-in-scope-surface">3.2 Service map (the in-scope surface)</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Repo</th>
+<th>DB</th>
+<th>Miniapp surface</th>
+<th>Mount prefix</th>
+<th>Doc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IAM (federated_identity)</td>
+<td>IAM-Backend</td>
+<td>iam</td>
+<td>register, token mint/verify/refresh, is-registered, users, activities, funnel, OMS, user stats</td>
+<td>/api/external/</td>
+<td>03</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>Sales</td>
+<td>Sales</td>
+<td>credit CRUD/pay, settlements, disputes, ledgers (public + internal + admin)</td>
+<td>/api/miniapp/</td>
+<td>04</td>
+</tr>
+<tr>
+<td>CDXE</td>
+<td>CDXE-REBOOT</td>
+<td>Cdxe</td>
+<td>connections, credit views, payment requests, merchant detail, disputes (customer + merchant side)</td>
+<td>/api/miniapp/</td>
+<td>05</td>
+</tr>
+<tr>
+<td>Projectmaster</td>
+<td>ERP-Projectmaster</td>
+<td>Master</td>
+<td>customer add/search/detail/edit/delete + identity validation endpoints</td>
+<td>/api/miniapp/</td>
+<td>06</td>
+</tr>
+<tr>
+<td>Payment (esewa app)</td>
+<td>Payment-Service</td>
+<td>Payment</td>
+<td>payment-request records: create/search/exists/pay/cancel/statistics/tenant-delete</td>
+<td>/api/esewa/</td>
+<td>07</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td>TMS-service</td>
+<td>TMS</td>
+<td>subscriptions status/initiate/verify/cancel + internal subscription endpoints + tour-status (registration/onboarding + configuration portions)</td>
+<td>/api/miniapp/, /api/tenant/</td>
+<td>08</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>Configuration-Service</td>
+<td>Configuration</td>
+<td>tenant/miniapp/ config read + detail update (federated) + onboarding data-transfer + FY/sanitization internal endpoints</td>
+<td>/api/service-configuration/, /api/dashboard/, /api/sanitization/</td>
+<td>09</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>events</td>
+<td>(events)</td>
+<td>miniapp notification list/mark-read/preference + internal notify-user + activity log</td>
+<td>/api/notification/, /api/activity_log/</td>
+<td>10</td>
+</tr>
+<tr>
+<td>miniapp-esewa (frontend)</td>
+<td>miniapp-esewa</td>
+<td>sessionStorage</td>
+<td>all pages + request modules</td>
+<td>—</td>
+<td>07 Part B</td>
+</tr>
+</tbody></table>
+<p>Internal (docker) hosts mirror the names: <a href="http://iam:8000">http://iam:8000</a>, <a href="http://sales:8000">http://sales:8000</a>, <a href="http://cdxe:8000">http://cdxe:8000</a>, <a href="http://projectmaster:8000">http://projectmaster:8000</a>, <a href="http://payment:8000">http://payment:8000</a>, <a href="http://tms:8000">http://tms:8000</a>, <a href="http://configuration:8000">http://configuration:8000</a>, <a href="http://events:8000">http://events:8000</a>. Public dev hosts: <a href="https://dev-iam-api.providhy.com">https://dev-iam-api.providhy.com</a>, <a href="https://dev-sales-api.providhy.com">https://dev-sales-api.providhy.com</a>, etc. (each repo&#39;s .env).</p>
+</section><section class="sec" data-title="4. How a request gets through the door (30-second version)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-how-a-request-gets-through-the-door-30-second-version">4. How a request gets through the door (30-second version)</h2>
+<ol>
+<li>Frontend computes a 6-digit TOTP (shared secret, 20-second window) and adds X-MINIAPP-TOKEN plus the Bearer JWT to every request.</li>
+<li>The service&#39;s FederatedIdentityAuthentication extracts the JWT (cookie, header, or body), POSTs it to IAM /api/external/token/verify/ forwarding the TOTP header; IAM checks signature, expiry and the TOTP.</li>
+<li>The service then decodes the JWT locally (verify=False) and reads the claims: user_id, tenant_id, subscribed_services, user_type (ESM/ESU), provider_code, tenant_root, permissions, subscription_expired.</li>
+<li>Permission classes gate by user_type / subscription / tenant_root; the view executes scoped to tenant_id.</li>
+<li>Service-to-service calls inside the flow use a different door: a shared internal password (INTERNAL_PASS) plus the tenant id, via InternalRequestAuthentication.</li>
+</ol>
+<p>Full mechanism + security notes: doc 02. Per-service variants and their quirks: each doc&#39;s section 3.</p>
+</section><section class="sec" data-title="5. The money flows (what actually happens)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-the-money-flows-what-actually-happens">5. The money flows (what actually happens)</h2>
+<h3 id="5-1-registration-one-time-per-wallet-identity">5.1 Registration (one time, per wallet identity)</h3>
+<p>Wallet user opens the miniapp -&gt; terms page (Website service) -&gt; accept: IAM POST /api/external/register/ with the eSewa token + encrypted identifier + provider code. IAM links/creates the external entity and triggers TMS /api/tenant/external-register/ which provisions the tenant (or links an existing one), creates/links the IAM user, and asks Configuration&#39;s data-transfer to copy the platform&#39;s default business rules (chart of accounts, config rows, fiscal year, terms) into the tenant. TMS stores the result in ExternalTenantLink (fiscal_year marker makes the transfer idempotent). Funnel events are recorded so the platform can watch onboarding progress.</p>
+<h3 id="5-2-login-each-session">5.2 Login (each session)</h3>
+<p>POST /api/external/token/ with the eSewa token + external_identifier + provider_code -&gt; IAM looks up the entity, checks TOTP, returns access+refresh JWT whose payload carries tenant_id, user_type, subscribed_services, product_code, permissions. Frontend stores them in sessionStorage; refresh is automatic on 401.</p>
+<h3 id="5-3-merchant-extends-credit-to-a-customer">5.3 Merchant extends credit to a customer</h3>
+<p>Merchant: add customer in Projectmaster (POST /api/miniapp/customer/) — optionally linking the customer&#39;s wallet identity; if the customer is a wallet user, create a <strong>connection</strong> in CDXE (POST /api/miniapp/create-connection/) — CDXE asks IAM (is the receiver registered?) and Projectmaster (is this wallet a real customer of this merchant?) in parallel, stores Connection(pending)+ConnectionIdentityLink with a 5-digit code, notifies both parties via Events. The customer approves/rejects in their app (approve sets the status; decline cascade-deletes both rows). Then the merchant creates a credit record (Sales ledger, via CDXE or Sales surface) — the customer sees it in their app and can pay.</p>
+<h3 id="5-4-paying-settling-credit">5.4 Paying / settling credit</h3>
+<p>Two paths, both ending in the Sales ledger:</p>
+<ul>
+<li><strong>Merchant-initiated payment request</strong>: merchant POSTs payment/request (CDXE) -&gt; Sales creates a PENDING settlement (credits untouched) + a payment request in Payment -&gt; customer sees the request and pays (or declines) -&gt; when the payment reaches a terminal state, Payment (or the customer action) calls Sales payment/request/settle -&gt; settlement becomes approved (credits reduced) / rejected / cancelled. A pending request blocks customer deletion (Projectmaster checks Payment payment/request/exists/).</li>
+<li><strong>Customer-initiated payment</strong>: customer opens the merchant&#39;s credit and pays -&gt; CDXE credit/pay with a signed commit (HMAC-SHA256 SIGNATURE over the payload, key CUSTOM_KEY_ESEWA + 10-digit TOTP) -&gt; Sales credit/pay -&gt; Sales creates an APPROVED customer-payment and calls Payment payment/request/ (status completed with the transaction id) -&gt; Events notify. NOTE: the frontend defines these signed flows but no view sends the SIGNATURE header today — doc 05/07 flag this as unshipped.</li>
+</ul>
+<h3 id="5-5-disputes">5.5 Disputes</h3>
+<p>Customer raises a dispute on a credit (CDXE dispute/raise -&gt; Sales dispute/raise; guards: unpaid, no settlement, no pending dispute). Merchant resolves by editing the credit (resolution_by_edition) or deleting it (resolution_by_deletion); customer can cancel a pending dispute. Every transition notifies Events.</p>
+<h3 id="5-6-subscription-lifecycle-merchant-s-own-subscription">5.6 Subscription lifecycle (merchant&#39;s own subscription)</h3>
+<p>Frontend auto-fetches TMS /api/miniapp/subscriptions/status/ after login. Upgrade page lists modules/packages from the Package service, then TMS subscriptions/initiate (creates Payment + Subscription PENDING; returns a transaction id — in this checkout a random stub, verify is mocked by default), subscriptions/verify (marks paid, activates Subscription, creates TenantPackage/TenantPackageModule if missing, refreshes IAM subscription expiry), subscriptions/cancel (unused in frontend). Celery beat sends expiry reminders via Events. Known mismatch: frontend sends half_yearly/yearly, TMS choices are halfyearly/annually — suspected 400 bug (doc 08 §10).</p>
+<h3 id="5-7-configuration-that-shapes-the-credit-book">5.7 Configuration that shapes the credit book</h3>
+<p>At app boot the frontend reads Configuration /api/service-configuration/tenant/miniapp/?configuration=master_settings — inside it, the credit_settings row (credit limit + credit period) that all credit features honor. Merchant edits it in Profile &gt; Credit management via the federated detail endpoint. Tenant fiscal year / currency / datepicker essence come from Configuration internal endpoints; every customer create fetches the GL mapping (Account Receivable) from Configuration.</p>
+</section><section class="sec" data-title="6. Cross-service wiring (who calls whom, miniapp surface only)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-cross-service-wiring-who-calls-whom-miniapp-surface-only">6. Cross-service wiring (who calls whom, miniapp surface only)</h2>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Calls (evidence in the docs&#39; §9/§10)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>every service</td>
+<td>IAM</td>
+<td>external/token/verify (per request, TOTP forwarded); internal-check-permissions; external/is-registered (TMS, CDXE, Sales)</td>
+</tr>
+<tr>
+<td>CDXE</td>
+<td>Sales</td>
+<td>13 internal POST endpoints: credit user/merchant search, credit detail/ledger/overview, payment/request, credit/pay, settlement search/detail, all 4 dispute ops (doc 05 §9)</td>
+</tr>
+<tr>
+<td>CDXE</td>
+<td>Payment</td>
+<td>esewa/payment/request/exists (terminate guard), esewa/payment/request/pay</td>
+</tr>
+<tr>
+<td>CDXE</td>
+<td>Projectmaster</td>
+<td>validate-customer-connection (create + approve/reject)</td>
+</tr>
+<tr>
+<td>CDXE</td>
+<td>IAM/Events</td>
+<td>is-registered; notify-user + log-activity (celery)</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>Payment</td>
+<td>payment/request (create), payment/request/search (enrichment); receives payment/request/settle callback</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>Projectmaster</td>
+<td>customer-check (credit list/create + due-date batch jobs; cross-tenant tenant_id=all reads flagged)</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>CDXE</td>
+<td>get-all-connection (celery due/overdue reminder tasks)</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>Configuration</td>
+<td>tenant/expose (FY, GL)</td>
+</tr>
+<tr>
+<td>Projectmaster</td>
+<td>CDXE</td>
+<td>get-connection (customer-search enrichment), connection/delete/customer (customer delete)</td>
+</tr>
+<tr>
+<td>Projectmaster</td>
+<td>Sales</td>
+<td>credit/ledger/internal, credit/merchant/search, records/delete/customer (customer delete)</td>
+</tr>
+<tr>
+<td>Projectmaster</td>
+<td>Payment</td>
+<td>esewa/payment/request/exists (delete guard)</td>
+</tr>
+<tr>
+<td>Projectmaster</td>
+<td>Configuration</td>
+<td>tenant/expose (GL mapping on customer create)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>Sales</td>
+<td>payment/request/settle (on terminal states, sync httpx)</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td>IAM</td>
+<td>tenant-user-info refresh, is-registered, register link, update-subscribed-services, onboarding-status</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td>Configuration</td>
+<td>data-transfer (on registration), update-unique-id (eBilling), sanitization, tenant-fy-essence</td>
+</tr>
+<tr>
+<td>TMS</td>
+<td>Events</td>
+<td>notify-user (celery, subscription lifecycle)</td>
+</tr>
+<tr>
+<td>IAM</td>
+<td>TMS</td>
+<td>tenant-list (external-register provisioning), funnel backfill (planned)</td>
+</tr>
+<tr>
+<td>IAM</td>
+<td>Events</td>
+<td>notify-user (registration trial notification — flagged module_type=SALES bug, doc 10)</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>(consumes)</td>
+<td>Kafka activity/notification/email topics (consumer only)</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="7. Key findings a business person should know"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-key-findings-a-business-person-should-know">7. Key findings a business person should know</h2>
+<ol>
+<li><strong>The wallet is not (yet) wired to real eSewa payments in this code.</strong> Payment-Service stores payment-request records and has no ePay API integration (no epay.esewa.com.np references anywhere, verified). TMS subscription verify is mocked by default (ESEWA_MOCK_MODE). Production may differ via env flags not present in this checkout — doc 07/08 §10.</li>
+<li><strong>Two parallel credit surfaces exist.</strong> Sales and CDXE both expose credit/pay/dispute/payment-request endpoints for the miniapp. The frontend routes customer-facing credit operations through CDXE (which delegates to Sales&#39; internal ledger endpoints); Sales&#39; direct endpoints are the ledger of record plus merchant-side and internal paths. This looks like an in-flight migration (CDXE-REBOOT) — doc 04/05 §11.</li>
+<li><strong>Customer identity is a stub.</strong> dummy-customer-check (Projectmaster) always returns is_provider_user:true; the env vars pointing at a real eSewa user-check API are unreferenced leftovers. In this checkout, no service calls the real eSewa verification API — doc 05/06 §11.</li>
+<li><strong>Tenant isolation is the core safety model</strong>: every miniapp query is scoped by the tenant_id claim; internal calls pass the tenant id explicitly (trusted). One flagged risk: Sales due-date batch jobs read Projectmaster customers with tenant_id=all (cross-tenant) — doc 04/06 §10.</li>
+<li><strong>Money-adjacent guards are real</strong>: pending payment request blocks customer deletion; dispute guards; settlement lifecycle states; signed (HMAC) commit for customer-initiated settlement — but that signature is not yet sent by the frontend (unshipped) — doc 05.</li>
+<li><strong>Suspected bugs found in code</strong> (details in each doc&#39;s unknowns section): TMS payment_period value mismatch (frontend half_yearly vs TMS halfyearly); IAM trial notification hardcodes module_type=SALES; events mark-read ignores the ids list; Sales dispute deletion writes dispute.status instead of dispute.dispute_status; Configuration tenant/create/configuration/ (non-v1) has no declared auth; events create-export-log/ unauthenticated.</li>
+</ol>
+</section><section class="sec" data-title="8. Reading guide for the rest of this documentation set"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-reading-guide-for-the-rest-of-this-documentation-set">8. Reading guide for the rest of this documentation set</h2>
+<ul>
+<li>Business story per service: each doc&#39;s §1 + §8 (walkthroughs).</li>
+<li>Every API, one line each: 13-api-catalog.md; deep per-endpoint flow traces: each doc&#39;s §5 (numbered steps with file:line).</li>
+<li>Data: 11-er-diagrams.md (consolidated) + each doc&#39;s ER section.</li>
+<li>End-to-end flows: 12-sequence-diagrams.md (login, registration, credit create, payment request, settlement, dispute, subscription).</li>
+<li>Security: 02-authentication-deep-dive.md §6 + each doc&#39;s auth section.</li>
+</ul>
+</section><section class="sec" data-title="9. Scope boundaries (what is NOT documented)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-scope-boundaries-what-is-not-documented">9. Scope boundaries (what is NOT documented)</h2>
+<p>Package service (module catalog), Website/Landing (terms), Purchase/Accounting/PMS/Document services (only their call sites from in-scope code), the main ERP web frontends, CMS/portal surfaces, heimer_auth&#39;s full admin user management, Kafka topics&#39; producers outside the miniapp surface, and any production-only env behavior (secrets, mock flags). Each doc&#39;s unknowns section lists the specific gaps.</p>
+</section></article><div class="pagenav"><a class="pn" href="00-README.html"><div class="pn-dir">← Previous</div><div class="pn-name">Index &amp; Reading Guide</div></a><a class="pn next" href="M-merchant-side.html"><div class="pn-dir">Next →</div><div class="pn-name">Merchant Side</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-what-is-this-in-one-paragraph">1. What is this, in one paragraph</a></li><li class="l2"><a href="#2-who-are-the-actors-non-technical">2. Who are the actors (non-technical)</a></li><li class="l2"><a href="#3-system-landscape">3. System landscape</a></li><li class="l3"><a href="#3-1-context-diagram">3.1 Context diagram</a></li><li class="l3"><a href="#3-2-service-map-the-in-scope-surface">3.2 Service map (the in-scope surface)</a></li><li class="l2"><a href="#4-how-a-request-gets-through-the-door-30-second-version">4. How a request gets through the door (30-second version)</a></li><li class="l2"><a href="#5-the-money-flows-what-actually-happens">5. The money flows (what actually happens)</a></li><li class="l3"><a href="#5-1-registration-one-time-per-wallet-identity">5.1 Registration (one time, per wallet identity)</a></li><li class="l3"><a href="#5-2-login-each-session">5.2 Login (each session)</a></li><li class="l3"><a href="#5-3-merchant-extends-credit-to-a-customer">5.3 Merchant extends credit to a customer</a></li><li class="l3"><a href="#5-4-paying-settling-credit">5.4 Paying / settling credit</a></li><li class="l3"><a href="#5-5-disputes">5.5 Disputes</a></li><li class="l3"><a href="#5-6-subscription-lifecycle-merchant-s-own-subscription">5.6 Subscription lifecycle (merchant's own subscription)</a></li><li class="l3"><a href="#5-7-configuration-that-shapes-the-credit-book">5.7 Configuration that shapes the credit book</a></li><li class="l2"><a href="#6-cross-service-wiring-who-calls-whom-miniapp-surface-only">6. Cross-service wiring (who calls whom, miniapp surface only)</a></li><li class="l2"><a href="#7-key-findings-a-business-person-should-know">7. Key findings a business person should know</a></li><li class="l2"><a href="#8-reading-guide-for-the-rest-of-this-documentation-set">8. Reading guide for the rest of this documentation set</a></li><li class="l2"><a href="#9-scope-boundaries-what-is-not-documented">9. Scope boundaries (what is NOT documented)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

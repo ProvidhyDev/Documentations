@@ -1,0 +1,1297 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Payment + Frontend - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc current" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="07-payment-esewa.html#part-a-payment-service-esewa-app">Part A — Payment-Service eSewa app</a><a class="sb-item sb-sub" href="07-payment-esewa.html#part-b-miniapp-esewa-frontend">Part B — miniapp-esewa frontend</a><a class="sb-item sb-sub" href="07-payment-esewa.html#part-c-cross-cutting-flows-call-maps-verdicts">Part C — Cross-cutting flows, call maps, verdicts</a></div><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>07 — Payment-Service (eSewa app) &amp; miniapp-esewa — Federated Miniapp Documentation</h1>
+<ul>
+<li><strong>Scope:</strong> (a) Part A — the <code>esewa</code> app of <code>E:/Work/Payment-Service</code> (Django service &quot;payment&quot;), incl. its eSewa ePay integration status; (b) Part B — the <code>E:/Work/miniapp-esewa</code> Next.js frontend (wallet/credit miniapp &quot;Lenden&quot; inside the eSewa mobile app); Part C — cross-cutting flows, call maps, unknowns, and the definitive service-ownership table.</li>
+<li><strong>Evidence:</strong> read-only trace of <code>Payment-Service/{config,esewa,dashboard}</code> and <code>miniapp-esewa/{app,src}</code> plus corroboration in <code>Sales/miniapp/urls.py</code>, <code>CDXE-REBOOT/miniapp/urls.py</code>, <code>ERP-Projectmaster/miniapp/urls.py</code>, <code>TMS-service</code>, <code>IAM-Backend/IAM/urls.py</code>. Every flow/call-map claim cites file:line.</li>
+<li><strong>Template:</strong> SHARED-CONTEXT.md, applied to both parts; where a section only applies to one part, that is stated.</li>
+</ul>
+<hr>
+</section><section class="sec" data-title="Part A — Payment-Service eSewa app"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="part-a-payment-service-esewa-app">Part A — Payment-Service eSewa app</h2>
+<h3 id="a-1-business-overview">A.1 Business overview</h3>
+<p>Payment-Service is a thin, single-purpose microservice on the Providhy federated miniapp surface: it stores <strong>eSewa payment-request records</strong> (<code>EsewaPaymentRequest</code>) for the eSewa merchant miniapp (&quot;Lenden&quot;) and propagates their terminal status to Sales&#39; credit settlements. It does <strong>not</strong> own credit records, customers, connections, or disputes — those live in Sales / Projectmaster / CDXE (see C.6).</p>
+<p>Three facts define the app&#39;s shape:</p>
+<ol>
+<li>Its only frontend-reachable endpoint is <strong>merchant cancellation of a payment request</strong> (<code>POST api/esewa/payment/request/cancel/&lt;payment_id&gt;/</code>). All other endpoints are internal S2S (shared-password auth), called by Sales, CDXE, Projectmaster, and TMS (A.10).</li>
+<li><strong>There is no eSewa ePay wallet integration in this service&#39;s code.</strong> No reference to <code>epay.esewa.com.np</code>, no merchant token, no status-URL call anywhere in the repo (verified by grep). The one helper that would call an eSewa URL is hardcoded to a dummy address and is never invoked by any view (A.11). The eSewa/Fonepay merchant payloads for <em>subscription</em> payments live in TMS (<code>TMS-service/dashboard/custom_functions.py:502-541</code>).</li>
+<li>The app is the <strong>lifecycle record for payment requests</strong> (<code>requested -&gt; completed|declined|cancelled</code>; <code>failed</code> exists as a choice). On terminal states it synchronously calls Sales <code>POST /api/miniapp/payment/request/settle/</code> to update the underlying credit settlement.</li>
+</ol>
+<h3 id="a-2-technical-overview">A.2 Technical overview</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Fact</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Framework</td>
+<td>Django 5.0.3 + DRF</td>
+<td><code>config/settings.py:1-14</code> (header), DRF statics in <code>static/rest_framework/</code></td>
+</tr>
+<tr>
+<td>Apps</td>
+<td><code>dashboard</code> (shared infra), <code>esewa</code> (only business app), <code>corsheaders</code>; <code>accountpayable</code>/<code>accountreceivable</code> commented out</td>
+<td><code>config/settings.py:48-61</code> (comment at :55-56)</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>Postgres <code>Payment</code> via <code>django_prometheus</code> wrapper</td>
+<td><code>config/settings.py:98-107</code>, <code>.env:10</code></td>
+</tr>
+<tr>
+<td>Root mount</td>
+<td><code>api/esewa/</code> -&gt; <code>esewa.urls</code></td>
+<td><code>config/urls.py:26</code></td>
+</tr>
+<tr>
+<td>Async</td>
+<td><code>httpx</code> async + <code>async_to_sync</code> wrappers for S2S calls; no Celery/Redis/Kafka in repo</td>
+<td><code>dashboard/async_func.py:1-5,17</code>, <code>dashboard/helpers.py:4,159-161</code></td>
+</tr>
+<tr>
+<td>Sync HTTP</td>
+<td><code>requests</code> used only by auth backends (IAM verify/permissions)</td>
+<td><code>dashboard/auth_backends.py:1,41,77</code></td>
+</tr>
+<tr>
+<td>CORS</td>
+<td><code>X-MINIAPP-TOKEN</code> in allowed headers</td>
+<td><code>config/settings.py:179-182</code></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>Django admin at <code>settings.ADMIN_URL</code> (<code>config(&quot;PAYMENT_ADMIN_URL&quot;)</code> — see A.11)</td>
+<td><code>config/urls.py:27</code>, <code>config/settings.py:193</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>none (<code>esewa/tests.py</code> empty)</td>
+<td><code>esewa/tests.py:1-3</code></td>
+</tr>
+</tbody></table>
+<p><strong><code>accountpayable</code> / <code>accountreceivable</code> — out of scope.</strong> Models <code>SupplierPayment(Items)</code> / <code>CustomerPayment(Items)</code> exist (<code>accountpayable/models.py:6-33</code>, <code>accountreceivable/models.py:6-32</code>) but: empty <code>urls.py</code> (0 lines each), stub <code>views.py</code>, commented out of <code>INSTALLED_APPS</code>, and they reference non-existent <code>choices.PaymentType</code>/<code>EntryType</code> (would crash on import). No root-url mount, no <code>FederatedIdentityAuthentication</code>. One line each: dead code, no endpoints.</p>
+<h3 id="a-3-authentication-authorization">A.3 Authentication &amp; authorization</h3>
+<p>Two DRF auth classes in <code>dashboard/auth_backends.py</code> (Payment-Service&#39;s own copy of the federated stack):</p>
+<p><strong>1) <code>InternalRequestAuthentication</code></strong> (<code>auth_backends.py:12-27</code>) — used by 6 of 7 esewa endpoints (A.2-A.7):</p>
+<ul>
+<li>POST: <code>password</code> + <code>tenant_id</code> in body; GET: query params (lines 16-23).</li>
+<li>Validates <code>password == INTERNAL_PASS</code> (<code>.env:11</code>, <code>helpers.py:81-84</code>, <code>api_links.py:2</code>) — a shared static secret across all services.</li>
+<li>Returns <code>(True, tenant_id)</code> -&gt; <code>request.auth = tenant_id</code> (line 27). No user, no JWT, no TOTP.</li>
+</ul>
+<p><strong>2) <code>FederatedIdentityAuthentication</code></strong> (<code>auth_backends.py:30-67</code>) — used by exactly one endpoint (A.1, cancel):</p>
+<ol>
+<li>Token from cookie <code>miniAppAccessToken</code>, else <code>Authorization: Bearer</code>, else body <code>accessToken</code> (<code>helpers.get_access_token</code>, <code>helpers.py:45-72</code>; key set at <code>auth_backends.py:33-35</code>).</li>
+<li><code>POST {IAM}/api/external/token/verify/</code> with <code>{token}</code>, <strong>forwarding the raw <code>X-MINIAPP-TOKEN</code> header</strong> (<code>auth_backends.py:37-38,41,125-146</code>) — TOTP verification is delegated to IAM (client-side TOTP: step 20, see B.3).</li>
+<li>Local JWT decode (HS256, <code>verify=False</code>) extracting <code>user_id, tenant_id, external_identifier, provider_code, user_type, tenant_root, subscribed_services, username</code> (lines 42-54).</li>
+<li>Raises <code>PermissionError(&quot;Your subscription doesn&#39;t include cdxe.&quot;)</code> when <code>PR2700</code> (CDXE) is not in <code>subscribed_services</code> (lines 55-56) — a <strong>copy-paste leftover from CDXE</strong> in this repo&#39;s copy (flagged in A.11).</li>
+</ol>
+<p><strong>Permission chain</strong> — <code>HasFederatedEntityPermission</code> (<code>auth_backends.py:106-122</code>): <code>provider_code</code> in <code>view.required_app_scope</code> ([&#39;esewa&#39;], <code>generics.py:16</code>) AND <code>user_type</code> in <code>view.required_user_type</code> ([&#39;ESM&#39;] for cancel, <code>views.py:36</code>) AND <code>HasPermission</code> (lines 70-103): <code>tenant_root</code> -&gt; allow; else <code>GET {IAM}api/internal-check-permissions/?password=...&amp;user_id=...</code> (lines 77-79) must grant the view&#39;s feature+action (cancel: <code>PR2601 PAYMENT_MANAGEMENT</code> + <code>approve_cancel</code> — <code>choices.py:274</code>, <code>views.py:38</code>).</p>
+<p><strong>Base view</strong> — <code>esewa/generics.py:12-26</code> <code>FederatedAuthenticationView</code>: auth [FederatedIdentityAuthentication], permissions [HasFederatedEntityPermission]; subclasses must declare <code>required_action_permission</code> + <code>required_feature_permission</code> or <code>ImproperlyConfigured</code> (lines 20-26). <code>FederatedSearchView</code> (<code>generics.py:30-176</code>) is a reusable tenant-scoped GET search template (pagination <code>CustomTransactionPagination</code>, page size 100 — <code>pagination.py:3-5</code>) but <strong>no current URL uses it</strong> (the search URL is an internal <code>APIView</code>).</p>
+<h3 id="a-4-exposed-endpoint-catalog">A.4 Exposed endpoint catalog</h3>
+<p>Mount <code>api/esewa/</code> (<code>config/urls.py:26</code>). Dev public base <code>https://dev-payment-api.providhy.com</code> (<code>.env:48</code>); docker base <code>http://payment:8000</code> (<code>.env:28</code>).</p>
+<p><strong>A.4.1 Public miniapp endpoints (frontend-facing, federated auth)</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method + path (local)</th>
+<th>Purpose</th>
+<th>Auth / permission</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A1</td>
+<td><code>POST api/esewa/payment/request/cancel/&lt;payment_id&gt;/</code></td>
+<td>Merchant cancels an outstanding payment request</td>
+<td><code>FederatedIdentityAuthentication</code> + <code>HasFederatedEntityPermission</code> (ESM; PR2601/approve_cancel) — <code>esewa/urls.py:8-11</code>, <code>views.py:34-72</code></td>
+</tr>
+</tbody></table>
+<p>Full dev URL: <code>https://dev-payment-api.providhy.com/api/esewa/payment/request/cancel/&lt;payment_id&gt;/</code>.</p>
+<p><strong>A.4.2 Internal service-to-service endpoints (shared-password auth)</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method + path</th>
+<th>Purpose</th>
+<th>Caller(s)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A2</td>
+<td><code>POST api/esewa/payment/request/</code></td>
+<td>Create payment-request record (requested or completed)</td>
+<td>Sales</td>
+</tr>
+<tr>
+<td>A3</td>
+<td><code>POST api/esewa/payment/request/search/</code></td>
+<td>Batch-fetch request status by settlement ids</td>
+<td>Sales</td>
+</tr>
+<tr>
+<td>A4</td>
+<td><code>POST api/esewa/payment/request/pay/&lt;payment_id&gt;/</code></td>
+<td>Mark completed/declined/cancelled after customer executes</td>
+<td>CDXE</td>
+</tr>
+<tr>
+<td>A5</td>
+<td><code>POST api/esewa/payment/request/exists/</code></td>
+<td>Active (requested) request exists for customer?</td>
+<td>CDXE, Projectmaster</td>
+</tr>
+<tr>
+<td>A6</td>
+<td><code>POST api/esewa/payment/request/statistics/</code></td>
+<td>Aggregate counts/amounts (<strong>all tenants</strong> — A.11)</td>
+<td>none found</td>
+</tr>
+<tr>
+<td>A7</td>
+<td><code>POST api/esewa/tenant-data-deletion/</code></td>
+<td>Tenant-data-deletion cascade</td>
+<td>TMS</td>
+</tr>
+</tbody></table>
+<p>All A2-A.7: <code>authentication_classes = [InternalRequestAuthentication]</code>, <code>permission_classes = [AllowAny]</code> (<code>views.py:15,78,177,209,253,288</code>); docker full URLs <code>http://payment:8000/api/esewa/...</code>.</p>
+<p><strong>A.4.3 Admin / other</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A8</td>
+<td><code>{settings.ADMIN_URL}</code></td>
+<td>Django admin; <code>EsewaPaymentRequest</code> registered — <code>esewa/admin.py:6</code>, <code>config/urls.py:27</code></td>
+</tr>
+</tbody></table>
+<p><strong>Webhooks / callbacks: none.</strong> No eSewa-initiated callback route exists (full <code>esewa/urls.py</code> is exactly the 7 paths above under the <code>api/esewa/</code> mount; no <code>epay</code>/<code>webhook</code> route — verified).</p>
+<h3 id="a-5-per-endpoint-flow-trace">A.5 Per-endpoint flow trace</h3>
+<p><strong>A.1 — <code>POST api/esewa/payment/request/cancel/&lt;payment_id&gt;/</code></strong> (<code>views.py:34-72</code>; the only federated endpoint)</p>
+<ol>
+<li><strong>Auth</strong> — <code>FederatedIdentityAuthentication.authenticate</code> (<code>auth_backends.py:31-67</code>): extract Bearer JWT -&gt; <code>POST {IAM}/api/external/token/verify/</code> forwarding <code>X-MINIAPP-TOKEN</code> (lines 41, 125-146) -&gt; local decode (line 42) -&gt; CDXE-subscription check (lines 55-56) -&gt; returns <code>(user_id, tenant_id)</code>.
+Errors: no token -&gt; 401 &quot;Invalid token.&quot; (lines 39-40); IAM connect timeout -&gt; 503 (lines 58-64); any other -&gt; 401 (lines 66-67).</li>
+<li><strong>Permission</strong> — <code>HasFederatedEntityPermission</code> (A.3); non-root -&gt; IAM permission lookup; failure -&gt; 403.</li>
+<li><strong>Lookup</strong> — <code>EsewaPaymentRequest.objects.get(payment=payment_id, tenant_id=request.auth)</code> (<code>views.py:41-45,49</code>); missing -&gt; <strong>404</strong> (lines 51-55).</li>
+<li><strong>Validate</strong> — <code>EsewaPaymentRequestPaySerializer</code> (<code>views.py:57-68</code>): <code>validate()</code> (<code>serializers.py:188-214</code>) whitelists status; <code>validate_cancel_payment</code> requires current status <code>requested</code> (<code>serializers.py:176-179</code>), else 400 &quot;Only requested payment requests can be processed.&quot;</li>
+<li><strong>Settle propagation</strong> — <code>update()</code> (<code>serializers.py:216-228</code>): <code>helpers.initiate_transaction_settlement(payment=instance.payment, tenant_id, payment_status=&quot;cancelled&quot;, description)</code> -&gt; <code>async_func.ainitiate_transaction_settlement</code> <strong>sync</strong> <code>POST {SALES}api/miniapp/payment/request/settle/</code> with <code>{password, payment, status, provider_code, description}</code> (httpx, 30 s timeout — <code>dashboard/async_func.py:111-144</code>); client error -&gt; 400 (async_func.py:136-138), server error -&gt; 503 (async_func.py:140-143).</li>
+<li><strong>Persist</strong> — <code>super().update</code> sets <code>status=&quot;cancelled&quot;</code> (<code>serializers.py:228</code>).</li>
+<li><strong>Response</strong> — 200 <code>{&quot;message&quot;: &quot;Payment request cancelled successfully.&quot;}</code> (<code>views.py:69-72</code>).</li>
+</ol>
+<p>DB: 1 UPDATE. Outbound: IAM x2 (unless root), Sales x1 (sync).</p>
+<p><strong>A.2 — <code>POST api/esewa/payment/request/</code></strong> (<code>views.py:13-31</code>)</p>
+<ol>
+<li>Internal auth; body <code>{password, tenant_id, external_identifier, provider_code, initiator?, payment_request_data: {customer, payment, amount, status?, transaction_id?}}</code>.</li>
+<li>Context <code>{tenant_id, external_identifier, provider_code, initiator: data.get(&quot;initiator&quot;,&quot;merchant&quot;)}</code> (<code>views.py:19-24</code>).</li>
+<li><code>EsewaPaymentRequestSerializer</code> (<code>serializers.py:16-102</code>): <code>amount</code> &gt; 0 (lines 16-20); context keys required (lines 54-57); <code>initiator=&quot;customer&quot;</code> -&gt; <code>transaction_id</code> required when status <code>completed</code> + duplicate check (lines 60-80); <code>initiator=&quot;merchant&quot;</code> -&gt; if status <code>completed</code> the settle call in step 5 must succeed or ValidationError (lines 82-102).</li>
+<li><strong>Create</strong> — <code>EsewaPaymentRequest.objects.create(tenant_id, initiated_by=external_identifier, ...)</code> (<code>serializers.py:82-102</code>); <code>unique_id</code> auto <code>ESW-YYYYMMDD-&lt;8hex&gt;-&lt;6hex&gt;</code> (<code>models.py:31-43</code>, <code>helpers.py:75-78</code>).</li>
+<li><strong>Settle (conditional)</strong> — status <code>completed</code> + <code>initiator=&quot;merchant&quot;</code> -&gt; <code>POST {SALES}api/miniapp/payment/request/settle/</code> (same error mapping as A.1 step 5).</li>
+<li><strong>Response</strong> — 200 serializer data incl. <code>payment_details: {tenant_id, paid_to}</code> (<code>views.py:25-30</code>, <code>serializers.py:42-48</code>).</li>
+</ol>
+<p>DB: 1 INSERT (<code>@transaction.atomic</code>, <code>views.py:16</code>). Errors: 400 validation, 401 bad password (<code>exception.py:4-7</code>), 400/503 Sales settle.</p>
+<p><strong>A.3 — <code>POST api/esewa/payment/request/search/</code></strong> (<code>views.py:75-141</code>)</p>
+<ol>
+<li>Internal auth; body <code>{password, tenant_id, provider_code, external_identifier, payment_id: [ids], method: &quot;all&quot;|&quot;manual&quot;|&lt;status&gt;}</code>.</li>
+<li>Lookup <code>tenant_id__in=..., payment__in=...</code> (<code>views.py:94-99</code>).</li>
+<li><code>method</code> must be in <code>EsewaPaymentRequestChoices.values</code> or <code>[&quot;all&quot;,&quot;manual&quot;]</code> else 400 (lines 119-123).</li>
+<li>Response: dict keyed by <code>payment</code> (settlement) id; only records with <code>status == method</code> (all when <code>method=&quot;all&quot;</code>); fields limited to <code>id, payment, unique_id, status, transaction_id, initiated_by</code> (lines 84-92, 136-141). Stray <code>print</code> at line 124.</li>
+</ol>
+<p>DB: 1 SELECT. No outbound.</p>
+<p><strong>A.4 — <code>POST api/esewa/payment/request/pay/&lt;payment_id&gt;/</code></strong> (<code>views.py:175-204</code>)</p>
+<p>Caller: CDXE <code>execute_miniapp_payment</code> (<code>CDXE-REBOOT/dashboard/helpers.py:612-636</code>) sending <code>{password, tenant_id, connected_merchants: [merchant tenant ids], external_identifier, provider_code, status: completed|declined|cancelled, transaction_id?, description?}</code>.</p>
+<ol>
+<li>Internal auth.</li>
+<li>Lookup <code>payment=payment_id, customer__external_identifier=external_identifier, tenant_id__in=connected_merchants, status=requested</code> (<code>views.py:179-190</code>); missing -&gt; 404. <strong><code>payment_id</code> is the Sales settlement id stored in the <code>payment</code> field, not <code>EsewaPaymentRequest.id</code></strong> (see A.11).</li>
+<li><code>validate()</code> (<code>serializers.py:188-214</code>): <code>completed</code>/<code>declined</code> require instance status <code>requested</code> <strong>and</strong> caller tenant in <code>connected_merchants</code> (<code>validate_customer_payment</code>, lines 161-174); <code>completed</code> requires <code>transaction_id</code> + duplicate check (lines 181-186).</li>
+<li><code>update()</code> (lines 216-228): for <code>completed</code> stores <code>transaction_id</code>; always calls <strong>Sales settle</strong> with the new status; saves status.</li>
+<li>Response: 200 serializer data.</li>
+</ol>
+<p>DB: 1 UPDATE. Outbound: Sales x1 (sync). Errors: 400 (&quot;Only requested payment requests can be processed.&quot;, &quot;Invalid operation: Merchant not connected to the customer.&quot;, &quot;Transaction id is required for completed payments.&quot;, &quot;Duplicate transaction id found.&quot;), 404, 400/503 Sales.</p>
+<p><strong>A.5 — <code>POST api/esewa/payment/request/exists/</code></strong> (<code>views.py:207-235</code>)</p>
+<ol>
+<li>Internal auth; body <code>{password, tenant_id, customer_identifier, provider_code}</code>.</li>
+<li>Filter <code>tenant_id, customer__external_identifier=..., status=requested</code> (lines 218-222).</li>
+<li>200 <code>{exists: true, total_amount: ...}</code> when found, else 404 <code>{exists: false, total_amount: 0}</code> (lines 223-235).</li>
+</ol>
+<p>Callers: CDXE connection-terminate guard (<code>CDXE-REBOOT/miniapp/views.py:269</code>); Projectmaster miniapp customer flow (<code>ERP-Projectmaster/miniapp/views.py:161</code>).</p>
+<p><strong>A.6 — <code>POST api/esewa/payment/request/statistics/</code></strong> (<code>views.py:251-284</code>)</p>
+<ol>
+<li>Internal auth (<code>tenant_id</code> received but <strong>not used for filtering</strong>).</li>
+<li>Aggregates <strong>all tenants</strong>: <code>total_requests</code>, <code>total_amount</code>, <code>failed_requests</code> (status <code>failed</code>, lines 257-258), <code>pending_payment_requests</code> (requested), <code>completed_payment_requests</code> + <code>_amount</code> (lines 255-283).</li>
+<li><ol start="200">
+<li>No caller found in the traced repos (A.11).</li>
+</ol>
+</li>
+</ol>
+<p><strong>A.7 — <code>POST api/esewa/tenant-data-deletion/</code></strong> (<code>views.py:287-298</code>)</p>
+<ol>
+<li>Internal auth (<code>tenant_id</code> from body).</li>
+<li><code>remove_all</code> flag: falsy -&gt; delete rows for <code>tenant_id</code>; <strong>truthy -&gt; Q() deletes every row of every tenant</strong> (lines 291-294).</li>
+<li>200 <code>{&quot;message&quot;: &quot;Deleted N records for tenant X.&quot;}</code>.</li>
+</ol>
+<p>Caller: TMS cascade <code>PAYMENT_DELETE</code> (<code>TMS-service/dashboard/helpers.py:192</code>).</p>
+<h3 id="a-6-data-model">A.6 Data model</h3>
+<p>Single business model <code>EsewaPaymentRequest</code> (<code>esewa/models.py:5-52</code>) on abstract <code>TimeModel</code> (id BigAuto, created/modified — <code>dashboard/models.py:39-51</code>). Final table <code>esewa_esewapaymentrequest</code> (<code>AlterModelTable table=None</code> in <code>migrations/0002_...py:46-49</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tenant_id</code></td>
+<td>Char(255)</td>
+<td>Tenant of the request creator; removed then re-added same day (migrations 0005/0006, 2025-12-29)</td>
+</tr>
+<tr>
+<td><code>initiated_by</code></td>
+<td>Char(255)</td>
+<td>external_identifier of creator; was <code>esewa_identifier</code> in 0001, renamed in 0002</td>
+</tr>
+<tr>
+<td><code>paid_to</code></td>
+<td>Char(255, default &quot;self&quot;)</td>
+<td>Added in 0003; <strong>never written by code</strong> — only surfaced in <code>payment_details</code> (<code>serializers.py:44-48</code>)</td>
+</tr>
+<tr>
+<td><code>unique_id</code></td>
+<td>Char(255)</td>
+<td>Auto <code>ESW-YYYYMMDD-&lt;8hex&gt;-&lt;6hex&gt;</code> (<code>models.py:31-43</code>, <code>helpers.py:75-78</code>)</td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td>JSONField(null)</td>
+<td>Customer payload (id, external_identifier, ...) passed by caller</td>
+</tr>
+<tr>
+<td><code>transaction_id</code></td>
+<td>Char(100), null, unique-when-not-null (<code>uniq_transaction_id_when_not_null</code>, migration 0004)</td>
+<td>Wallet transaction id, set on completed payment</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Decimal(10,2)</td>
+<td>Requested amount</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Char(50), default <code>requested</code></td>
+<td>requested/completed/declined/failed/cancelled (<code>choices.py:472-477</code>)</td>
+</tr>
+<tr>
+<td><code>payment</code></td>
+<td>Char(100)</td>
+<td><strong>Logical FK to Sales credit-settlement id</strong> (comment <code>models.py:24-26</code>); key for A.3/A.4 lookups and the Sales settle call</td>
+</tr>
+</tbody></table>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    ESEWA_PAYMENT_REQUEST {
+        bigint id PK
+        char tenant_id
+        char initiated_by
+        char paid_to
+        char unique_id
+        json customer
+        char transaction_id UK
+        decimal amount
+        char status
+        char payment &quot;Sales settlement id (logical FK)&quot;
+        datetime created
+        datetime modified
+    }
+    ESEWA_PAYMENT_REQUEST ||--o| SALES_CREDIT_SETTLEMENT : &quot;payment = settlement id (cross-DB, not enforced)&quot;
+</pre></div>
+<p>(No fields for <code>SALES_CREDIT_SETTLEMENT</code> — that model lives in the Sales repo and is referenced only by string id.)</p>
+<p>Migration history: 0001 initial (esewa_identifier, currency, unique transaction_id, table &quot;TimeModel&quot;) -&gt; 0002 rename initiated_by, drop currency, add customer JSON + cancelled status, table -&gt; default name -&gt; 0003 add paid_to -&gt; 0004 nullable transaction_id + conditional unique -&gt; 0005 drop tenant_id -&gt; 0006 re-add tenant_id.</p>
+<hr>
+<hr>
+</section><section class="sec" data-title="Part B — miniapp-esewa frontend"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="part-b-miniapp-esewa-frontend">Part B — miniapp-esewa frontend</h2>
+<h3 id="b-1-business-overview">B.1 Business overview</h3>
+<p>miniapp-esewa (&quot;Lenden&quot;) is a <strong>wallet/credit-management miniapp that runs inside the eSewa mobile app</strong> as a WebView, for eSewa merchants (entity type <code>ESM</code>) and eSewa users (<code>ESU</code>). The merchant experience (what this build wires up): verify customers as eSewa users via the native bridge, establish connections, record credit (dues) with terms, request payment through the customer&#39;s eSewa wallet, settle credits manually, review statements and transactions, manage disputes (help &amp; support), notifications, credit-limit settings, and pay for subscription upgrades. All business data (customers, credits, settlements, connections, disputes) lives in the ERP backends — this app holds <strong>no data itself</strong> (auth session only, in <code>sessionStorage</code>).</p>
+<h3 id="b-2-technical-overview">B.2 Technical overview</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Fact</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Framework</td>
+<td>Next.js <code>^16.3.5</code> (App Router) + React <code>^19.2</code> + TypeScript</td>
+<td><code>package.json:27,29</code></td>
+</tr>
+<tr>
+<td>Route groups</td>
+<td><code>(open)</code> (public: <code>/, /about, /forms, /terms-conditions</code>) and <code>(protected)</code> (auth-guarded, <code>app/(protected)/layout.tsx:22-28</code> redirects to <code>terms-conditions</code> when not authenticated)</td>
+<td><code>app/ tree</code></td>
+</tr>
+<tr>
+<td>Pages</td>
+<td>all client components, dynamically imported with <code>ssr: false</code></td>
+<td>every <code>app/**/page.tsx</code> (e.g. <code>app/page.tsx:5</code>)</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>single axios instance, 60 s timeout, <code>withCredentials: true</code></td>
+<td><code>src/services/api.ts:6-32</code></td>
+</tr>
+<tr>
+<td>Auth refresh</td>
+<td><code>axios-auth-refresh</code> interceptor -&gt; IAM <code>external/token/refresh/</code></td>
+<td><code>api.ts:67-111</code></td>
+</tr>
+<tr>
+<td>TOTP</td>
+<td><code>speakeasy</code> <strong>server action</strong> (<code>&#39;use server&#39;</code>), secret = <code>CUSTOM_KEY</code> env, <strong>step 20</strong></td>
+<td><code>src/actions/otp.ts:5-24</code></td>
+</tr>
+<tr>
+<td>Crypto</td>
+<td><code>crypto-js</code> AES-256-ECB decryption of the eSewa merchant blob</td>
+<td><code>src/shared/utils/app.ts:18-31</code></td>
+</tr>
+<tr>
+<td>Native bridge</td>
+<td><code>esewa-ui-library</code> <code>^1.10.12</code> (<code>requestFromMiniApp</code> + callback enums) for INIT_APP / MERCHANT_DETAIL / VALIDATE_USER / PAYMENT_REQUEST / CLOSE_APP</td>
+<td><code>package.json:26</code>, <code>src/shared/utils/es-utils.ts:9-54</code></td>
+</tr>
+<tr>
+<td>State</td>
+<td>React contexts: auth (<code>sessionStorage</code> &quot;user&quot;), config (currency + credit settings), toasts, dialog stack, tour</td>
+<td><code>src/context/auth-context.tsx:52-99</code>, <code>src/context/config-context.tsx:29-50</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>vitest config present; <code>src/test/</code></td>
+<td><code>package.json:15-16</code></td>
+</tr>
+<tr>
+<td>Base URLs</td>
+<td>built from <code>NEXT_PUBLIC_*</code> env: <code>{HOST}_BASE_URL = &quot;https://&quot; + HOST + DOMAIN</code> where <code>DOMAIN = &quot;-api.providhy.com/api/&quot;</code></td>
+<td><code>src/shared/constants.ts:1-44</code>, <code>.env.example:1-23</code></td>
+</tr>
+</tbody></table>
+<p>Dev base URLs used below (from <code>.env.example</code>): IAM <code>https://dev-iam-api.providhy.com/api/</code>, TMS <code>https://dev-tms-api.providhy.com/api/</code>, PACKAGE <code>https://dev-package-api.providhy.com/api/</code>, CDXE <code>https://dev-cdxe-api.providhy.com/api/</code>, SALES <code>https://dev-sales-api.providhy.com/api/</code>, PROJECTMASTER <code>https://dev-projectmaster-api.providhy.com/api/</code>, EVENT <code>https://dev-events-api.providhy.com/api/</code>, CONFIGURATION <code>https://dev-configuration-api.providhy.com/api/</code>, LANDING <code>https://dev-landing-api.providhy.com/api/</code>, PAYMENT <code>https://dev-payment-api.providhy.com/api/</code>.</p>
+<h3 id="b-3-authentication-login-flow-detail">B.3 Authentication &amp; login flow (detail)</h3>
+<p>The miniapp has <strong>no username/password form</strong> — identity is delegated to the host eSewa app through the WebView bridge.</p>
+<ol>
+<li><strong>Root page</strong> (<code>app/page.tsx:5</code> -&gt; <code>src/views/home/index.tsx</code>): on mount, sends bridge request <code>INIT_APP</code> with <code>merchant_identifier = APP_MERCHANT_IDENTIFIER</code> (server action <code>src/actions/identifier.ts:3-7</code>; call at <code>home/index.tsx:194-205</code>). The eSewa app returns <code>{token, scope}</code>; the <strong>eSewa app token</strong> is stored in <code>sessionStorage[&quot;miniAppAuthToken&quot;]</code> (+ <code>&quot;miniAppAuthScope&quot;</code>) (<code>home/index.tsx:163-172</code>).</li>
+<li><strong>Merchant details</strong> — bridge request <code>MERCHANT_DETAIL</code> with that token (<code>home/index.tsx:58-67</code>) returns a JSON blob containing <code>encryptedData</code> (base64) + optional email; stored in <code>sessionStorage[&quot;miniAppUserDetails&quot;]</code> (<code>home/index.tsx:73-77</code>).</li>
+<li><strong>Decrypt</strong> — <code>decryptAES256ECB(encryptedData, cropAndReverse(token))</code> (<code>home/index.tsx:89-96</code>): AES-256-ECB, PKCS7, key = <strong>first 32 chars of the eSewa token, reversed</strong> (<code>src/shared/utils/app.ts:18-31</code>). The decrypted JSON&#39;s <code>id</code> is the merchant&#39;s eSewa identifier (→ <code>external_identifier</code>).</li>
+<li><strong>Login</strong> — <code>POST {IAM}external/token/</code> with <code>{token: &lt;eSewa token&gt;, external_identifier: &lt;decrypted id&gt;, encrypted_text: &lt;raw encryptedData blob&gt;, provider_code: &quot;esewa&quot;}</code> (<code>home/index.tsx:86-100</code>, body type <code>auth.ts:32-37</code>). So: <code>token</code> is the <strong>eSewa app token</strong> (not a Providhy JWT); <code>encrypted_text</code> is passed through to IAM, which decrypts/verifies it server-side (IAM-Backend domain). Response <code>{access, refresh, payload{tenant_id, user_type ESM|ESU, subscribed_services, product_code, tenant_root, username, ...}}</code> (<code>auth.ts:74-97</code>).</li>
+<li><strong>Session store</strong> — <code>login()</code> writes <code>sessionStorage[&quot;user&quot;]</code> = <code>{id, name, email, accessToken, refreshToken, entity_type, payload}</code> and routes to <code>/dashboard</code> (<code>src/context/auth-context.tsx:84-94</code>). On failure (not registered) the app redirects to <code>/terms-conditions</code> (<code>home/index.tsx:129-137, 236-240</code>).</li>
+<li><strong>Register (accept terms)</strong> — <code>/terms-conditions</code> (<code>src/views/terms-conditions/index.tsx</code>): fetches terms text from <code>GET {LANDING}website/terms/web/?type=esewa_merchant_terms</code> (<code>profile.ts:146-161</code>; the axios interceptor skips the TOTP header for this URL — <code>api.ts:47-49</code>). On accept: bridge <code>GET_PRODUCT</code> for the product code (index.tsx:78-104) then <code>POST {IAM}external/register/</code> with <code>{token, provider_code, entity_type: &quot;ESM&quot;, product_code, encrypted_text, external_identifier, user_details: {username, contact, full_name}}</code> (index.tsx:252-330, body type <code>auth.ts:18-30</code>) → then the same <code>login()</code>.</li>
+<li><strong>Per-request headers</strong> — axios request interceptor (<code>api.ts:34-56</code>): <code>Authorization: Bearer &lt;user.accessToken&gt;</code> (<code>api.ts:8-26</code>) <strong>plus</strong> <code>X-MINIAPP-TOKEN: &lt;TOTP&gt;</code> where the TOTP is computed by the <strong>Next.js server</strong> via the <code>getAppOtp</code> server action (<code>api.ts:51-53</code> → <code>otp.ts:5-24</code>; speakeasy, base32 <code>CUSTOM_KEY</code>, <strong>step 20</strong>). Skipped for <code>website/terms/web</code> (api.ts:47-49).</li>
+<li><strong>Refresh</strong> — on 401, <code>axios-auth-refresh</code> calls <code>POST {IAM}external/token/refresh/</code> <code>{refresh}</code> (<code>api.ts:68-109</code>), updates <code>sessionStorage[&quot;user&quot;]</code>, retries; on failure clears the session and redirects to <code>/</code>.</li>
+<li>Backends validate <code>X-MINIAPP-TOKEN</code> by forwarding it to IAM <code>/api/external/token/verify/</code> (e.g. Payment-Service <code>dashboard/auth_backends.py:37-41,125-146</code>).</li>
+</ol>
+<p>Note: <strong><code>(open)/forms</code> is not a login page</strong> — it is a form-component demo (<code>src/views/forms/index.tsx:17-77</code>: name/email/bio/colors/country/datepicker). Login happens at <code>/</code> (home).</p>
+<h3 id="b-4-page-inventory-21-routes">B.4 Page inventory (21 routes)</h3>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>View</th>
+<th>What it does (business)</th>
+<th>Request functions used</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td><code>views/home/index.tsx</code></td>
+<td>Auto-launch: INIT_APP + MERCHANT_DETAIL bridge → IAM login; full-page eSewa loading screen</td>
+<td><code>loginRequest</code></td>
+</tr>
+<tr>
+<td><code>/about</code> (open)</td>
+<td><code>views/about/index.tsx</code></td>
+<td>Static UI-component showcase (carousel, dialogs, pickers) — no API calls</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>/forms</code> (open)</td>
+<td><code>views/forms/index.tsx</code></td>
+<td>Demo form page (validation showcase) — no API calls</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>/terms-conditions</code> (open)</td>
+<td><code>views/terms-conditions/index.tsx</code></td>
+<td>Terms acceptance + IAM register + login; redirect target for unauthenticated/logout; dev <code>?test</code> login/register dialogs (index.tsx:61, 121-139)</td>
+<td><code>getTermsConditionContent</code>, <code>agreeTermsAndConditions</code>, <code>loginRequest</code></td>
+</tr>
+<tr>
+<td><code>/dashboard</code></td>
+<td><code>views/dashboard/index.tsx</code></td>
+<td>Home: credit overview, credit list, transaction list, product tour, add-credit modal, add-customer modal, request-payment quick action, cancel-request modal</td>
+<td><code>getCreditOverview</code> (:213), <code>getCredits</code> (:184), <code>getTransactions</code> (:200), <code>getCreditDetails</code> (:219), <code>requestPayment</code> (:227, :854), <code>getTourStatus</code> (:234), <code>updateTourStatus</code> (:230)</td>
+</tr>
+<tr>
+<td><code>/customers</code></td>
+<td><code>views/customers/index.tsx</code></td>
+<td>Customer list (search, connection status chips)</td>
+<td><code>getCustomers</code> (:5)</td>
+</tr>
+<tr>
+<td><code>/customers/[id]</code></td>
+<td><code>views/customers/details.tsx</code></td>
+<td>Customer detail: connection create/cancel, credit list, transactions, add-credit modal</td>
+<td><code>getCustomerDetails</code> (:93), <code>getTransactions</code> (:112), <code>requestConection</code> (:157)</td>
+</tr>
+<tr>
+<td><code>/customers/[id]/credit-log</code></td>
+<td><code>views/customers/credit-log.tsx</code></td>
+<td>Credit ledger (overview + paged list) for one customer</td>
+<td><code>getCreditDetailLogOverview</code> (:87), <code>getCreditDetailLogList</code> (imports :5-8)</td>
+</tr>
+<tr>
+<td><code>/credit-history</code></td>
+<td><code>views/credit/credit-history.tsx</code></td>
+<td>Merchant credit entries: view/edit/delete, manual settle, manage allocations, request payment</td>
+<td><code>getCredits</code> (:11), <code>getCreditDetails</code> (:10, :369), <code>requestPayment</code> (:27, :382, :633), <code>getCustomers</code> (:26)</td>
+</tr>
+<tr>
+<td><code>/request-payment</code></td>
+<td><code>views/request-payment/index.tsx</code> -&gt; <code>views/payment/request-payment-form.tsx</code></td>
+<td>Standalone payment-request form (customer select, amount, remarks)</td>
+<td><code>getCustomerDetails</code> (:145), <code>getCustomers</code> (imports :11), <code>requestPayment</code> (:12, :177, :314)</td>
+</tr>
+<tr>
+<td><code>/statement</code></td>
+<td><code>views/statement/index.tsx</code></td>
+<td>Statement detail for <code>?transactionId=</code> (settlement + payment_request_details incl. status from Payment-Service)</td>
+<td><code>getMerchantTransactionDetails</code> (:9, :48)</td>
+</tr>
+<tr>
+<td><code>/transaction-history</code></td>
+<td><code>views/transaction-history/index.tsx</code></td>
+<td>Transaction (settlement) list with search + customer filter</td>
+<td><code>getTransactions</code> (:13), <code>getCustomers</code> (:25)</td>
+</tr>
+<tr>
+<td><code>/notifications</code></td>
+<td><code>views/notifications/index.tsx</code></td>
+<td>Paged notification list</td>
+<td><code>getNotifications</code> (:3)</td>
+</tr>
+<tr>
+<td><code>/profile</code></td>
+<td><code>views/profile/index.tsx</code></td>
+<td>Profile header + customer list + upgrade entry</td>
+<td><code>getCustomers</code> (:74)</td>
+</tr>
+<tr>
+<td><code>/profile/credit-management</code></td>
+<td><code>views/profile/credit-management/index.tsx</code></td>
+<td>Credit limit/period settings</td>
+<td><code>updateCreditManagementSettings</code> (:7, :71) + <code>getCreditmanagementSettings</code> via ConfigProvider</td>
+</tr>
+<tr>
+<td><code>/profile/notification-settings</code></td>
+<td><code>views/profile/notification-settings/index.tsx</code></td>
+<td>Notification preferences toggles</td>
+<td><code>getNotificationSettings</code> (:57), <code>updateNotificationtSettings</code> (:77)</td>
+</tr>
+<tr>
+<td><code>/profile/upgrade</code></td>
+<td><code>views/profile/upgrade/index.tsx</code></td>
+<td>Subscription upgrade (see C.4)</td>
+<td><code>getModules</code> (:66), <code>getPackageDetails</code> (:84), <code>initiateSubscriptionPayment</code> (:92), <code>verifySubscriptionPayment</code> (:96)</td>
+</tr>
+<tr>
+<td><code>/profile/faqs</code></td>
+<td><code>views/profile/faqs/index.tsx</code></td>
+<td>Static FAQ content (no API)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>/profile/help-support</code></td>
+<td><code>views/profile/help-support/index.tsx</code></td>
+<td>Disputes list (raised issues), review/resolve, correct credit, settle</td>
+<td><code>getDisputes</code> (:63), <code>deleteDisputeFromMerchant</code> (:70-72), <code>getDisputeDetails</code> (via <code>raised-issue-review-credit.tsx:50</code>), plus credit form/settle modals</td>
+</tr>
+<tr>
+<td><code>/profile/privacy-policy</code></td>
+<td><code>views/profile/privacy-policy/index.tsx</code></td>
+<td>Static policy content</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>/profile/about-us</code></td>
+<td><code>views/profile/about-us/index.tsx</code></td>
+<td>Static &quot;about Lenden&quot; content</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3 id="b-5-frontend-request-function-catalog-complete-frontend-backend-mapping">B.5 Frontend request function catalog (complete frontend -&gt; backend mapping)</h3>
+<p>62 exported request functions across 10 modules (<code>src/services/requests/*</code>; <code>index.ts</code> re-exports the auth module). Host abbreviations per B.2. &quot;Used by&quot; = current UI wiring (verified by grep); &quot;unused&quot; = exported but called by no page/component in this build.</p>
+<p><strong>auth.ts</strong> (base IAM unless noted)</p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agreeTermsAndConditions</code> (:99-112)</td>
+<td>POST IAM <code>external/register/</code></td>
+<td><code>{token, provider_code, entity_type, external_identifier, product_code?, encrypted_text, user_details{username, contact, full_name}}</code></td>
+<td>terms-conditions</td>
+</tr>
+<tr>
+<td><code>loginRequest</code> (:114-124)</td>
+<td>POST IAM <code>external/token/</code></td>
+<td><code>{token, external_identifier, encrypted_text, provider_code}</code></td>
+<td>home, terms-conditions, test dialogs</td>
+</tr>
+<tr>
+<td><code>refreshTokenRequest</code> (:126-136)</td>
+<td>POST IAM <code>external/token/refresh/</code></td>
+<td><code>{refresh}</code></td>
+<td>api.ts 401 interceptor (:82-86)</td>
+</tr>
+<tr>
+<td><code>getSubscription</code> (:161-170)</td>
+<td>GET TMS <code>miniapp/subscriptions/status/</code></td>
+<td>—</td>
+<td>AuthProvider auto (:74-82), upgrade</td>
+</tr>
+<tr>
+<td><code>initiateSubscriptionPayment</code> (:176-193)</td>
+<td>POST TMS <code>miniapp/subscriptions/initiate/</code></td>
+<td><code>{payment_period, module_id?, subscription_id?}</code></td>
+<td>upgrade (:204)</td>
+</tr>
+<tr>
+<td><code>verifySubscriptionPayment</code> (:195-207)</td>
+<td>POST TMS <code>miniapp/subscriptions/verify/</code></td>
+<td><code>{transaction_id}</code></td>
+<td>upgrade (:218)</td>
+</tr>
+<tr>
+<td><code>getModules</code> (:213-223)</td>
+<td>GET PACKAGE <code>miniapp/modules/</code></td>
+<td><code>?service=PR2600</code></td>
+<td>upgrade (:66)</td>
+</tr>
+<tr>
+<td><code>getPackageDetails</code> (:242-255)</td>
+<td>GET PACKAGE <code>miniapp/modules/{id}/</code></td>
+<td><code>?service=PR2600&amp;payment_period=...</code></td>
+<td>upgrade (:84)</td>
+</tr>
+</tbody></table>
+<p><strong>connections.ts</strong> (CDXE)</p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>acceptRejectConnection</code> (:1-30)</td>
+<td>POST CDXE <code>miniapp/approve-reject-connection/&lt;id&gt;/</code></td>
+<td>`{status: &quot;approved&quot;</td>
+<td>&quot;declined&quot;}`</td>
+</tr>
+</tbody></table>
+<p><strong>credit.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>addCredit</code> (:203-219)</td>
+<td>POST SALES <code>miniapp/credit/create/</code></td>
+<td>multipart FormData</td>
+<td>credit form (:316)</td>
+</tr>
+<tr>
+<td><code>editCredit</code> (:221-239)</td>
+<td>POST SALES <code>miniapp/credit/detail/&lt;id&gt;/</code></td>
+<td>multipart FormData</td>
+<td>credit form (:335)</td>
+</tr>
+<tr>
+<td><code>getCreditDetails</code> (:241-245)</td>
+<td>GET SALES <code>miniapp/credit/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>dashboard, credit-history, credit form, success/review modals</td>
+</tr>
+<tr>
+<td><code>getCreditDetailsForCustomer</code> (:247-254)</td>
+<td>GET CDXE <code>miniapp/credit/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCredits</code> (:256-266)</td>
+<td>GET SALES <code>miniapp/credit/search/</code></td>
+<td><code>{q, page, count, customer_id?}</code></td>
+<td>dashboard (:184), credit-history</td>
+</tr>
+<tr>
+<td><code>settleCredit</code> (:268-279)</td>
+<td>POST SALES <code>miniapp/settlement/manual/create/</code></td>
+<td><code>{customer{id, entity_type}, items[{credit, allocated_amount}], total_allocated_amount, description, payment_method}</code></td>
+<td>settle-credit-modal (:112), settle-credit-for-customer (:132)</td>
+</tr>
+<tr>
+<td><code>getCreditOverview</code> (:287-292)</td>
+<td>GET SALES <code>miniapp/credit/overview/</code></td>
+<td>—</td>
+<td>dashboard (:213)</td>
+</tr>
+<tr>
+<td><code>getCreditOverviewForCustomer</code> (:294-300)</td>
+<td>GET CDXE <code>miniapp/credit/overview/</code></td>
+<td>—</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCreditsForCustomer</code> (:302-311)</td>
+<td>GET CDXE <code>miniapp/get-credit/</code></td>
+<td>params</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCreditDetailLogOverview</code> (:313-325)</td>
+<td>GET SALES <code>miniapp/credit/ledger/overview/</code></td>
+<td><code>{customer_id, from_date, to_date}</code></td>
+<td>customers/[id]/credit-log (:87)</td>
+</tr>
+<tr>
+<td><code>getCreditDetailLogOverviewForCustomer</code> (:327-339)</td>
+<td>GET CDXE <code>miniapp/credit/ledger/overview/</code></td>
+<td><code>{connection_id, from_date, to_date}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCreditDetailLogList</code> (:341-353)</td>
+<td>GET SALES <code>miniapp/credit/ledger/</code></td>
+<td><code>{customer_id, from_date, to_date}</code></td>
+<td>customers/[id]/credit-log</td>
+</tr>
+<tr>
+<td><code>getCreditDetailLogListForCustomer</code> (:355-367)</td>
+<td>GET CDXE <code>miniapp/credit/ledger/</code></td>
+<td><code>{connection_id, from_date, to_date}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCreditDetailLogForCustomerList</code> (:369-382)</td>
+<td>GET SALES <code>miniapp/credit/ledger/&lt;id&gt;/</code></td>
+<td><code>{customer_id, from_date, to_date, id}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>settleCreditCustomerInitiated</code> (:384-400)</td>
+<td>POST CDXE <code>miniapp/credit/pay/</code></td>
+<td><code>{merchant_identifier, total_allocated_amount, items}</code></td>
+<td>unused (customer-side)</td>
+</tr>
+<tr>
+<td><code>customerInitiatedPaymentPay</code> (:402-416)</td>
+<td>POST CDXE <code>miniapp/credit/pay/</code></td>
+<td><code>{merchant_identifier, total_allocated_amount}</code></td>
+<td>unused (customer-side)</td>
+</tr>
+<tr>
+<td><code>deleteCredit</code> (:418-428)</td>
+<td>DELETE SALES <code>miniapp/credit/detail/&lt;id&gt;/</code></td>
+<td>—</td>
+<td>delete-credit-entry modal (:85)</td>
+</tr>
+<tr>
+<td><code>getDisputes</code> (:430-440)</td>
+<td>GET SALES <code>miniapp/dispute/search/</code></td>
+<td><code>{q, page, count}</code></td>
+<td>help-support (:63)</td>
+</tr>
+<tr>
+<td><code>addDispute</code> (:442-456)</td>
+<td>POST CDXE <code>miniapp/dispute/raise/</code></td>
+<td><code>{credit, description}</code></td>
+<td>unused (raised-issue entry not wired)</td>
+</tr>
+<tr>
+<td><code>getDisputeDetails</code> (:458-463)</td>
+<td>GET SALES <code>miniapp/dispute/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>raised-issue-review-credit (:50)</td>
+</tr>
+<tr>
+<td><code>getCustomerDisputes</code> (:465-474)</td>
+<td>GET CDXE <code>miniapp/dispute/search/</code></td>
+<td>params</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCustomerDisputeDetails</code> (:476-483)</td>
+<td>GET CDXE <code>miniapp/dispute/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>deleteDispute</code> (:485-501)</td>
+<td>DELETE CDXE <code>miniapp/credit/detail/&lt;id&gt;/</code></td>
+<td><code>?dispute_status=&amp;dispute_id=</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>deleteDisputeFromMerchant</code> (:503-519)</td>
+<td>DELETE SALES <code>miniapp/credit/detail/&lt;id&gt;/</code></td>
+<td><code>?dispute_status=&amp;dispute_id=</code></td>
+<td>help-support (:70-72)</td>
+</tr>
+</tbody></table>
+<p><strong>customer.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getCustomers</code> (:82-92)</td>
+<td>GET PROJECTMASTER <code>miniapp/customer/search/</code></td>
+<td><code>{connection_status, q, page, count}</code></td>
+<td>customers, profile, transaction-history, credit form, credit-history, request-payment form</td>
+</tr>
+<tr>
+<td><code>getCustomerDetails</code> (:94-101)</td>
+<td>GET PROJECTMASTER <code>miniapp/customer/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>customers/[id], customer form, request-payment form, allocation/delete modals</td>
+</tr>
+<tr>
+<td><code>addCustomer</code> (:103-113)</td>
+<td>POST PROJECTMASTER <code>miniapp/customer/</code></td>
+<td><code>{name, mobile?, description, is_provider_user, external_identifier}</code></td>
+<td>customer form (:200, :239, :258)</td>
+</tr>
+<tr>
+<td><code>editCustomer</code> (:115-127)</td>
+<td>POST PROJECTMASTER <code>miniapp/customer/detail/&lt;id&gt;/</code></td>
+<td>same</td>
+<td>customer form (:212, :283)</td>
+</tr>
+<tr>
+<td><code>deleteCustomer</code> (:129-139)</td>
+<td>DELETE PROJECTMASTER <code>miniapp/customer/detail/&lt;id&gt;/</code></td>
+<td>—</td>
+<td>delete-customer-modal (:78)</td>
+</tr>
+<tr>
+<td><code>requestConection</code> (:141-151)</td>
+<td>POST CDXE <code>miniapp/create-connection/</code></td>
+<td><code>{receiver_identifier, description}</code></td>
+<td>customers/[id] (:157), send-connection-request modal</td>
+</tr>
+<tr>
+<td><code>cancelRequestConection</code> (:153-165)</td>
+<td>POST CDXE <code>miniapp/connection/terminate/&lt;id&gt;/</code></td>
+<td><code>{...}</code> body</td>
+<td>cancel-connection-request modal (:38)</td>
+</tr>
+</tbody></table>
+<p><strong>merchants.ts</strong> — all <strong>unused</strong> (customer-side variants)</p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getMerchants</code> (:73-83)</td>
+<td>GET CDXE <code>miniapp/connection/search/</code></td>
+<td><code>{connection_status, count, q}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getMerchantDetails</code> (:85-92)</td>
+<td>GET CDXE <code>miniapp/merchant/detail/&lt;id&gt;</code></td>
+<td>—</td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>addMerchant</code> (:94-104)</td>
+<td>POST PROJECTMASTER <code>miniapp/customer/</code></td>
+<td><code>{name, mobile, remarks}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>editMerchant</code> (:106-118)</td>
+<td>POST PROJECTMASTER <code>miniapp/customer/detail/&lt;id&gt;</code></td>
+<td><code>{name, mobile, remarks}</code></td>
+<td>unused</td>
+</tr>
+</tbody></table>
+<p><strong>notifications.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getNotifications</code> (:26-36)</td>
+<td>GET EVENT <code>notification/miniapp/list/</code></td>
+<td><code>{q, page}</code></td>
+<td>notifications page</td>
+</tr>
+</tbody></table>
+<p><strong>payment.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>requestPayment</code> (:31-42)</td>
+<td>POST <strong>CDXE</strong> <code>miniapp/payment/request/</code></td>
+<td><code>{description, customer{id, entity_type, external_identifier}, total_allocated_amount, remarks, items?[{credit, allocated_amount}]}</code></td>
+<td>dashboard (:854), credit-history (:633), request-payment form (:314)</td>
+</tr>
+<tr>
+<td><code>requestPaymentCancel</code> (:44-54)</td>
+<td>POST <strong>PAYMENT</strong> <code>esewa/payment/request/cancel/&lt;id&gt;/</code></td>
+<td>— (id in path)</td>
+<td>cancel-payment-request modal (:63)</td>
+</tr>
+</tbody></table>
+<p><strong>profile.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getCreditmanagementSettings</code> (:66-76)</td>
+<td>GET CONFIGURATION <code>service-configuration/tenant/miniapp/</code></td>
+<td><code>?configuration=master_settings</code> (or <code>credit_settings</code>)</td>
+<td>ConfigProvider (all protected pages, <code>config-context.tsx:43-50</code>), credit-management page</td>
+</tr>
+<tr>
+<td><code>updateCreditManagementSettings</code> (:78-91)</td>
+<td>POST CONFIGURATION <code>service-configuration/tenant/miniapp/detail/&lt;id&gt;/</code></td>
+<td><code>{value: {credit_limit, credit_period}}</code></td>
+<td>credit-management (:71)</td>
+</tr>
+<tr>
+<td><code>getNotificationSettings</code> (:93-103)</td>
+<td>GET EVENT <code>notification/preference/</code></td>
+<td><code>{q?}</code></td>
+<td>notification-settings (:57)</td>
+</tr>
+<tr>
+<td><code>updateNotificationtSettings</code> (:105-118)</td>
+<td>POST EVENT <code>notification/preference/&lt;id&gt;/</code></td>
+<td><code>{enabled: boolean}</code></td>
+<td>notification-settings (:77)</td>
+</tr>
+<tr>
+<td><code>getTourStatus</code> (:120-131)</td>
+<td>GET TMS <code>tenant/tour-status/miniapp/</code></td>
+<td><code>?take_tour=miniapp</code></td>
+<td>dashboard (:234)</td>
+</tr>
+<tr>
+<td><code>updateTourStatus</code> (:133-144)</td>
+<td>POST TMS <code>tenant/tour-status/miniapp/</code></td>
+<td><code>{tour_taken: &quot;miniapp&quot;}</code></td>
+<td>dashboard (:230)</td>
+</tr>
+<tr>
+<td><code>getTermsConditionContent</code> (:146-161)</td>
+<td>GET LANDING <code>website/terms/web/</code></td>
+<td><code>?type=esewa_merchant_terms</code> (no TOTP header)</td>
+<td>terms-conditions (:65)</td>
+</tr>
+</tbody></table>
+<p><strong>transactions.ts</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function (line)</th>
+<th>Method + path</th>
+<th>Body / params</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getTransactions</code> (:80-90)</td>
+<td>GET SALES <code>miniapp/settlement/search/</code></td>
+<td><code>{q, page, count}</code></td>
+<td>dashboard (:200), customers/[id] (:112), transaction-history</td>
+</tr>
+<tr>
+<td><code>getCustomersTransactions</code> (:92-102)</td>
+<td>GET CDXE <code>miniapp/settlement/search/</code></td>
+<td><code>{q, page, count}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getCustomersTransactionDetails</code> (:104-114)</td>
+<td>GET CDXE <code>miniapp/settlement/detail/&lt;id&gt;/</code></td>
+<td><code>{id}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getMerchantTransactionDetails</code> (:116-126)</td>
+<td>GET SALES <code>miniapp/settlement/detail/&lt;id&gt;/</code></td>
+<td><code>{id}</code></td>
+<td>statement (:48)</td>
+</tr>
+<tr>
+<td><code>getCustomersTransactionsForCustomer</code> (:128-138)</td>
+<td>GET CDXE <code>miniapp/settlement/search/</code></td>
+<td><code>{..., connection_id}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>payRequestedPayment</code> (:140-153)</td>
+<td>POST CDXE <code>miniapp/payment/request/pay/&lt;transaction_id&gt;/</code></td>
+<td><code>{status}</code></td>
+<td><strong>unused — see C.5 (SIGNATURE mismatch)</strong></td>
+</tr>
+<tr>
+<td><code>getCustomerConnections</code> (:155-165)</td>
+<td>GET SALES <code>miniapp/connection/search/</code></td>
+<td><code>{q, page, count}</code></td>
+<td>unused</td>
+</tr>
+<tr>
+<td><code>getMerchantTransactionList</code> (:167-174)</td>
+<td>GET PROJECTMASTER <code>miniapp/settlement/search/&lt;id&gt;/</code></td>
+<td>—</td>
+<td>unused; <strong>no such route exists in Projectmaster</strong> (<code>ERP-Projectmaster/miniapp/urls.py:5-32</code>) — dead URL</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="&lt;strong&gt;Totals:&lt;/strong&gt; 62 functions — 8 (auth) + 1 (connections) + 24 (credit) + 7 (customer) + 4 (merchants) + 1 (notifications) + 2 (payment) + 7 (profile) + 8 (transactions). 39 are wired into the current merchant UI; 23 are exported but unused (customer-side/ESU variants or dead URLs)."><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="strong-totals-strong-62-functions-8-auth-1-connections-24-credit-7-customer-4-merchants-1-notifications-2-payment-7-profile-8-transactions-39-are-wired-into-the-current-merchant-ui-23-are-exported-but-unused-customer-side-esu-variants-or-dead-urls"><strong>Totals:</strong> 62 functions — 8 (auth) + 1 (connections) + 24 (credit) + 7 (customer) + 4 (merchants) + 1 (notifications) + 2 (payment) + 7 (profile) + 8 (transactions). 39 are wired into the current merchant UI; 23 are exported but unused (customer-side/ESU variants or dead URLs).</h2>
+</section><section class="sec" data-title="Part C — Cross-cutting flows, call maps, verdicts"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="part-c-cross-cutting-flows-call-maps-verdicts">Part C — Cross-cutting flows, call maps, verdicts</h2>
+<h3 id="c-1-key-sequence-diagrams">C.1 Key sequence diagrams</h3>
+<h4>7.1 Login + first-time registration (merchant onboarding)</h4>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant APP as eSewa native app
+    participant FE as miniapp-esewa (WebView)
+    participant IAM as IAM service
+    participant LANDING as Landing service
+    FE-&gt;&gt;APP: bridge INIT_APP (merchant_identifier)
+    APP--&gt;&gt;FE: token, scope (stored in sessionStorage)
+    FE-&gt;&gt;APP: bridge MERCHANT_DETAIL (token)
+    APP--&gt;&gt;FE: merchant blob (encryptedData base64)
+    Note over FE: AES-256-ECB decrypt, key = reverse of first 32 chars of eSewa token
+    FE-&gt;&gt;IAM: POST /api/external/token/ (eSewa token, external_identifier, encrypted_text)
+    IAM--&gt;&gt;FE: error (not registered)
+    FE-&gt;&gt;LANDING: GET /api/website/terms/web/?type=esewa_merchant_terms
+    LANDING--&gt;&gt;FE: terms content
+    FE-&gt;&gt;APP: bridge GET_PRODUCT
+    APP--&gt;&gt;FE: product code
+    FE-&gt;&gt;IAM: POST /api/external/register/ (entity_type ESM, user_details, encrypted_text)
+    IAM--&gt;&gt;FE: registered
+    FE-&gt;&gt;IAM: POST /api/external/token/ (login again)
+    IAM--&gt;&gt;FE: access + refresh JWT
+    Note over FE: sessionStorage user, redirect /dashboard
+</pre></div>
+<p>Evidence: <code>views/home/index.tsx:86-100,163-205</code>; <code>src/shared/utils/app.ts:18-31</code>; <code>views/terms-conditions/index.tsx:65,78-104,252-330</code>; <code>auth.ts:32-37,99-124</code>; <code>profile.ts:146-161</code>; <code>api.ts:47-49,68-111</code>.</p>
+<h4>7.2 Subscription purchase / upgrade</h4>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as miniapp-esewa (profile/upgrade)
+    participant PKG as PACKAGE service
+    participant TMS as TMS service
+    FE-&gt;&gt;PKG: GET /api/miniapp/modules/?service=PR2600
+    PKG--&gt;&gt;FE: module/package list
+    FE-&gt;&gt;PKG: GET /api/miniapp/modules/{id}/?service=PR2600&amp;payment_period=yearly
+    PKG--&gt;&gt;FE: pricing detail
+    FE-&gt;&gt;TMS: POST /api/miniapp/subscriptions/initiate/ (payment_period, module_id, subscription_id)
+    TMS--&gt;&gt;FE: transaction_id (eSewa/Fonepay charge initiated on TMS side)
+    FE-&gt;&gt;TMS: POST /api/miniapp/subscriptions/verify/ (transaction_id)
+    TMS--&gt;&gt;FE: subscription verified
+    FE-&gt;&gt;TMS: GET /api/miniapp/subscriptions/status/ (refetch)
+</pre></div>
+<p>Evidence: <code>views/profile/upgrade/index.tsx:66,76-88,204-222</code>; <code>auth.ts:176-223,242-255</code>. The actual eSewa/Fonepay merchant payload and charge live in TMS (<code>TMS-service/payment/views.py</code> FonepayPayment + <code>custom_functions.py:502-541</code>) — TMS tracer scope; this frontend only sees <code>transaction_id</code>.</p>
+<h4>7.3 Payment request lifecycle (create / pay / cancel)</h4>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as miniapp-esewa (merchant)
+    participant CDXE as CDXE /api/miniapp
+    participant SALES as Sales /api/miniapp
+    participant PAY as Payment-Service /api/esewa
+    participant CUST as customer (eSewa app, not in these repos)
+    rect rgb(240,240,240)
+    Note over FE,PAY: create (merchant requests payment)
+    FE-&gt;&gt;CDXE: POST payment/request/ (customer, total, items)
+    CDXE-&gt;&gt;SALES: POST payment/request/ (internal password)
+    SALES-&gt;&gt;SALES: create pending credit settlement
+    SALES-&gt;&gt;PAY: POST payment/request/ (payment = settlement id)
+    PAY--&gt;&gt;SALES: 200 (status requested)
+    SALES--&gt;&gt;FE: 200
+    FE-&gt;&gt;CUST: native bridge push PAYMENT_REQUEST
+    end
+    rect rgb(240,248,240)
+    Note over CUST,PAY: pay (customer executes in eSewa app)
+    CUST--&gt;&gt;PAY: (wallet charge happens outside these repos; transaction_id produced)
+    FE-&gt;&gt;CDXE: POST payment/request/pay/{id}/ (status completed + SIGNATURE HMAC)
+    CDXE-&gt;&gt;PAY: POST payment/request/pay/{settlement_id}/ (internal)
+    PAY-&gt;&gt;SALES: POST payment/request/settle/ (status completed)
+    SALES--&gt;&gt;PAY: 200
+    PAY--&gt;&gt;FE: 200
+    end
+    rect rgb(248,240,240)
+    Note over FE,PAY: cancel (merchant, direct to Payment-Service)
+    FE-&gt;&gt;PAY: POST esewa/payment/request/cancel/{id}/ (JWT + X-MINIAPP-TOKEN)
+    PAY-&gt;&gt;SALES: POST payment/request/settle/ (status cancelled)
+    SALES--&gt;&gt;PAY: 200
+    PAY--&gt;&gt;FE: 200
+    end
+</pre></div>
+<p>Evidence: FE <code>payment.ts:31-54</code>; CDXE <code>CDXE-REBOOT/miniapp/views.py:727-840</code> (SIGNATURE check :806-824), <code>CDXE-REBOOT/miniapp/serializers.py:447</code>; Sales <code>Sales/miniapp/serializers.py:1257-1333,1295</code>; Payment-Service A.1-A.4.</p>
+<h4>7.4 eSewa ePay status verification — verdict: NOT implemented in these repos</h4>
+<p>The ePay status URL from SHARED-CONTEXT (<code>https://epay.esewa.com.np/api/epay/transaction/status/</code>) appears <strong>nowhere</strong> in Payment-Service or miniapp-esewa (verified by grep across both repos). What exists instead:</p>
+<ol>
+<li><code>helpers.get_esewa_payment_url()</code> returns a <strong>hardcoded dummy</strong> <code>http://dummy-api/esewa/payment/url</code> (<code>dashboard/helpers.py:133-141</code>).</li>
+<li><code>EsewaPaymentRequestSerializer.execute_esewa_payment()</code> (<code>serializers.py:104-124</code>) and <code>get_dummy_esewa_payload()</code> (<code>serializers.py:230-252</code>, builds a fake <code>ESW_&lt;uuid&gt;</code> transaction id) are defined but <strong>called by no view</strong> (verified by grep).</li>
+<li>Frontend <code>NEXT_PUBLIC_ESEWA_URL</code> (<code>https://epay.esewa.com.np/api/epay/main/v2/form</code>, <code>.env.example:25</code>) is defined but <strong>unused in code</strong> (verified by grep).</li>
+</ol>
+<p><strong>Verdict (mock-mode finding):</strong> in this build the &quot;payment&quot; behind a payment request is a <strong>status record</strong>, not a live ePay call. The wallet charge happens inside the eSewa app itself (outside both repos); the resulting <code>transaction_id</code> comes back into the system through CDXE&#39;s pay call (C.1/7.3). The eSewa/Fonepay merchant integration that IS live (subscription payments) sits in <strong>TMS</strong>. No merchant token, no ePay client, no status-poll loop in either repo.</p>
+<h3 id="c-2-business-walkthroughs">C.2 Business walkthroughs</h3>
+<p><strong>1) Merchant onboarding + login.</strong> Aarav opens &quot;Lenden&quot; inside the eSewa app. The WebView fires <code>INIT_APP</code> (home/index.tsx:194-205), receives the eSewa token, then <code>MERCHANT_DETAIL</code> (home/index.tsx:58-67) returns the encrypted merchant blob; the FE decrypts it locally (AES-256-ECB, key derived from the token — app.ts:18-31) and calls IAM login (home/index.tsx:86-100). First time, IAM says &quot;not registered&quot;, so the app routes to <code>/terms-conditions</code>: Aarav reads the eSewa merchant terms (fetched from Landing, no TOTP header — api.ts:47-49), taps Accept, the app fetches his product code via the <code>GET_PRODUCT</code> bridge and registers him as an <code>ESM</code> (terms-conditions/index.tsx:252-330), logs in again, and lands on <code>/dashboard</code> with his credit overview, credits, and transactions. From then on every request carries <code>Bearer &lt;JWT&gt;</code> + <code>X-MINIAPP-TOKEN</code> (server-computed TOTP, step 20 — api.ts:34-56, otp.ts:5-24).</p>
+<p><strong>2) Requesting payment and paying it back.</strong> Aarav owes Sita (a customer) 5,000 from a credit entry. From the dashboard he taps the credit, &quot;Request payment&quot; (dashboard/index.tsx:850-889): the FE POSTs to CDXE <code>miniapp/payment/request/</code> (payment.ts:31-42); CDXE validates identity/connection and forwards to Sales, which creates a pending credit settlement and records the request in Payment-Service (<code>EsewaPaymentRequest.status=requested</code>, A.2). The FE then pushes a <code>PAYMENT_REQUEST</code> notification to Sita&#39;s phone via the eSewa native bridge (es-utils.ts:18-54) and opens <code>/statement?transactionId=...</code>. Sita sees the request in her eSewa app and pays there (wallet charge outside these repos). The completion path — CDXE <code>payment/request/pay/{id}/</code> -&gt; Payment-Service A.4 -&gt; Sales settle (C.1/7.3) — exists end-to-end in the backends, but <strong>no current FE page calls it</strong> (transactions.ts:140-153 unused; C.5). Before payment, Aarav can instead cancel: the FE calls Payment-Service <strong>directly</strong> (the only Payment-Service endpoint the app uses) — cancel-payment-request.tsx:29-63 -&gt; A.1, which requires status <code>requested</code> and settles <code>cancelled</code> in Sales.</p>
+<p><strong>3) Disputes (help &amp; support).</strong> A customer disputes a credit entry (the raising side, CDXE <code>dispute/raise/</code>, is not wired in the current FE — credit.ts:442-456 unused). On <code>/profile/help-support</code> the merchant sees the disputes list (GET Sales <code>dispute/search/</code> — help-support/index.tsx:63), opens a dispute for details (GET Sales <code>dispute/detail/{id}</code> — raised-issue-review-credit.tsx:50), and can resolve it by calling DELETE Sales <code>credit/detail/{id}/?dispute_status=...&amp;dispute_id=...</code> (help-support/index.tsx:70-72, credit.ts:503-519), or correct the credit (credit form) or settle it manually (settle-credit-modal).</p>
+<h3 id="c-3-section-9-outbound-call-map-payment-service-other-systems">C.3 Section 9 — Outbound call map (Payment-Service -&gt; other systems)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Target</th>
+<th>Method + path</th>
+<th>Trigger</th>
+<th>Evidence (file:line)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>IAM</td>
+<td><code>POST {IAM_API}api/external/token/verify/</code></td>
+<td>every federated-auth request (A.1)</td>
+<td><code>auth_backends.py:125-146</code> (called :41)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IAM</td>
+<td><code>GET {IAM_API}api/internal-check-permissions/?password=...&amp;user_id=...</code></td>
+<td>A.1, non-tenant_root users</td>
+<td><code>auth_backends.py:77-79</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sales</td>
+<td><code>POST {SALES_API}api/miniapp/payment/request/settle/</code></td>
+<td>A.1 (cancelled), A.2 (completed+merchant), A.4 (completed/declined/cancelled)</td>
+<td><code>async_func.py:111-144</code>; called from <code>serializers.py:98,222</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>TMS</td>
+<td>—</td>
+<td><strong>none</strong> (verified: no TMS reference in esewa/dashboard call paths)</td>
+<td>grep</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Events</td>
+<td>—</td>
+<td><strong>none</strong> (no Events/Kafka usage in repo)</td>
+<td>grep</td>
+</tr>
+<tr>
+<td>6</td>
+<td>eSewa (external)</td>
+<td>—</td>
+<td><strong>none live</strong>; only the hardcoded dummy <code>http://dummy-api/esewa/payment/url</code> in dead code</td>
+<td><code>helpers.py:133-141</code> (see C.1/7.4)</td>
+</tr>
+</tbody></table>
+<p>All outbound #1-#2 are sync <code>requests</code> (10 s timeout); #3 is sync <code>httpx</code> via <code>async_to_sync</code> (30 s timeout). No background jobs, no queues.</p>
+<h3 id="c-4-section-10-inbound-callers-who-calls-whose-endpoints">C.4 Section 10 — Inbound callers (who calls whose endpoints)</h3>
+<p><strong>Payment-Service esewa endpoints (Part A):</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Caller</th>
+<th>Method + path</th>
+<th>Purpose</th>
+<th>Evidence (file:line)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>miniapp-esewa FE (merchant)</td>
+<td><code>POST https://dev-payment-api.providhy.com/api/esewa/payment/request/cancel/&lt;id&gt;/</code></td>
+<td>Merchant cancels request</td>
+<td>FE <code>payment.ts:44-54</code>; wired in <code>cancel-payment-request.tsx:29-63</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sales</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/</code></td>
+<td>Record request when settlement created</td>
+<td><code>Sales/dashboard/helper.py:68</code>; call sites <code>Sales/miniapp/serializers.py:1295,1569</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sales</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/search/</code></td>
+<td>Enrich settlement search/detail with request status</td>
+<td><code>Sales/dashboard/helper.py:69</code>; <code>Sales/dashboard/async_func.py:95-130</code>; consumed <code>Sales/miniapp/serializers.py:546</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>CDXE</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/exists/</code></td>
+<td>Block connection termination while a requested payment exists</td>
+<td><code>CDXE-REBOOT/dashboard/helpers.py:185-217</code>; <code>CDXE-REBOOT/miniapp/views.py:269</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>CDXE</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/pay/&lt;settlement_id&gt;/</code></td>
+<td>Customer executed payment</td>
+<td><code>CDXE-REBOOT/dashboard/helpers.py:612-636</code>; <code>CDXE-REBOOT/miniapp/serializers.py:447</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Projectmaster</td>
+<td><code>POST http://payment:8000/api/esewa/payment/request/exists/</code></td>
+<td>Existing-request check in miniapp customer flow</td>
+<td><code>ERP-Projectmaster/dashboard/helper.py:104</code>; <code>ERP-Projectmaster/miniapp/views.py:161</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>TMS</td>
+<td><code>POST http://payment:8000/api/esewa/tenant-data-deletion/</code></td>
+<td>Tenant-deletion cascade</td>
+<td><code>TMS-service/dashboard/helpers.py:192</code></td>
+</tr>
+</tbody></table>
+<p><strong>Sales settlement callback (inbound to Sales):</strong> <code>POST /api/miniapp/payment/request/settle/</code> is hosted by Sales (<code>Sales/miniapp/urls.py:26-27</code>) and its only caller found is Payment-Service (<code>async_func.py:111-144</code>) — i.e. Payment-Service is the settle trigger; Sales itself never calls this path from within its own miniapp create flow.</p>
+<p><strong>miniapp-esewa frontend -&gt; backends:</strong> full mapping in B.5. Only one frontend function reaches Payment-Service (<code>requestPaymentCancel</code>); everything else goes to IAM, TMS, PACKAGE, CDXE, Sales, Projectmaster, Events, Configuration, Landing.</p>
+<h3 id="c-5-section-11-unknowns-assumptions-and-verdicts">C.5 Section 11 — Unknowns, assumptions, and verdicts</h3>
+<p><strong>11.1 Definitive endpoint ownership (payment / credit / connection):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Frontend path (constants.ts)</th>
+<th>Host service</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>miniapp/payment/request/</code> (create)</td>
+<td><strong>CDXE</strong> (frontend calls it, <code>payment.ts:31-42</code>); CDXE forwards to <strong>Sales</strong> <code>miniapp/payment/request/</code> (<code>CDXE-REBOOT/miniapp/serializers.py:381-393</code>); Sales creates settlement then records in <strong>Payment-Service</strong> <code>api/esewa/payment/request/</code></td>
+<td><code>CDXE-REBOOT/miniapp/urls.py:29</code>; <code>Sales/miniapp/urls.py:26</code>; <code>Sales/miniapp/serializers.py:1295</code></td>
+</tr>
+<tr>
+<td><code>miniapp/payment/request/pay/{id}/</code> (pay)</td>
+<td><strong>CDXE</strong> (<code>ApproveDeclinePaymentRequest</code>; SIGNATURE HMAC required when completed) -&gt; <strong>Payment-Service</strong> <code>api/esewa/payment/request/pay/{id}/</code> (internal)</td>
+<td><code>CDXE-REBOOT/miniapp/urls.py:30</code>; <code>CDXE-REBOOT/miniapp/views.py:788-840</code>; <code>CDXE-REBOOT/dashboard/helpers.py:632</code></td>
+</tr>
+<tr>
+<td><code>esewa/payment/request/cancel/{id}/</code></td>
+<td><strong>Payment-Service</strong> (only service exposing it; FE calls directly)</td>
+<td><code>Payment-Service/esewa/urls.py:8-11</code>; <code>payment.ts:44-54</code></td>
+</tr>
+<tr>
+<td><code>miniapp/payment/request/settle/</code></td>
+<td><strong>Sales</strong> (internal; called by Payment-Service)</td>
+<td><code>Sales/miniapp/urls.py:27</code>; <code>Payment-Service/dashboard/async_func.py:111-144</code></td>
+</tr>
+<tr>
+<td>Credit: `miniapp/credit/create</td>
+<td>search</td>
+<td>detail</td>
+</tr>
+<tr>
+<td>Settlement: `miniapp/settlement/search</td>
+<td>detail`</td>
+<td><strong>Sales</strong> (merchant); CDXE mirrors for customer; <strong>no settlement route exists in Projectmaster</strong> (its <code>getMerchantTransactionList</code> URL is dead)</td>
+</tr>
+<tr>
+<td>Connections: <code>create-connection, approve-reject-connection, connection/terminate, connection/search</code></td>
+<td><strong>CDXE</strong></td>
+<td><code>CDXE-REBOOT/miniapp/urls.py</code></td>
+</tr>
+<tr>
+<td>Customers: `miniapp/customer/search</td>
+<td>detail</td>
+<td>POST`</td>
+</tr>
+<tr>
+<td>Subscriptions: <code>miniapp/subscriptions/{status,initiate,verify}</code></td>
+<td><strong>TMS</strong></td>
+<td><code>auth.ts:161-207</code> + TMS-service (TMS tracer scope)</td>
+</tr>
+<tr>
+<td>Disputes</td>
+<td>merchant: <strong>Sales</strong> (`dispute/search</td>
+<td>detail<code>); customer raise: **CDXE** (</code>dispute/raise`)</td>
+</tr>
+</tbody></table>
+<p><strong>11.2 Mock-mode finding (ePay).</strong> No live eSewa ePay integration in either repo (C.1/7.4): dummy URL helper, dead serializer methods, unused frontend env var, no merchant token, no status poll. Real wallet charge + ePay/Fonepay merchant payload live in TMS (subscriptions) and inside the eSewa app (payment requests). The <code>ESEWA_STATUS_URL</code> from SHARED-CONTEXT is not consumed by this system&#39;s code.</p>
+<p><strong>11.3 Other unknowns / observations (all verified, none invented):</strong></p>
+<ol>
+<li><strong>Statistics endpoint ignores tenant</strong> — A.6 aggregates all tenants (<code>views.py:255</code>); gated only by the shared <code>INTERNAL_PASS</code>. No caller found in the traced repos.</li>
+<li><strong><code>remove_all</code> flag</strong> on tenant-data-deletion wipes <strong>every tenant&#39;s</strong> rows (<code>views.py:291-294</code>).</li>
+<li><strong>Leftover CDXE subscription check</strong> on Payment-Service&#39;s federated auth rejects tenants without <code>PR2700</code> (<code>auth_backends.py:55-56</code>) — copy-paste artifact, likely unintended.</li>
+<li><strong><code>payRequestedPayment</code> (FE) does not send the <code>SIGNATURE</code> HMAC header</strong> that CDXE&#39;s pay endpoint requires for <code>completed</code> (<code>CDXE-REBOOT/miniapp/views.py:806-824</code>) — moot while the function is unused, but it could never work as written.</li>
+<li><strong><code>getMerchantTransactionList</code> targets a non-existent Projectmaster route</strong> (<code>miniapp/settlement/search/&lt;id&gt;/</code>; absence in <code>ERP-Projectmaster/miniapp/urls.py:5-32</code>) — dead URL.</li>
+<li>23 of 62 FE request functions are unused (customer-side/ESU variants); the customer-side flow is not wired in this build (<code>user_type</code> ESU exists in types, <code>auth.ts:62</code>).</li>
+<li><code>paid_to</code> column is write-dead (default &quot;self&quot; only; no assignment in views/serializers).</li>
+<li><code>failed</code> status is never set by Payment-Service code (only counted, <code>views.py:257-258</code>); could only arrive via Sales-provided status at A.2 creation (inferred, unverified in Sales).</li>
+<li><code>PAYMENT_ADMIN_URL</code> missing from checked-in <code>.env</code> (settings.py:193 reads it) — provided by deployment env, inferred.</li>
+<li><code>X-MINIAPP-TOKEN</code> TOTP uses <strong>step 20</strong> (otp.ts:21) vs the standard 30 s — IAM side must match; noted as observed config.</li>
+<li>No tests in Payment-Service (<code>esewa/tests.py</code> empty); FE has vitest config but coverage of the request layer not assessed.</li>
+<li>Stray <code>print</code> in A.3 (<code>views.py:124</code>); large commented-out legacy blocks in <code>views.py:143-172,237-248</code>.</li>
+</ol>
+</section></article><div class="pagenav"><a class="pn" href="06-projectmaster-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">Projectmaster Miniapp</div></a><a class="pn next" href="08-tms-registration-config.html"><div class="pn-dir">Next →</div><div class="pn-name">TMS Registration and Config</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#part-a-payment-service-esewa-app">Part A — Payment-Service eSewa app</a></li><li class="l3"><a href="#a-1-business-overview">A.1 Business overview</a></li><li class="l3"><a href="#a-2-technical-overview">A.2 Technical overview</a></li><li class="l3"><a href="#a-3-authentication-authorization">A.3 Authentication &amp; authorization</a></li><li class="l3"><a href="#a-4-exposed-endpoint-catalog">A.4 Exposed endpoint catalog</a></li><li class="l3"><a href="#a-5-per-endpoint-flow-trace">A.5 Per-endpoint flow trace</a></li><li class="l3"><a href="#a-6-data-model">A.6 Data model</a></li><li class="l2"><a href="#part-b-miniapp-esewa-frontend">Part B — miniapp-esewa frontend</a></li><li class="l3"><a href="#b-1-business-overview">B.1 Business overview</a></li><li class="l3"><a href="#b-2-technical-overview">B.2 Technical overview</a></li><li class="l3"><a href="#b-3-authentication-login-flow-detail">B.3 Authentication &amp; login flow (detail)</a></li><li class="l3"><a href="#b-4-page-inventory-21-routes">B.4 Page inventory (21 routes)</a></li><li class="l3"><a href="#b-5-frontend-request-function-catalog-complete-frontend-backend-mapping">B.5 Frontend request function catalog (complete frontend -&gt; backend mapping)</a></li><li class="l2"><a href="#strong-totals-strong-62-functions-8-auth-1-connections-24-credit-7-customer-4-merchants-1-notifications-2-payment-7-profile-8-transactions-39-are-wired-into-the-current-merchant-ui-23-are-exported-but-unused-customer-side-esu-variants-or-dead-urls">&lt;strong&gt;Totals:&lt;/strong&gt; 62 functions — 8 (auth) + 1 (connections) + 24 (credit) + 7 (customer) + 4 (merchants) + 1 (notifications) + 2 (payment) + 7 (profile) + 8 (transactions). 39 are wired into the current merchant UI; 23 are exported but unused (customer-side/ESU variants or dead URLs).</a></li><li class="l2"><a href="#part-c-cross-cutting-flows-call-maps-verdicts">Part C — Cross-cutting flows, call maps, verdicts</a></li><li class="l3"><a href="#c-1-key-sequence-diagrams">C.1 Key sequence diagrams</a></li><li class="l3"><a href="#c-2-business-walkthroughs">C.2 Business walkthroughs</a></li><li class="l3"><a href="#c-3-section-9-outbound-call-map-payment-service-other-systems">C.3 Section 9 — Outbound call map (Payment-Service -&gt; other systems)</a></li><li class="l3"><a href="#c-4-section-10-inbound-callers-who-calls-whose-endpoints">C.4 Section 10 — Inbound callers (who calls whose endpoints)</a></li><li class="l3"><a href="#c-5-section-11-unknowns-assumptions-and-verdicts">C.5 Section 11 — Unknowns, assumptions, and verdicts</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

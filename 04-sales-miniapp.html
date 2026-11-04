@@ -1,0 +1,1394 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sales Miniapp - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc current" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="04-sales-miniapp.html#1-business-overview">1. Business overview</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#3-authentication-authorization">3. Authentication &amp; authorization</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#4-endpoint-catalog">4. Endpoint catalog</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#5-endpoint-flow-traces">5. Endpoint flow traces</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#6-data-model">6. Data model</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#7-sequence-diagrams">7. Sequence diagrams</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#8-business-process-walkthroughs">8. Business process walkthroughs</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#9-outbound-call-map-from-the-sales-miniapp">9. Outbound call map (from the Sales miniapp)</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#10-inbound-callers-who-calls-the-sales-miniapp">10. Inbound callers (who calls the Sales miniapp)</a><a class="sb-item sb-sub" href="04-sales-miniapp.html#11-unknowns-assumptions-observations">11. Unknowns, assumptions &amp; observations</a></div><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Sales — Federated Miniapp Documentation</h1>
+<p>Scope: E:/Work/Sales/miniapp — the credit/sales-ledger surface of the Sales service for the
+eSewa miniapp (merchant side) and other internal services (customer-facing views via CDXE,
+settlement callbacks from Payment, customer/ledger lookups from Projectmaster).
+Public base URL: <a href="https://dev-sales-api.providhy.com">https://dev-sales-api.providhy.com</a> (Sales/.env SALES_BACKEND_URL).
+Evidence base: Sales/miniapp/{urls,views,generics,models,serializers,mixins,filters,utils,tasks}.py,
+Sales/dashboard/{auth_backends,helper,async_func,choices,pagination,mixins}.py,
+Sales/core/{urls,settings,celery}.py, Sales/miniapp/migrations/0018_alter_credit_ledger_view.py,
+Sales/.env. Caller repos: CDXE-REBOOT, ERP-Projectmaster, Payment-Service, miniapp-esewa.</p>
+</section><section class="sec" data-title="1. Business overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview">1. Business overview</h2>
+<p>The Sales miniapp is a trade-credit book for eSewa merchants (ESM) and their connected
+customers (ESU). A merchant extends credit to a customer on terms (amount, due date,
+payment term) instead of invoicing goods; the miniapp tracks each credit record&#39;s remaining
+balance, payment status (unpaid / partially paid / fully paid) and due/over-due state.</p>
+<ul>
+<li>Credit record = a SalesInvoice proxy (unique_id prefix CID-): approved at creation,
+carries grand_total, remaining_amount, transaction_date (due date), payment_status.
+No goods/inventory involvement (views.py:91-121).</li>
+<li>Settlement = a CustomerPayment proxy (unique_id prefix TID-): reduces credit balances.
+Two flavors: manual (cash/cheque etc., recorded by the merchant, status approved
+immediately) and payment request (merchant requests the customer to pay via the eSewa
+wallet; settlement starts pending, becomes approved only when the Payment service
+reports the eSewa transaction completed; rejected/draft on declined/cancelled)
+(serializers.py:1327-1370; views.py:1591-1681).</li>
+<li>Dispute (unique_id prefix CD-): a customer contests a credit via their connected
+merchant (raised through CDXE). States: issued (default) to resolved
+(merchant edits the credit = resolution_by_edition, or deletes the credit =
+resolution_by_deletion) or cancelled (customer withdraws) (choices.py:538-550;
+views.py:419-513, 1291-1349).</li>
+<li>Ledger: two Postgres views (credit_ledger_view, credit_ledger_view_customer) union
+approved credits (+grand_total) and approved settlements (-total_allocated_amount)
+with a running current_balance per tenant+customer
+(migrations/0018_alter_credit_ledger_view.py:3-85; models.py:92-134).</li>
+<li>Notifications: merchant/customer are notified via the Events service on credit
+create/edit/delete, settlement, payment-request outcomes, dispute resolution, plus daily
+00:00 due-date and over-due reminder sweeps (tasks.py:119-353; core/celery.py:47-54).</li>
+</ul>
+</section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
+<ul>
+<li>Django 5 + DRF project core (manage.py:11 points to core.settings); root core/urls.py.</li>
+<li>Apps: miniapp (this surface), sales (sub-apps sales_invoice, customer_payment, ...domain
+tables), dashboard (shared auth/choices/helper), config_setup, ai_app.</li>
+<li>DB: Postgres database Sales (.env DB_NAME), engine django_prometheus.db.backends.postgresql
+(settings.py:99-108). Multi-tenant: every query is tenant-scoped via tenant_id
+(merchant tenant = JWT tenant_id claim, or tenant_id body field for internal calls).</li>
+<li>Async workers: Celery + Redis broker redis:6379/0, results in django-db
+(settings.py:203-218); beat schedule core/celery.py:22-55 (miniapp tasks at 00:00:
+send_due_date_reminder, send_over_due_reminder). Kafka broker kafka-crs:9092 is configured
+(settings.py:220) but NOT used by the miniapp module (verified: no kafka calls in
+miniapp/*.py).</li>
+<li>Outbound HTTP: synchronous requests (auth, payment, document) and async httpx
+(customer check, payment-request details, configuration, registered-user checks) via
+dashboard/helper.py base URLs (helper.py:33-49) — docker-internal http://<svc>:8000 in
+the network, <a href="https://dev-*-api.providhy.com">https://dev-*-api.providhy.com</a> when LOCAL=True (.env; helper.py:51-68).</li>
+<li>Shared internal secret: INTERNAL_PASS (.env; helper.py:29) authenticates all internal
+miniapp endpoints (see section 3). TOTP secret CUSTOM_KEY (.env; settings.py:192) is used
+by the frontend to compute X-MINIAPP-TOKEN (platform fact, SHARED-CONTEXT.md).</li>
+<li>Key files: miniapp/views.py (1899 lines, 30 views), miniapp/serializers.py (1644),
+miniapp/generics.py (160, auth base classes), miniapp/models.py (162),
+dashboard/auth_backends.py (247).</li>
+</ul>
+</section><section class="sec" data-title="3. Authentication &amp; authorization"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-authentication-authorization">3. Authentication &amp; authorization</h2>
+<p>Two auth regimes; all 30 endpoints share the single mount api/miniapp/ (section 4), so
+public / internal / admin is distinguished by WHICH AUTH CLASSES THE VIEW DECLARES, not by
+mount path.</p>
+<h3 id="3-1-federated-miniapp-browser-auth-federatedidentityauthentication-dashboard-auth-backends-py-180-216">3.1 Federated (miniapp-browser) auth — FederatedIdentityAuthentication (dashboard/auth_backends.py:180-216)</h3>
+<p>Opted into by FederatedAuthenticationView (miniapp/generics.py:43-86):
+authentication_classes = [FederatedIdentityAuthentication],
+permission_classes = [HasFederatedEntityPermission], default
+required_user_type = choices.ExternalEntityType.values (generics.py:70);
+<strong>init_subclass</strong> forces every subclass to declare required_feature_permission and
+required_action_permission (generics.py:74-86).</p>
+<p>Flow per request (Sales copy):</p>
+<ol>
+<li>Token lookup helper.get_access_token(request, access_token_key=&quot;miniAppAccessToken&quot;)
+(auth_backends.py:183-185; helper.py:1017-1047): cookie miniAppAccessToken, then
+Authorization: Bearer <jwt>, then body field miniAppAccessToken.</li>
+<li>POST {IAM}/api/external/token/verify/ with JSON {token: <jwt>} AND the client&#39;s
+X-MINIAPP-TOKEN TOTP header forwarded (auth_backends.py:188-191, 218-229).
+TOTP validity is therefore enforced on the IAM side; no TOTP code is computed in Sales.</li>
+<li>On 200, the JWT is decoded locally WITHOUT signature verification:
+TokenBackend(&quot;HS256&quot;).decode(token, verify=False) (auth_backends.py:192-206). Claims
+user_id, tenant_id, subscribed_services, user_permissions, provider_code, user_type,
+tenant_root, username, external_identifier, subscription_expired are placed on the
+request; returns (user_id, tenant_id) so request.auth = tenant_id.</li>
+<li>Failure paths: requests exceptions timeout/ConnectionError to 503
+TemporaryServiceUnavailableError (auth_backends.py:208-212, 230-231); HTTP error or
+exception to AuthenticationFailed 401 (auth_backends.py:214-215, 232-235); missing
+token to CustomAuthenticationFailed(INVALID_TOKEN) (auth_backends.py:207).</li>
+</ol>
+<p>Differences from the canonical IAM copy (SHARED-CONTEXT.md): this Sales copy does NO
+verify_request_origin origin check and NO local ExternalEntity lookup — it delegates
+token+TOTP verification to IAM&#39;s external verify endpoint and then trusts JWT claims
+(decoded with verify=False). The canonical MiniAppAuthentication subclass is not present
+in Sales; the view base references FederatedIdentityAuthentication directly.</p>
+<h3 id="3-2-permission-hasfederatedentitypermission-dashboard-auth-backends-py-238-247">3.2 Permission — HasFederatedEntityPermission (dashboard/auth_backends.py:238-247)</h3>
+<p>Overrides HasPermission.has_permission WITHOUT calling super(): it only checks
+request.user_type in view.required_user_type (else PermissionDenied / False).
+Consequences: for miniapp federated views the subscription-expiry check, the IAM
+user_permissions loop, and the fiscal-year context set by the parent
+(auth_backends.py:85-100) do NOT run; required_feature_permission /
+required_action_permission are effectively only validated for presence by
+<strong>init_subclass</strong>. Most merchant views restrict to ESEWA_MERCHANT (ESM);
+ledger views keep the default (all external entity types).</p>
+<h3 id="3-3-internal-service-to-service-auth-shared-password">3.3 Internal (service-to-service) auth — shared password</h3>
+<ul>
+<li>InternalRequestAuthentication (auth_backends.py:144-166): reads password, tenant_id,
+external_identifier, provider_code from POST body (or GET query), sets
+request.auth = tenant_id, request.external_identifier, request.provider_code; validates
+password == INTERNAL_PASS via helper.validate_internal_pass (helper.py:383-386), else
+AuthenticationFailed 401. Returns (None, tenant_id) (anonymous user). Used by views via
+InternalAuthenticationView (miniapp/generics.py:89-91; permission_classes = []).</li>
+<li>InternalRequestPermission (auth_backends.py:169-177): same password check applied as a
+permission (POST body / GET query; other methods denied). Used by plain APIView
+endpoints that declare no authentication_classes (DRF default auth applies;
+settings.py:141-144 only adds a production exception handler, so anonymous access is
+possible — the password is the only gate).</li>
+<li>InternalSearchView (generics.py:152-211): concrete POST-only search view built on
+InternalAuthenticationView (q-search mixin; no pagination — plain list response).</li>
+</ul>
+</section><section class="sec" data-title="4. Endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-endpoint-catalog">4. Endpoint catalog</h2>
+<p>All routes are defined in Sales/miniapp/urls.py: internal_urlpatterns (lines 5-50),
+urlpatterns (lines 52-121), miniapp_admin_urlpatterns (lines 123-135); all three lists are
+concatenated into one urlpatterns (urls.py:136-137) and mounted ONCE under
+path(&quot;api/miniapp/&quot;, include(&quot;miniapp.urls&quot;)) (core/urls.py:20). Full base path:
+<a href="https://dev-sales-api.providhy.com/api/miniapp/">https://dev-sales-api.providhy.com/api/miniapp/</a></p>
+<h3 id="4-1-public-list-urlpatterns-urls-py-52-121-15-endpoints">4.1 &quot;Public&quot; list — urlpatterns (urls.py:52-121) — 15 endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/overview/">https://dev-sales-api.providhy.com/api/miniapp/credit/overview/</a></td>
+<td>CreditOverviewView</td>
+<td>views.py:43</td>
+<td>Merchant&#39;s total credit summary (remaining / over-due / paid)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/create/">https://dev-sales-api.providhy.com/api/miniapp/credit/create/</a></td>
+<td>CreateCreditRecord</td>
+<td>views.py:83</td>
+<td>Create an approved credit record for a customer</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/search/">https://dev-sales-api.providhy.com/api/miniapp/credit/search/</a></td>
+<td>CreditRecordListView</td>
+<td>views.py:177</td>
+<td>Search merchant&#39;s open credit records</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GET/POST/DELETE</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/detail/%7Bpk%7D/">https://dev-sales-api.providhy.com/api/miniapp/credit/detail/{pk}/</a></td>
+<td>CreditRecordDetailView</td>
+<td>views.py:277</td>
+<td>Credit detail; update amount/due date (resolve dispute); cancel/delete credit</td>
+</tr>
+<tr>
+<td>5</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/detail/customer/%7Bpk%7D/">https://dev-sales-api.providhy.com/api/miniapp/credit/detail/customer/{pk}/</a></td>
+<td>CreditDetailViewForCustomer</td>
+<td>views.py:516</td>
+<td>Customer-facing credit detail (internal auth, called by CDXE)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/pay/">https://dev-sales-api.providhy.com/api/miniapp/credit/pay/</a></td>
+<td>PayCreditView</td>
+<td>views.py:1684</td>
+<td>Customer-initiated settlement of credits via eSewa wallet (internal auth, via CDXE)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/raise/">https://dev-sales-api.providhy.com/api/miniapp/dispute/raise/</a></td>
+<td>RaiseCreditRecordDisputeByUserView</td>
+<td>views.py:1291</td>
+<td>Customer raises a dispute on a credit (internal auth, via CDXE)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/cancel/%7Bdispute_id%7D/">https://dev-sales-api.providhy.com/api/miniapp/dispute/cancel/{dispute_id}/</a></td>
+<td>CreditDisputeCancelView</td>
+<td>views.py:1324</td>
+<td>Customer cancels their dispute (internal auth, via CDXE)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/search/">https://dev-sales-api.providhy.com/api/miniapp/dispute/search/</a></td>
+<td>CreditDisputeListAPIView</td>
+<td>views.py:1352</td>
+<td>Merchant&#39;s dispute list</td>
+</tr>
+<tr>
+<td>10</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/detail/%7Bdispute_id%7D/">https://dev-sales-api.providhy.com/api/miniapp/dispute/detail/{dispute_id}/</a></td>
+<td>CreditDisputeDetailView</td>
+<td>views.py:1418</td>
+<td>Merchant&#39;s dispute detail</td>
+</tr>
+<tr>
+<td>11</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/settlement/manual/create/">https://dev-sales-api.providhy.com/api/miniapp/settlement/manual/create/</a></td>
+<td>ManualCreditSettlementView</td>
+<td>views.py:665</td>
+<td>Record an offline/manual credit settlement</td>
+</tr>
+<tr>
+<td>12</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/settlement/detail/%7Bpk%7D/">https://dev-sales-api.providhy.com/api/miniapp/settlement/detail/{pk}/</a></td>
+<td>SettlementDetailView</td>
+<td>views.py:726</td>
+<td>Settlement detail incl. eSewa payment-request status</td>
+</tr>
+<tr>
+<td>13</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/settlement/search/">https://dev-sales-api.providhy.com/api/miniapp/settlement/search/</a></td>
+<td>ManualCreditSettlementSearchView</td>
+<td>views.py:829</td>
+<td>Search merchant&#39;s settlements (by payment method/status)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/overview/">https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/overview/</a></td>
+<td>CreditLedgerOverviewView</td>
+<td>views.py:1152</td>
+<td>Ledger summary per customer (given / received / opening / closing)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GET</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/">https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/</a></td>
+<td>FetchCreditLogsView</td>
+<td>views.py:952</td>
+<td>Paginated ledger transaction list per customer</td>
+</tr>
+</tbody></table>
+<p>Auth note: #1-4 and #9-15 use federated JWT auth; #5, #6, #7, #8 sit in the public URL
+list but require the INTERNAL SHARED PASSWORD (browser clients reach equivalent
+functionality through CDXE — see section 10).</p>
+<h3 id="4-2-internal-list-internal-urlpatterns-urls-py-5-50-13-endpoints">4.2 Internal list — internal_urlpatterns (urls.py:5-50) — 13 endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>16</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/user/search/">https://dev-sales-api.providhy.com/api/miniapp/credit/user/search/</a></td>
+<td>GetCreditRecordForCustomer</td>
+<td>views.py:561</td>
+<td>A customer&#39;s open credits across connected merchants (CDXE)</td>
+</tr>
+<tr>
+<td>17</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/merchant/search/">https://dev-sales-api.providhy.com/api/miniapp/credit/merchant/search/</a></td>
+<td>GetCreditRecordForMerchant</td>
+<td>views.py:614</td>
+<td>A merchant&#39;s credits for given customers (Projectmaster)</td>
+</tr>
+<tr>
+<td>18</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/settlement/detail/customer/%7Bpk%7D/">https://dev-sales-api.providhy.com/api/miniapp/settlement/detail/customer/{pk}/</a></td>
+<td>SettlementDetailViewForCustomer</td>
+<td>views.py:777</td>
+<td>Customer-facing settlement detail (CDXE)</td>
+</tr>
+<tr>
+<td>19</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/settlement/search/internal/">https://dev-sales-api.providhy.com/api/miniapp/settlement/search/internal/</a></td>
+<td>InternalCreditSettlementSearchView</td>
+<td>views.py:899</td>
+<td>Settlement search for a customer across merchants (CDXE)</td>
+</tr>
+<tr>
+<td>20</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/payment/request/">https://dev-sales-api.providhy.com/api/miniapp/payment/request/</a></td>
+<td>PaymentRequestView</td>
+<td>views.py:1550</td>
+<td>Create merchant-initiated eSewa payment request + PENDING settlement (CDXE)</td>
+</tr>
+<tr>
+<td>21</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/payment/request/settle/">https://dev-sales-api.providhy.com/api/miniapp/payment/request/settle/</a></td>
+<td>InitiateTransactionSettlementView</td>
+<td>views.py:1591</td>
+<td>Callback: settle a PENDING settlement from Payment service outcome</td>
+</tr>
+<tr>
+<td>22</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/internal/">https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/internal/</a></td>
+<td>FetchCreditLogsViewInternal</td>
+<td>views.py:1011</td>
+<td>Ledger list for a merchant+customers (Projectmaster)</td>
+</tr>
+<tr>
+<td>23</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/customer/">https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/customer/</a></td>
+<td>CreditLedgerForCustomerView</td>
+<td>views.py:1031</td>
+<td>Customer&#39;s ledger across connected merchants (CDXE)</td>
+</tr>
+<tr>
+<td>24</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/customer/overview/">https://dev-sales-api.providhy.com/api/miniapp/credit/ledger/customer/overview/</a></td>
+<td>CreditLedgerOverviewForCustomerView</td>
+<td>views.py:1079</td>
+<td>Customer&#39;s ledger summary per merchant (CDXE)</td>
+</tr>
+<tr>
+<td>25</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/credit/overview/customer/">https://dev-sales-api.providhy.com/api/miniapp/credit/overview/customer/</a></td>
+<td>CreditOverviewForCustomerView</td>
+<td>views.py:63</td>
+<td>Customer&#39;s credit totals across connected merchants (CDXE)</td>
+</tr>
+<tr>
+<td>26</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/records/delete/customer/">https://dev-sales-api.providhy.com/api/miniapp/records/delete/customer/</a></td>
+<td>DeleteCustomerRecordsView</td>
+<td>views.py:1782</td>
+<td>Cancel all of a customer&#39;s credits+settlements (Projectmaster deprovisioning)</td>
+</tr>
+<tr>
+<td>27</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/search/customer/">https://dev-sales-api.providhy.com/api/miniapp/dispute/search/customer/</a></td>
+<td>CreditDisputeListViewForCustomer</td>
+<td>views.py:1387</td>
+<td>Customer&#39;s disputes across connected merchants (CDXE)</td>
+</tr>
+<tr>
+<td>28</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/dispute/detail/customer/%7Bdispute_id%7D/">https://dev-sales-api.providhy.com/api/miniapp/dispute/detail/customer/{dispute_id}/</a></td>
+<td>CreditDisputeDetailViewForCustomer</td>
+<td>views.py:1464</td>
+<td>Customer-facing dispute detail (CDXE)</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-admin-list-miniapp-admin-urlpatterns-urls-py-123-135-2-endpoints">4.3 Admin list — miniapp_admin_urlpatterns (urls.py:123-135) — 2 endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>29</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/admin/dispute/search/">https://dev-sales-api.providhy.com/api/miniapp/admin/dispute/search/</a></td>
+<td>CreditDisputeListViewForAdmin</td>
+<td>views.py:1816</td>
+<td>Platform-wide dispute search for internal ops (text search param)</td>
+</tr>
+<tr>
+<td>30</td>
+<td>POST</td>
+<td><a href="https://dev-sales-api.providhy.com/api/miniapp/admin/credit/overview/">https://dev-sales-api.providhy.com/api/miniapp/admin/credit/overview/</a></td>
+<td>CreditOverviewForAdminView</td>
+<td>views.py:1875</td>
+<td>Platform-wide credit totals (CID-prefixed, approved)</td>
+</tr>
+</tbody></table>
+<p>Auth: #29/#30 use the same internal shared-password auth (via InternalSearchView /
+InternalAuthenticationView) — they are NOT Django-admin routes; no extra role check
+exists (see section 11).</p>
+<p>ENDPOINT TOTALS: 15 + 13 + 2 = 30.</p>
+</section><section class="sec" data-title="5. Endpoint flow traces"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-endpoint-flow-traces">5. Endpoint flow traces</h2>
+<p>Common steps: federated endpoints run the section 3.1 auth chain then the
+HasFederatedEntityPermission user-type gate; internal endpoints run the password check of
+section 3.3. Below only view/serializer-specific steps are numbered.</p>
+<h3 id="5-1-get-api-miniapp-credit-overview-views-py-43-60">5.1 GET /api/miniapp/credit/overview/ (views.py:43-60)</h3>
+<ul>
+<li>Request: none (query ignored). Auth: federated; ESM only (views.py:47).</li>
+<li>Flow: build context {tenant_id: request.auth, provider_code} (views.py:51-56);
+CreditOverviewSerializer computes 3 aggregates (serializers.py:41-77):
+total_paid = sum(total_allocated_amount) over approved settlements whose items point to
+approved credits; total_remaining = sum(remaining_amount) over approved CreditRecords;
+total_over_due = sum(remaining_amount) where transaction_date &lt; today and
+payment_status in (unpaid, partially_paid) (serializers.py:66-77).</li>
+<li>DB: CreditRecord (read), CreditSettlement (read).</li>
+<li>Outbound: IAM token verify (auth only).</li>
+<li>Errors: 401 (bad token/IAM), 403 (non-ESM), 503 (IAM timeout).</li>
+</ul>
+<h3 id="5-2-post-api-miniapp-credit-create-views-py-83-174">5.2 POST /api/miniapp/credit/create/ (views.py:83-174)</h3>
+<ul>
+<li>Request: customer (JSON object), grand_total, entry_date, due_date (optional),
+description, payment_term (optional), files (optional image, multipart). Auth: federated;
+ESM; ADD_EDIT/SALES_INVOICE (views.py:84-85).</li>
+<li>Flow: (1) file type check via filetype (views.py:97-104; utils.py:35-46) — else 400
+INVALID_FILE_TYPE. (2) entry_by = helper.get_username(request.username) (views.py:106;
+helper.py:401-406). (3) CreditRecordSerializer.validate_customer (serializers.py:316-338)
+POSTs Projectmaster /api/miniapp/customer-check/ (async_func.py:61-92) — 400 if customer
+not found. (4) get_external_data POSTs Configuration /api/service-configuration/tenant/expose/
+(async_func.py:133-155; helper.py:162) for credit settings (credit_limit, credit_period)
+(serializers.py:283-314). (5) validate: grand_total &gt; 0; due_date defaults to
+entry_date + credit_period days; due_date must be &gt;= entry_date (serializers.py:360-376).
+(6) save(): CreditRecord (SalesInvoice proxy) created with status=approved,
+remaining_amount=grand_total, unique_id CID-xxxx from ID.createID (views.py:121-122;
+serializers.py:378-401; models.py:18-23). (7) if files: POST Document
+/api/document/record-entry-document/ (helper.py:350-380; views.py:124-129) — server error
+raises ValidationError (rollback). (8) if customer.is_provider_user: fetch merchant name
+via IAM /api/external/is-registered/ (views.py:133-135; async_func.py:158-181); read new
+balance from CreditLedger view (views.py:137-144); enqueue Celery send_notification_task +
+send_activity_log to Events (views.py:158-172). (9) 201 {id, unique_id, message}.</li>
+<li>DB: writes SalesInvoice (+ID counter); reads ID.</li>
+<li>Outbound: Projectmaster, Configuration, Document, IAM (all sync httpx/requests); Events
+(async Celery).</li>
+<li>Errors: 400 (file type; serializer field errors incl. customer-not-found; due date);
+401/403/503 (auth).</li>
+</ul>
+<h3 id="5-3-get-api-miniapp-credit-search-views-py-177-245">5.3 GET /api/miniapp/credit/search/ (views.py:177-245)</h3>
+<ul>
+<li>Request query: q (free text), customer_id (optional), from_date/to_date (entry date
+range), order_by (entry_date or remaining_amount, optional leading -), plus
+SalesInvoiceFilterSet params + over_due (bool) + payment_status; page/count
+(pagination.py:4-7, page size 100). Auth: federated; ESM.</li>
+<li>Flow: (1) get_lookup (views.py:199-210): tenant=request.auth, status != cancelled,
+remaining_amount &gt; 0, payment_status != fully_paid; optional entry_date range.
+(2) order_by validation against sorting_fields else ValidationError 400 (views.py:216-221).
+(3) if q or customer_id given: POST Projectmaster customer-check with all=True
+(views.py:227-234; async_func.py:61-92) to build customer_id map, annotate JSON customer
+id and filter (views.py:235-238). (4) filter_queryset via MiniAppFilterMixin
+(mixins.py:9-19) -&gt; CreditRecordFilterSet (filters.py:10-23) with tenant_id,
+start/end dates, provider_code injected. (5) paginate + serialize with
+include_fields id, unique_id, customer_details, due_date, entry_date, remaining_amount
+(views.py:186-197); list serializer does one batched Projectmaster customer-check for
+customer_details enrichment (serializers.py:146-213).</li>
+<li>DB: CreditRecord (read).</li>
+<li>Outbound: Projectmaster (up to 2 calls), IAM (auth).</li>
+<li>Errors: 400 (invalid order_by; serializer), 401/403/503 (auth).</li>
+</ul>
+<h3 id="5-4-get-post-delete-api-miniapp-credit-detail-pk-views-py-277-513">5.4 GET/POST/DELETE /api/miniapp/credit/detail/{pk}/ (views.py:277-513)</h3>
+<ul>
+<li>Auth: federated; ESM.</li>
+<li>GET: get_query (views.py:283-288) id+tenant+not cancelled; 404 if missing
+(views.py:295-299); CreditRecordSerializer (customer_details via Projectmaster
+customer-check, serializers.py:316-338); documents via GET Document
+/api/document/document-list/ (helper.py:336-347; views.py:307-308); 200 with documents.</li>
+<li>POST (update): file check (views.py:319-326); 404 (views.py:328-332); serializer update
+(serializers.py:420-430) — rejects unless payment_status == unpaid (400 &quot;Cannot update a
+partially paid credit record.&quot;); sets due_date-&gt;transaction_date, remaining_amount =
+grand_total; document upload if files (helper.py:350-380). If customer.is_provider_user:
+if body has dispute_data (JSON string with dispute_id, dispute_status):
+handle_dispute_resolution (views.py:349-372, 419-445) — dispute must exist and be
+pending (ValidationError otherwise, views.py:427-430) and dispute_status must equal
+resolved (views.py:431-434); sets dispute_status=resolved +
+resolution_method=resolution_by_edition; else plain edit notification. Notification +
+activity enqueued (views.py:374-408), balance re-read from CreditLedger (views.py:390-393).</li>
+<li>DELETE: 404 check (views.py:460-468); deletion eligibility — remaining == grand_total,
+payment_status == unpaid, no CreditSettlementItem exists (views.py:447-455, 469-473) —
+else 400 CREDIT_RECORD_DELETION_NOT_ALLOWED; status=cancelled (views.py:474-475); if
+query params dispute_id+dispute_status: resolve dispute with
+resolution_by_deletion (credit cancelled + other disputes on it deleted, views.py:437-441,
+482-488) + notification/activity (views.py:489-508); 200 DELETED.</li>
+<li>DB: CreditRecord (read/write), CreditDispute (read/write), CreditSettlementItem (read),
+CreditLedger (read balance).</li>
+<li>Outbound: IAM (auth, is-registered), Projectmaster (customer check), Document (list/upload),
+Events (async).</li>
+<li>Errors: 404, 400 (file, serializer, deletion not allowed, dispute state), 401/403/503.</li>
+</ul>
+<h3 id="5-5-post-api-miniapp-credit-detail-customer-pk-views-py-516-558">5.5 POST /api/miniapp/credit/detail/customer/{pk}/ (views.py:516-558)</h3>
+<ul>
+<li>Request body: password, connected_merchant_tenant_id (list), external_identifier
+(customer), provider_code. Auth: InternalRequestAuthentication (password gate).</li>
+<li>Flow: get_object (views.py:519-528): id=pk, tenant_id IN connected merchants,
+customer.external_identifier match, not cancelled; 404 if missing (views.py:534-538);
+CreditRecordSerializerForUser (serializers.py:439-474) with fixed include fields
+(views.py:543-553); documents via Document GET (helper.py:336-347; views.py:556-557).</li>
+<li>DB: CreditRecord (read).</li>
+<li>Outbound: Document (list). No IAM verify (internal password only).</li>
+<li>Errors: 401 (bad password), 404.</li>
+</ul>
+<h3 id="5-6-post-api-miniapp-credit-pay-views-py-1684-1779">5.6 POST /api/miniapp/credit/pay/ (views.py:1684-1779)</h3>
+<ul>
+<li>Request body: password, external_identifier, provider_code,
+settlement_data {merchant_tenant_id, total_allocated_amount, items? [{credit: id,
+allocated_amount}], description?, transaction_id, commit?}. Auth: APIView +
+InternalRequestPermission (views.py:1693) — password is the only gate.</li>
+<li>Flow: (1) tenant := merchant_tenant_id (views.py:1701). (2) SettleMerchantCreditSerializer
+(serializers.py:1384-1593): item credits must belong to the customer&#39;s
+external_identifier (serializers.py:1373-1381); get_invoices (serializers.py:1415-1443) —
+items if given, else ALL approved + unpaid/partially_paid + remaining&gt;0 credits of
+(tenant, customer); customer verified via Projectmaster customer-check
+(serializers.py:1465-1473); allocatable check via utils.validate_allocatable_amount
+(utils.py:49-66) or items sum == total_allocated (serializers.py:1483-1490).
+(3) commit == false → 200 &quot;Transaction valid&quot; dry-run (views.py:1713-1721).
+(4) create (serializers.py:1500-1522): CreditSettlement status=approved + items, each
+credit remaining_amount -= allocated, payment_status recomputed (serializers.py:1524-1555).
+(5) POST Payment /api/{provider_code}/payment/request/ with payment_request_data
+{customer, payment: settlement.id, amount, status: completed, transaction_id} plus
+paid_to, initiator: customer (serializers.py:1557-1588) — non-200 raises ValidationError
+and the @transaction.atomic view (views.py:1696) rolls back the settlement.
+(6) new balance from CreditLedgerCustomer view (views.py:1724-1731); merchant name via
+IAM is-registered (views.py:1733-1737); enqueue notification + activity (views.py:1753-1767).
+(7) 200 {message, id}.</li>
+<li>DB: writes CustomerPayment, CustomerPaymentItem, ID; updates SalesInvoice (remaining,
+payment_status); reads CreditLedgerCustomer view.</li>
+<li>Outbound: Projectmaster, Payment (requests), IAM, Events (async).</li>
+<li>Errors: 401 (password), 400 (customer not found, allocatable exceeded, payment-service
+failure response.json()).</li>
+</ul>
+<h3 id="5-7-post-api-miniapp-dispute-raise-views-py-1291-1321">5.7 POST /api/miniapp/dispute/raise/ (views.py:1291-1321)</h3>
+<ul>
+<li>Request body: password, connected_merchant_tenant_id, external_identifier, provider_code,
+dispute_data {credit: id, description}. Auth: InternalRequestAuthentication.</li>
+<li>Flow: CreditRecordDisputeSerializer (serializers.py:1082-1215):
+validate_credit (serializers.py:1123-1158) — credit.tenant_id must be in connected
+merchants; credit.customer.external_identifier must equal the requester; credit must be
+unpaid; no approved/pending settlement may exist on it; no pending dispute may already
+exist. create (serializers.py:1209-1215): CreditDispute with tenant from credit,
+unique_id CD-xxxx (models.py:86-89), dispute_status=issued (default, choices.py:538-541).
+201 {id, unique_id, message, tenant_id, amount = credit.remaining_amount}
+(views.py:1316-1321).</li>
+<li>DB: writes CreditDispute; reads SalesInvoice.</li>
+<li>Outbound: none (besides the internal password check — no IAM verify here).</li>
+<li>Errors: 401, 400 (all validate_credit conditions).</li>
+</ul>
+<h3 id="5-8-post-api-miniapp-dispute-cancel-dispute-id-views-py-1324-1349">5.8 POST /api/miniapp/dispute/cancel/{dispute_id}/ (views.py:1324-1349)</h3>
+<ul>
+<li>Request body: password, connected_merchant_tenant_id, external_identifier.
+Auth: InternalRequestAuthentication.</li>
+<li>Flow: lookup dispute id + tenant IN connected merchants +
+credit.customer.external_identifier == requester + credit not cancelled
+(views.py:1329-1334); 404 if missing (views.py:1335-1339); dispute_status = cancelled
+(views.py:1340-1341); 200 {message, id, tenant_id}.</li>
+<li>DB: read+write CreditDispute (select_related credit).</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 404.</li>
+</ul>
+<h3 id="5-9-get-api-miniapp-dispute-search-views-py-1352-1384">5.9 GET /api/miniapp/dispute/search/ (views.py:1352-1384)</h3>
+<ul>
+<li>Request query: dispute_status, unique_id, tenant_id (filterset, filters.py:32-36) +
+fiscal-year dates injected by mixin. Auth: federated; ESM.</li>
+<li>Flow: get_queryset (views.py:1374-1384): tenant = request.auth, credit not cancelled,
+order -id, select_related credit; MiniAppFilterMixin injects provider_code
+(mixins.py:9-19); serialize include_fields credit_details, dispute_status, id,
+customer_details (views.py:1360-1361) with credit_fields (views.py:1363-1372);
+list serializer (CreditDisputeListSerializer, serializers.py:976-1079) enriches
+customer_details via batched Projectmaster customer-check and merchant/issuer details
+via IAM is-registered.</li>
+<li>DB: CreditDispute (read, select_related credit).</li>
+<li>Outbound: Projectmaster, IAM.</li>
+<li>Errors: 401/403/503 (auth).</li>
+</ul>
+<h3 id="5-10-get-api-miniapp-dispute-detail-dispute-id-views-py-1418-1461">5.10 GET /api/miniapp/dispute/detail/{dispute_id}/ (views.py:1418-1461)</h3>
+<ul>
+<li>Auth: federated; ESM.</li>
+<li>Flow: tenant-scoped lookup (views.py:1426); 404 (views.py:1427-1431); serialize
+dispute_fields id, unique_id, description, dispute_status, credit_details,
+customer_details (views.py:1444-1455); credit_details = nested CreditRecordSerializer
+with credit_fields id, due_date, remaining_amount, description, entry_date
+(views.py:1436-1442) — customer_details via Projectmaster customer-check
+(serializers.py:1160-1175); documents from the CREDIT via Document GET
+(views.py:1457-1460).</li>
+<li>DB: CreditDispute (read), SalesInvoice (read).</li>
+<li>Outbound: Projectmaster, Document, IAM (auth).</li>
+<li>Errors: 401/403/503, 404.</li>
+</ul>
+<h3 id="5-11-post-api-miniapp-settlement-manual-create-views-py-665-723">5.11 POST /api/miniapp/settlement/manual/create/ (views.py:665-723)</h3>
+<ul>
+<li>Request body: customer (JSON), total_allocated_amount, items? [{credit: id,
+allocated_amount}], description?, payment_method? (default cash), payment_date?.
+Auth: federated; ESM; ADD_EDIT/CUSTOMER_PAYMENT (views.py:666-667).</li>
+<li>Flow: (1) valid_required_data customer + total_allocated_amount else 400 FieldError
+(views.py:680; helper.py:470-478). (2) ManualCreditSettlementSerializer
+(serializers.py:665-957): validate_customer via Projectmaster customer-check
+(serializers.py:785-809); total_allocated_amount must equal sum of item allocations
+(serializers.py:884-891, 811-824); get_credit_invoices (serializers.py:826-858) —
+item credits if given (PrimaryKeyRelatedField validates existence), else all approved +
+unpaid/partially_paid + remaining&gt;0 credits of the customer EXCLUDING credits with a
+pending dispute; none found → 400 &quot;No valid credit records found...&quot;; validate
+(serializers.py:860-892): every credit must belong to the customer; when no items
+supplied, allocatable check (utils.py:49-66). (3) create (serializers.py:936-957):
+CreditSettlement status=approved, payment_method default cash;
+create_payment_items (serializers.py:908-934): FIFO allocation ordered by -entry_date,
+writes CustomerPaymentItem rows, updates each credit remaining_amount/payment_status,
+bulk_update + save. (4) closing balance from CreditLedger view (views.py:688-694).
+(5) enqueue notification + activity (both merchant, views.py:700-719). (6) 201.</li>
+<li>DB: writes CustomerPayment, CustomerPaymentItem, ID; updates SalesInvoice; reads
+CreditLedger view, CreditDispute (pending-dispute exclusion).</li>
+<li>Outbound: Projectmaster, Events (async).</li>
+<li>Errors: 400 (required fields, serializer, no credits, allocatable exceeded), 401/403/503.</li>
+</ul>
+<h3 id="5-12-get-api-miniapp-settlement-detail-pk-views-py-726-774">5.12 GET /api/miniapp/settlement/detail/{pk}/ (views.py:726-774)</h3>
+<ul>
+<li>Auth: federated; ESM.</li>
+<li>Flow: get_query (views.py:732-737) id+tenant+not cancelled; 404
+(views.py:761-765); serialize include_fields (views.py:739-753) via
+ManualCreditSettlementSerializer: customer_details via Projectmaster customer-check
+(serializers.py:749-766); payment_request_details — for provider users, Payment
+/api/esewa/payment/request/search/ (serializers.py:706-721 → async_func.py:95-130;
+helper.py:69), else default {method: manual, status: offline}; credit_details
+(serializers.py:723-733); merchant_details via IAM is-registered
+(serializers.py:735-747).</li>
+<li>DB: CreditSettlement (read, items select_related).</li>
+<li>Outbound: Projectmaster, Payment (httpx), IAM.</li>
+<li>Errors: 401/403/503, 404; payment-service client error → ValidationError (async_func.py:123-125).</li>
+</ul>
+<h3 id="5-13-get-api-miniapp-settlement-search-views-py-829-896">5.13 GET /api/miniapp/settlement/search/ (views.py:829-896)</h3>
+<ul>
+<li>Request query: q (search_fields unique_id, customer__name, customer__external_identifier
+(views.py:831)), customer_id?, from_date+to_date?, order_by? (payment_date |
+total_allocated_amount | id), method? (default manual). Auth: federated; ESM.</li>
+<li>Flow: get_queryset (views.py:857-878): base CreditSettlement + q lookup
+(SearchMixin, mixins.py:181-194) + order_by validation (400) + customer_id JSON filter +
+payment_date range + status != cancelled; filter_queryset with
+PaymentSettlementFilterSet (filters.py:26-29) + tenant/fiscal dates/provider_code;
+get (views.py:880-896): serialize the whole filtered set first (list serializer
+ManualCreditSettlementListSerializer enriches payment_request_details +
+merchant_details in batch, serializers.py:540-662) then paginate the SERIALIZED data
+(page size 100). Method filtering: manual → keep settlements with no payment-request
+record (offline); requested/completed/declined → match payment-request status
+(serializers.py:628-662).</li>
+<li>DB: CreditSettlement (read).</li>
+<li>Outbound: Projectmaster, Payment, IAM.</li>
+<li>Errors: 400 (invalid order_by, invalid method), 401/403/503.</li>
+</ul>
+<h3 id="5-14-get-api-miniapp-credit-ledger-overview-views-py-1152-1218">5.14 GET /api/miniapp/credit/ledger/overview/ (views.py:1152-1218)</h3>
+<ul>
+<li>Request query: customer_id (required), from_date?, to_date?. Auth: federated; default
+user types (ESM + ESU); required_feature_permission = ServiceChoices.REPORTING (&quot;PR800&quot;)
+(views.py:955-956 pattern here: views.py:1153-1155) — presence only, see section 3.2.</li>
+<li>Flow: get_query on CreditLedger view (views.py:1157-1185): opening row = latest
+current_balance with txn_date &lt;= from_date (or earliest), closing row = latest with
+txn_date &lt;= to_date; aggregate credits_given = sum(txn_amount, txn_type=credit),
+payments_received = abs(sum(txn_amount, txn_type=settlement)) (views.py:1196-1199);
+opening_balance = opening.current_balance - opening.txn_amount (views.py:1200-1204).
+Missing customer_id → 400 INCORRECT_DATA_FORMAT (views.py:1213-1217) — checked AFTER the
+queries run (see section 11).</li>
+<li>DB: CreditLedger view only.</li>
+<li>Outbound: IAM (auth only).</li>
+<li>Errors: 400 (missing customer_id), 401/403/503.</li>
+</ul>
+<h3 id="5-15-get-api-miniapp-credit-ledger-views-py-952-1008">5.15 GET /api/miniapp/credit/ledger/ (views.py:952-1008)</h3>
+<ul>
+<li>Request query: customer_id (list), from_date?, to_date?, page/count. Auth: federated;
+default user types; required_feature_permission = choices.ServiceChoices.REPORTING
+(views.py:955) — see section 11 note.</li>
+<li>Flow: get_query (views.py:966-988): CreditLedger view + tenant + customer_id IN list +
+txn_date range; .values(txn_id, txn_date, txn_type, txn_amount, customer_id,
+current_balance).order_by(-txn_date, -created); CreditLedgerSerializer
+(serializers.py:1606-1616); paginate the serialized list (views.py:990-993, 1005-1008).</li>
+<li>DB: CreditLedger view only.</li>
+<li>Outbound: IAM (auth only).</li>
+<li>Errors: 401/403/503.</li>
+</ul>
+<h3 id="5-16-post-api-miniapp-credit-user-search-views-py-561-611">5.16 POST /api/miniapp/credit/user/search/ (views.py:561-611)</h3>
+<ul>
+<li>Request body: password, customer_identifier, connected_merchants (list of merchant
+tenant ids), from_date?, to_date?, order_by? (default -entry_date), over_due?.
+Auth: APIView + InternalRequestPermission.</li>
+<li>Flow: lookup (views.py:565-574): customer.external_identifier match + tenant IN
+connected + not cancelled + remaining_amount &gt; 0; optional entry_date range; over_due
+→ transaction_date &lt; now (views.py:587-591); order_by taken from body (views.py:582, 592);
+serialize with CreditRecordSerializerForUser excluding customer_id/unique_id/description
+(views.py:602-605); response grouped BY TENANT (views.py:607-611).</li>
+<li>DB: CreditRecord (read).</li>
+<li>Outbound: none (no IAM verify; internal password only).</li>
+<li>Errors: 401 (bad password). No explicit 400 validation.</li>
+</ul>
+<h3 id="5-17-post-api-miniapp-credit-merchant-search-views-py-614-662">5.17 POST /api/miniapp/credit/merchant/search/ (views.py:614-662)</h3>
+<ul>
+<li>Request body: password, tenant_id, customer_id (LIST — otherwise raw ValueError → 500,
+views.py:650-651), payment_status (list, default all). Auth: InternalRequestPermission.</li>
+<li>Flow: payment_status values must be in PaymentStatusChoices else 400
+INVALID_PAYMENT_STATUS (views.py:643-649); annotate customer_id from JSON; filter
+(views.py:621-633): not cancelled + tenant + customer_id IN list + payment_status IN
+list + remaining_amount &gt; 0; order -entry_date, -id; serialize excluding
+tenant_id/description; response grouped BY CUSTOMER (views.py:658-662).</li>
+<li>DB: CreditRecord (read).</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 400 (invalid payment_status), 500 (customer_id not a list).</li>
+</ul>
+<h3 id="5-18-post-api-miniapp-settlement-detail-customer-pk-views-py-777-826">5.18 POST /api/miniapp/settlement/detail/customer/{pk}/ (views.py:777-826)</h3>
+<ul>
+<li>Request body: password, tenant_id (merchant), external_identifier (customer),
+provider_code. Auth: InternalRequestAuthentication; GET explicitly 405
+(views.py:778-781, 823-826).</li>
+<li>Flow: get_query override (views.py:798-805): id + tenant IN body tenant_id +
+customer.external_identifier + not cancelled; reuses SettlementDetailView.get
+(views.py:815) with include_fields (views.py:783-796) → customer_details (Projectmaster),
+payment_request_details (Payment search), credit_details; check_payment_detail
+(views.py:807-811): if payment_request_details.status == &quot;offline&quot; → 400 &quot;Record not
+found.&quot; — i.e. only settlements with an online payment request are visible to the
+customer.</li>
+<li>DB: CreditSettlement (read).</li>
+<li>Outbound: Projectmaster, Payment, IAM (none for merchant_details — not in include_fields).</li>
+<li>Errors: 401, 405 (GET), 400 (offline settlement / not found).</li>
+</ul>
+<h3 id="5-19-post-api-miniapp-settlement-search-internal-views-py-899-949">5.19 POST /api/miniapp/settlement/search/internal/ (views.py:899-949)</h3>
+<ul>
+<li>Request body: password, tenant_id (list of merchant tenants), user_identifier?
+(customer), from_date?, to_date?, order_by?, method? (requested|completed|declined),
+q? (free text → search_query context), merchant_identifier?.
+Auth: InternalAuthenticationView via InternalSearchView (POST-only).</li>
+<li>Flow: get_lookup (views.py:903-914): not cancelled + payment_date range + tenant IN +
+optional customer external_identifier; get_queryset (views.py:916-924) with order_by
+validation (400); include_fields id, unique_id, total_allocated_amount,
+payment_request_details, merchant_details, description, payment_date (views.py:926-935);
+get_serializer_context validates method else 400 (views.py:937-949); list serializer
+enriches (Payment + IAM) and filters by method (serializers.py:628-662);
+InternalSearchView.post returns the plain (unpaginated) list (generics.py:203-211).</li>
+<li>DB: CreditSettlement (read).</li>
+<li>Outbound: Projectmaster, Payment, IAM.</li>
+<li>Errors: 401, 400 (invalid method, invalid order_by).</li>
+</ul>
+<h3 id="5-20-post-api-miniapp-payment-request-views-py-1550-1588">5.20 POST /api/miniapp/payment/request/ (views.py:1550-1588)</h3>
+<ul>
+<li>Request body: password, tenant_id (merchant), entry_by, provider_code,
+external_identifier, payment_request_data {customer, total_allocated_amount, items?,
+description?, payment_method? (default wallet)}. Auth: InternalRequestPermission.</li>
+<li>Flow: PaymentRequestSerializer (serializers.py:1257-1332): create path → inherited
+validate: customer must be a VERIFIED PROVIDER USER else 400 &quot;Customer must be a
+verified provider user to create payment request.&quot; (serializers.py:1281-1285); plus
+ManualCreditSettlementSerializer.validate (credit ownership, allocatable —
+serializers.py:860-892). create (serializers.py:1327-1332): CreditSettlement
+status=PENDING; super().create with create_payment_items(update_credit=False) —
+settlement items written but credit balances UNCHANGED (serializers.py:936-957,
+1334-1339); then create_payment_request (serializers.py:1287-1311): POST Payment
+/api/{provider_code}/payment/request/ with payment_request_data {customer, payment:
+settlement.id, amount, settlement_id}; non-200 → ValidationError (whole transaction
+rolls back). 201 {message, id, unique_id}.</li>
+<li>DB: writes CustomerPayment (pending), CustomerPaymentItem, ID.</li>
+<li>Outbound: Projectmaster (customer check), Payment (requests, sync).</li>
+<li>Errors: 401, 400 (not a verified provider user, allocatable exceeded, payment-service
+non-200).</li>
+</ul>
+<h3 id="5-21-post-api-miniapp-payment-request-settle-views-py-1591-1681">5.21 POST /api/miniapp/payment/request/settle/ (views.py:1591-1681)</h3>
+<ul>
+<li>Request body: password, payment (settlement id), tenant_id, status
+(completed|declined|cancelled), provider_code?, description?. Auth:
+InternalRequestPermission. Caller: Payment service on eSewa outcome.</li>
+<li>Flow: (1) status map (views.py:1595-1601): completed→approved, declined→rejected,
+cancelled→draft (unknown input → None). (2) settlement lookup id+tenant (views.py:1611);
+404 (views.py:1613-1616). (3) PaymentRequestSerializer.update
+(serializers.py:1341-1370): only PENDING settlements updatable (serializers.py:1271-1279);
+if approved → each credit remaining_amount -= item.allocated_amount and payment_status
+recomputed (serializers.py:1357-1361); else payment_status recomputed only
+(serializers.py:1354-1356); bulk_update credits (serializers.py:1363-1366); settlement
+status/description saved (serializers.py:1367-1369). (4) merchant name via IAM
+is-registered (views.py:1642-1644); if completed → new balance from CreditLedger view
+(views.py:1651-1660); if completed or declined → enqueue notification + activity
+(views.py:1662-1677). (5) 200.</li>
+<li>DB: updates CustomerPayment, SalesInvoice; reads CreditLedger view.</li>
+<li>Outbound: IAM (is-registered), Events (async).</li>
+<li>Errors: 401, 404, 400 (settlement not pending).</li>
+</ul>
+<h3 id="5-22-post-api-miniapp-credit-ledger-internal-views-py-1011-1028">5.22 POST /api/miniapp/credit/ledger/internal/ (views.py:1011-1028)</h3>
+<ul>
+<li>Request body: password, tenant_id, customer_id (list), from_date?, to_date?.
+Auth: InternalRequestAuthentication; GET → 405 (views.py:1025-1028).</li>
+<li>Flow: post (views.py:1020-1023) calls super().get with internal_request=True; reuses
+FetchCreditLogsView.get_query (views.py:966-988) — tenant from request.auth (set from
+body by the auth class); serialized records grouped by customer_id (views.py:1012-1018).
+No pagination.</li>
+<li>DB: CreditLedger view only.</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 405.</li>
+</ul>
+<h3 id="5-23-post-api-miniapp-credit-ledger-customer-views-py-1031-1076">5.23 POST /api/miniapp/credit/ledger/customer/ (views.py:1031-1076)</h3>
+<ul>
+<li>Request body: password, external_identifier (customer), connected_merchants (list),
+from_date?, to_date?. Auth: InternalRequestPermission.</li>
+<li>Flow: missing identifier/merchants → 400 (views.py:1049-1053); query on
+CreditLedgerCustomer view (views.py:1054-1073): tenant IN connected +
+customer_identifier + txn_date range; values include tenant_id + customer_identifier;
+response grouped by tenant_id (views.py:1035-1041).</li>
+<li>DB: CreditLedgerCustomer view only.</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 400.</li>
+</ul>
+<h3 id="5-24-post-api-miniapp-credit-ledger-customer-overview-views-py-1079-1149">5.24 POST /api/miniapp/credit/ledger/customer/overview/ (views.py:1079-1149)</h3>
+<ul>
+<li>Request body: password, tenant_id (single merchant), external_identifier, from_date?,
+to_date?. Auth: InternalRequestPermission.</li>
+<li>Flow: get_query on CreditLedgerCustomer view (views.py:1082-1116) with opening/closing
+rows; aggregate credits_given / payments_received (abs) (views.py:1127-1130);
+opening_balance / closing_balance (views.py:1131-1136); missing customer_identifier →
+400 AFTER computation (views.py:1144-1148); 200 {credits_given, payments_received,
+opening_balance, closing_balance}.</li>
+<li>DB: CreditLedgerCustomer view only.</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 400.</li>
+</ul>
+<h3 id="5-25-post-api-miniapp-credit-overview-customer-views-py-63-80">5.25 POST /api/miniapp/credit/overview/customer/ (views.py:63-80)</h3>
+<ul>
+<li>Request body: password, tenant_id?, connected_merchant_tenant_id (list),
+external_identifier, provider_code. Auth: InternalRequestAuthentication.</li>
+<li>Flow: CreditOverviewSerializerForUser (serializers.py:80-143): aggregates over
+connected merchants&#39; approved credits filtered by customer.external_identifier;
+total_paid also filters settlements by customer (serializers.py:104-115).</li>
+<li>DB: CreditRecord (read), CreditSettlement (read).</li>
+<li>Outbound: none.</li>
+<li>Errors: 401; 400 (missing context via valid_context_data, serializers.py:85-92).</li>
+</ul>
+<h3 id="5-26-post-api-miniapp-records-delete-customer-views-py-1782-1813">5.26 POST /api/miniapp/records/delete/customer/ (views.py:1782-1813)</h3>
+<ul>
+<li>Request body: password, customer_identifier, tenant_id. Auth: InternalRequestPermission.</li>
+<li>Flow: missing fields → 400 (views.py:1789-1793); bulk UPDATE CreditRecord → status
+cancelled (views.py:1797-1799) AND CreditSettlement → status cancelled
+(views.py:1800-1802) for (tenant, customer external_identifier); count = sum of both
+(comment: settlements are cancelled, not deleted, views.py:1805); 200 {message:
+&quot;Deleted N Credit Records&quot;}.</li>
+<li>DB: bulk updates SalesInvoice, CustomerPayment.</li>
+<li>Outbound: none.</li>
+<li>Errors: 401, 400.</li>
+</ul>
+<h3 id="5-27-post-api-miniapp-dispute-search-customer-views-py-1387-1415">5.27 POST /api/miniapp/dispute/search/customer/ (views.py:1387-1415)</h3>
+<ul>
+<li>Request body: password, connected_merchant_tenant_id, external_identifier.
+Auth: InternalAuthenticationView via InternalSearchView (POST-only; enable_search=False
+so q is ignored).</li>
+<li>Flow: get_lookup (views.py:1406-1415): tenant IN connected +
+credit.customer.external_identifier + credit not cancelled; include_fields
+credit_details, dispute_status, id, tenant_id (views.py:1391-1392); credit_fields incl.
+merchant_details (views.py:1394-1404) → nested CreditRecordSerializer merchant_details
+via IAM is-registered (serializers.py:735-747, 1108-1114); list serializer enriches
+customer_details via Projectmaster (serializers.py:976-1079); plain list response
+(generics.py:203-211).</li>
+<li>DB: CreditDispute (read).</li>
+<li>Outbound: Projectmaster, IAM.</li>
+<li>Errors: 401.</li>
+</ul>
+<h3 id="5-28-post-api-miniapp-dispute-detail-customer-dispute-id-views-py-1464-1513">5.28 POST /api/miniapp/dispute/detail/customer/{dispute_id}/ (views.py:1464-1513)</h3>
+<ul>
+<li>Request body: password, tenant_id, connected_merchant_tenant_id, external_identifier.
+Auth: InternalRequestAuthentication.</li>
+<li>Flow: same lookup as dispute-cancel (views.py:1472-1477); 404 (views.py:1478-1482);
+serialize dispute_fields (views.py:1496-1507) incl. credit_details (credit_fields id,
+grand_total, description, entry_date, views.py:1488-1494) and customer_details
+(Projectmaster, serializers.py:1160-1175); documents from the credit via Document GET
+(views.py:1509-1512).</li>
+<li>DB: CreditDispute (read), SalesInvoice (read).</li>
+<li>Outbound: Projectmaster, Document, IAM (is-registered for merchant_details).</li>
+<li>Errors: 401, 404.</li>
+</ul>
+<h3 id="5-29-post-api-miniapp-admin-dispute-search-views-py-1816-1872-brief">5.29 POST /api/miniapp/admin/dispute/search/ (views.py:1816-1872) — brief</h3>
+<ul>
+<li>Request: POST body with password (+tenant_id/external_identifier per auth class);
+optional GET ?search= text (views.py:1844-1851). Auth: InternalSearchView →
+InternalRequestAuthentication (shared password; NO role check).</li>
+<li>Flow: lookup: search matches credit.customer.external_identifier or credit.customer.name
+or dispute description (views.py:1847-1851); queryset ordered -id (views.py:1854-1861,
+debug print at 1860); include_fields credit_details, dispute_status, id, issuer_details,
+merchant_details, description, status, created, resolution_method (views.py:1821-1832);
+context provider_code=esewa (views.py:1840); paginated via
+CustomTransactionPagination (views.py:1818, 1864-1872); enrichment via Projectmaster
+customer-check + IAM is-registered (CreditDisputeListSerializer, serializers.py:976-1079).</li>
+<li>DB: CreditDispute (read).</li>
+<li>Outbound: Projectmaster, IAM.</li>
+<li>Errors: 401.</li>
+</ul>
+<h3 id="5-30-post-api-miniapp-admin-credit-overview-views-py-1875-1899-brief">5.30 POST /api/miniapp/admin/credit/overview/ (views.py:1875-1899) — brief</h3>
+<ul>
+<li>Request body: password, tenant_id?, from_date?, to_date?. Auth:
+InternalRequestAuthentication.</li>
+<li>Flow: optional entry_date range (views.py:1877-1882); aggregate over ALL tenants where
+unique_id starts with &quot;CID&quot; (views.py:1883-1885 — no tenant scoping):
+total_credit_amount = sum(grand_total, status approved), remaining_amount =
+sum(remaining_amount, status approved) (views.py:1886-1893); 200
+{total_credit_amount, remaining_amount}.</li>
+<li>DB: CreditRecord (read, aggregate).</li>
+<li>Outbound: none.</li>
+<li>Errors: 401.</li>
+</ul>
+</section><section class="sec" data-title="6. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model">6. Data model</h2>
+<p>Models: miniapp/models.py — CreditRecord (9-23, proxy of SalesInvoice, ordering -id),
+CreditSettlement (26-39, proxy of CustomerPayment; unique_id TID- via ID.createID),
+CreditSettlementItem (42-49, proxy of CustomerPaymentItem), CreditDispute (52-89, real
+model, default table; unique_id CD-), CreditLedger (92-111, managed=False,
+db_table credit_ledger_view), CreditLedgerCustomer (114-134, managed=False,
+db_table credit_ledger_view_customer). Domain tables: SalesInvoice
+(sales/sales_invoice/models.py:13-121), CustomerPayment (sales/customer_payment/models.py:14-116),
+CustomerPaymentItem (customer_payment/models.py:184-206), ID counter
+(dashboard/models.py:17-59). customer is a JSONField {id, external_identifier, name,
+entity_type, is_provider_user, ...} on both SalesInvoice and CustomerPayment — there is no
+FK to a customer table in Sales (customers live in Projectmaster).</p>
+<p>Views (Postgres, created/recreated by migration 0018, miniapp/migrations/0018_alter_credit_ledger_view.py:3-85):</p>
+<ul>
+<li>credit_ledger_view: union of approved SalesInvoice (txn_type credit, +grand_total,
+txn_date=entry_date) and approved CustomerPayment (txn_type settlement,
+-total_allocated_amount, txn_date=payment_date); running SUM window partitioned by
+tenant_id + customer_id → current_balance.</li>
+<li>credit_ledger_view_customer: same but carries customer_identifier and partitions by
+tenant_id + customer_identifier.
+Note: views are NOT filtered to miniapp-created records — every approved invoice/payment
+in the Sales DB appears (see section 11).</li>
+</ul>
+<div class="diagram"><pre class="mermaid-src">erDiagram
+    ID {
+        string tenant_id
+        string name &quot;CID / TID / CD&quot;
+        int unique_id &quot;per-tenant counter&quot;
+    }
+    CreditRecord {
+        int id PK
+        string tenant_id
+        string unique_id &quot;CID-####&quot;
+        date entry_date
+        date invoice_date
+        date transaction_date &quot;due date&quot;
+        json customer
+        float grand_total
+        float remaining_amount
+        int payment_term
+        string status &quot;approved / cancelled&quot;
+        string payment_status &quot;unpaid / partially_paid / fully_paid&quot;
+        text description
+    }
+    CreditSettlement {
+        int id PK
+        string tenant_id
+        string unique_id &quot;TID-####&quot;
+        json customer
+        date payment_date
+        string payment_method
+        float total_allocated_amount
+        string status &quot;pending / approved / rejected / draft / cancelled&quot;
+        text description
+    }
+    CreditSettlementItem {
+        int id PK
+        int payment FK &quot;CustomerPayment&quot;
+        int sales_invoice FK &quot;SalesInvoice&quot;
+        float allocated_amount
+        float total_amount
+        float remaining_amount
+    }
+    CreditDispute {
+        int id PK
+        string tenant_id
+        string unique_id &quot;CD-####&quot;
+        int credit FK &quot;SalesInvoice&quot;
+        text description
+        string dispute_status &quot;issued / resolved / cancelled&quot;
+        string resolution_method &quot;resolution_by_edition / resolution_by_deletion&quot;
+        string entry_by
+    }
+    CreditLedger {
+        int id &quot;view row&quot;
+        string tenant_id
+        string customer_id
+        date txn_date
+        string txn_type &quot;credit / settlement&quot;
+        decimal txn_amount
+        decimal current_balance
+    }
+    CreditLedgerCustomer {
+        int id &quot;view row&quot;
+        string tenant_id
+        string customer_id
+        string customer_identifier
+        date txn_date
+        string txn_type
+        decimal txn_amount
+        decimal current_balance
+    }
+    ID ||--o{ CreditRecord : &quot;issues&quot;
+    ID ||--o{ CreditSettlement : &quot;issues&quot;
+    ID ||--o{ CreditDispute : &quot;issues&quot;
+    CreditRecord ||--o{ CreditDispute : &quot;disputed by&quot;
+    CreditRecord ||--o{ CreditSettlementItem : &quot;settled via&quot;
+    CreditSettlement ||--o{ CreditSettlementItem : &quot;contains&quot;
+    CreditRecord ||--o{ CreditLedger : &quot;credit rows&quot;
+    CreditSettlement ||--o{ CreditLedger : &quot;settlement rows&quot;
+    CreditRecord ||--o{ CreditLedgerCustomer : &quot;credit rows&quot;
+    CreditSettlement ||--o{ CreditLedgerCustomer : &quot;settlement rows&quot;
+</pre></div>
+<p>Key fields used by the miniapp (from the domain models):</p>
+<ul>
+<li>SalesInvoice: tenant_id, unique_id, entry_date, transaction_date, customer (JSON),
+grand_total, remaining_amount, payment_term, status, payment_status, narration,
+description, payment_method (sales_invoice/models.py:13-75); status choices
+draft/submitted_for_approval/approved/cancelled/pending/rejected (choices.py:58-64);
+payment status unpaid/partially_paid/fully_paid (choices.py:400-404).</li>
+<li>CustomerPayment: tenant_id, unique_id, customer (JSON), total_allocated_amount,
+payment_method, payment_date, status, description, entry_by
+(customer_payment/models.py:14-54).</li>
+<li>CustomerPaymentItem: payment FK, sales_invoice FK, total_amount, remaining_amount,
+allocated_amount, is_opening (customer_payment/models.py:184-206).</li>
+<li>CreditDispute: tenant_id, unique_id, credit FK (related_name credit_disputes),
+description, dispute_status (default issued), resolution_method, entry_by,
+created_at/updated_at (miniapp/models.py:57-78).</li>
+</ul>
+</section><section class="sec" data-title="7. Sequence diagrams"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-sequence-diagrams">7. Sequence diagrams</h2>
+<h3 id="7-1-merchant-creates-a-credit-record">7.1 Merchant creates a credit record</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant SALES as Sales
+    participant IAM as IAM
+    participant PM as Projectmaster
+    participant CONF as Configuration
+    participant DOC as Document
+    participant EV as Events (celery)
+    FE-&gt;&gt;SALES: POST /api/miniapp/credit/create/ (JWT + X-MINIAPP-TOKEN)
+    SALES-&gt;&gt;IAM: POST /api/external/token/verify/ (token + TOTP header)
+    IAM--&gt;&gt;SALES: 200 (valid token + TOTP)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;CONF: POST /api/service-configuration/tenant/expose/
+    CONF--&gt;&gt;SALES: credit settings (limit, period)
+    SALES-&gt;&gt;SALES: save CreditRecord (approved, CID-, remaining=total)
+    opt files uploaded
+        SALES-&gt;&gt;DOC: POST /api/document/record-entry-document/
+        DOC--&gt;&gt;SALES: 200
+    end
+    SALES--&gt;&gt;FE: 201 {id, unique_id}
+    SALES--)EV: send_notification_task + send_activity_log
+</pre></div>
+<h3 id="7-2-customer-initiated-settlement-customer-pays-outstanding-credit-via-esewa-wallet">7.2 Customer-initiated settlement (customer pays outstanding credit via eSewa wallet)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (customer)
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/credit/pay/ (customer view)
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/credit/pay/ (internal password)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;SALES: settlement APPROVED + items, credits reduced (tx)
+    SALES-&gt;&gt;PAY: POST /api/esewa/payment/request/ (status completed, transaction_id)
+    PAY--&gt;&gt;SALES: 200
+    SALES--&gt;&gt;CDXE: 200 {id}
+    CDXE--&gt;&gt;FE: 200
+    SALES--)EV: notify merchant + customer, activity log
+    Note over SALES,PAY: wallet charge itself is executed by Payment/eSewa gateway (outside Sales trace)
+</pre></div>
+<h3 id="7-3-merchant-initiated-payment-request-and-esewa-completion-callback">7.3 Merchant-initiated payment request and eSewa completion callback</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa (merchant)
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant PM as Projectmaster
+    participant PAY as Payment
+    participant ESEWA as eSewa wallet
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/payment/request/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/payment/request/ (internal password)
+    SALES-&gt;&gt;PM: POST /api/miniapp/customer-check/ (verified provider user)
+    PM--&gt;&gt;SALES: customer data
+    SALES-&gt;&gt;SALES: settlement PENDING + items (credit balances unchanged, tx)
+    SALES-&gt;&gt;PAY: POST /api/esewa/payment/request/
+    PAY--&gt;&gt;CDXE: payment request created (wallet collect link)
+    CDXE--&gt;&gt;FE: 201
+    ESEWA-&gt;&gt;PAY: customer pays (completed, transaction_id)
+    PAY-&gt;&gt;SALES: POST /api/miniapp/payment/request/settle/ (status completed)
+    SALES-&gt;&gt;SALES: settlement APPROVED, credit remaining -= allocation (tx)
+    SALES--&gt;&gt;PAY: 200
+    SALES--)EV: notify merchant + customer, activity log
+    Note over PAY,SALES: declined maps to rejected, cancelled maps to draft (views.py:1595-1601)
+</pre></div>
+<h3 id="7-4-dispute-lifecycle-raise-resolve-by-edit-cancel">7.4 Dispute lifecycle (raise, resolve-by-edit, cancel)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as miniapp-esewa
+    participant CDXE as CDXE
+    participant SALES as Sales
+    participant EV as Events (celery)
+    FE-&gt;&gt;CDXE: POST miniapp/dispute/raise/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/dispute/raise/ (internal password)
+    SALES-&gt;&gt;SALES: save CreditDispute (issued, CD-)
+    SALES--&gt;&gt;FE: 201 {id, amount}
+    FE-&gt;&gt;SALES: POST /api/miniapp/credit/detail/{id}/ (dispute_data resolved)
+    SALES-&gt;&gt;SALES: dispute RESOLVED (resolution_by_edition)
+    SALES--)EV: notify customer, activity log
+    FE-&gt;&gt;CDXE: POST miniapp/dispute/cancel/{id}/
+    CDXE-&gt;&gt;SALES: POST /api/miniapp/dispute/cancel/{id}/ (internal password)
+    SALES-&gt;&gt;SALES: dispute CANCELLED
+    SALES--&gt;&gt;FE: 200
+</pre></div>
+</section><section class="sec" data-title="8. Business process walkthroughs"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-process-walkthroughs">8. Business process walkthroughs</h2>
+<h3 id="8-1-sita-opens-a-credit-account-for-her-customer-merchant-side">8.1 Sita opens a credit account for her customer (merchant side)</h3>
+<p>Sita (eSewa merchant) opens the miniapp and goes to Credit. She picks a customer from her
+customer list, enters the amount she wants to extend and the due date (the due date can be
+left empty — Sales fills it from the credit period configured for her tenant), and attaches
+a photo of the purchase if she wants. On save, Sales checks that the customer really
+belongs to her tenant and is known to the eSewa network, then records the credit as
+APPROVED with the full amount outstanding. The customer&#39;s running balance in the ledger
+rises by that amount, and if the customer is a registered eSewa user, Sita and the customer
+both get a &quot;credit created&quot; notification with the amount and the new balance. Later Sita
+can edit the amount or due date (only while nothing has been paid), or cancel the whole
+credit (only while it is fully unpaid and never settled) — cancel-with-dispute also closes
+the dispute.</p>
+<h3 id="8-2-ram-pays-his-credit-with-the-esewa-wallet-customer-side">8.2 Ram pays his credit with the eSewa wallet (customer side)</h3>
+<p>Ram is Sita&#39;s customer. In the miniapp his dashboard shows what he owes across all
+connected merchants (the totals come from Sales&#39; internal &quot;credit/overview/customer&quot; and
+&quot;credit/user/search&quot; endpoints, which CDXE fetches on his behalf). He taps &quot;Pay&quot; on the
+credit, picks how much, and confirms. Behind the scenes CDXE calls Sales&#39; credit/pay
+endpoint, which verifies the credit belongs to him and that he cannot pay more than is
+outstanding (pending payment requests count against the balance), records the settlement as
+approved, reduces the credit&#39;s remaining amount, and tells the Payment service that a
+completed eSewa payment of that amount (with the wallet transaction id) exists for this
+settlement. Both Sita and Ram are notified of the payment. If he only pays part of the
+credit, the credit shows &quot;partially paid&quot; until the next payment.</p>
+<h3 id="8-3-sita-asks-ram-to-pay-merchant-initiated-payment-request">8.3 Sita asks Ram to pay (merchant-initiated payment request)</h3>
+<p>Instead of waiting, Sita can request payment herself. She selects the credit(s), enters the
+amount, and confirms — Sales creates a PENDING settlement (the ledger and the credit&#39;s
+remaining amount are NOT touched yet, so the request can still be cancelled) and hands a
+payment request to the Payment service, which generates the eSewa collect link shown to
+Ram. When Ram completes the payment in his wallet, the Payment service calls back into
+Sales (payment/request/settle) with the outcome: completed becomes an APPROVED settlement
+and the credit is reduced; a declined attempt marks the settlement rejected; a cancelled
+attempt resets it to draft. Sita sees the request with its live status (requested /
+completed / declined) in her transaction list, and both parties are notified when it ends.</p>
+<h3 id="8-4-ram-disputes-the-bill">8.4 Ram disputes the bill</h3>
+<p>If Ram believes the amount is wrong, he raises a dispute from his miniapp. Sales checks
+that the credit belongs to his connected merchant, is unpaid, has no active settlement and
+no earlier pending dispute, then records the dispute in &quot;issued&quot; state — while it is
+pending, Sita cannot settle that credit. Sita then resolves it by editing the credit to the
+correct amount (resolution by edition) or, if the credit was recorded in error, by deleting
+it (resolution by deletion, which cancels the credit). If Ram changes his mind, he simply
+cancels the dispute. Every resolution is logged in the activity log and the customer is
+notified.</p>
+<h3 id="8-5-offline-manual-settlement">8.5 Offline (manual) settlement</h3>
+<p>For cash or bank transfers that never touch the eSewa wallet, Sita records a manual
+settlement: she picks the customer and the amount (Sales will spread it across the
+customer&#39;s open credits oldest-first, or she can name exact credits), optionally writes a
+note. Sales approves it immediately, reduces the credits, updates the ledger, and notifies
+both parties. Manual settlements show up in her transaction list with payment method
+&quot;manual/offline&quot;, distinct from wallet-driven ones.</p>
+<h3 id="8-6-the-ledger">8.6 The ledger</h3>
+<p>For any customer, Sita can open the ledger: a chronological list of every credit granted
+(+amount) and every settlement made (-amount) with the running balance, plus a summary
+(total given, total received, opening and closing balance for a date range). The numbers
+come straight from two database views over the approved invoices and approved payments.
+Every night at midnight Sales sweeps the credits and sends due-date reminders for credits
+due soon and over-due reminders for unpaid credits past their due date
+(tasks.py:119-353; core/celery.py:47-54).</p>
+</section><section class="sec" data-title="9. Outbound call map (from the Sales miniapp)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-outbound-call-map-from-the-sales-miniapp">9. Outbound call map (from the Sales miniapp)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Target service</th>
+<th>Method + path</th>
+<th>Triggered by</th>
+<th>Purpose</th>
+<th>Sync/async</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>IAM</td>
+<td>POST /api/external/token/verify/</td>
+<td>every federated request</td>
+<td>validate miniapp JWT + X-MINIAPP-TOKEN</td>
+<td>sync</td>
+<td>auth_backends.py:188-191, 218-235</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IAM</td>
+<td>POST /api/external/is-registered/</td>
+<td>credit edit/delete notifications; settlement detail/search; dispute merchant/issuer details; pay/settle callbacks</td>
+<td>merchant/issuer name lookup (registered user check)</td>
+<td>sync httpx</td>
+<td>async_func.py:158-181; used at serializers.py:735-747, views.py:133-135, 1642-1644, 1733-1737</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Projectmaster</td>
+<td>POST /api/miniapp/customer-check/</td>
+<td>credit create/search/detail, manual settlement, payment request, credit/pay, dispute details</td>
+<td>validate customer exists for tenant + enrich (is_provider_user)</td>
+<td>sync httpx</td>
+<td>async_func.py:61-92; helper.py:114; used at serializers.py:299-310, 785-809, 1160-1175, 1465-1473; views.py:227-234</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Configuration</td>
+<td>POST /api/service-configuration/tenant/expose/</td>
+<td>credit create/update</td>
+<td>tenant credit settings (credit_limit, credit_period)</td>
+<td>sync httpx</td>
+<td>async_func.py:133-155; helper.py:162; serializers.py:283-314</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Payment</td>
+<td>POST /api/{provider_code}/payment/request/</td>
+<td>payment/request/ (merchant request), credit/pay/ (customer settlement)</td>
+<td>create payment request / record completed wallet payment</td>
+<td>sync requests</td>
+<td>serializers.py:1287-1311, 1557-1588; helper.py:68</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Payment</td>
+<td>POST /api/esewa/payment/request/search/</td>
+<td>settlement detail/search (merchant + internal)</td>
+<td>live payment-request status (requested/completed/declined)</td>
+<td>sync httpx</td>
+<td>async_func.py:95-130; helper.py:69; serializers.py:706-721</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Document</td>
+<td>POST /api/document/record-entry-document/</td>
+<td>credit create/update with files</td>
+<td>attach uploaded images</td>
+<td>sync requests</td>
+<td>helper.py:350-380; views.py:124-129</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Document</td>
+<td>GET /api/document/document-list/</td>
+<td>credit/settlement/dispute detail views</td>
+<td>list attachments</td>
+<td>sync requests</td>
+<td>helper.py:336-347; views.py:307-308, 556-557, 1457-1460, 1509-1512</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Events</td>
+<td>POST /api/notification/miniapp/notify-user/</td>
+<td>credit create/edit/delete, manual settlement, pay, settle callback, dispute resolution, nightly due/over-due sweeps</td>
+<td>miniapp notification to user</td>
+<td>async Celery</td>
+<td>tasks.py:18-71; helper.py:159; called at views.py:158, 374, 401, 489, 700, 1663, 1753; tasks.py:200, 220, 311, 330</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Events</td>
+<td>POST /api/activity_log/miniapp/log-activity/</td>
+<td>same triggers as #9</td>
+<td>miniapp activity log</td>
+<td>async Celery</td>
+<td>tasks.py:74-116; helper.py:160</td>
+</tr>
+</tbody></table>
+<p>Kafka (kafka-crs:9092, settings.py:220) and dashboard/kafka_function.py exist in the repo
+but are NOT invoked anywhere in the miniapp module.</p>
+</section><section class="sec" data-title="10. Inbound callers (who calls the Sales miniapp)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-callers-who-calls-the-sales-miniapp">10. Inbound callers (who calls the Sales miniapp)</h2>
+<h3 id="10-1-miniapp-esewa-frontend-browser-base-a-href-https-dev-sales-api-providhy-com-https-dev-sales-api-providhy-com-a">10.1 miniapp-esewa frontend (browser) — base <a href="https://dev-sales-api.providhy.com">https://dev-sales-api.providhy.com</a></h3>
+<p>Direct calls (merchant-side views; federated JWT + X-MINIAPP-TOKEN):</p>
+<ul>
+<li>POST credit/create/ — miniapp-esewa/src/services/requests/credit.ts:209</li>
+<li>GET/POST/DELETE credit/detail/ — credit.ts:229, 243, 424, 514</li>
+<li>GET credit/search/ — credit.ts:260</li>
+<li>POST settlement/manual/create/ — credit.ts:274</li>
+<li>GET credit/overview/ — credit.ts:289</li>
+<li>GET credit/ledger/overview/ — credit.ts:319</li>
+<li>GET credit/ledger/ (list + single id) — credit.ts:347, 376</li>
+<li>GET dispute/search/ — credit.ts:434</li>
+<li>GET dispute/detail/ — credit.ts:460</li>
+<li>GET settlement/search/ — miniapp-esewa/src/services/requests/transactions.ts:84</li>
+<li>GET settlement/detail/ — transactions.ts:120</li>
+</ul>
+<p>Customer-side views deliberately go to CDXE_BASE_URL instead of Sales (constants.ts:93-97):
+credit/pay (credit.ts:395, 411), dispute/raise (credit.ts:451), dispute search/detail
+(customer) (credit.ts:470, 480), customer credit detail (credit.ts:251, 496), settlement
+search/detail (customer) (transactions.ts:96, 108, 132). CDXE then calls the Sales internal
+endpoints below with the shared password — which is why #5-8 of section 4.1 carry internal
+auth despite living in the public URL list.</p>
+<h3 id="10-2-cdxe-reboot-customer-facing-gateway-internal-password-in-payload">10.2 CDXE-REBOOT (customer-facing gateway) — internal password in payload</h3>
+<p>All in CDXE-REBOOT/dashboard/helpers.py (payloads include password,
+external_identifier, connected_merchant_tenant_id, provider_code):</p>
+<ul>
+<li>credit/detail/customer/{id}/ — helpers.py:238, from CDXE CreditDetailView (miniapp/views.py:519)</li>
+<li>dispute/search/customer/ — helpers.py:274, from SearchCreditRecordDisputeView (miniapp/views.py:1261)</li>
+<li>dispute/cancel/{id}/ — helpers.py:316, from CreditDisputeCancelView (miniapp/views.py:1202)</li>
+<li>dispute/detail/customer/{id}/ — helpers.py:352, from CreditDisputeDetailView (miniapp/views.py:1305)</li>
+<li>credit/user/search/ — helpers.py:449, from GetCreditDetailsForCustomer (miniapp/views.py:418) and merchant detail serializer (miniapp/serializers.py:540)</li>
+<li>credit/ledger/customer/ — helpers.py:482, from CreditLedgerView (miniapp/views.py:579) and miniapp/serializers.py:17, 245, 529</li>
+<li>dispute/raise/ — helpers.py:508, from RaiseCreditRecordDisputeView (miniapp/views.py:1138)</li>
+<li>credit/ledger/customer/overview/ — helpers.py:558, from CreditLedgerOverview (miniapp/views.py:635)</li>
+<li>credit/pay/ — helpers.py:655, from SettleOutstandingCredit (miniapp/views.py:843) via miniapp/serializers.py:492-496</li>
+<li>settlement/search/internal/ — helpers.py:693, from SettlementSearchView (miniapp/views.py:965)</li>
+<li>settlement/detail/customer/{id}/ — helpers.py:728, from SettlementDetailView (miniapp/views.py:1000)</li>
+<li>credit/overview/customer/ — helpers.py:768, from CreditOverview (miniapp/views.py:386)</li>
+<li>payment/request/ — helpers.py:597, from RequestMiniappPayment (miniapp/views.py:727) via miniapp/serializers.py:382</li>
+</ul>
+<h3 id="10-3-erp-projectmaster-customer-master-internal-password">10.3 ERP-Projectmaster (customer master) — internal password</h3>
+<p>Constants: ERP-Projectmaster/dashboard/helper.py:95-97. Call sites in
+ERP-Projectmaster/dashboard/async_func.py:</p>
+<ul>
+<li>credit/merchant/search/ — aget_customer_credits (async_func.py:44, used by connection/customer flows)</li>
+<li>credit/ledger/internal/ — afetch_credit_ledger (async_func.py:117)</li>
+<li>records/delete/customer/ — adelete_customer_transactions (async_func.py:199), when a customer connection is terminated/deprovisioned</li>
+</ul>
+<h3 id="10-4-payment-service-esewa-settlement-callback-internal-password">10.4 Payment-Service (eSewa settlement callback) — internal password</h3>
+<ul>
+<li>payment/request/settle/ — Payment-Service/dashboard/async_func.py:111-144
+(ainitiate_transaction_settlement), wrapped at dashboard/helpers.py:144-160, invoked from
+the eSewa payment-request lifecycle: Payment-Service/esewa/serializers.py:98 (create with
+status completed, merchant initiator) and esewa/serializers.py:216-228 (update to
+completed / cancelled / declined). Payload: {password, payment (settlement id), tenant_id,
+status, provider_code, description}.</li>
+</ul>
+<p>No other repo under E:/Work references these Sales miniapp paths (TMS-service and
+Configuration-Service: 0 matches).</p>
+</section><section class="sec" data-title="11. Unknowns, assumptions &amp; observations"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-assumptions-observations">11. Unknowns, assumptions &amp; observations</h2>
+<ol>
+<li>Ledger views are not filtered to miniapp records: credit_ledger_view unions ALL approved
+SalesInvoice rows and ALL approved CustomerPayment rows in the Sales DB
+(0018_alter_credit_ledger_view.py:3-85). Miniapp-created records are only distinguishable
+by unique_id prefixes CID-/TID- (models.py:18-39); the admin overview and the nightly
+reminder sweeps explicitly filter unique_id startswith CID (views.py:1884;
+tasks.py:133, 248), but the customer/merchant ledger endpoints do not.</li>
+<li>JWT signature: the Sales copy decodes the miniapp JWT locally with verify=False
+(auth_backends.py:192) after IAM accepted it at /api/external/token/verify/ — the
+assumption is that IAM validates the signature (and the TOTP header) there. TOTP
+enforcement itself is not in Sales code (the header is only forwarded,
+auth_backends.py:188-191).</li>
+<li>HasFederatedEntityPermission does not call super() (auth_backends.py:238-247):
+subscription-expiry, IAM user_permissions and fiscal-year checks of HasPermission
+(auth_backends.py:85-100) are therefore skipped for all miniapp federated views; only the
+user_type gate applies. required_feature_permission/required_action_permission are only
+enforced for presence (generics.py:74-86).</li>
+<li>FetchCreditLogsView sets required_feature_permission = ServiceChoices.REPORTING
+(&quot;PR800&quot;) instead of an AllFeatures constant (views.py:955) — likely copy-paste; no
+practical effect given point 3.</li>
+<li>Endpoints #5-8 of section 4.1 (credit/detail/customer, credit/pay, dispute/raise,
+dispute/cancel) are in the public URL list but use the internal shared password; the
+browser frontend reaches them only via CDXE (section 10.1). Direct browser calls without
+the password fail with 401.</li>
+<li>Views using permission_classes = [InternalRequestPermission] declare no
+authentication_classes; DRF default authentication applies and settings only customize
+the exception handler (settings.py:141-144), so the shared password is the sole gate for
+9 internal endpoints.</li>
+<li>Code smell (bug, observed): handle_dispute_resolution&#39;s resolution-by-deletion path sets
+dispute.status (not a model field) instead of dispute.dispute_status
+(views.py:441), so the dispute&#39;s persisted status is not set to resolved on that path
+(only resolution_method is saved, views.py:443-444).</li>
+<li>GetCreditRecordForMerchant raises a raw ValueError (HTTP 500) when customer_id is not a
+list (views.py:650-651).</li>
+<li>The ledger overview endpoints check for missing customer_id / customer_identifier AFTER
+computing aggregates (views.py:1144-1148, 1213-1217).</li>
+<li>InitiateTransactionSettlementView maps completed/declined/cancelled to
+approved/rejected/draft; any other status yields data status None
+(views.py:1595-1601) — downstream behaviour on an unknown status is untested/unknown.</li>
+<li>order_by on the internal search endpoints is taken from the request body and passed to
+Django order_by (views.py:582, 592) — safe only because callers are trusted internal
+services with the shared password.</li>
+<li>The admin endpoints (section 4.3) have no role/tenant restriction beyond the shared
+password; admin/credit/overview aggregates across all tenants (views.py:1883-1893).</li>
+<li>PayCreditView docstring (views.py:1685-1691) says the settlement must not go through if
+the payment service fails — matches implementation: settlement creation and the Payment
+call are in one atomic transaction (views.py:1696; serializers.py:1586-1587).</li>
+<li>Frontend constant miniapp/get-credit/ (constants.ts:67) is not served by the Sales
+miniapp (presumably another service, e.g. Projectmaster) — out of scope.</li>
+<li>CreditDispute.entry_by is left null on the raise path (the internal view does not put
+entry_by into the serializer context, views.py:1300-1305; serializers.py:1209-1215).</li>
+</ol>
+</section></article><div class="pagenav"><a class="pn" href="03-iam-federated-identity.html"><div class="pn-dir">← Previous</div><div class="pn-name">IAM Federated Identity</div></a><a class="pn next" href="05-cdxe-miniapp.html"><div class="pn-dir">Next →</div><div class="pn-name">CDXE Miniapp</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview">1. Business overview</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l3"><a href="#3-1-federated-miniapp-browser-auth-federatedidentityauthentication-dashboard-auth-backends-py-180-216">3.1 Federated (miniapp-browser) auth — FederatedIdentityAuthentication (dashboard/auth_backends.py:180-216)</a></li><li class="l3"><a href="#3-2-permission-hasfederatedentitypermission-dashboard-auth-backends-py-238-247">3.2 Permission — HasFederatedEntityPermission (dashboard/auth_backends.py:238-247)</a></li><li class="l3"><a href="#3-3-internal-service-to-service-auth-shared-password">3.3 Internal (service-to-service) auth — shared password</a></li><li class="l2"><a href="#4-endpoint-catalog">4. Endpoint catalog</a></li><li class="l3"><a href="#4-1-public-list-urlpatterns-urls-py-52-121-15-endpoints">4.1 &quot;Public&quot; list — urlpatterns (urls.py:52-121) — 15 endpoints</a></li><li class="l3"><a href="#4-2-internal-list-internal-urlpatterns-urls-py-5-50-13-endpoints">4.2 Internal list — internal_urlpatterns (urls.py:5-50) — 13 endpoints</a></li><li class="l3"><a href="#4-3-admin-list-miniapp-admin-urlpatterns-urls-py-123-135-2-endpoints">4.3 Admin list — miniapp_admin_urlpatterns (urls.py:123-135) — 2 endpoints</a></li><li class="l2"><a href="#5-endpoint-flow-traces">5. Endpoint flow traces</a></li><li class="l3"><a href="#5-1-get-api-miniapp-credit-overview-views-py-43-60">5.1 GET /api/miniapp/credit/overview/ (views.py:43-60)</a></li><li class="l3"><a href="#5-2-post-api-miniapp-credit-create-views-py-83-174">5.2 POST /api/miniapp/credit/create/ (views.py:83-174)</a></li><li class="l3"><a href="#5-3-get-api-miniapp-credit-search-views-py-177-245">5.3 GET /api/miniapp/credit/search/ (views.py:177-245)</a></li><li class="l3"><a href="#5-4-get-post-delete-api-miniapp-credit-detail-pk-views-py-277-513">5.4 GET/POST/DELETE /api/miniapp/credit/detail/{pk}/ (views.py:277-513)</a></li><li class="l3"><a href="#5-5-post-api-miniapp-credit-detail-customer-pk-views-py-516-558">5.5 POST /api/miniapp/credit/detail/customer/{pk}/ (views.py:516-558)</a></li><li class="l3"><a href="#5-6-post-api-miniapp-credit-pay-views-py-1684-1779">5.6 POST /api/miniapp/credit/pay/ (views.py:1684-1779)</a></li><li class="l3"><a href="#5-7-post-api-miniapp-dispute-raise-views-py-1291-1321">5.7 POST /api/miniapp/dispute/raise/ (views.py:1291-1321)</a></li><li class="l3"><a href="#5-8-post-api-miniapp-dispute-cancel-dispute-id-views-py-1324-1349">5.8 POST /api/miniapp/dispute/cancel/{dispute_id}/ (views.py:1324-1349)</a></li><li class="l3"><a href="#5-9-get-api-miniapp-dispute-search-views-py-1352-1384">5.9 GET /api/miniapp/dispute/search/ (views.py:1352-1384)</a></li><li class="l3"><a href="#5-10-get-api-miniapp-dispute-detail-dispute-id-views-py-1418-1461">5.10 GET /api/miniapp/dispute/detail/{dispute_id}/ (views.py:1418-1461)</a></li><li class="l3"><a href="#5-11-post-api-miniapp-settlement-manual-create-views-py-665-723">5.11 POST /api/miniapp/settlement/manual/create/ (views.py:665-723)</a></li><li class="l3"><a href="#5-12-get-api-miniapp-settlement-detail-pk-views-py-726-774">5.12 GET /api/miniapp/settlement/detail/{pk}/ (views.py:726-774)</a></li><li class="l3"><a href="#5-13-get-api-miniapp-settlement-search-views-py-829-896">5.13 GET /api/miniapp/settlement/search/ (views.py:829-896)</a></li><li class="l3"><a href="#5-14-get-api-miniapp-credit-ledger-overview-views-py-1152-1218">5.14 GET /api/miniapp/credit/ledger/overview/ (views.py:1152-1218)</a></li><li class="l3"><a href="#5-15-get-api-miniapp-credit-ledger-views-py-952-1008">5.15 GET /api/miniapp/credit/ledger/ (views.py:952-1008)</a></li><li class="l3"><a href="#5-16-post-api-miniapp-credit-user-search-views-py-561-611">5.16 POST /api/miniapp/credit/user/search/ (views.py:561-611)</a></li><li class="l3"><a href="#5-17-post-api-miniapp-credit-merchant-search-views-py-614-662">5.17 POST /api/miniapp/credit/merchant/search/ (views.py:614-662)</a></li><li class="l3"><a href="#5-18-post-api-miniapp-settlement-detail-customer-pk-views-py-777-826">5.18 POST /api/miniapp/settlement/detail/customer/{pk}/ (views.py:777-826)</a></li><li class="l3"><a href="#5-19-post-api-miniapp-settlement-search-internal-views-py-899-949">5.19 POST /api/miniapp/settlement/search/internal/ (views.py:899-949)</a></li><li class="l3"><a href="#5-20-post-api-miniapp-payment-request-views-py-1550-1588">5.20 POST /api/miniapp/payment/request/ (views.py:1550-1588)</a></li><li class="l3"><a href="#5-21-post-api-miniapp-payment-request-settle-views-py-1591-1681">5.21 POST /api/miniapp/payment/request/settle/ (views.py:1591-1681)</a></li><li class="l3"><a href="#5-22-post-api-miniapp-credit-ledger-internal-views-py-1011-1028">5.22 POST /api/miniapp/credit/ledger/internal/ (views.py:1011-1028)</a></li><li class="l3"><a href="#5-23-post-api-miniapp-credit-ledger-customer-views-py-1031-1076">5.23 POST /api/miniapp/credit/ledger/customer/ (views.py:1031-1076)</a></li><li class="l3"><a href="#5-24-post-api-miniapp-credit-ledger-customer-overview-views-py-1079-1149">5.24 POST /api/miniapp/credit/ledger/customer/overview/ (views.py:1079-1149)</a></li><li class="l3"><a href="#5-25-post-api-miniapp-credit-overview-customer-views-py-63-80">5.25 POST /api/miniapp/credit/overview/customer/ (views.py:63-80)</a></li><li class="l3"><a href="#5-26-post-api-miniapp-records-delete-customer-views-py-1782-1813">5.26 POST /api/miniapp/records/delete/customer/ (views.py:1782-1813)</a></li><li class="l3"><a href="#5-27-post-api-miniapp-dispute-search-customer-views-py-1387-1415">5.27 POST /api/miniapp/dispute/search/customer/ (views.py:1387-1415)</a></li><li class="l3"><a href="#5-28-post-api-miniapp-dispute-detail-customer-dispute-id-views-py-1464-1513">5.28 POST /api/miniapp/dispute/detail/customer/{dispute_id}/ (views.py:1464-1513)</a></li><li class="l3"><a href="#5-29-post-api-miniapp-admin-dispute-search-views-py-1816-1872-brief">5.29 POST /api/miniapp/admin/dispute/search/ (views.py:1816-1872) — brief</a></li><li class="l3"><a href="#5-30-post-api-miniapp-admin-credit-overview-views-py-1875-1899-brief">5.30 POST /api/miniapp/admin/credit/overview/ (views.py:1875-1899) — brief</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-sequence-diagrams">7. Sequence diagrams</a></li><li class="l3"><a href="#7-1-merchant-creates-a-credit-record">7.1 Merchant creates a credit record</a></li><li class="l3"><a href="#7-2-customer-initiated-settlement-customer-pays-outstanding-credit-via-esewa-wallet">7.2 Customer-initiated settlement (customer pays outstanding credit via eSewa wallet)</a></li><li class="l3"><a href="#7-3-merchant-initiated-payment-request-and-esewa-completion-callback">7.3 Merchant-initiated payment request and eSewa completion callback</a></li><li class="l3"><a href="#7-4-dispute-lifecycle-raise-resolve-by-edit-cancel">7.4 Dispute lifecycle (raise, resolve-by-edit, cancel)</a></li><li class="l2"><a href="#8-business-process-walkthroughs">8. Business process walkthroughs</a></li><li class="l3"><a href="#8-1-sita-opens-a-credit-account-for-her-customer-merchant-side">8.1 Sita opens a credit account for her customer (merchant side)</a></li><li class="l3"><a href="#8-2-ram-pays-his-credit-with-the-esewa-wallet-customer-side">8.2 Ram pays his credit with the eSewa wallet (customer side)</a></li><li class="l3"><a href="#8-3-sita-asks-ram-to-pay-merchant-initiated-payment-request">8.3 Sita asks Ram to pay (merchant-initiated payment request)</a></li><li class="l3"><a href="#8-4-ram-disputes-the-bill">8.4 Ram disputes the bill</a></li><li class="l3"><a href="#8-5-offline-manual-settlement">8.5 Offline (manual) settlement</a></li><li class="l3"><a href="#8-6-the-ledger">8.6 The ledger</a></li><li class="l2"><a href="#9-outbound-call-map-from-the-sales-miniapp">9. Outbound call map (from the Sales miniapp)</a></li><li class="l2"><a href="#10-inbound-callers-who-calls-the-sales-miniapp">10. Inbound callers (who calls the Sales miniapp)</a></li><li class="l3"><a href="#10-1-miniapp-esewa-frontend-browser-base-a-href-https-dev-sales-api-providhy-com-https-dev-sales-api-providhy-com-a">10.1 miniapp-esewa frontend (browser) — base &lt;a href=&quot;https://dev-sales-api.providhy.com&quot;&gt;https://dev-sales-api.providhy.com&lt;/a&gt;</a></li><li class="l3"><a href="#10-2-cdxe-reboot-customer-facing-gateway-internal-password-in-payload">10.2 CDXE-REBOOT (customer-facing gateway) — internal password in payload</a></li><li class="l3"><a href="#10-3-erp-projectmaster-customer-master-internal-password">10.3 ERP-Projectmaster (customer master) — internal password</a></li><li class="l3"><a href="#10-4-payment-service-esewa-settlement-callback-internal-password">10.4 Payment-Service (eSewa settlement callback) — internal password</a></li><li class="l2"><a href="#11-unknowns-assumptions-observations">11. Unknowns, assumptions &amp; observations</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

@@ -1,0 +1,414 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Merchant Side - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc current" href="M-merchant-side.html"><span>Merchant Side</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="M-merchant-side.html#1-register-log-in">1. Register &amp; log in</a><a class="sb-item sb-sub" href="M-merchant-side.html#2-customers-add-search-edit-delete-no-connection-needed">2. Customers — add, search, edit, delete (no connection needed)</a><a class="sb-item sb-sub" href="M-merchant-side.html#3-connection-requests-merchant-esewa-customer">3. Connection requests (merchant → eSewa customer)</a><a class="sb-item sb-sub" href="M-merchant-side.html#4-credit-book-add-edit-delete-view">4. Credit book — add, edit, delete, view</a><a class="sb-item sb-sub" href="M-merchant-side.html#5-manual-offline-settlement">5. Manual (offline) settlement</a><a class="sb-item sb-sub" href="M-merchant-side.html#6-payment-requests-merchant-asks-the-customer-to-pay-via-wallet">6. Payment requests (merchant asks the customer to pay via wallet)</a><a class="sb-item sb-sub" href="M-merchant-side.html#7-disputes-customer-says-something-s-off">7. Disputes (customer says &quot;something's off&quot;)</a><a class="sb-item sb-sub" href="M-merchant-side.html#8-notifications-activity">8. Notifications &amp; activity</a><a class="sb-item sb-sub" href="M-merchant-side.html#9-profile-credit-rules-subscription-upgrade">9. Profile — credit rules &amp; subscription upgrade</a><a class="sb-item sb-sub" href="M-merchant-side.html#appendix-a-every-merchant-api-the-app-actually-calls-today">Appendix A — every merchant API the app actually calls (today)</a><a class="sb-item sb-sub" href="M-merchant-side.html#appendix-b-honest-caveats-from-the-code-this-build">Appendix B — honest caveats (from the code, this build)</a></div><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>The Merchant Side of the eSewa Miniapp — Feature Guide</h1>
+<blockquote>
+<p>For the business person AND the engineer. Each feature: what it is (plain words) → how it works (with the real code path) → diagram → rules &amp; edge cases. Every hop is cited to file:line in the trace docs (03–10) — this guide is the map; those are the survey.</p>
+</blockquote>
+<p>Every API call in this app carries two things: the merchant&#39;s <strong>login token</strong> (JWT) and a <strong>one-time 6-digit security code</strong> (TOTP, 20-second window). The service checks both with the identity service (IAM) on every single request. Internal service-to-service calls instead use a shared internal password. That&#39;s the whole auth story — details in doc 02.</p>
+</section><section class="sec" data-title="1. Register &amp; log in"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-register-log-in">1. Register &amp; log in</h2>
+<p><strong>What it is.</strong> A merchant (or customer) who has an eSewa account opens the miniapp the first time, accepts the terms, and is &quot;registered&quot;. From then on they just log in. Their eSewa identity (wallet id) is what identifies them — no separate username/password.</p>
+<p><strong>How it works (registration, one time):</strong></p>
+<ol>
+<li><p>App shows terms (fetched from the Website service — out of scope) → user accepts.</p>
+</li>
+<li><p>App calls <strong>IAM</strong> <code>POST /api/external/register/</code> with the eSewa token + the user&#39;s external identifier + provider code <code>esewa</code> (doc 03 §5.1).</p>
+</li>
+<li><p>IAM links/creates the external identity and triggers <strong>TMS</strong> <code>/api/tenant/external-register/</code> (doc 08 §5.5), which provisions the merchant&#39;s tenant and asks <strong>Configuration</strong> <code>data-transfer/</code> to copy the platform&#39;s default business rules (chart of accounts, credit settings, fiscal year) into that tenant (doc 09 §6.3).</p>
+</li>
+<li><p>IAM records a funnel event (onboarding analytics) and Events sends a welcome notification (doc 10 §7.4).</p>
+</li>
+</ol>
+<p><strong>How it works (login, every session):</strong></p>
+<ol>
+<li><p>App calls <strong>IAM</strong> <code>POST /api/external/token/</code> (eSewa token + identifier) → gets back an access JWT + refresh JWT (doc 03 §5.2).</p>
+</li>
+<li><p>The JWT&#39;s payload carries: which user, <strong>which tenant</strong>, merchant/customer type (ESM/ESU), subscribed services, permissions. Every later request sends this JWT + a fresh TOTP code; each service re-verifies with IAM (doc 02 §5).</p>
+</li>
+<li><p>Token expired? The app auto-refreshes via <code>POST /api/external/token/refresh/</code> and retries (doc 07 Part B §B.3).</p>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart LR
+ A[eSewa app opens miniapp] --&gt; B[Accept terms?]
+ B --&gt;|first time| C[IAM register]
+ C --&gt; D[TMS creates tenant]
+ D --&gt; E[Configuration copies default rules]
+ E --&gt; F[Done - logged in]
+ B --&gt;|already registered| G[IAM token mint]
+ G --&gt; F
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>The same wallet id can only register once per provider (IAM unique per provider, doc 03 §6).</p>
+</li>
+<li><p>Registration is idempotent: the TMS→Configuration transfer runs once (marker stored in the tenant link, doc 08 §5.5).</p>
+</li>
+<li><p>Known issue: the welcome-notification call hardcodes the wrong module type and can fail silently (doc 10 §11(b)) — registration itself still succeeds.</p>
+</li>
+</ul>
+</section><section class="sec" data-title="2. Customers — add, search, edit, delete (no connection needed)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-customers-add-search-edit-delete-no-connection-needed">2. Customers — add, search, edit, delete (no connection needed)</h2>
+<p><strong>What it is.</strong> The merchant keeps a book of customers. A customer can be a plain name+phone (&quot;credit without connection&quot;), or linked to a wallet user (&quot;provider user&quot;) so they can later be connected.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p><strong>Add</strong>: app → <strong>Projectmaster</strong> <code>POST /api/miniapp/customer/</code> {name, mobile?, description, is_provider_user, external_identifier} (doc 06 §5.1). If the merchant ticks &quot;this is a wallet user&quot; and gives the wallet id, a wallet-identity link row is created alongside the customer.</p>
+</li>
+<li><p><strong>Search/list</strong>: <code>GET /api/miniapp/customer/search/</code> — for each row the backend quietly asks <strong>CDXE</strong> <code>get-connection/</code> (internal) whether that customer has an approved connection, and enriches the list (doc 06 §7.2).</p>
+</li>
+<li><p><strong>Edit</strong>: <code>POST /api/miniapp/customer/detail/{id}/</code> (doc 06 §5.4).</p>
+</li>
+<li><p><strong>Delete</strong>: <code>DELETE /api/miniapp/customer/detail/{id}/</code> (doc 06 §5.5): the backend first asks <strong>Payment</strong> &quot;does this customer have a pending payment request?&quot; — if yes, deletion is refused (400). Otherwise it asks <strong>Sales</strong> to cancel the customer&#39;s records and, if it&#39;s a wallet user, asks <strong>CDXE</strong> to terminate the connection — then soft-deletes the customer.</p>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+ A[Add customer] --&gt; B{Wallet user?}
+ B --&gt;|no| C[Customer row only]
+ B --&gt;|yes| D[Customer + wallet-identity link]
+ C --&gt; E[Can extend credit immediately]
+ D --&gt; F[Can ALSO send a connection request - section 3]
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>Credit works fine without a connection — the connection (section 3) only matters for the <em>customer&#39;s app</em> seeing the credit and for payment requests to that wallet user.</p>
+</li>
+<li><p>Deletion is blocked while a payment request is pending (doc 06 §5.5); cleanup failures are swallowed (a cleanup task error won&#39;t stop the soft-delete — doc 06 §11).</p>
+</li>
+<li><p>&quot;Is this a real wallet user?&quot; validation is a <strong>stub</strong> in this build: it always answers yes (doc 06 §5.6, §11) — real eSewa user verification isn&#39;t wired.</p>
+</li>
+</ul>
+</section><section class="sec" data-title="3. Connection requests (merchant → eSewa customer)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-connection-requests-merchant-esewa-customer">3. Connection requests (merchant → eSewa customer)</h2>
+<p><strong>What it is.</strong> A wallet-linked customer doesn&#39;t see the merchant&#39;s credit until they&#39;re <strong>connected</strong>. The merchant sends a connection request; the customer approves it in their app.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p>Merchant taps connect → app → <strong>CDXE</strong> <code>POST /api/miniapp/create-connection/</code> (doc 05 §5.5).</p>
+</li>
+<li><p>CDXE checks in parallel: <strong>IAM</strong> &quot;is that wallet id registered?&quot; + <strong>Projectmaster</strong> &quot;is that wallet really a customer of this merchant?&quot; (doc 05 §5.5).</p>
+</li>
+<li><p>CDXE stores the connection as <strong>pending</strong> with a <strong>5-digit code</strong> + a wallet-identity link row, and notifies both sides (doc 05 §7.1).</p>
+</li>
+<li><p>Customer approves (their app → CDXE <code>approve-reject-connection/{code}/</code>) → connection becomes <strong>approved</strong>; the customer can now see credit, disputes and payment requests from this merchant. Customer declines → both rows are deleted (doc 05 §7.1).</p>
+</li>
+<li><p>Merchant lists connections via CDXE <code>get-connection/</code> / <code>connection/search/</code>; can <strong>terminate</strong> a connection (<code>connection/terminate/{pk}</code>) — refused while a payment request is pending (doc 05 §5.7).</p>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+ participant M as Merchant app
+ participant C as CDXE
+ participant I as IAM
+ participant P as Projectmaster
+ participant U as Customer app
+ M-&gt;&gt;C: create-connection (customer wallet id)
+ par
+ C-&gt;&gt;I: is-registered?
+ and
+ C-&gt;&gt;P: validate-customer-connection?
+ end
+ C-&gt;&gt;C: store pending + 5-digit code
+ C--)U: &quot;connection request&quot; notification
+ U-&gt;&gt;C: approve-reject-connection/{code} (approve)
+ C-&gt;&gt;C: approved (or declined = rows deleted)
+ C--)M: approved notification
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>Connection needs an existing Projectmaster customer with a wallet identity (section 2).</p>
+</li>
+<li><p>Decline is a hard delete — no history (doc 05 §5.6).</p>
+</li>
+<li><p>Terminate keeps history (status=terminated) but is blocked while a payment request is pending (doc 05 §5.7).</p>
+</li>
+</ul>
+</section><section class="sec" data-title="4. Credit book — add, edit, delete, view"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-credit-book-add-edit-delete-view">4. Credit book — add, edit, delete, view</h2>
+<p><strong>What it is.</strong> A <strong>credit record</strong> = &quot;customer X owes the merchant Rs Y, payable in N days&quot;. This is the heart of the app. The ledger (credit + payments history) and the dashboard totals are all views over it.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p><strong>Add</strong>: app → <strong>Sales</strong> <code>POST /api/miniapp/credit/create/</code> (multipart: customer, amount, payment term, description, items) (doc 04 §5.2). Sales stores it as a credit record with the customer details embedded (no hard link to Projectmaster), fetches the customer&#39;s GL (Account Receivable) mapping from <strong>Configuration</strong>, and notifies the connected customer via <strong>Events</strong> + logs the activity.</p>
+</li>
+<li><p><strong>Edit</strong>: <code>POST /api/miniapp/credit/detail/{id}/</code> (doc 04 §5.4) — editing a disputed credit is how the merchant resolves a dispute (section 7).</p>
+</li>
+<li><p><strong>Delete</strong>: <code>DELETE /api/miniapp/credit/detail/{id}/</code> (doc 04 §5.4) — only allowed while nothing has been paid against it (remaining == total); deleting also resolves any pending dispute on it.</p>
+</li>
+<li><p><strong>View</strong>: dashboard totals <code>GET credit/overview/</code>; list <code>GET credit/search/</code>; one record <code>GET credit/detail/{id}/</code>; customer&#39;s ledger <code>GET credit/ledger/overview/</code> + <code>GET credit/ledger/</code> (by customer + date range) (doc 04 §5.1/5.3/5.14/5.15).</p>
+</li>
+<li><p><strong>Statement</strong>: settlement list <code>GET settlement/search/</code> + detail <code>GET settlement/detail/{id}/</code> — the statement page also shows the linked payment-request status from <strong>Payment</strong> (Sales enriches via an internal search call, doc 04 §5.12/5.13; doc 07 §C.3).</p>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+ A[Credit record: customer owes Rs Y] --&gt; B[Edit / Delete]
+ A --&gt; C[Settle manually - section 5]
+ A --&gt; D[Payment request - section 6]
+ A --&gt; E[Customer disputes - section 7]
+ C --&gt; F[Ledger + statement]
+ D --&gt; F
+ E --&gt; B
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>A credit can only be deleted while fully unpaid; partial payment moves it to settlement history instead (doc 04 §5.4).</p>
+</li>
+<li><p>The customer the credit references is stored as plain data — if the merchant deletes the customer (section 2), Sales&#39; delete-records endpoint cancels the open credits for that customer (doc 04 §5.26).</p>
+</li>
+<li><p>The credit limit/period the merchant set in Profile (section 9) bounds new credits.</p>
+</li>
+</ul>
+</section><section class="sec" data-title="5. Manual (offline) settlement"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-manual-offline-settlement">5. Manual (offline) settlement</h2>
+<p><strong>What it is.</strong> The customer paid cash / bank transfer / cash at the counter — the merchant records it so the credit is reduced. This is a <strong>settlement</strong> with no wallet money moving.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p>Merchant selects one or more credit records and how much of each is paid → app → <strong>Sales</strong> <code>POST /api/miniapp/settlement/manual/create/</code> {customer, items[{credit, allocated_amount}], total_allocated_amount, payment method/date} (doc 04 §5.11).</p>
+</li>
+<li><p>Sales creates an <strong>approved</strong> settlement (a payment row), reduces each credit&#39;s outstanding amount, notifies the customer via <strong>Events</strong> and logs the activity (doc 04 §5.11).</p>
+</li>
+<li><p>It appears in the statement/transaction history (section 4.5) and in the customer&#39;s app (their settlement search).</p>
+</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart LR
+ A[Customer paid offline] --&gt; B[Merchant: record settlement]
+ B --&gt; C[Sales creates approved settlement]
+ C --&gt; D[Credits reduced]
+ C --&gt; E[Customer notified]
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>Allocations must not exceed each credit&#39;s remaining amount (validated in the view, doc 04 §5.11).</p>
+</li>
+<li><p>Settlements are never hard-deleted — the system only ever <em>cancels</em> them (doc 04 §5.26 note).</p>
+</li>
+</ul>
+</section><section class="sec" data-title="6. Payment requests (merchant asks the customer to pay via wallet)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-payment-requests-merchant-asks-the-customer-to-pay-via-wallet">6. Payment requests (merchant asks the customer to pay via wallet)</h2>
+<p><strong>What it is.</strong> Instead of waiting, the merchant sends a payment request to the customer — either for <strong>one credit</strong> or for the <strong>full receivable</strong> (all pending credits to that customer). The customer then pays from their eSewa wallet, or declines. The merchant can also cancel a request.</p>
+<p><strong>How it works (send):</strong></p>
+<ol>
+<li><p>App → <strong>CDXE</strong> <code>POST /api/miniapp/payment/request/</code> {customer, total_allocated_amount, items[], description} (doc 05 §5.14).</p>
+</li>
+<li><p>CDXE validates the sum and (for connected customers) the approved connection, then calls <strong>Sales</strong> <code>payment/request/</code> internally → Sales creates a <strong>PENDING settlement — credits are NOT reduced yet</strong> → Sales calls <strong>Payment</strong> <code>payment/request/</code> (stores the request record, status <em>requested</em>) (doc 04 §5.20; doc 07 A.2).</p>
+</li>
+<li><p><strong>Events</strong> notifies the customer: &quot;merchant X requested Rs Y&quot; (doc 10 §7.3).</p>
+</li>
+</ol>
+<p><strong>How it works (customer pays or declines):</strong></p>
+<ol start="4">
+<li><p>Customer&#39;s app → <strong>CDXE</strong> <code>POST /api/miniapp/payment/request/pay/{id}/</code> {status: completed + transaction_id, or declined}. Completed requires a <strong>signed payload</strong> (HMAC over the request, keyed with the shared eSewa key + a 10-digit TOTP — doc 05 §5.15).</p>
+</li>
+<li><p>CDXE → <strong>Payment</strong> <code>payment/request/pay/{settlement_id}/</code> (marks the record completed/declined) → <strong>Payment</strong> calls <strong>Sales</strong> <code>payment/request/settle/</code> (doc 07 A.4, C.1).</p>
+</li>
+<li><p>Sales finalizes: completed → settlement <strong>approved</strong>, credits reduced; declined → <strong>rejected</strong> (credits untouched); cancelled → back to <strong>draft</strong> (doc 04 §5.21).</p>
+</li>
+</ol>
+<p><strong>How it works (merchant cancels):</strong></p>
+<ol start="7">
+<li>App → <strong>Payment</strong> <code>POST /api/esewa/payment/request/cancel/{id}/</code> — the only call the app makes straight to the Payment service (federated auth) → Payment marks it cancelled → Sales settles it to draft (doc 07 A.1).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+ participant M as Merchant app
+ participant C as CDXE
+ participant S as Sales
+ participant P as Payment
+ participant E as Events
+ participant U as Customer app
+ M-&gt;&gt;C: payment/request (items, total)
+ C-&gt;&gt;S: payment/request (internal)
+ S-&gt;&gt;S: PENDING settlement (credits untouched)
+ S-&gt;&gt;P: payment/request (status requested)
+ C--)E: notify customer
+ U-&gt;&gt;C: payment/request/pay/{id} (completed + SIGNATURE)
+ C-&gt;&gt;P: payment/request/pay/{settlement_id}
+ P-&gt;&gt;S: payment/request/settle (completed)
+ S-&gt;&gt;S: APPROVED + credits reduced
+ Note over U,P: decline = same path, status declined -&gt; rejected
+ M-&gt;&gt;P: cancel/{id} (merchant)
+ P-&gt;&gt;S: settle (cancelled -&gt; draft)
+</pre></div>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>While a request is pending: the customer&#39;s credit can&#39;t be deleted, the connection can&#39;t be terminated, and another request for that customer is blocked (Payment <code>exists/</code> guard — doc 04/05 §5.7).</p>
+</li>
+<li><p>In <strong>this code build</strong> the wallet charge behind &quot;completed&quot; is not a live eSewa ePay call — the payment record&#39;s status is set by the flow above (mock mode; verdict + evidence in doc 07 §C.5). The frontend&#39;s customer-pay function also doesn&#39;t yet send the required signature (doc 07 §C.5) — i.e. the customer-side payment UI is not shipped in this checkout.</p>
+</li>
+</ul>
+</section><section class="sec" data-title="7. Disputes (customer says &quot;something's off&quot;)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-disputes-customer-says-something-s-off">7. Disputes (customer says &quot;something&#39;s off&quot;)</h2>
+<p><strong>What it is.</strong> The customer flags a credit (wrong amount, already paid…). The merchant resolves it in one of two ways: <strong>edit</strong> the credit (fix it) or <strong>delete</strong> the credit (cancel it). The customer can also withdraw a dispute.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p>Customer raises → <strong>CDXE</strong> <code>dispute/raise/</code> → internally <strong>Sales</strong> <code>dispute/raise/</code> (guards: credit must be unpaid, have no settlement, no other pending dispute — doc 04 §5.7; doc 05 §5.19).</p>
+</li>
+<li><p>Merchant sees it in Help &amp; Support; resolving = editing the credit (<code>POST credit/detail/{id}/</code> → dispute marked resolved, resolution_by_edition) or deleting it (<code>DELETE credit/detail/{id}/?dispute_status=...</code> → credit cancelled, dispute removed, resolution_by_deletion) (doc 04 §5.4).</p>
+</li>
+<li><p>Customer withdraws → CDXE <code>dispute/cancel/{id}/</code> → Sales (doc 04 §5.8). Every transition notifies <strong>Events</strong>.</p>
+</li>
+</ol>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>Disputed credit: can&#39;t be settled while a dispute is pending (settlement views exclude it).</p>
+</li>
+<li><p>The raise side is server-side complete, but the customer app&#39;s raise button is not wired in this checkout (doc 07 §C.5) — the merchant side (edit/delete resolution) is live.</p>
+</li>
+<li><p>Known code quirk: one delete path writes to the wrong dispute status field, so the resolved flag may not persist (doc 04 §11.7).</p>
+</li>
+</ul>
+</section><section class="sec" data-title="8. Notifications &amp; activity"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-notifications-activity">8. Notifications &amp; activity</h2>
+<p><strong>What it is.</strong> The bell in the app. Credit added, payment requested, dispute raised, subscription expiring — everything lands here. The merchant can also browse their activity history.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><p>Backends push via <strong>Events</strong> <code>notify-user/</code> (internal, queued) → a notification row is created per user, gated by the user&#39;s notification preferences (doc 10 §7.1/7.2).</p>
+</li>
+<li><p>App polls <code>GET /api/notification/miniapp/list/</code> (federated) and can mark read (<code>mark-read/</code> — note: current implementation marks by user, not by selected ids, doc 10 §11a) and read/update preferences (<code>notification/preference/</code>).</p>
+</li>
+</ol>
+<p><strong>Rules &amp; edge cases.</strong> In-app only — no email/SMS/Kafka delivery on the miniapp surface (doc 10 §11). The daily 6:00 AM due-date/overdue reminders for customers come from Sales/CDXE scheduled jobs (doc 04 §8; doc 05 §9 row 20-21).</p>
+</section><section class="sec" data-title="9. Profile — credit rules &amp; subscription upgrade"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-profile-credit-rules-subscription-upgrade">9. Profile — credit rules &amp; subscription upgrade</h2>
+<p><strong>What it is.</strong> (a) The merchant&#39;s own credit policy: max credit limit + payment period (in days) their customers get by default. (b) The merchant&#39;s Providhy subscription: buy/upgrade modules and payment period.</p>
+<p><strong>How it works (credit rules):</strong></p>
+<ol>
+<li><p>On app start the frontend reads <strong>Configuration</strong> <code>GET /api/service-configuration/tenant/miniapp/?configuration=master_settings</code> — the <code>credit_settings</code> row holds limit + period (doc 09 §6.1).</p>
+</li>
+<li><p>Merchant changes them in Profile → <code>POST .../tenant/miniapp/detail/{id}/</code> — tenant-scoped update; every credit feature reads the same row on the next request (pull-based, no push) (doc 09 §6.2).</p>
+</li>
+</ol>
+<p><strong>How it works (upgrade):</strong></p>
+<ol start="3">
+<li><p>Upgrade page lists modules from the <strong>Package</strong> service → <code>POST /api/miniapp/subscriptions/initiate/</code> {payment_period, module_id, subscription_id} on <strong>TMS</strong> → TMS creates a pending Payment + Subscription and returns a transaction id → (wallet charge — mocked in this build) → <code>POST subscriptions/verify/</code> {transaction_id} → TMS activates the subscription, creates the tenant&#39;s package/module rows, and refreshes the IAM expiry (doc 08 §6.3).</p>
+</li>
+<li><p>App auto-checks <code>GET subscriptions/status/</code> after login; <strong>Celery</strong> jobs send expiry reminders via Events (doc 08 §6.4).</p>
+</li>
+</ol>
+<p><strong>Rules &amp; edge cases.</strong></p>
+<ul>
+<li><p>Suspected bug: the upgrade form sends <code>half_yearly</code>/<code>yearly</code> but TMS expects <code>halfyearly</code>/<code>annually</code> — may 400 (doc 08 §10).</p>
+</li>
+<li><p>Verify is mocked by default (ESEWA_MOCK_MODE) and the initiate transaction id is a stub (doc 08 §10) — same mock-mode caveat as section 6.</p>
+</li>
+</ul>
+</section><section class="sec" data-title="Appendix A — every merchant API the app actually calls (today)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="appendix-a-every-merchant-api-the-app-actually-calls-today">Appendix A — every merchant API the app actually calls (today)</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Method + path (service)</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Login</td>
+<td>POST /api/external/token/ (IAM)</td>
+<td>login screen</td>
+</tr>
+<tr>
+<td>Register</td>
+<td>POST /api/external/register/ (IAM)</td>
+<td>first-time, terms accepted</td>
+</tr>
+<tr>
+<td>Refresh</td>
+<td>POST /api/external/token/refresh/ (IAM)</td>
+<td>on 401, automatic</td>
+</tr>
+<tr>
+<td>Terms text</td>
+<td>GET website/terms/web/ (Website, out of scope)</td>
+<td>terms screen</td>
+</tr>
+<tr>
+<td>Customer list</td>
+<td>GET /api/miniapp/customer/search/ (Projectmaster)</td>
+<td>customers page (enriched with connection state via CDXE internally)</td>
+</tr>
+<tr>
+<td>Add customer</td>
+<td>POST /api/miniapp/customer/ (Projectmaster)</td>
+<td>customer form</td>
+</tr>
+<tr>
+<td>Customer detail</td>
+<td>GET /api/miniapp/customer/detail/{id}/ (Projectmaster)</td>
+<td>customer page</td>
+</tr>
+<tr>
+<td>Edit customer</td>
+<td>POST /api/miniapp/customer/detail/{id}/ (Projectmaster)</td>
+<td>customer form</td>
+</tr>
+<tr>
+<td>Delete customer</td>
+<td>DELETE /api/miniapp/customer/detail/{id}/ (Projectmaster)</td>
+<td>delete modal (Payment guard inside)</td>
+</tr>
+<tr>
+<td>Credit dashboard</td>
+<td>GET /api/miniapp/credit/overview/ (Sales)</td>
+<td>dashboard</td>
+</tr>
+<tr>
+<td>Credit list</td>
+<td>GET /api/miniapp/credit/search/ (Sales)</td>
+<td>credit history</td>
+</tr>
+<tr>
+<td>Add credit</td>
+<td>POST /api/miniapp/credit/create/ (Sales)</td>
+<td>credit form</td>
+</tr>
+<tr>
+<td>Credit detail</td>
+<td>GET/POST/DELETE /api/miniapp/credit/detail/{id}/ (Sales)</td>
+<td>view/edit/delete credit</td>
+</tr>
+<tr>
+<td>Customer ledger</td>
+<td>GET /api/miniapp/credit/ledger/overview/ + /credit/ledger/ (Sales)</td>
+<td>customer credit pages</td>
+</tr>
+<tr>
+<td>Manual settlement</td>
+<td>POST /api/miniapp/settlement/manual/create/ (Sales)</td>
+<td>settle modal</td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td>GET /api/miniapp/settlement/search/ + /settlement/detail/{id}/ (Sales)</td>
+<td>dashboard, statement page (detail enriched with Payment request status)</td>
+</tr>
+<tr>
+<td>Send payment request</td>
+<td>POST /api/miniapp/payment/request/ (CDXE)</td>
+<td>request-payment form (CDXE→Sales→Payment internally)</td>
+</tr>
+<tr>
+<td>Cancel payment request</td>
+<td>POST /api/esewa/payment/request/cancel/{id}/ (Payment)</td>
+<td>cancel modal (the only direct app→Payment call)</td>
+</tr>
+<tr>
+<td>Dispute resolution</td>
+<td>POST/DELETE /api/miniapp/credit/detail/{id}/ (Sales, with dispute params)</td>
+<td>Help &amp; Support</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>GET /api/notification/miniapp/list/ (Events)</td>
+<td>notifications page</td>
+</tr>
+<tr>
+<td>Notification settings</td>
+<td>GET/PUT /api/notification/preference/ (Events)</td>
+<td>profile</td>
+</tr>
+<tr>
+<td>Credit settings</td>
+<td>GET /api/service-configuration/tenant/miniapp/?configuration=master_settings + POST .../detail/{id}/ (Configuration)</td>
+<td>app boot, profile</td>
+</tr>
+<tr>
+<td>Subscription</td>
+<td>GET /api/miniapp/subscriptions/status/ + POST initiate/ + verify/ (TMS); GET modules + package (Package)</td>
+<td>profile/upgrade, auto-check</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Appendix B — honest caveats (from the code, this build)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="appendix-b-honest-caveats-from-the-code-this-build">Appendix B — honest caveats (from the code, this build)</h2>
+<ul>
+<li><p><strong>No live eSewa ePay integration in these repos</strong>: payment records are status rows; the real wallet charge/mock is env-driven (doc 07 §C.5, doc 08 §10).</p>
+</li>
+<li><p><strong>Customer-side actions (approve, pay, self-settle, raise dispute) are built server-side but the customer UI in this checkout is not fully wired</strong> — see the Customer-Side doc, appendix.</p>
+</li>
+<li><p><strong>Wallet-user validation is a stub</strong> (always &quot;yes&quot;) — doc 06 §5.6.</p>
+</li>
+<li><p>A few flagged bugs (payment_period mismatch, mark-read, dispute status field, welcome notification) — each cited in the sections above and in docs 04/07/08/10 §11.</p>
+</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="01-overview.html"><div class="pn-dir">← Previous</div><div class="pn-name">Overview</div></a><a class="pn next" href="C-customer-side.html"><div class="pn-dir">Next →</div><div class="pn-name">Customer Side</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-register-log-in">1. Register &amp; log in</a></li><li class="l2"><a href="#2-customers-add-search-edit-delete-no-connection-needed">2. Customers — add, search, edit, delete (no connection needed)</a></li><li class="l2"><a href="#3-connection-requests-merchant-esewa-customer">3. Connection requests (merchant → eSewa customer)</a></li><li class="l2"><a href="#4-credit-book-add-edit-delete-view">4. Credit book — add, edit, delete, view</a></li><li class="l2"><a href="#5-manual-offline-settlement">5. Manual (offline) settlement</a></li><li class="l2"><a href="#6-payment-requests-merchant-asks-the-customer-to-pay-via-wallet">6. Payment requests (merchant asks the customer to pay via wallet)</a></li><li class="l2"><a href="#7-disputes-customer-says-something-s-off">7. Disputes (customer says &quot;something's off&quot;)</a></li><li class="l2"><a href="#8-notifications-activity">8. Notifications &amp; activity</a></li><li class="l2"><a href="#9-profile-credit-rules-subscription-upgrade">9. Profile — credit rules &amp; subscription upgrade</a></li><li class="l2"><a href="#appendix-a-every-merchant-api-the-app-actually-calls-today">Appendix A — every merchant API the app actually calls (today)</a></li><li class="l2"><a href="#appendix-b-honest-caveats-from-the-code-this-build">Appendix B — honest caveats (from the code, this build)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>
