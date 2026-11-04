@@ -1,0 +1,48 @@
+# agent-test: end-to-end smoke test of the docs-agent pipeline (manual trigger).
+# Your hosted model (qwen3.8-27B via ai-gw.f1arl.com) drives headless Claude Code, which updates the
+# visible status line on the live portal (index.html #agentline), commits, and pushes. Pages deploys.
+# Run it: Actions tab -> agent-test -> Run workflow. Then refresh https://providhydev.github.io/Documentations/
+name: agent-test
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Run agent - update the visible status line
+        env:
+          ANTHROPIC_BASE_URL: https://ai-gw.f1arl.com
+          ANTHROPIC_API_KEY: ${{ secrets.MODEL_KEY }}
+          ANTHROPIC_MODEL: qwen3.8-27B
+          ANTHROPIC_SMALL_FAST_MODEL: qwen3.8-27B
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+        run: |
+          git config user.name "docs-agent[bot]"
+          git config user.email "docs-agent@users.noreply.github.com"
+          claude -p "TASK (simple, visible test): update the agent status line on the portal.
+          1) Open index.html in the repo root. Find the single line containing id=\"agentline\".
+          2) Replace ONLY the text between its > and </p> with: 🤖 Docs agent: TEST OK - <current UTC date and time> - qwen3.8-27B via ai-gw.f1arl.com. Change nothing else in the file.
+          3) Then run exactly these shell commands (the GH_TOKEN env var is already set):
+          git add index.html
+          git commit -m 'agent-test: status line update'
+          git push "https://x:$GH_TOKEN@github.com/ProvidhyDev/Documentations.git" HEAD:main
+          4) Reply with the exact new status-line text you wrote, nothing else." --dangerously-skip-permissions --effort medium
+      - name: Verify commit landed on origin
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+        run: |
+          sha=$(git rev-parse HEAD)
+          echo "local HEAD: $sha"
+          for i in 1 2 3; do
+            if curl -sf -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/ProvidhyDev/Documentations/commits/$sha > /dev/null; then
+              echo "commit $sha visible on origin - test PASSED"; exit 0; fi
+            sleep 5; done
+          echo "commit not visible on origin - test FAILED"; exit 1
