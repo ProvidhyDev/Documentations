@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMS - Providhy Documentation</title>
+<style>
+:root { --bg:#f5f7fa; --panel:#ffffff; --text:#1d2534; --dim:#5c6779; --line:#e4e9f1; --acc:#e8590c; --shadow:0 1px 3px rgba(16,24,40,.08); }
+[data-theme="dark"] { --bg:#0e1420; --panel:#151d2e; --text:#d9e1ef; --dim:#8794ab; --line:#273350; --acc:#ff8a3d; }
+* { box-sizing:border-box }
+body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); display:flex; align-items:center; justify-content:center; font:16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding:24px }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); max-width:520px; padding:40px; text-align:center }
+.card .ico { font-size:40px; margin-bottom:14px }
+h1 { font-size:24px; margin:0 0 10px }
+p { color:var(--dim); margin:0 0 22px }
+a.btn { display:inline-block; background:var(--acc); color:#fff; text-decoration:none; font-weight:600; font-size:14px; border-radius:8px; padding:9px 18px }
+a.btn:hover { filter:brightness(1.08) }
+</style>
+<script>
+(function () {
+  var s = null; try { s = localStorage.getItem('mm-theme'); } catch (e) {}
+  document.documentElement.setAttribute('data-theme', s === 'dark' ? 'dark' : 'light');
+})();
+</script>
+</head>
+<body>
+<div class="card">
+  <div class="ico">📚</div>
+  <h1>OMS documentation</h1>
+  <p>Order Management System: merchant resolution, order flows and integrations. This section is being prepared and will appear here. In the meantime, the <strong>eSewa Miniapps</strong> docs are live.</p>
+  <a class="btn" href="../index.html">All Providhy docs</a>
+</div>
+</body>
+</html>
