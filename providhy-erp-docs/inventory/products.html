@@ -1,0 +1,645 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Inventory (ProductManagement) - ProductManagement - Products - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc current" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">63 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>ProductManagement . Products</h1>
+<p>Product master (with product batches), unit-of-measurement (UOM) master, and the GraphQL endpoint of the product app. Products carry the GL account mapping (expense / income / inventory GL), the stock model (independent vs batch), campaign linkage, and secondary unit conversions. Categories are documented separately (categories.md); campaigns in campaign.md. Variant and product-variant routes exist in the same app but the feature is not used in ProvidhyERP - they are listed in overview.md under Not used and not documented here.</p>
+<p>All routes below are relative to /api/product/ unless noted; Source: product/urls.py, product/views.py, product/serializers.py, product/schema.py @ edd7d596.</p>
+</section><section class="sec" data-title="Endpoint map"><h2 id="endpoint-map">Endpoint map</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>POST</td>
+<td>/graphql/</td>
+<td>GraphQL query (product, all_products)</td>
+<td>resolver-level IAM check; no endpoint auth</td>
+</tr>
+<tr>
+<td>2</td>
+<td>GET/POST</td>
+<td>/uom/</td>
+<td>List / create UOM</td>
+<td>IAM + PR903 UOM view / add_edit</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET</td>
+<td>/uom/search/</td>
+<td>Paginated UOM search (list screen)</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GET</td>
+<td>/uom/search/select/</td>
+<td>Active UOMs for pickers (+ secondary units of a product)</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>POST</td>
+<td>/uom/inactive/</td>
+<td>Bulk activate/deactivate UOMs</td>
+<td>IAM + PR903 active_inactive</td>
+</tr>
+<tr>
+<td>6</td>
+<td>POST</td>
+<td>/uom/create-endpoint/</td>
+<td>Bulk-create UOM names (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>7</td>
+<td>GET/POST</td>
+<td>/uom/detail/<pk>/</td>
+<td>UOM detail / update</td>
+<td>IAM + PR903 view / add_edit</td>
+</tr>
+<tr>
+<td>8</td>
+<td>POST</td>
+<td>/</td>
+<td>Create product (v1, legacy)</td>
+<td>IAM + PR901 PRODUCT_CREATION add_edit</td>
+</tr>
+<tr>
+<td>9</td>
+<td>POST</td>
+<td>/v2/</td>
+<td>Create product (v2, latest)</td>
+<td>IAM + PR901 add_edit</td>
+</tr>
+<tr>
+<td>10</td>
+<td>GET</td>
+<td>/delete/</td>
+<td>One-shot data wipe, hardcoded tenant</td>
+<td>NONE (unauthenticated)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>GET</td>
+<td>/search/</td>
+<td>Product list screen (fixed-asset enrichment)</td>
+<td>IAM + PR901 view</td>
+</tr>
+<tr>
+<td>12</td>
+<td>POST</td>
+<td>/search-global/</td>
+<td>Fuzzy product-name search (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>13</td>
+<td>GET/POST</td>
+<td>/detail/<pk>/</td>
+<td>Product detail (inventory + GL enriched) / update</td>
+<td>IAM + PR901 view / add_edit</td>
+</tr>
+<tr>
+<td>14</td>
+<td>POST</td>
+<td>/inactive/</td>
+<td>Bulk activate/deactivate products</td>
+<td>IAM + PR901 active_inactive</td>
+</tr>
+<tr>
+<td>15</td>
+<td>POST</td>
+<td>/check/</td>
+<td>Product exists? / product summary (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>16</td>
+<td>POST</td>
+<td>/check-multiple/</td>
+<td>Summaries for many product ids (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>17</td>
+<td>POST</td>
+<td>/active-check/</td>
+<td>Active product summary (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>18</td>
+<td>POST</td>
+<td>/import/</td>
+<td>Migration import: products + batches + variants (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>19</td>
+<td>GET</td>
+<td>/batch-wise/</td>
+<td>Products of a category, accounting format (S2S)</td>
+<td>internal password (query)</td>
+</tr>
+<tr>
+<td>20</td>
+<td>GET</td>
+<td>/report-product/search/select/</td>
+<td>Category product picker for reports</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>21</td>
+<td>POST</td>
+<td>/product-list-accounting/</td>
+<td>Products by ids or by GL account (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>22</td>
+<td>GET</td>
+<td>/list/</td>
+<td>Product search/select for document lines</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>23</td>
+<td>GET</td>
+<td>/product-list-cdxe/</td>
+<td>Active products id+name (S2S, CDXE)</td>
+<td>API key</td>
+</tr>
+<tr>
+<td>24</td>
+<td>GET</td>
+<td>/list/inventory-data/</td>
+<td>Single active product + inventory quantities</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>25</td>
+<td>GET</td>
+<td>/elastic-search/</td>
+<td>Elasticsearch-backed product search</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>26</td>
+<td>POST</td>
+<td>/bulk-product-validation/</td>
+<td>Validate bulk product import rows (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>27</td>
+<td>POST</td>
+<td>/bulk-add/</td>
+<td>Bulk product import + inventory seeding</td>
+<td>NONE (unauthenticated)</td>
+</tr>
+<tr>
+<td>28</td>
+<td>POST</td>
+<td>/kafka-product-listing/</td>
+<td>Products per tenant for listing pipeline</td>
+<td>NONE (unauthenticated)</td>
+</tr>
+<tr>
+<td>29</td>
+<td>POST</td>
+<td>/type-check/</td>
+<td>Split ids into goods / services / fixed assets (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>30</td>
+<td>GET</td>
+<td>/recent-transactions/v2/<pk>/</td>
+<td>Product transaction timeline (cursor)</td>
+<td>IAM + PR901 view</td>
+</tr>
+<tr>
+<td>31</td>
+<td>GET</td>
+<td>/recent-transactions-internal/<pk>/</td>
+<td>Same, for other services</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>32</td>
+<td>GET</td>
+<td>/products-uom/</td>
+<td>Stream product UOM rows as NDJSON (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>33</td>
+<td>POST</td>
+<td>/uom-import/</td>
+<td>Validate/create secondary unit conversions (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>34</td>
+<td>POST</td>
+<td>/change-case/</td>
+<td>Bulk upper/lower a product field (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>35</td>
+<td>GET</td>
+<td>/duplicate-batch/</td>
+<td>Is this batch number taken?</td>
+<td>IAM only (no-perm)</td>
+</tr>
+<tr>
+<td>36</td>
+<td>POST</td>
+<td>/deduplicate-unique-id/</td>
+<td>Repair duplicate product unique_ids (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>37</td>
+<td>POST</td>
+<td>/product-batch/check-multiple/</td>
+<td>Batches for many ids (S2S)</td>
+<td>internal</td>
+</tr>
+<tr>
+<td>38</td>
+<td>POST</td>
+<td>/product-batch/check/</td>
+<td>Re-resolve batch list + quantities (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>39</td>
+<td>POST</td>
+<td>/product-batch/detail/</td>
+<td>Batch create/update</td>
+<td>IAM + PR901 view / add_edit</td>
+</tr>
+<tr>
+<td>40</td>
+<td>GET</td>
+<td>/product-batch/search/select/&lt;product_id&gt;/</td>
+<td>Batch picker for a product</td>
+<td>IAM + PR901 view</td>
+</tr>
+<tr>
+<td>41</td>
+<td>POST</td>
+<td>/product-batch/create-endpoint/</td>
+<td>Create batch + seed inventory (S2S)</td>
+<td>internal password</td>
+</tr>
+<tr>
+<td>42</td>
+<td>POST</td>
+<td>/product-batch-line-item/</td>
+<td>Batches of a product for line items (S2S)</td>
+<td>internal</td>
+</tr>
+</tbody></table>
+<p>Legacy note: route 7 also accepts a versioned suffix (uom/detail/<pk>/&lt;str:version&gt;/ via the include at product/urls.py:216-225); the view ignores the version (views.py:233, :243). The catalog flattens these includes as separate /api/product/&lt;str:version&gt;/ entries.</p>
+</section><section class="sec" data-title="1. POST /graphql/"><h2 id="1-post-graphql">1. POST /graphql/</h2>
+<ul>
+<li>View: csrf_exempt graphene_django GraphQLView mounted directly at product/urls.py:9 with the schema from product/schema.py (no APIView subclass).</li>
+<li>Auth: none at the endpoint. The schema&#39;s two resolvers (product, all_products) are decorated with has_permission(ServiceChoices.PRODUCT_MASTER, ActionChoices.VIEW) (schema.py:37-55); all fields of Product, ProductCategory, UOM, Campaign are exposed (fields = <strong>all</strong>).</li>
+<li>A CustomGraphQLView class implementing APIKeyAuthentication exists (views.py:4725-4737) but is not referenced by any URL - dead code. The root-level /graphql/ mount the catalog lists is commented out (core/urls.py:11), so /api/product/graphql/ is the only live GraphQL endpoint.</li>
+</ul>
+</section><section class="sec" data-title="2. GET/POST /uom/"><h2 id="2-get-post-uom">2. GET/POST /uom/</h2>
+<ul>
+<li>View: UOMListCreate - product/views.py:67 (route urls.py:10).</li>
+<li>Auth: IAM + HasPermission, feature PR903 UOM; GET -&gt; view, POST -&gt; add_edit (views.py:68-70, 83-88).</li>
+<li>GET: query params status (required, 404 UNKNOWN_STATUS otherwise, views.py:93-95); tenant-scoped (views.py:96-98); paginated.</li>
+<li>POST: body { uom } required (views.py:105); UOMSerializer.create sanitizes via the Configuration service and enforces case-insensitive uniqueness (serializers.py:31-38); activity log (views.py:74-81, 115); 201 with id/unique_id/uom/short_name.</li>
+</ul>
+</section><section class="sec" data-title="3. GET /uom/search/"><h2 id="3-get-uom-search">3. GET /uom/search/</h2>
+<ul>
+<li>View: UOMSearchView - product/views.py:169 (route urls.py:11-12).</li>
+<li>Auth: IAMAuthenticationBackendProduct only - no HasPermission (no-perm) (views.py:170).</li>
+<li>Request: status (required, views.py:178-180), q free text over uom / entry_by / unique_id (icontains, views.py:187-195).</li>
+<li>Response: 200 paginated list via UOMSerializer.</li>
+</ul>
+</section><section class="sec" data-title="4. GET /uom/search/select/"><h2 id="4-get-uom-search-select">4. GET /uom/search/select/</h2>
+<ul>
+<li>View: UOMSearchSelectView - product/views.py:130 (route urls.py:12-15).</li>
+<li>Auth: IAM only (no-perm) (views.py:131).</li>
+<li>Request: q optional (unique_id / entry_by / uom, views.py:150-154), product_id optional.</li>
+<li>Processing: active UOMs only (views.py:142); when product_id is given the filter is narrowed to UOMs used by that product (views.py:145-146) and the serializer appends that product&#39;s secondary_units conversion list (serializers.py:49-57).</li>
+<li>Response: 200 paginated list.</li>
+</ul>
+</section><section class="sec" data-title="5. POST /uom/inactive/"><h2 id="5-post-uom-inactive">5. POST /uom/inactive/</h2>
+<ul>
+<li>View: UOMBulkActiveStatusUpdate - product/views.py:280 (route urls.py:17-19).</li>
+<li>Auth: IAM + HasPermission, PR903; POST -&gt; active_inactive (views.py:280-283, 298-305).</li>
+<li>Request: { id: [ids], status: active|inactive } validated as dict with list id (views.py:315-321).</li>
+<li>Processing: per-item tenant-scoped save in transaction.atomic; missing id -&gt; 404 UOM_NOT_FOUND (views.py:336-339); activity log per item (views.py:285-296).</li>
+<li>Response: 200 { message }.</li>
+</ul>
+</section><section class="sec" data-title="6. POST /uom/create-endpoint/"><h2 id="6-post-uom-create-endpoint">6. POST /uom/create-endpoint/</h2>
+<ul>
+<li>View: UOMCreateListAPIView - product/views.py:3712 (route urls.py:20-24).</li>
+<li>Auth: no class; body password must equal the shared internal password (validate_internal_pass, views.py:3714), else 401.</li>
+<li>Request: { tenant_id, uom: [names] }.</li>
+<li>Processing: for each name, creates a UOM row when not already present for the tenant (is_unique_pass, views.py:3717-3721). Anomaly: the created rows are not given the tenant_id from the body (views.py:3721), so bulk-created UOMs have a null tenant.</li>
+<li>Response: 200 empty.</li>
+</ul>
+</section><section class="sec" data-title="7. GET/POST /uom/detail/&lt;pk&gt;/"><h2 id="7-get-post-uom-detail-pk">7. GET/POST /uom/detail/<pk>/</h2>
+<ul>
+<li>View: UOMUpdate - product/views.py:205 (route urls.py:216-225, incl. version suffix).</li>
+<li>Auth: IAM + HasPermission, PR903; GET -&gt; view, POST -&gt; add_edit (views.py:204-208, 226-231).</li>
+<li>GET: tenant-scoped lookup (views.py:210-214); 200 serializer data, 404 UOM_NOT_FOUND (views.py:239-241).</li>
+<li>POST: 404 when missing; 400 INACTIVE_RECORD_NO_UPDATE when the record is inactive (views.py:250-254); UOMSerializer.update re-sanitizes and re-checks uniqueness (serializers.py:40-45); activity log with changed values (views.py:266-268).</li>
+<li>Response: 200 { message }; 400 on validation errors.</li>
+</ul>
+</section><section class="sec" data-title="8. POST / (v1 create, legacy)"><h2 id="8-post-v1-create-legacy">8. POST / (v1 create, legacy)</h2>
+<ul>
+<li>View: ProductListCreate - product/views.py:745 (route urls.py:39). The GET handler is commented out (views.py:768-814); the view is create-only.</li>
+<li>Auth: IAM + HasPermission, feature PR901 PRODUCT_CREATION; POST -&gt; add_edit (views.py:746-748, 761-766).</li>
+<li>Request: full product payload; expiry configuration is fetched from the Configuration service (PRODUCT_FLOW / BATCH_AND_SERIAL) - 503 CONFIGURATION_NOT_FOUND when absent. Goods require uom + product_category; services must not manage inventory; independent stock keeping plus expiry compulsion requires expiry_date (pattern shared with v2, views.py:1150-1170).</li>
+<li>Processing: ProductSerializer.create (serializers.py:1054-1059); a supplier-existence check against the Projectmaster service is attempted but the response is compared with if supplier_response == 204, i.e. a Response object is compared to an integer - the condition is always false and the branch raises SOMETHING_WENT_WRONG, so this v1 create path is effectively dead/broken (views.py:1059-1063); activity log and Kafka product-creation event on success.</li>
+<li>Status: superseded by route 9 in practice; documented here because the route is still registered.</li>
+</ul>
+</section><section class="sec" data-title="9. POST /v2/ (latest create)"><h2 id="9-post-v2-latest-create">9. POST /v2/ (latest create)</h2>
+<ul>
+<li>View: ProductListCreateV2 - product/views.py:1100 (route urls.py:40). Create-only (post at views.py:1123).</li>
+<li>Auth: IAM + HasPermission, PR901; POST -&gt; add_edit (views.py:1101-1103, 1116-1121).</li>
+<li>Request: same field contract as route 8 (name, product_type always; uom + product_category for goods; expiry_date when independent stock keeping and the tenant&#39;s expiry compulsion is on, views.py:1130-1170); helper.manage_fixed_assets normalizes fixed-asset fields (views.py:1173).</li>
+<li>Processing: carries the same broken supplier check as route 8 (if supplier_response == 204 always false -&gt; SOMETHING_WENT_WRONG, views.py:1228-1233); then product create via ProductSerializer, product-variant get_or_create when variants are passed (excluded feature side effect, serializers.py:1093-1102), activity log, Kafka event.</li>
+<li>Note: the supplier-check defect means the create path depends on code after the broken branch; flag for review.</li>
+</ul>
+</section><section class="sec" data-title="10. GET /delete/"><h2 id="10-get-delete">10. GET /delete/</h2>
+<ul>
+<li>View: DeleteUnnecessarydata - product/views.py:4117 (route urls.py:41).</li>
+<li>Auth: NONE - no authentication_classes, no permission_classes (views.py:4117-4118).</li>
+<li>Behavior: a one-shot destructive GET that deletes, for the hardcoded tenant 941187 only, all Product rows, sub-categories, top-level categories, UOMs and Variants (views.py:4119-4127), then returns &quot;done&quot;.</li>
+<li>Flag: unauthenticated destructive endpoint with a hardcoded tenant id - high risk; treat as a leftover migration tool.</li>
+</ul>
+</section><section class="sec" data-title="11. GET /search/ (list screen)"><h2 id="11-get-search-list-screen">11. GET /search/ (list screen)</h2>
+<ul>
+<li>View: ProductSearchView - product/views.py:3277 (route urls.py:42).</li>
+<li>Auth: IAM + HasPermission, PR901; GET -&gt; view (initial also maps POST -&gt; add_edit, views.py:3280-3292).</li>
+<li>Request: q (name / entry_by / unique_id icontains, views.py:3434-3441), status, category (comma list; a special fixed-asset pseudo value is stripped and becomes an is_fixed_asset=True filter, views.py:3392-3432), module (sales -&gt; sellable=True only, views.py:3402-3418).</li>
+<li>Processing: paginated ProductListSerializer (fixed-asset product_type remap, serializers.py:646-664); fixed-asset products are enriched by an async httpx fan-out (batches of 100, chunks of 5) to the Accounting service fixed-asset accounts endpoint (views.py:3294-3353, 3451-3453); total_quantity is joined locally from the Inventory / BatchInventoryTotal tables for manage_inventory products (views.py:3457-3488).</li>
+<li>Response: 200 paginated list.</li>
+</ul>
+</section><section class="sec" data-title="12. POST /search-global/"><h2 id="12-post-search-global">12. POST /search-global/</h2>
+<ul>
+<li>View: ProductNameSearchForGlobalAPIView - product/views.py:3493 (route urls.py:43-47).</li>
+<li>Auth: InternalRequestPermission (password in body/query).</li>
+<li>Request: { tenant_id, q } (views.py:3498).</li>
+<li>Processing: Postgres trigram similarity (TrigramSimilarity) with a 0.8 floor when the name icontains the query, threshold 0.1, top 5 rows (views.py:3502-3519).</li>
+<li>Response: 200 { product: [ { id, unique_id, name, similarity, extra_data } ] } for the global search widget in other modules.</li>
+</ul>
+</section><section class="sec" data-title="13. GET/POST /detail/&lt;pk&gt;/"><h2 id="13-get-post-detail-pk">13. GET/POST /detail/<pk>/</h2>
+<ul>
+<li>View: ProductUpdate - product/views.py:1469 (route urls.py:48).</li>
+<li>Auth: IAM + HasPermission, PR901; GET -&gt; view, POST -&gt; add_edit (views.py:1468-1472, 1533-1538).</li>
+<li>GET: ProductReadSerializer - resolves the three GL ids through the Accounting GL-mapping check service (serializers.py:843-847), attaches per-batch and product-level opening/available/hold quantities and rate/amount via the self inventory-data call (helper.query_inventory_data -&gt; self /api/inventory/inventory-data/, serializers.py:888-963), and, when the current fiscal year is closed, overlays the historical opening info for that year (serializers.py:869-914); fixed-asset product_type remap + asset_category (serializers.py:972-981).</li>
+<li>POST: expiry configuration required (503 otherwise, views.py:1559-1569); required-field rules as in route 9 (views.py:1575-1603); 404 PRODUCT_NOT_FOUND when the product is missing (views.py:1604-1609), 400 INACTIVE_RECORD_NO_UPDATE when inactive (views.py:1610-1614); name/sku/item_code case-insensitive uniqueness (views.py:1620); ProductSerializer.update re-sanitizes (note: the sanitize payload keys are misspelled as selig_price and skock_keeping at serializers.py:1025 and :1033, so those fields are not sanitized under their real names), adds GL additions (custom_functions.product_gl_addition_creation, serializers.py:1068), syncs the product-variant row when passed (serializers.py:1093-1102); Kafka product-edition event (views.py:1660-1665).</li>
+<li>Response: 200 serializer data (GET) / 200 (POST).</li>
+</ul>
+</section><section class="sec" data-title="14. POST /inactive/"><h2 id="14-post-inactive">14. POST /inactive/</h2>
+<ul>
+<li>View: ProductBulkActiveStatusUpdate - product/views.py:1678 (route urls.py:49-53).</li>
+<li>Auth: IAM + HasPermission, PR901; POST -&gt; active_inactive (views.py:1677-1681, 1696-1703).</li>
+<li>Request: { id: [ids], status } (views.py:1713-1719).</li>
+<li>Processing: per-item tenant-scoped save; missing id -&gt; 404 (views.py:1733-1736); activity log per item (views.py:1728-1732).</li>
+<li>Response: 200 { message }.</li>
+</ul>
+</section><section class="sec" data-title="15. POST /check/"><h2 id="15-post-check">15. POST /check/</h2>
+<ul>
+<li>View: ProductCheck - product/views.py:2803 (route urls.py:54).</li>
+<li>Auth: no class; body password compared directly to the shared password (views.py:2806), else 401.</li>
+<li>Request: { password, tenant_id } plus either multiple: true with product_ids (existence check - 200 only when all exist, views.py:2808-2811), or import: true (lookup by item_code in the unique_id field, views.py:2813-2817), or product_id.</li>
+<li>Processing: resolves the tenant&#39;s primary_code configuration (PRODUCT_FLOW / UNIQUE_ID) and returns the product summary { id, unique_id, primary_code, name, product_type, manage_inventory, stock_keeping, uom, description, hs_code, vat, cost_price } (views.py:2823-2857).</li>
+<li>Response: 200 summary or 200 empty (multiple).</li>
+</ul>
+</section><section class="sec" data-title="16. POST /check-multiple/"><h2 id="16-post-check-multiple">16. POST /check-multiple/</h2>
+<ul>
+<li>View: ProductCheckMultiple - product/views.py:2902 (route urls.py:55-59).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: { product_ids: [ids], tenant_id }.</li>
+<li>Response: 200 map { id: { name, uom, item_code, unique_id } } via ProductMinimalSerializer (serializers.py:985-994, views.py:2916-2923).</li>
+</ul>
+</section><section class="sec" data-title="17. POST /active-check/"><h2 id="17-post-active-check">17. POST /active-check/</h2>
+<ul>
+<li>View: ProductActiveCheck - product/views.py:2926 (route urls.py:65-67).</li>
+<li>Auth: no class; body password == shared password (views.py:2929), else 401.</li>
+<li>Request: { password, tenant_id, product_id }; product must be active (views.py:2931-2935).</li>
+<li>Response: 200 { id, unique_id, name, stock_keeping, uom }; 404 when missing or inactive (views.py:2947-2948).</li>
+</ul>
+</section><section class="sec" data-title="18. POST /import/"><h2 id="18-post-import">18. POST /import/</h2>
+<ul>
+<li>View: ProductMagration - product/views.py:3905 (route urls.py:68).</li>
+<li>Auth: no class; internal password via validate_internal_pass (views.py:3947), else falls through (no response) on failure.</li>
+<li>Request: { password, tenant_id, inventory_data: [rows], all_variant_list: [ { name, value: [] } ] }.</li>
+<li>Processing: creates variant parents + values from all_variant_list - a side effect on the excluded variant feature (views.py:3953-3969); then per inventory row: get_or_create UOM / category / subcategory (views.py:3972-3988), product + batch rows, and GL account ids resolved through the Accounting GL-mapping check (views.py:3906-3915). Migration tool from an external ledger, not a normal business endpoint.</li>
+<li>Flag: writes Variant rows (excluded feature) - documented for completeness of the import path only.</li>
+</ul>
+</section><section class="sec" data-title="19. GET /batch-wise/"><h2 id="19-get-batch-wise">19. GET /batch-wise/</h2>
+<ul>
+<li>View: CategoryBasedProductFilter - product/views.py:3727 (route urls.py:69).</li>
+<li>Auth: no class; password in query string via validate_internal_pass (views.py:3729), else 401.</li>
+<li>Request: ?category=<id> or ?sub_category=<id> (subcategory wins, views.py:3733-3740), ?tenant_id=<id>.</li>
+<li>Response: 200 list via ProductInfoForAccounting with the tenant&#39;s primary_code (custom_functions.conf_setup, views.py:3741-3744) - consumed by the Accounting service.</li>
+</ul>
+</section><section class="sec" data-title="20. GET /report-product/search/select/"><h2 id="20-get-report-product-search-select">20. GET /report-product/search/select/</h2>
+<ul>
+<li>View: CategoryBasedProductFilterFrontEnd - product/views.py:3749 (route urls.py:70-74).</li>
+<li>Auth: IAMAuthenticationBackendProduct only (no-perm) (views.py:3750).</li>
+<li>Request: q, category, sub_category, batch (bool - restricts to batch stock keeping, views.py:3772-3776).</li>
+<li>Processing: active, goods, manage_inventory, non-fixed-asset products only (views.py:3764-3770); icontains over unique_id/name/sku/item_code/product_type/entry_by (views.py:3784-3796).</li>
+<li>Response: 200 paginated list via ProductInfoForFrontEnd with primary_code (views.py:3801-3805).</li>
+</ul>
+</section><section class="sec" data-title="21. POST /product-list-accounting/"><h2 id="21-post-product-list-accounting">21. POST /product-list-accounting/</h2>
+<ul>
+<li>View: ProductFilter - product/views.py:3808 (route urls.py:80-82).</li>
+<li>Auth: no class; body password via validate_internal_pass (views.py:3810), else 401.</li>
+<li>Request: { password, tenant_id } plus product_ids (list - all must exist, views.py:3814-3833) or account_id (filters by inventory_gl_id, views.py:3835-3838); neither -&gt; 400.</li>
+<li>Response: 200 list via ProductInfoForAccounting (views.py:3844-3848).</li>
+</ul>
+</section><section class="sec" data-title="22. GET /list/"><h2 id="22-get-list">22. GET /list/</h2>
+<ul>
+<li>View: ProductSearchSelectView - product/views.py:1413 (route urls.py:83).</li>
+<li>Auth: IAM only (no-perm) (views.py:1414).</li>
+<li>Request: search, module (sales -&gt; sellable=True; purchase -&gt; no manage_inventory filter; anything else -&gt; manage_inventory=True, views.py:1421-1429), feature (quotation/order/requisition -&gt; serializer without batches, views.py:1453-1464).</li>
+<li>Processing: active products, icontains over unique_id/sku/item_code/product_type/entry_by/name (views.py:1434-1447); ProductSearchWithBatchSerializer attaches batches, each enriched with available/total quantity via a self inventory-data call (serializers.py:1131-1155, 1178-1197); primary_code from tenant configuration (views.py:1455).</li>
+<li>Response: 200 paginated list.</li>
+</ul>
+</section><section class="sec" data-title="23. GET /product-list-cdxe/"><h2 id="23-get-product-list-cdxe">23. GET /product-list-cdxe/</h2>
+<ul>
+<li>View: ProductListForCDXE - product/views.py:4740 (route urls.py:84-88).</li>
+<li>Auth: APIKeyAuthentication - X-API-Key header Fernet-decrypted must equal the tenant id (dashboard/auth_backends.py:195-243).</li>
+<li>Request: ?search (name icontains, views.py:4756-4757).</li>
+<li>Response: 200 paginated { id, name } of active products (ProductSerializerCDXE, serializers.py:2019-2022) - consumed by the CDXE partner integration.</li>
+</ul>
+</section><section class="sec" data-title="24. GET /list/inventory-data/"><h2 id="24-get-list-inventory-data">24. GET /list/inventory-data/</h2>
+<ul>
+<li>View: SingleProductAPIView - product/views.py:3529 (route urls.py:89-93).</li>
+<li>Auth: IAM only (no-perm) (views.py:3530).</li>
+<li>Request: ?product_id; the product must be active (views.py:3534-3538).</li>
+<li>Processing: builds a full product payload with primary_code (UNIQUE_ID configuration, views.py:3540-3559), secondary units, campaign summary (views.py:3539, 3580-3582), and per-batch available/total quantity plus product-level totals via the self inventory quantity endpoint (INVENTORY_DATA_QUANITY_SERVICE_API -&gt; self /api/inventory/inventory/data/, views.py:3615-3678).</li>
+<li>Response: 200 single object; 404 when missing (views.py:3681-3684).</li>
+</ul>
+</section><section class="sec" data-title="25. GET /elastic-search/"><h2 id="25-get-elastic-search">25. GET /elastic-search/</h2>
+<ul>
+<li>View: ProductElasticSearchView - product/views.py:4132 (route urls.py:163).</li>
+<li>Auth: IAM only (no-perm) (views.py:4133).</li>
+<li>Request: ?q.</li>
+<li>Processing: Elasticsearch match on name filtered by term tenant_id (views.py:4154-4161); hits are mapped back to the database by unique_id (views.py:4164-4167).</li>
+<li>Response: 200 paginated list; anomaly: the serializer is given a hardcoded placeholder primary_code &quot;primary_code123&quot; (views.py:4175).</li>
+</ul>
+</section><section class="sec" data-title="26. POST /bulk-product-validation/"><h2 id="26-post-bulk-product-validation">26. POST /bulk-product-validation/</h2>
+<ul>
+<li>View: ProductBulkValidationView - product/views.py:4435 (route urls.py:164).</li>
+<li>Auth: InternalRequestPermission (views.py:4434).</li>
+<li>Request: { tenant_id, data: [product rows] }.</li>
+<li>Processing: validates each row against existing products using raw SQL lookups (views.py:4435-4635 - flag: raw SQL in this service&#39;s otherwise-ORM codebase) and calls the GL bulk-check service (serializers.py:1496).</li>
+<li>Response: 200 { valid_data: [...], error_data: [...] } consumed by the import flow.</li>
+</ul>
+</section><section class="sec" data-title="27. POST /bulk-add/"><h2 id="27-post-bulk-add">27. POST /bulk-add/</h2>
+<ul>
+<li>View: ProductImportView - product/views.py:4404 (route urls.py:165).</li>
+<li>Auth: NONE - no authentication_classes, no permission_classes (views.py:4404-4405); tenant_id and username come from the body (views.py:4409-4411).</li>
+<li>Processing: ProductImportSerializer (serializers.py:1228 onward); custom_create creates the products and then seeds inventory by calling the self bulk-create endpoint (INVENTORY_BULK_CREATE_API -&gt; self /api/inventory/bulk-create/, serializers.py:2004) and emits a Kafka event (serializers.py:2009).</li>
+<li>Flag: unauthenticated bulk writer - high risk.</li>
+</ul>
+</section><section class="sec" data-title="28. POST /kafka-product-listing/"><h2 id="28-post-kafka-product-listing">28. POST /kafka-product-listing/</h2>
+<ul>
+<li>View: ProductListForTenant - product/views.py:4689 (route urls.py:166).</li>
+<li>Auth: NONE (views.py:4689).</li>
+<li>Request: { tenant_id: &quot;all&quot; | [tenant ids] } (views.py:4697-4703).</li>
+<li>Response: 200 list of { action: &quot;list&quot;, tenant_id, data: [ProductReadSerializer rows] } grouped per tenant (views.py:4705-4722) - input for the external product-listing/Kafka pipeline.</li>
+<li>Flag: unauthenticated read over arbitrary tenants.</li>
+</ul>
+</section><section class="sec" data-title="29. POST /type-check/"><h2 id="29-post-type-check">29. POST /type-check/</h2>
+<ul>
+<li>View: CheckProductTypeAPIView - product/views.py:4810 (route urls.py:167-171).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: { tenant_id (required, 400 when missing, views.py:4816-4820), product_ids (list, all must exist, views.py:4829-4833) }.</li>
+<li>Response: 200 { goods: [ids], services: [ids], fixed_asset_services: [ids], fixed_asset_goods: [ids] } (views.py:4837-4861).</li>
+</ul>
+</section><section class="sec" data-title="30. GET /recent-transactions/v2/&lt;pk&gt;/"><h2 id="30-get-recent-transactions-v2-pk">30. GET /recent-transactions/v2/<pk>/</h2>
+<ul>
+<li>View: ProductRecentTransactionAPIView - product/views.py:4972 (route urls.py:177-181).</li>
+<li>Auth: IAM + HasPermission, PR901; GET -&gt; view (views.py:4973-4976).</li>
+<li>Request: path pk; query next / previous cursors, count (default 10), service (comma list restricted to sales, purchase, stock_adjustment - 400 otherwise, views.py:4998-5004), feature, batch_id.</li>
+<li>Processing: the product must exist for the tenant (404 otherwise, views.py:4991-4997); TransactionTimelinePaginator builds the merged page, pulling sales / purchase entries from the Sales and Purchase services&#39; recent-transaction endpoints (helper.SALES_RECENT_TRANSACTIONS / PURCHASE_RECENT_TRANSACTIONS, helper.py:113-115) with caching via utils.get_cached_transaction_page (views.py:5005-5023).</li>
+<li>Response: 200 transaction timeline page.</li>
+</ul>
+</section><section class="sec" data-title="31. GET /recent-transactions-internal/&lt;pk&gt;/"><h2 id="31-get-recent-transactions-internal-pk">31. GET /recent-transactions-internal/<pk>/</h2>
+<ul>
+<li>View: ProductRecentTransactionInternalAPIView - product/views.py:5027 (route urls.py:182-186).</li>
+<li>Auth: InternalRequestPermission, no authentication (views.py:5028-5029). Subclass of the v1 base ProductRecentTransaction (views.py:4864) that reuses its handler for other services.</li>
+</ul>
+</section><section class="sec" data-title="32. GET /products-uom/"><h2 id="32-get-products-uom">32. GET /products-uom/</h2>
+<ul>
+<li>View: UOMForProductAPIView - product/views.py:5032 (route urls.py:187-191).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: ?tenant_id (required, views.py:5050-5051), ?chunk_size (default 100, views.py:5037).</li>
+<li>Processing: streams all products of the tenant in chunks as NDJSON lines via ProductUomSerializer (id, uom, secondary_units, serializers.py:2056-2067) (views.py:5053-5058).</li>
+<li>Response: 200 streaming application/json body.</li>
+</ul>
+</section><section class="sec" data-title="33. POST /uom-import/"><h2 id="33-post-uom-import">33. POST /uom-import/</h2>
+<ul>
+<li>View: ProductUnitImportValidationCreation - product/views.py:5061 (route urls.py:211-215).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: { tenant_id, data: [rows with name, item_code, uom, secondary_unit, conversion_rate, remarks] } with rows for one product continuing under a blank name (views.py:5139-5158); query create=true switches from validation to creation.</li>
+<li>Processing (create): for each matched product, missing UOMs are created and ProductUnitConversion rows are bulk_created (views.py:5068-5101).</li>
+<li>Processing (validate): products not found are returned in error_data with a remark, the rest in valid_data, both reshaped into the single-unit migration format (views.py:5160-5215).</li>
+<li>Response: 200 { valid_data, error_data } or { message: &quot;Created&quot; }.</li>
+</ul>
+</section><section class="sec" data-title="34. POST /change-case/"><h2 id="34-post-change-case">34. POST /change-case/</h2>
+<ul>
+<li>View: ProductChangeCase - product/views.py:5218 (route urls.py:226).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: { fields: [field names], case: upper|lower (400 otherwise, views.py:5246-5250), tenant_id } (views.py:5222).</li>
+<li>Processing: single bulk .update() applying Lower/Upper to the named product fields for the tenant (views.py:5232-5244).</li>
+<li>Response: 200 { message, updated_rows }.</li>
+</ul>
+</section><section class="sec" data-title="35. GET /duplicate-batch/"><h2 id="35-get-duplicate-batch">35. GET /duplicate-batch/</h2>
+<ul>
+<li>View: CheckForDuplicateBatch - product/views.py:5455 (route urls.py:227).</li>
+<li>Auth: IAMAuthenticationBackendProduct only (no-perm) (views.py:5456).</li>
+<li>Request: ?batch_number.</li>
+<li>Response: 400 { error: &quot;Product &#39;X&#39; already has this batch number!&quot; } when any batch of a tenant product carries the number (views.py:5460-5470), else 200 empty - used as a pre-flight check by document screens.</li>
+</ul>
+</section><section class="sec" data-title="36. POST /deduplicate-unique-id/"><h2 id="36-post-deduplicate-unique-id">36. POST /deduplicate-unique-id/</h2>
+<ul>
+<li>View: ProductUniqueIdDeduplicateView - product/views.py:5257 (route urls.py:228-232).</li>
+<li>Auth: InternalRequestPermission.</li>
+<li>Request: { tenant_id? (scope), dry_run, batch_size (default 2000, views.py:5297-5307) }.</li>
+<li>Processing: finds (tenant_id, unique_id) groups with more than one product (views.py:5309-5318); keeps the oldest row and renumbers the rest from the higher of the PRD ID-ledger max and the max number found on Product rows (views.py:5339-5373); dry_run reports without writing (views.py:5431-5432); otherwise one atomic bulk_create of new ID-ledger rows plus bulk_update of the products, 409 on a concurrent-update IntegrityError (views.py:5434-5450).</li>
+<li>Response: 200 { message, tenants_affected, duplicate_groups, products_reassigned, dry_run, reassignments }.</li>
+</ul>
+</section><section class="sec" data-title="37. POST /product-batch/check-multiple/"><h2 id="37-post-product-batch-check-multiple">37. POST /product-batch/check-multiple/</h2>
+<ul>
+<li>View: ProductBatchCheckMultiple - product/views.py:2878 (route urls.py:60-64).</li>
+<li>Auth: InternalRequestPermission (views.py:2879).</li>
+<li>Request: { batch_ids: [ids], tenant_id }.</li>
+<li>Response: 200 map { batch_id: { unique_id, batch_number, expiry_date } } via ProductBatchMinimalSerializer (views.py:2890-2899).</li>
+</ul>
+</section><section class="sec" data-title="38. POST /product-batch/check/"><h2 id="38-post-product-batch-check">38. POST /product-batch/check/</h2>
+<ul>
+<li>View: ProductBatchCheck - product/views.py:2965 (route urls.py:134-136).</li>
+<li>Auth: the class sets permisson_classes = [AllowAny] - a misspelling DRF ignores (views.py:2966), so the effective gate is the body password check (views.py:2971), else 401.</li>
+<li>Request: { password, tenant_id, product_id, batch_id: [ { id?, ...rate/quantity/return_count/... } ], inventory_data?: bool }.</li>
+<li>Processing: for each entry with a known id, re-fetches the batch under the product and, when inventory_data is set, fetches available/total quantity from the self inventory quantity endpoint (views.py:2979-3011); unknown ids are passed through (views.py:3022-3023).</li>
+<li>Response: 200 merged batch list; 204 when a batch does not exist (views.py:3027-3028).</li>
+</ul>
+</section><section class="sec" data-title="39. POST /product-batch/detail/"><h2 id="39-post-product-batch-detail">39. POST /product-batch/detail/</h2>
+<ul>
+<li>View: ProductBatchAddUpdate - product/views.py:2383 (route urls.py:124-128).</li>
+<li>Auth: IAM + HasPermission, PR901; POST -&gt; add_edit (views.py:2384-2387, 2418-2423).</li>
+<li>Request: batch payload { product, batch_number, manufacture_date?, expiry_date?, product_life? } (ProductBatchSerializer).</li>
+<li>Processing: the tenant&#39;s expiry configuration must exist (503 CONFIGURATION_NOT_FOUND otherwise, views.py:2439-2461); ProductBatchSerializer sanitizes via the Configuration service and enforces batch-number uniqueness per tenant (serializers.py:473-516); batch-scoped activity log (views.py:2389-2398).</li>
+<li>Response: 200 with the saved batch data.</li>
+</ul>
+</section><section class="sec" data-title="40. GET /product-batch/search/select/&lt;product_id&gt;/"><h2 id="40-get-product-batch-search-select-product-id">40. GET /product-batch/search/select/&lt;product_id&gt;/</h2>
+<ul>
+<li>View: ProductBatchSearchSelectAPIView - product/views.py:4766 (route urls.py:129-133).</li>
+<li>Auth: IAM + HasPermission, PR901; GET -&gt; view (views.py:4767-4770).</li>
+<li>Request: path product_id; q over batch_number / expiry_date / manufacture_date / unique_id (views.py:4784-4788).</li>
+<li>Processing: ProductBatchSearchSerializer appends available/total quantity per batch via the self inventory quantity endpoint (serializers.py:1131-1155).</li>
+<li>Response: 200 paginated list.</li>
+</ul>
+</section><section class="sec" data-title="41. POST /product-batch/create-endpoint/"><h2 id="41-post-product-batch-create-endpoint">41. POST /product-batch/create-endpoint/</h2>
+<ul>
+<li>View: BatchCreateEndpoint - product/views.py:3059 (route urls.py:137-141).</li>
+<li>Auth: no class; body password must equal the shared password (views.py:3061-3062), else 401.</li>
+<li>Request: { password, tenant_id, entry_by, method, quantity, product_id, batch_number, ...batch fields, fiscal_year? }.</li>
+<li>Processing: reuses an existing batch with the same number when it belongs to the same product (400 otherwise, views.py:3084-3111); new batches go through ProductBatchSerializer (sanitize + uniqueness, serializers.py:498-516); for new batches only, inventory is seeded by POSTing to the self create-endpoint (INVENTORY_CREATE_ENDPOINT -&gt; self /api/inventory/create-endpoint/, views.py:3131-3138); Kafka NEW_BATCH_CREATION event for new batches (views.py:3152-3158).</li>
+<li>Response: 200 { batch_id, batch_number, expiry_date, product_life, unique_id }.</li>
+</ul>
+</section><section class="sec" data-title="42. POST /product-batch-line-item/"><h2 id="42-post-product-batch-line-item">42. POST /product-batch-line-item/</h2>
+<ul>
+<li>View: ProductBatchForLineItem - product/views.py:4797 (route urls.py:119-123).</li>
+<li>Auth: InternalRequestPermission (views.py:4798).</li>
+<li>Request: { product_id }.</li>
+<li>Response: 200 list of the product&#39;s batches with available/total quantity (ProductBatchSearchSerializer, views.py:4803-4807) - for document line-item batch pickers in other services.</li>
+</ul>
+</section><section class="sec" data-title="Side effects (all endpoints)"><h2 id="side-effects-all-endpoints">Side effects (all endpoints)</h2>
+<ul>
+<li>Activity log via the Events service (POST {EVENTS}api/activity_log/create-activity-log/, helper.py:100) for UOM / product / batch create, update, active-inactive.</li>
+<li>Sanitization via the Configuration service (POST {CONFIGURATION}api/sanitization/form-data/, helper.py:102) on every UOM, product and product-batch create/update; a failed sanitize aborts the write (SANITIZE_ERROR).</li>
+<li>Accounting GL-mapping check (helper.GL_MAPPING_SERVICE_CHECK) on product reads (per product, serializers.py:843) and in the migration import (views.py:3912).</li>
+<li>Self inventory calls: quantity reads through helper.query_inventory_data -&gt; self /api/inventory/inventory-data/ (helper.py:82, INVENTORY_API points back at this service) and INVENTORY_DATA_QUANITY_SERVICE_API -&gt; self /api/inventory/inventory/data/ (helper.py:83); inventory seeding through self /api/inventory/create-endpoint/ and /api/inventory/bulk-create/ (helper.py:59, :67).</li>
+<li>Kafka events via the producer connection (PRODUCER_CONNECTION_URL) on product create/update and new batch creation (call_kafka, views.py:1660-1665, 3152-3158; serializers.py:2009).</li>
+<li>Cross-service reads: Sales and Purchase recent-transaction endpoints for the timeline (helper.py:113-115); Accounting fixed-asset accounts in the list screen (views.py:3297-3304).</li>
+</ul>
+</section><section class="sec" data-title="Frontend usage (apps-frontend @ production)"><h2 id="frontend-usage-apps-frontend-production">Frontend usage (apps-frontend @ production)</h2>
+<p>Per fe_usage.json, the product-area routes referenced by the frontend scan are: /uom/, /uom/search/, /uom/search/select/, /search/, /detail/<pk>/, /list/, /recent-transactions/v2/<pk>/, /duplicate-batch/, /product-batch/detail/. This is a floor, not a ceiling; every other route on this page is marked unused by the scan (mostly internal S2S endpoints consumed by other services).</p>
+</section><section class="sec" data-title="Superseded / legacy routes (not documented)"><h2 id="superseded-legacy-routes-not-documented">Superseded / legacy routes (not documented)</h2>
+<ul>
+<li>GET /api/product/recent-transactions/&lt;int:pk&gt;/ (v1, ProductRecentTransaction - views.py:4864) - superseded by the cursor-paginated v2 (route 30); the internal variant (route 31) still subclasses the v1 handler.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../inventory/dashboard.html"><div class="pn-dir">← Previous</div><div class="pn-name">ProductManagement - Dashboard</div></a><a class="pn next" href="../inventory/stock.html"><div class="pn-dir">Next →</div><div class="pn-name">ProductManagement - Stock</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-map">Endpoint map</a></li><li class="l2"><a href="#1-post-graphql">1. POST /graphql/</a></li><li class="l2"><a href="#2-get-post-uom">2. GET/POST /uom/</a></li><li class="l2"><a href="#3-get-uom-search">3. GET /uom/search/</a></li><li class="l2"><a href="#4-get-uom-search-select">4. GET /uom/search/select/</a></li><li class="l2"><a href="#5-post-uom-inactive">5. POST /uom/inactive/</a></li><li class="l2"><a href="#6-post-uom-create-endpoint">6. POST /uom/create-endpoint/</a></li><li class="l2"><a href="#7-get-post-uom-detail-pk">7. GET/POST /uom/detail/&lt;pk&gt;/</a></li><li class="l2"><a href="#8-post-v1-create-legacy">8. POST / (v1 create, legacy)</a></li><li class="l2"><a href="#9-post-v2-latest-create">9. POST /v2/ (latest create)</a></li><li class="l2"><a href="#10-get-delete">10. GET /delete/</a></li><li class="l2"><a href="#11-get-search-list-screen">11. GET /search/ (list screen)</a></li><li class="l2"><a href="#12-post-search-global">12. POST /search-global/</a></li><li class="l2"><a href="#13-get-post-detail-pk">13. GET/POST /detail/&lt;pk&gt;/</a></li><li class="l2"><a href="#14-post-inactive">14. POST /inactive/</a></li><li class="l2"><a href="#15-post-check">15. POST /check/</a></li><li class="l2"><a href="#16-post-check-multiple">16. POST /check-multiple/</a></li><li class="l2"><a href="#17-post-active-check">17. POST /active-check/</a></li><li class="l2"><a href="#18-post-import">18. POST /import/</a></li><li class="l2"><a href="#19-get-batch-wise">19. GET /batch-wise/</a></li><li class="l2"><a href="#20-get-report-product-search-select">20. GET /report-product/search/select/</a></li><li class="l2"><a href="#21-post-product-list-accounting">21. POST /product-list-accounting/</a></li><li class="l2"><a href="#22-get-list">22. GET /list/</a></li><li class="l2"><a href="#23-get-product-list-cdxe">23. GET /product-list-cdxe/</a></li><li class="l2"><a href="#24-get-list-inventory-data">24. GET /list/inventory-data/</a></li><li class="l2"><a href="#25-get-elastic-search">25. GET /elastic-search/</a></li><li class="l2"><a href="#26-post-bulk-product-validation">26. POST /bulk-product-validation/</a></li><li class="l2"><a href="#27-post-bulk-add">27. POST /bulk-add/</a></li><li class="l2"><a href="#28-post-kafka-product-listing">28. POST /kafka-product-listing/</a></li><li class="l2"><a href="#29-post-type-check">29. POST /type-check/</a></li><li class="l2"><a href="#30-get-recent-transactions-v2-pk">30. GET /recent-transactions/v2/&lt;pk&gt;/</a></li><li class="l2"><a href="#31-get-recent-transactions-internal-pk">31. GET /recent-transactions-internal/&lt;pk&gt;/</a></li><li class="l2"><a href="#32-get-products-uom">32. GET /products-uom/</a></li><li class="l2"><a href="#33-post-uom-import">33. POST /uom-import/</a></li><li class="l2"><a href="#34-post-change-case">34. POST /change-case/</a></li><li class="l2"><a href="#35-get-duplicate-batch">35. GET /duplicate-batch/</a></li><li class="l2"><a href="#36-post-deduplicate-unique-id">36. POST /deduplicate-unique-id/</a></li><li class="l2"><a href="#37-post-product-batch-check-multiple">37. POST /product-batch/check-multiple/</a></li><li class="l2"><a href="#38-post-product-batch-check">38. POST /product-batch/check/</a></li><li class="l2"><a href="#39-post-product-batch-detail">39. POST /product-batch/detail/</a></li><li class="l2"><a href="#40-get-product-batch-search-select-product-id">40. GET /product-batch/search/select/&lt;product_id&gt;/</a></li><li class="l2"><a href="#41-post-product-batch-create-endpoint">41. POST /product-batch/create-endpoint/</a></li><li class="l2"><a href="#42-post-product-batch-line-item">42. POST /product-batch-line-item/</a></li><li class="l2"><a href="#side-effects-all-endpoints">Side effects (all endpoints)</a></li><li class="l2"><a href="#frontend-usage-apps-frontend-production">Frontend usage (apps-frontend @ production)</a></li><li class="l2"><a href="#superseded-legacy-routes-not-documented">Superseded / legacy routes (not documented)</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

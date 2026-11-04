@@ -5,40 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Providhy Documentation</title>
 <style>
-:root { --bg:#f5f7fa; --panel:#ffffff; --text:#1d2534; --dim:#5c6779; --line:#e4e9f1; --acc:#e8590c; --acc-soft:#fff1e8; --shadow:0 1px 3px rgba(16,24,40,.08); }
-[data-theme="dark"] { --bg:#0e1420; --panel:#151d2e; --text:#d9e1ef; --dim:#8794ab; --line:#273350; --acc:#ff8a3d; --acc-soft:#2a1c12; }
-* { box-sizing:border-box }
-body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif }
-.wrap { max-width:980px; margin:0 auto; padding:56px 20px 72px }
-.hero { margin-bottom:40px }
-.hero .kicker { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--acc); background:var(--acc-soft); border-radius:999px; padding:4px 12px; margin-bottom:14px }
-h1 { font-size:34px; margin:0 0 10px; letter-spacing:-.01em }
-.hero p { color:var(--dim); max-width:640px; margin:0 }
-.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:18px }
-a.card { display:block; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px; text-decoration:none; color:var(--text); box-shadow:var(--shadow); transition:border-color .15s, transform .15s }
-a.card:hover { border-color:var(--acc); transform:translateY(-2px) }
-.card h2 { font-size:18px; margin:0 0 8px }
-.card p { margin:0; color:var(--dim); font-size:14px }
-.badge { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:3px 10px; margin-bottom:12px }
-.badge.live { background:var(--acc-soft); color:var(--acc) }
-.badge.soon { background:var(--codeinl,#edf1f7); color:var(--dim) }
-[data-theme="dark"] .badge.soon { background:#1d2740 }
-.foot { margin-top:48px; color:var(--dim); font-size:13px }
-.agentline { margin-top:10px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; color:var(--acc) }
+body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:#f6f7f9;color:#1c2430}
+.wrap{max-width:960px;margin:0 auto;padding:48px 20px}
+.kicker{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#0b6e4f;font-weight:700}
+h1{margin:8px 0 12px;font-size:40px}
+p{line-height:1.6;color:#42506a}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:32px}
+.card{display:block;background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:20px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.card:hover{border-color:#0b6e4f;box-shadow:0 4px 14px rgba(11,110,79,.10)}
+.card h2{margin:10px 0 8px;font-size:20px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:#e7f5ef;color:#0b6e4f}
+.foot{margin-top:40px;font-size:13px;color:#8a94a6}
 </style>
-<script>
-(function () {
-  var s = null; try { s = localStorage.getItem('mm-theme'); } catch (e) {}
-  document.documentElement.setAttribute('data-theme', s === 'dark' ? 'dark' : 'light');
-})();
-</script>
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
     <span class="kicker">Providhy ERP</span>
     <h1>Documentation</h1>
-    <p>Documentation for the Providhy platform. The eSewa federated-identity miniapps docs are live today; further product sections (ERP, OMS) will be added here over time.</p>
+    <p>Documentation for the Providhy platform. The eSewa federated-identity miniapps docs and the reverse-engineered ERP API docs are live today; further product sections (OMS) will be added here over time.</p>
   </div>
   <div class="cards">
     <a class="card" href="esewa-miniapp-docs/index.html">
@@ -46,11 +31,13 @@ a.card:hover { border-color:var(--acc); transform:translateY(-2px) }
       <h2>eSewa Miniapps</h2>
       <p>Federated-identity miniapp surface: Sales, CDXE, Projectmaster, IAM, Payment (eSewa), TMS, Configuration, Events. Feature guides + per-service deep-dives + API catalog.</p>
     </a>
-    
-    
+    <a class="card" href="providhy-erp-docs/index.html">
+      <span class="badge live">Live - 64 pages</span>
+      <h2>ERP API Reference</h2>
+      <p>Reverse-engineered API documentation for all 16 Providhy ERP services - traced from f1-production source with per-endpoint file:line evidence. Latest API version only.</p>
+    </a>
   </div>
   <div class="foot">ProvidhyDev - documentation repo. Each product section lives in its own folder and is served from this site.</div>
-  <p class="agentline" id="agentline">TEST OK - 2026-11-04 14:09:25 UTC - qwen3.8-27B via ai-gw.f1arl.com (codex)</p>
 </div>
 </body>
 </html>
