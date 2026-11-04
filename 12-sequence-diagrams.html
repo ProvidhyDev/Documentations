@@ -18,7 +18,7 @@
     IAM-&gt;&gt;REDIS: save access jti per user (jti invalidation)
     IAM--&gt;&gt;FE: 200 access, refresh, payload + miniApp cookies
     IAM-&gt;&gt;KAFKA: activity log (views.py:417-444)
-    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27); EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
+    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27), EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
 </pre></div>
 <p><em>Source: doc 03 §7.1</em></p>
 </section><section class="sec" data-title="2. First-time registration &amp; tenant provisioning"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-first-time-registration-tenant-provisioning">2. First-time registration &amp; tenant provisioning</h2>
@@ -80,7 +80,7 @@
     IAM--&gt;&gt;PM: token valid
     PM-&gt;&gt;IAM: GET /api/internal-check-permissions/ (non-root users only)
     IAM--&gt;&gt;PM: feature PR301 + action add_edit
-    PM-&gt;&gt;PM: validate name/identifier/mobile; duplicate check (CustomerIdentityLink)
+    PM-&gt;&gt;PM: validate name/identifier/mobile, duplicate check (CustomerIdentityLink)
     PM-&gt;&gt;CFG: POST /api/service-configuration/tenant/expose/ (gl_mapping, customer)
     CFG--&gt;&gt;PM: account_receivable id (or none)
     PM-&gt;&gt;PM: create Customer (unique_id CUS&lt;n&gt;) + CustomerIdentityLink
@@ -310,7 +310,7 @@
     participant IAM as IAM /api/external/oms/
     participant TMS as TMS-service
     OMS-&gt;&gt;IAM: POST oms/merchant/resolve/ with provider_code, merchant_id, name, contact + shared password
-    IAM-&gt;&gt;IAM: per-provider row lock; look up entity (oms_views.py:142-160)
+    IAM-&gt;&gt;IAM: per-provider row lock, look up entity (oms_views.py:142-160)
     alt first sight
         IAM-&gt;&gt;IAM: create CustomUser + ExternalEntity (OMS_MERCHANT, product_code=uuid) (oms_views.py:164-178)
         IAM-&gt;&gt;TMS: POST api/tenant/external-register/ with no_package_module and no_fiscal_transfer

@@ -650,7 +650,7 @@ Traced 2026-11-03 from production-branch checkout. All line refs are file:line i
     IAM-&gt;&gt;REDIS: save access jti per user (jti invalidation)
     IAM--&gt;&gt;FE: 200 access, refresh, payload + miniApp cookies
     IAM-&gt;&gt;KAFKA: activity log (views.py:417-444)
-    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27); EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
+    Note over IAM: AuthAuditMiddleware records EXTERNAL_LOGIN (auth_audit.py:27), EntityUserActivityTrackingMiddleware appends EntityActivity (middleware.py:15)
 </pre></div>
 <h3 id="7-2-first-time-registration-terms-acceptance">7.2 First-time registration (terms acceptance)</h3>
 <div class="diagram"><pre class="mermaid-src">sequenceDiagram
@@ -660,11 +660,11 @@ Traced 2026-11-03 from production-branch checkout. All line refs are file:line i
     participant EVT as events service
     participant KAFKA as Kafka
     FE-&gt;&gt;IAM: POST external/register/ (same TOTP + envelope, + entity_type, product_code, user_details) + X-MINIAPP-TOKEN
-    IAM-&gt;&gt;IAM: TOTP + envelope check; reject if entity exists (views.py:110-117)
+    IAM-&gt;&gt;IAM: TOTP + envelope check, reject if entity exists (views.py:110-117)
     IAM-&gt;&gt;IAM: create CustomUser (tenant_root, unusable password) + ExternalEntity (serializers.py:21-75)
-    IAM-&gt;&gt;TMS: POST api/tenant/external-register/ (shared password; idempotent per identity)
+    IAM-&gt;&gt;TMS: POST api/tenant/external-register/ (shared password, idempotent per identity)
     TMS--&gt;&gt;IAM: tenant_id, subscribed_services, fiscal_year
-    IAM-&gt;&gt;IAM: link user tenant_id/username/subscribed_services; commit DB (views.py:294-305)
+    IAM-&gt;&gt;IAM: link user tenant_id/username/subscribed_services, commit DB (views.py:294-305)
     IAM-&gt;&gt;KAFKA: activity log (views.py:216-254)
     alt ESM merchant (tenant_root)
         IAM-&gt;&gt;EVT: celery send_notification_task to api/notification/miniapp/notify-user/ (tasks.py:14-67)
@@ -690,7 +690,7 @@ Traced 2026-11-03 from production-branch checkout. All line refs are file:line i
     participant IAM as IAM /api/external/oms/
     participant TMS as TMS-service
     OMS-&gt;&gt;IAM: POST oms/merchant/resolve/ with provider_code, merchant_id, name, contact + shared password
-    IAM-&gt;&gt;IAM: per-provider row lock; look up entity (oms_views.py:142-160)
+    IAM-&gt;&gt;IAM: per-provider row lock, look up entity (oms_views.py:142-160)
     alt first sight
         IAM-&gt;&gt;IAM: create CustomUser + ExternalEntity (OMS_MERCHANT, product_code=uuid) (oms_views.py:164-178)
         IAM-&gt;&gt;TMS: POST api/tenant/external-register/ with no_package_module and no_fiscal_transfer

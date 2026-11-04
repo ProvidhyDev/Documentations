@@ -327,8 +327,8 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     CUSTOMER ||--o{ CUSTOMER_CATEGORY : &quot;customer_category FK (PROTECT)&quot;
     CUSTOMER ||--|| CUSTOMER_IDENTITY_LINK : &quot;customer_identity OneToOne&quot;
     SUPPLIER ||--o{ SUPPLIER_CATEGORY : &quot;supplier_category FK (PROTECT)&quot;
-    CUSTOMER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
-    SUPPLIER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    CUSTOMER |o..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    SUPPLIER |o..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
 
     CUSTOMER {
         bigint id PK
@@ -370,7 +370,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     }
     CUSTOMER_IDENTITY_LINK {
         bigint id PK
-        bigint customer PK_FK &quot;OneToOne, related_name customer_identity&quot;
+        bigint customer FK &quot;OneToOne, related_name customer_identity&quot;
         string provider_code &quot;esewa&quot;
         bool is_provider_user
         string external_identifier &quot;eSewa wallet id, nullable&quot;
@@ -495,7 +495,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     IAM--&gt;&gt;PM: token valid
     PM-&gt;&gt;IAM: GET /api/internal-check-permissions/ (non-root users only)
     IAM--&gt;&gt;PM: feature PR301 + action add_edit
-    PM-&gt;&gt;PM: validate name/identifier/mobile; duplicate check (CustomerIdentityLink)
+    PM-&gt;&gt;PM: validate name/identifier/mobile, duplicate check (CustomerIdentityLink)
     PM-&gt;&gt;CFG: POST /api/service-configuration/tenant/expose/ (gl_mapping, customer)
     CFG--&gt;&gt;PM: account_receivable id (or none)
     PM-&gt;&gt;PM: create Customer (unique_id CUS&lt;n&gt;) + CustomerIdentityLink
@@ -520,7 +520,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     CDXE--&gt;&gt;PM: connection map (status pending/approved...)
     PM-&gt;&gt;SALES: POST /api/miniapp/credit/ledger/internal/ (tenant_id, customer_id[])
     SALES--&gt;&gt;PM: credit ledger per customer (current_balance...)
-    PM-&gt;&gt;PM: filter by connection_status; sort (order_by); paginate (100)
+    PM-&gt;&gt;PM: filter by connection_status, sort (order_by), paginate (100)
     PM--&gt;&gt;FE: 200 paged list (id, name, mobile, total_credit_amount, connection_details, external_identifier)
 </pre></div>
 <h3 id="7-3-merchant-deletes-a-customer-payment-guard-sales-cdxe-cleanup-soft-delete">7.3 Merchant deletes a customer (Payment guard → Sales/CDXE cleanup → soft delete)</h3>
@@ -562,8 +562,8 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     CDXE-&gt;&gt;PM: POST /api/miniapp/validate-customer-connection/ (password, tenant_id, customer_identifier, provider_code, return_data=true)
     PM-&gt;&gt;PM: CustomerIdentityLink lookup (active + provider user)
     PM--&gt;&gt;CDXE: 200 {is_provider_user, id, name, mobile, external_identifier} (or 200 with error body)
-    CDXE-&gt;&gt;CDXE: receiver must be registered user OR provider-user customer; no existing connection
-    CDXE-&gt;&gt;CDXE: save Connection + ConnectionIdentityLink; notify both parties
+    CDXE-&gt;&gt;CDXE: receiver must be registered user OR provider-user customer, no existing connection
+    CDXE-&gt;&gt;CDXE: save Connection + ConnectionIdentityLink, notify both parties
     CDXE--&gt;&gt;FE: 201 connection created
 </pre></div>
 <p>(Also used by CDXE <code>ApproveRejectConnection.post</code> on approve/reject to fetch the customer name for the notification/activity log — <code>CDXE-REBOOT\miniapp\views.py:189-207</code>.)</p>

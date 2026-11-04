@@ -251,8 +251,8 @@
     CUSTOMER ||--o{ CUSTOMER_CATEGORY : &quot;customer_category FK (PROTECT)&quot;
     CUSTOMER ||--|| CUSTOMER_IDENTITY_LINK : &quot;customer_identity OneToOne&quot;
     SUPPLIER ||--o{ SUPPLIER_CATEGORY : &quot;supplier_category FK (PROTECT)&quot;
-    CUSTOMER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
-    SUPPLIER }..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    CUSTOMER |o..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
+    SUPPLIER |o..o{ PAYMENT_TERM : &quot;payment_term CharField (NO FK)&quot;
 
     CUSTOMER {
         bigint id PK
@@ -294,7 +294,7 @@
     }
     CUSTOMER_IDENTITY_LINK {
         bigint id PK
-        bigint customer PK_FK &quot;OneToOne, related_name customer_identity&quot;
+        bigint customer FK &quot;OneToOne, related_name customer_identity&quot;
         string provider_code &quot;esewa&quot;
         bool is_provider_user
         string external_identifier &quot;eSewa wallet id, nullable&quot;

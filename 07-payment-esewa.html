@@ -1070,7 +1070,7 @@ Errors: no token -&gt; 401 &quot;Invalid token.&quot; (lines 39-40); IAM connect
     end
     rect rgb(240,248,240)
     Note over CUST,PAY: pay (customer executes in eSewa app)
-    CUST--&gt;&gt;PAY: (wallet charge happens outside these repos; transaction_id produced)
+    CUST--&gt;&gt;PAY: (wallet charge happens outside these repos, transaction_id produced)
     FE-&gt;&gt;CDXE: POST payment/request/pay/{id}/ (status completed + SIGNATURE HMAC)
     CDXE-&gt;&gt;PAY: POST payment/request/pay/{settlement_id}/ (internal)
     PAY-&gt;&gt;SALES: POST payment/request/settle/ (status completed)
