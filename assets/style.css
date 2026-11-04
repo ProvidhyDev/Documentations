@@ -103,3 +103,21 @@ body.export-mode .seckb input { accent-color:var(--acc); margin-left:6px }
   h2, h3 { page-break-after:avoid }
   a { color:#111 }
 }
+
+/* ---- diagram interactivity: PNG button + enlarge modal ---- */
+.diagram { position:relative }
+.diagram.zoomable { cursor:zoom-in }
+.diagram-png { position:absolute; top:8px; right:8px; z-index:6; font-size:11px; font-weight:600; letter-spacing:.04em; padding:3px 10px; border-radius:6px; border:1px solid var(--line); background:var(--panel); color:var(--dim); cursor:pointer }
+.diagram-png:hover { border-color:var(--acc); color:var(--acc) }
+#mmModal { position:fixed; inset:0; z-index:100 }
+#mmModal[hidden] { display:none }
+.mm-backdrop { position:absolute; inset:0; background:rgba(8,12,22,.62) }
+.mm-box { position:absolute; inset:14px; display:flex; flex-direction:column; background:var(--bg); border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 60px rgba(0,0,0,.35); overflow:hidden }
+.mm-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 14px; border-bottom:1px solid var(--line); background:var(--panel) }
+.mm-title { font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.mm-ctrls { display:flex; gap:6px; flex:none }
+.mm-btn { padding:4px 10px; font-size:13px; flex:none }
+.mm-body { flex:1; overflow:auto; padding:18px; display:flex; align-items:flex-start; justify-content:center }
+.mm-body svg { display:block; max-width:none; height:auto; background:#fff; border-radius:6px; box-shadow:var(--shadow) }
+@media (max-width:720px) { .mm-box { inset:0; border-radius:0 } .mm-head { flex-wrap:wrap } }
+@media print { .diagram-png, #mmModal { display:none !important } .diagram.zoomable { cursor:default } }
