@@ -1,7 +1,7 @@
 name: agent-test
 # End-to-end smoke test of the docs-agent pipeline (manual trigger only).
-# Your hosted model (qwen3.8-27B via ai-gw.f1arl.com) drives headless Claude Code, which updates the
-# visible status line on the live portal (index.html #agentline), commits, and pushes. Pages deploys.
+# Runner: OpenAI Codex CLI against the hosted qwen3.8-27B (OpenAI-compatible /v1).
+# The agent updates the visible status line on the live portal (index.html #agentline), commits, and pushes.
 on:
   workflow_dispatch: {}
 
@@ -16,26 +16,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-      - name: Run agent - update the visible status line
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Run agent - update the visible status line (Codex)
         env:
-          ANTHROPIC_BASE_URL: "https://ai-gw.f1arl.com"
-          ANTHROPIC_API_KEY: ${{ secrets.MODEL_KEY }}
-          ANTHROPIC_MODEL: qwen3.8-27B
-          ANTHROPIC_SMALL_FAST_MODEL: qwen3.8-27B
+          MODEL_KEY: ${{ secrets.MODEL_KEY }}
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
+          CODEX_HOME: /tmp/codex
         run: |
-          echo "GH_TOKEN present: length=${#GH_TOKEN}" "docs-agent[bot]"
+          git config user.name "docs-agent[bot]"
           git config user.email "docs-agent@users.noreply.github.com"
-          claude -p "TASK (simple, visible test): update the agent status line on the portal.
-          1) Open index.html in the repo root. Find the single line containing id=\"agentline\".
-          2) Replace ONLY the text between its > and </p> with: TEST OK - <current UTC date and time> - qwen3.8-27B via ai-gw.f1arl.com. Change nothing else in the file.
+          echo "GH_TOKEN present: length=${#GH_TOKEN}"
+          mkdir -p "$CODEX_HOME"
+          {
+          echo 'model = "qwen3.8-27B"'
+          echo 'model_provider = "providhy"'
+          echo ''
+          echo '[model_providers.providhy]'
+          echo 'name = "Providhy hosted"'
+          echo 'base_url = "https://ai-gw.f1arl.com/v1"'
+          echo 'env_key = "MODEL_KEY"'
+          echo 'wire_api = "chat"'
+          } > "$CODEX_HOME/config.toml"
+          codex exec --dangerously-bypass-approvals-and-sandbox "TASK (simple, visible test): update the agent status line on the portal.
+          1) Open index.html in the repo root. Find the single line containing id=agentline.
+          2) Replace ONLY the text between its > and </p> with: TEST OK - <current UTC date and time> - qwen3.8-27B via ai-gw.f1arl.com (codex). Change nothing else in the file.
           3) Then run exactly these shell commands (the GH_TOKEN env var is already set):
           git add index.html
           git commit -m 'agent-test: status line update'
           git push "https://x:$GH_TOKEN@github.com/ProvidhyDev/Documentations.git" HEAD:main
-          4) Reply with the exact new status-line text you wrote, nothing else." --dangerously-skip-permissions --effort medium
+          4) Finish with the exact new status-line text you wrote, nothing else."
       - name: Verify commit landed on origin
         env:
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
