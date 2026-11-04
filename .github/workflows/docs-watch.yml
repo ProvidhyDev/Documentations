@@ -1,20 +1,8 @@
-# GitHub-native docs watcher — runner verified 2026-11-04 against Providhy's hosted model.
-# NOT active: lives in docs-agent/, NOT .github/workflows/.
-# To enable:
-#   1. Secrets on ProvidhyDev/Documentations (Settings > Secrets > Actions):
-#        MODEL_KEY       : API key for https://ai-gw.f1arl.com/v1 (the hosted qwen3.8-27B)
-#        DOCS_SYNC_TOKEN : fine-grained PAT — Contents:read on the 9 tracked service repos, Contents:write here
-#   2. Copy this file to .github/workflows/docs-watch.yml and push.
-# VERIFIED FACTS (2026-11-04, smoke-tested):
-#   - ai-gw.f1arl.com speaks BOTH OpenAI (/v1/chat/completions) and Anthropic Messages (/v1/messages) formats.
-#   - Claude Code connects with ANTHROPIC_BASE_URL=https://ai-gw.f1arl.com (it appends /v1/messages).
-#   - The gateway REJECTS reasoning_effort 'high' (Claude Code's default). Pass --effort medium (works) —
-#     supported values: xhigh (default), medium, low. Ask the gw admin to also allow 'high' for the 27B group.
-#   - qwen3.8-27B is a thinking model (returns thinking blocks); Claude Code handles them.
-#   - Alternative runner (OpenAI route): OpenAI Codex CLI with model_providers base_url https://ai-gw.f1arl.com/v1,
-#     model qwen3.8-27B, wire_api 'chat' — no effort flag needed on that route.
 name: docs-watch
-
+# GitHub-native docs watcher. Detects production-branch moves in tracked service repos, runs the
+# headless agent (qwen3.8-27B via ai-gw.f1arl.com through Claude Code) with docs-agent/PLAYBOOK.md,
+# and opens a docs PR. Verified 2026-11-04: endpoint speaks OpenAI + Anthropic formats; effort must
+# be medium (gateway rejects 'high'). Secrets: MODEL_KEY, DOCS_SYNC_TOKEN.
 on:
   schedule:
     - cron: '*/30 * * * *'
@@ -33,18 +21,19 @@ jobs:
         run: |
           node -e '
           (async () => {
-            const st = require("./.docs-state.json");
+            const fs = require("fs");
+            const st = JSON.parse(fs.readFileSync("./.docs-state.json", "utf8"));
             const moved = [];
             for (const [repo, e] of Object.entries(st.repos)) {
-              const r = await fetch(`https://api.github.com/repos/${repo}/branches/${e.branch}`,
-                { headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, "User-Agent": "docs-watch" } });
-              if (!r.ok) { console.log(`WARN ${repo} unreadable (${r.status})`); continue; }
+              const r = await fetch("https://api.github.com/repos/" + repo + "/branches/" + e.branch,
+                { headers: { Authorization: "Bearer " + process.env.GH_TOKEN, "User-Agent": "docs-watch" } });
+              if (!r.ok) { console.log("WARN " + repo + " unreadable (" + r.status + ")"); continue; }
               const cur = (await r.json()).commit.sha;
               if (!cur.startsWith(e.sha)) moved.push(repo);
             }
             const m = moved.length ? moved.join(",") : "none";
-            console.log(`moved=${m}`);
-            require("fs").appendFileSync(process.env.GITHUB_OUTPUT, `moved=${m}\n`);
+            console.log("moved=" + m);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "moved=" + m + "\n");
           })().catch(e => { console.error(e); process.exit(1); });
           '
   sync-docs:
@@ -59,22 +48,23 @@ jobs:
         run: |
           node -e '
           const { execSync } = require("child_process");
-          const st = require("./.docs-state.json");
+          const fs = require("fs");
+          const st = JSON.parse(fs.readFileSync("./.docs-state.json", "utf8"));
           for (const [repo, e] of Object.entries(st.repos)) {
             const name = repo.split("/")[1];
-            execSync(`git clone --branch ${e.branch} --depth 50 https://x:${process.env.GH_TOKEN}@github.com/${repo}.git /src/${name}`, { stdio: "inherit" });
+            execSync("git clone --branch " + e.branch + " --depth 50 https://x:" + process.env.GH_TOKEN + "@github.com/" + repo + ".git /src/" + name, { stdio: "inherit" });
           }
           '
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
-      - name: Run the agent — execute docs-agent/PLAYBOOK.md (PR mode)
+      - name: Run the agent - execute docs-agent/PLAYBOOK.md (PR mode)
         env:
-          ANTHROPIC_BASE_URL: https://ai-gw.f1arl.com
+          ANTHROPIC_BASE_URL: "https://ai-gw.f1arl.com"
           ANTHROPIC_API_KEY: ${{ secrets.MODEL_KEY }}
           ANTHROPIC_MODEL: qwen3.8-27B
           ANTHROPIC_SMALL_FAST_MODEL: qwen3.8-27B
           GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
         run: |
-          claude -p "You are the docs-sync agent. Read docs-agent/PLAYBOOK.md and execute it completely. The tracked service repos are cloned under /src/<RepoName>/ — treat those as the local checkouts named in the playbook (map by repo name). Because this is a headless CI run, use PR MODE for section 2.6: branch docs-sync-<YYYYMMDD-HHMM>, push it, and open a PR to main with the acceptance report as the PR body. Do NOT push directly to main. If no repos moved, say so and stop. Service repos under /src are READ-ONLY." --dangerously-skip-permissions --effort medium
+          claude -p "You are the docs-sync agent. Read docs-agent/PLAYBOOK.md and execute it completely. The tracked service repos are cloned under /src/<RepoName>/ - treat those as the local checkouts named in the playbook (map by repo name). Because this is a headless CI run, use PR MODE for section 2.6: branch docs-sync-<YYYYMMDD-HHMM>, push it, and open a PR to main with the acceptance report as the PR body. Do NOT push directly to main. If no repos moved, say so and stop. Service repos under /src are READ-ONLY." --dangerously-skip-permissions --effort medium
       - name: Watch the PR
         run: echo 'Review the opened PR in the PRs tab; merging it deploys the site via pages.yml'
