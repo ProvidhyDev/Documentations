@@ -1,0 +1,318 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Start Here &amp; Cross-Cutting - Architecture Deep-Dive - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc current" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc current" href="../guide/03-architecture.html"><span>Architecture Deep-Dive</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">77 pages - 16 services, traced from f1-production code, verified 2026-11-05</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Architecture Deep-Dive</h1>
+<p>This page is the structural deep-dive of the Providhy ERP platform: entry points, the two authentication chains, the tenant-registration cascade, the Kafka event backbone, data flow and state - plus the patterns and anti-patterns found in a full-architecture grill of the code. It complements the <a href="01-overview.html">Platform Overview</a>: that page says what the platform does; this page says how it is built and where the structural risk is.</p>
+<p>Every <code>file:line</code> reference below was read from the <strong>f1-production</strong> commit listed under <a href="#how-to-read">How to read this page</a> (verified 2026-11-05). Severity tags (HIGH / MEDIUM / LOW) and the <a href="#findings-register">findings register</a> at the bottom are the condensed output of that grill. <strong>CDXE-REBOOT</strong> is out of scope (not part of the Providhy ERP deployment).</p>
+</section><section class="sec" data-title="How to read this page"><h2 id="how-to-read">How to read this page</h2>
+<ul>
+<li>Paths are relative to the service repo root (e.g. <code>Sales/dashboard/auth_backends.py:54</code>). IAM-Backend is its own repo - the federated-identity surface lives there (it is not the CMS-IAM repo).</li>
+<li>"Verified" means read from the exact commit below on 2026-11-05; line numbers refer to those commits.</li>
+<li><strong>HIGH</strong> = should be scheduled; <strong>MEDIUM</strong> = plan around it; <strong>LOW</strong> = hygiene. <strong>[GOOD]</strong> = a pattern worth keeping and copying.</li>
+</ul>
+<table>
+<thead><tr><th>Service</th><th>Repo</th><th>f1-production SHA</th></tr></thead>
+<tbody>
+<tr><td>Sales</td><td>Sales</td><td><code>d07a3d4c</code></td></tr>
+<tr><td>Purchase</td><td>Purchase</td><td><code>ad05cc9b</code></td></tr>
+<tr><td>Accounting</td><td>Accounting</td><td><code>a60aaba</code></td></tr>
+<tr><td>ProductManagement (inventory)</td><td>ProductManagement</td><td><code>edd7d59</code></td></tr>
+<tr><td>ERP-Projectmaster (parties)</td><td>ERP-Projectmaster</td><td><code>07c3ea6</code></td></tr>
+<tr><td>reporting</td><td>reporting</td><td><code>ec01f56</code></td></tr>
+<tr><td>TMS (tenant management)</td><td>TMS-service</td><td><code>56f9576</code></td></tr>
+<tr><td>events</td><td>events</td><td><code>08d1385</code></td></tr>
+<tr><td>IAM-Backend (auth + federated)</td><td>IAM-Backend</td><td><code>0f7c15f</code></td></tr>
+<tr><td>Payment-Service (eSewa)</td><td>Payment-Service</td><td><code>87a90b2</code></td></tr>
+<tr><td>Configuration-Service</td><td>Configuration-Service</td><td><code>df75e09</code></td></tr>
+<tr><td>Migration-Service</td><td>Migration-service</td><td><code>3d4b1a6</code></td></tr>
+<tr><td>Website-Service</td><td>Website-Service</td><td><code>377aa73</code></td></tr>
+<tr><td>Document-Service</td><td>Document-Service</td><td><code>1794bdd</code></td></tr>
+<tr><td>Package Registry</td><td>ERP-Project-Package</td><td><code>07d9c88</code></td></tr>
+<tr><td>Kafka Infrastructure (producer + consumer)</td><td>kafka_producer / kafka_consumer_service</td><td><code>80644d3</code> / <code>97084cf</code></td></tr>
+<tr><td>providhy_kafka (shared package, <em>not</em> on f1)</td><td>providhy-kafka @ development</td><td><code>4015222</code></td></tr>
+</tbody></table>
+<p>All services are Django 5.0.3 + DRF + simplejwt with one Postgres database per service, one shared Redis (Celery broker + token revocation), and one Kafka cluster. Every container runs its <code>entrypoint.sh</code>: 4 Celery prefork workers (concurrency=1) + Celery beat + <code>manage.py runserver</code> as the web server (Sales <code>entrypoint.sh:23</code>). Running <code>runserver</code> in production containers is finding #13.</p>
+</section><section class="sec" data-title="Service map"><h2 id="service-map">Service map</h2>
+<p>Each box is one repo, one container, and one Postgres database. Synchronous traffic is plain HTTP between services; the only asynchronous traffic is the Kafka record events (right). The dotted edges into IAM-Backend are the per-request auth calls from the next section - the highest-frequency edges in the whole system.</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TB
+subgraph users[Users]
+FE[ERP web client]
+MA[eSewa miniapp]
+OPS[Providhy ops + CMS/PAM]
+end
+subgraph core[Core business services - one DB each]
+S[Sales]
+P[Purchase]
+PM[ProductManagement]
+A[Accounting]
+PMAS[ERP-Projectmaster]
+end
+subgraph platform[Platform services]
+IAM[IAM-Backend<br/>tokens + federated identity]
+TMS[TMS-Service]
+CFG[Configuration-Service]
+PKG[Package Registry]
+EV[events]
+PAY[Payment-Service]
+DOC[Document-Service]
+MIG[Migration-Service]
+WEB[Website-Service]
+end
+subgraph bus[Event backbone]
+KPF[kafka_producer<br/>FastAPI sidecar]
+K[(Kafka)]
+KCS[kafka_consumer_service]
+R[reporting<br/>warehouse + read replica]
+end
+FE --> S &amp; P &amp; PM &amp; A &amp; PMAS
+MA --> IAM
+OPS --> TMS &amp; PKG &amp; CFG &amp; WEB &amp; EV
+S &amp; P &amp; PM &amp; A -.-&gt;|1-2 auth calls per request| IAM
+S &amp; P &amp; PM &amp; A -.-&gt;|journal hooks| A
+S &amp; P &amp; PM &amp; A &amp; PMAS -.-&gt;|notifications + logs| EV
+S &amp; P &amp; PM &amp; A -.-&gt;|record events| KPF
+KPF --&gt; K
+K --&gt; R
+K --&gt; KCS
+A -.-&gt;|own consumer (accounting_events)| K
+IAM -.-&gt;|registration, 60s stopgap| TMS
+TMS --&gt;|tenant config transfer| CFG
+TMS --&gt; PKG
+</pre></div>
+<p>Reading the map: module services talk to each other only through internal HTTP hooks (journals into Accounting, notifications into events) and through Kafka for record events; IAM-Backend sits on every request; TMS is the tenant factory that Configuration, the Package Registry and the modules depend on at onboarding time.</p>
+</section><section class="sec" data-title="Authentication: two chains"><h2 id="authentication-two-chains">Authentication: two chains</h2>
+<p>The platform has two user-facing authentication chains (ERP users and eSewa miniapp identities) plus one internal machine-to-machine scheme. All three are implemented per service - the same classes re-implemented in every module, which is where most of the structural risk is.</p>
+<h3 id="erp-auth-chain">ERP chain (per request)</h3>
+<p>Every ERP request goes through two per-view classes in the module service: an <code>IAMAuthenticationBackend*</code> (authentication) and a <code>HasPermission</code> subclass (authorization). Sales copy as the reference implementation (<code>Sales/dashboard/auth_backends.py</code>):</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+participant FE as ERP frontend
+participant SVC as Module service (e.g. Sales)
+participant IAM as IAM-Backend
+FE-&gt;&gt;SVC: request with JWT
+SVC-&gt;&gt;IAM: POST /api/token/verify/ (auth_backends.py:54-62)
+IAM--&gt;&gt;SVC: user_id, tenant_id, subscription, fiscal year
+Note over SVC: backend returns raw ints (user_id, tenant_id)
+alt tenant root (request.tenant_root)
+SVC--&gt;&gt;FE: proceed - second call skipped (line 93)
+else regular user
+SVC-&gt;&gt;IAM: GET permission-check?password=INTERNAL_PASS&amp;user_id=... (line 98)
+IAM--&gt;&gt;SVC: feature/action permission map
+SVC--&gt;&gt;FE: 200 only if the view's required feature + action match (103-121)
+end
+</pre></div>
+<table>
+<thead><tr><th>Step</th><th>HTTP call</th><th>How often</th><th>Cache</th><th>Timeout</th></tr></thead>
+<tbody>
+<tr><td>Token verify</td><td>POST {IAM_API}api/token/verify/</td><td>Every request, every service</td><td>None</td><td>None set (requests.post, line 58)</td></tr>
+<tr><td>Permission fetch</td><td>GET {IAM_PERMISSION_CHECK}?password=...&amp;user_id=...</td><td>Every request, non-root users only</td><td>None</td><td>None set (lines 97-99)</td></tr>
+</tbody></table>
+<p>Consequences: IAM-Backend is on the critical path of literally every ERP request (1-2 synchronous round-trips, no caching, no timeouts) - finding #1 (HIGH). Root users short-circuit the second call (line 93). Inside <code>HasPermission</code> the check is fail-closed (a view without declared <code>required_feature_permission</code>/<code>required_action_permission</code> returns False, lines 106-107), but there are <strong>no global DRF defaults</strong>: <code>REST_FRAMEWORK</code> is defined only in PROD/UAT and only sets the exception handler (Sales <code>core/settings.py:141-144</code>), so a view that declares no permission class is simply open - finding #11 (MEDIUM).</p>
+<h3 id="federated-auth-chain">Federated chain (eSewa miniapp)</h3>
+<p>Miniapp identities are minted by IAM-Backend's external surface (<code>api/external/</code>: register, token, token/verify, token/refresh, is-registered, user-statistics, users, activities) with an HS256 JWT carrying custom claims (tenant_id, provider_code, user_type, tenant_root, subscribed_services, external_identifier, product_code, subscribed_date) and delivered as the <code>miniAppAccessToken</code>/<code>miniAppRefreshToken</code> cookies (IAM-Backend <code>federated_identity/views.py:234-235</code>):</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+participant MA as eSewa miniapp
+participant IAM as IAM-Backend
+participant SVC as Module service
+Note over MA,IAM: origin check on verify = TOTP on X-MINIAPP-TOKEN, skipped in UAT/DEV (utils.py:78-84)
+MA-&gt;&gt;SVC: request with miniAppAccessToken cookie
+SVC-&gt;&gt;IAM: POST /api/external/token/verify/ + X-MINIAPP-TOKEN (auth_backends.py:218-229)
+IAM--&gt;&gt;SVC: Token is valid
+SVC-&gt;&gt;SVC: decode the same JWT locally with verify=False (line 192)
+SVC--&gt;&gt;MA: 200 with raw int identities
+</pre></div>
+<p>The local decode trusts the remote verify (signature not re-checked, <code>verify=False</code>, line 192). A debug <code>print</code> of the full IAM response goes to stdout on every federated request (line 227) - finding #14 (LOW).</p>
+<h3 id="internal-s2s">Internal service-to-service (INTERNAL_PASS)</h3>
+<p>Service-to-service calls authenticate with one static shared secret, <code>INTERNAL_PASS</code> (Sales <code>dashboard/helper.py:29</code>), sent in the POST body or the GET query string (auth_backends.py:147,152). Three weaknesses at once - finding #3 (HIGH):</p>
+<ul>
+<li>the comparison is <code>!=</code> (non-constant-time, helper.py:383-386);</li>
+<li>on a failed check the attempted secret is printed to stdout (auth_backends.py:165) - which is the real secret whenever a caller typo'd it;</li>
+<li>the same password rides along in plaintext in every internal payload (17 such payload sites in Sales/dashboard/helper.py alone).</li>
+</ul>
+<p>Fix direction: per-service signed HMAC or mTLS, <code>hmac.compare_digest</code>, remove the print.</p>
+<h3 id="diverged-auth-copies">The 12-copies problem</h3>
+<p>The pattern above is copy-pasted per service and has drifted (all 12 copies MD5-distinct, verified 2026-11-05):</p>
+<table>
+<thead><tr><th>Service</th><th>File</th><th>Lines</th></tr></thead>
+<tbody>
+<tr><td>Configuration-Service</td><td>dashboard/auth_backends.py</td><td>217</td></tr>
+<tr><td>ProductManagement</td><td>dashboard/auth_backends.py</td><td>211</td></tr>
+<tr><td>Sales</td><td>dashboard/auth_backends.py</td><td>210</td></tr>
+<tr><td>reporting</td><td>dashboard/auth_backends.py</td><td>180</td></tr>
+<tr><td>ERP-Projectmaster</td><td>dashboard/auth_backends.py</td><td>191</td></tr>
+<tr><td>Migration-service</td><td>dashboard/auth_backends.py</td><td>166</td></tr>
+<tr><td>events</td><td>dashboard/auth_backends.py</td><td>147</td></tr>
+<tr><td>TMS</td><td>dashboard/auth_backends.py</td><td>137</td></tr>
+<tr><td>Purchase</td><td>dashboard/auth_backends.py</td><td>122</td></tr>
+<tr><td>Payment-Service</td><td>dashboard/auth_backends.py</td><td>120</td></tr>
+<tr><td>Accounting</td><td>dashboard/auth_backends.py</td><td>101</td></tr>
+<tr><td>Website-Service</td><td>dashboard/auth_backends.py</td><td>73</td></tr>
+</tbody></table>
+<p>Any auth change must be applied 12+ times and will drift again - finding #2 (HIGH). Fix direction: a shared <code>providhy_auth</code> package with per-service thin wrappers (the same idea that <code>providhy_kafka</code> applies to topic names).</p>
+</section><section class="sec" data-title="Tenant registration cascade"><h2 id="registration-cascade">Tenant registration cascade</h2>
+<p>When a new eSewa user registers (and no tenant exists for the provider+identifier yet), four services are involved in one <strong>synchronous</strong> HTTP chain that creates the tenant end-to-end:</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+participant ES as eSewa miniapp
+participant IAM as IAM-Backend
+participant TMS as TMS-Service
+participant CFG as Configuration-Service
+ES-&gt;&gt;IAM: POST /api/external/register/ (AES-ECB payload)
+IAM-&gt;&gt;IAM: decrypt (utils.py:366) + exists-check (400 if known)
+IAM-&gt;&gt;TMS: POST RegisterExternalEntityView (timeout=60, views.py:161)
+TMS-&gt;&gt;TMS: idempotent upsert ExternalTenantLink + row lock (views.py:4771-4803)
+TMS-&gt;&gt;CFG: POST data-transfer (timeout 5s connect / 120s read, custom_functions.py:572)
+CFG--&gt;&gt;TMS: tenant config ready (CoA copy 12-21s for ERP tenants)
+TMS--&gt;&gt;IAM: tenant_id
+IAM-&gt;&gt;IAM: update_user(username_{tenant_id}) + HS256 JWT + jti in Redis (views.py:178,219)
+IAM--&gt;&gt;ES: cookies miniAppAccessToken / miniAppRefreshToken
+</pre></div>
+<table>
+<thead><tr><th>Hop</th><th>Caller</th><th>Budget</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>eSewa -&gt; IAM</td><td>eSewa</td><td>n/a</td><td>client side</td></tr>
+<tr><td>IAM -&gt; TMS</td><td>register_tenant_if_needed</td><td>60s</td><td>"ponytail: 60s stopgap" comment (IAM views.py:158)</td></tr>
+<tr><td>TMS -&gt; Configuration</td><td>transfer_tenant_configuration</td><td>5s connect / 120s read</td><td>(TMS custom_functions.py:566-572)</td></tr>
+<tr><td>Configuration CoA copy</td><td>-</td><td>12-21s</td><td>production timing in the code comment (custom_functions.py:566-568)</td></tr>
+</tbody></table>
+<p><strong>Timeout inversion</strong> (finding #4, HIGH): the outer 60s budget can expire while the inner 120s hop is still running - IAM answers the user with an error while TMS/Configuration keep creating data (orphan-tenant risk). The code comment itself calls the 60s a stopgap.</p>
+<p>[GOOD] The TMS step is idempotent (<code>ExternalTenantLink</code> per provider+external_identifier, <code>select_for_update</code> row lock, tenant_management/views.py:4771-4807), so retries are safe. The right fix is therefore an async 202 + outbox + reconciliation worker, not a bigger timeout.</p>
+<p>[MEDIUM] The registration payload is "encrypted" with AES-ECB whose key is the <strong>first 32 characters of the client-supplied miniapp token sent in the same request</strong> (IAM utils.py:348-393, <code>key = token[:32]</code> at :393) - obfuscation, not encryption. Finding #5. Fix direction: per-provider asymmetric keys (or per-provider KMS-wrapped AES-256-GCM).</p>
+</section><section class="sec" data-title="Event backbone (Kafka)"><h2 id="event-backbone">Event backbone (Kafka)</h2>
+<p>The platform is mid-migration of its Kafka contract. <strong>f1-production today runs the legacy generation</strong> - one raw topic per module with the action string inside the payload. The <strong>next-generation contract</strong> (9 topics + shared Actions constants) lives in the <code>providhy_kafka</code> package, which no f1 service has adopted yet. Both generations are verified below.</p>
+<h3 id="legacy-topics">Topics on f1 today</h3>
+<table>
+<thead><tr><th>Topic</th><th>Producer (f1 file)</th><th>Consumers (verified)</th></tr></thead>
+<tbody>
+<tr><td><code>sales_events</code></td><td>Sales dashboard/kafka_function.py:15</td><td>reporting (dashboard/tasks.py:23)</td></tr>
+<tr><td><code>purchase_events</code></td><td>Purchase dashboard/async_func.py</td><td>reporting (dashboard/tasks.py:23)</td></tr>
+<tr><td><code>inventory_events</code></td><td>ProductManagement inventory/async_func.py</td><td>reporting (tasks.py:23); kafka_consumer_service (core/management/commands/kafka_consumer.py)</td></tr>
+<tr><td><code>accounting_events</code></td><td>Accounting dashboard/async_func.py</td><td>Accounting's own consumer (dashboard/management/commands/kafka_consumer.py:23, group <code>accounting-consumer-group</code> :18); reporting (tasks.py:23)</td></tr>
+<tr><td><code>master_events</code></td><td>ERP-Projectmaster dashboard/async_func.py + kafka_function.py</td><td>no f1 consumer found in this trace</td></tr>
+</tbody></table>
+<p>In dev environments every topic gets a <code>dev_</code> prefix (same producer files, <code>DEVELOPMENT</code> flag). Note that Accounting is both a producer and a consumer of its own topic.</p>
+<h3 id="publish-path">How a record event is published</h3>
+<p>Module services never touch Kafka directly. They POST to the <strong>kafka_producer sidecar</strong> (FastAPI + AIOKafkaProducer, <code>kafka_producer/main.py:21,29</code>; endpoint <code>POST /v1/produce/</code>, app/routes.py:13) with <code>event_topic</code>, <code>event_type</code> (used as the Kafka key) and <code>value</code>. Example, Sales (dashboard/kafka_function.py:8-27): topic <code>sales_events</code>, key <code>"sales"</code> (line 20), value <code>{action, tenant_id, data}</code>.</p>
+<p>The <code>action</code> string comes from per-service <code>ConsumerActionList</code> classes - Sales ~15 values, Purchase 20, ProductManagement 20, Accounting 34 - each re-declared in its own <code>choices.py</code>, i.e. the action vocabulary is duplicated per service just like the auth backends.</p>
+<h3 id="next-gen-contract">Next-generation contract (providhy_kafka)</h3>
+<p>The shared package <code>providhy_kafka</code> (providhy-kafka @ development, <code>4015222</code>) defines the intended contract in plain, Django-free classes (topics.py): 9 topics - <code>invoice.events</code>, <code>return.events</code>, <code>order.events</code>, <code>delivery_note.events</code>, <code>drn.events</code>, <code>payment.events</code>, <code>activity_log.events</code>, <code>notification.events</code>, <code>email.events</code> (with <code>dev_</code> prefix in dev) - and 23 <code>Actions</code> constants (approval/cancel per record type plus <code>activity_log_created</code>, <code>notification_created</code>, <code>email_created</code>). Its docstring says producers and consumers should import from it so a rename happens in one place.</p>
+<p>Verified by full-repo scan on 2026-11-05: <strong>zero f1 services import it and zero f1 code contains those topic strings</strong>, and it is not pinned in any requirements.txt. The migration to this contract has not started on f1 - findings #6/#7 (MEDIUM).</p>
+<h3 id="consumers">Consumers</h3>
+<table>
+<thead><tr><th>Consumer</th><th>What it does</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>kafka_consumer_service</td><td>generic (domain, action) -&gt; handler registry</td><td>dispatcher raises ValueError on an unknown event (core/kafka/dispatcher.py:8-12) - no dead-letter queue</td></tr>
+<tr><td>reporting</td><td>kafka_data_ingestor.py (1064L) + kafka_consumer management command</td><td>dual ingestion path coexists with the generic service - finding #9 (MEDIUM)</td></tr>
+<tr><td>Accounting</td><td>its own kafka_consumer management command</td><td>legacy <code>accounting_events</code> topic, group <code>accounting-consumer-group</code></td></tr>
+</tbody></table>
+<h3 id="events-branch-note">events service branch note</h3>
+<p>Finding #8 (MEDIUM): the <strong>events service on f1-production contains zero Kafka code</strong> (0 .py files mention kafka), while its <code>kafka_consumers</code> app (email + activity-log consumers) exists only on <code>uat</code>; f1 also has committed <code>__pycache__</code>. Reconcile uat -&gt; f1 (or document the intentional cut) before relying on events-driven email/activity-log ingestion.</p>
+</section><section class="sec" data-title="Data flow and state"><h2 id="data-flow-state">Data flow and state</h2>
+<p>The write path of a typical module record (invoice approval shown):</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+participant FE as Frontend
+participant SVC as Module service
+participant A as Accounting
+participant EV as events
+participant KP as kafka_producer sidecar
+participant K as Kafka
+participant R as reporting
+FE-&gt;&gt;SVC: create + submit record (JWT)
+SVC-&gt;&gt;SVC: workflow approval, persist to own DB
+SVC-&gt;&gt;A: internal journal hook (HTTP, on approval)
+SVC-&gt;&gt;EV: notification + activity log (HTTP)
+SVC-&gt;&gt;KP: POST /v1/produce/ (record event)
+KP-&gt;&gt;K: publish to module topic
+K-&gt;&gt;R: consumer materializes transaction + ledger views
+Note over R: reports read the warehouse + read replica only
+</pre></div>
+<p><strong>Multi-tenancy</strong>: every table carries a <code>tenant_id</code> column; the request-scoped identity is the raw int tenant id returned by the auth backends (<code>request.auth</code>), and <code>request.user</code> is a raw user id int (finding #15, LOW). There is no Django multi-tenancy library and no DB-level row security - tenant isolation is enforced in query code.</p>
+<p><strong>Warehouse</strong>: reporting models wrap database views, e.g. <code>db_table = "AccountingTransactionView"</code> and <code>"TransactionLedgerView"</code> plus the report views (reporting/accounting/models.py:86,145,349,443,539; <code>SalesTransactionView</code> in reporting/sales). Reports never read a module database.</p>
+<p><strong>Replica</strong>: reporting runs a primary/replica router (Reporting/db_routers.py, settings.py:121) - reads go to a PostgreSQL streaming replica, writes and migrations to the master; a thread-local <code>force_database</code> override serves the "report from master" endpoints.</p>
+<p><strong>Redis / Celery</strong>: Redis holds the JWT jti revocation cache, locks and counters; Celery (per service, from entrypoint.sh) handles email and deferred postings.</p>
+</section><section class="sec" data-title="Patterns and anti-patterns"><h2 id="patterns-anti-patterns">Patterns and anti-patterns</h2>
+<h3 id="patterns-keep">What to keep</h3>
+<ul>
+<li>[GOOD] Fail-fast base classes: <code>Sales/miniapp/generics.py:43-78</code> - <code>FederatedAuthenticationView.__init_subclass__</code> crashes the app at import time unless a subclass declares feature + action permissions (also <code>InternalAuthenticationView</code> :89, <code>FederatedSearchView</code> :94).</li>
+<li>[GOOD] Idempotent external registration in TMS: <code>ExternalTenantLink</code> + <code>select_for_update</code> (tenant_management/views.py:4771-4807).</li>
+<li>[GOOD] The reporting primary/replica router isolates report reads from module writes (db_routers.py).</li>
+<li>[GOOD] The <code>providhy_kafka</code> package idea: one source of truth for topic/action strings, importable without Django - it just has not been adopted on f1 yet.</li>
+</ul>
+<h3 id="patterns-hurt">What hurts</h3>
+<ul>
+<li>Per-request auth round-trips with no cache or timeout [HIGH #1]</li>
+<li>12 diverged <code>auth_backends.py</code> copies [HIGH #2]</li>
+<li>Shared INTERNAL_PASS in body/query, non-constant-time compare, secret printed on failure [HIGH #3]</li>
+<li>Sync 4-service registration cascade with inverted timeouts (60s outer &lt; 120s inner) [HIGH #4]</li>
+<li>AES-ECB with a client-derived key on the registration payload [MEDIUM #5]</li>
+<li>Two Kafka contract generations; the next one unadopted on f1 [MEDIUM #6/#7]</li>
+<li>events f1/uat divergence (kafka consumers exist only on uat) [MEDIUM #8]</li>
+<li>Dual reporting ingestion paths [MEDIUM #9]</li>
+<li>God files [MEDIUM #10] - table below</li>
+<li>Fail-open DRF defaults (no global auth/permission classes) [MEDIUM #11]</li>
+<li>Wrong env var for the payment URL in Sales [MEDIUM #12]</li>
+<li><code>manage.py runserver</code> as the container web server [MEDIUM #13]</li>
+<li>Debug prints with PII/secrets [LOW #14]; raw-int user identity [LOW #15]</li>
+</ul>
+<h3 id="god-files">God files</h3>
+<table>
+<thead><tr><th>File</th><th>Lines</th></tr></thead>
+<tbody>
+<tr><td>ProductManagement inventory/views.py</td><td>5686</td></tr>
+<tr><td>TMS tenant_management/views.py</td><td>4517</td></tr>
+<tr><td>Configuration-Service dashboard/views.py</td><td>2094</td></tr>
+<tr><td>Sales sales/sales_invoice/views.py</td><td>2070</td></tr>
+<tr><td>reporting accounting/views.py</td><td>1887</td></tr>
+</tbody></table>
+<p>Split by aggregate (create / approve / return / query) as work touches them; all five are on the critical path of their service.</p>
+</section><section class="sec" data-title="Findings register"><h2 id="findings-register">Findings register</h2>
+<p>The condensed grill output. Effort is an engineer estimate (one experienced Django developer).</p>
+<table>
+<thead><tr><th>#</th><th>Sev</th><th>Finding</th><th>Where (f1)</th><th>Fix direction</th><th>Effort</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>HIGH</td><td>Per-request auth RPCs x2 (verify + permission), no cache, no timeout on verify</td><td>auth_backends.py:54-62, 97-99 (x12 copies)</td><td>Redis cache keyed by token + per-user permission list; set explicit timeouts</td><td>3-5d</td></tr>
+<tr><td>2</td><td>HIGH</td><td>12 diverged copies of dashboard/auth_backends.py</td><td>all services</td><td>shared providhy_auth package with thin per-service wrappers</td><td>5-8d</td></tr>
+<tr><td>3</td><td>HIGH</td><td>INTERNAL_PASS in body/query; non-constant-time compare; secret printed on failure</td><td>helper.py:29,383-386; auth_backends.py:152,165</td><td>per-service HMAC or mTLS; hmac.compare_digest; remove print</td><td>1-2d</td></tr>
+<tr><td>4</td><td>HIGH</td><td>Sync 4-service registration cascade; outer 60s &lt; inner 120s (orphan risk)</td><td>IAM views.py:137-175; TMS custom_functions.py:558-578</td><td>202 + outbox + reconciliation worker; align timeouts</td><td>2-3w</td></tr>
+<tr><td>5</td><td>MEDIUM</td><td>AES-ECB key = first 32 chars of the client-supplied token</td><td>IAM utils.py:348-393</td><td>per-provider asymmetric keys or KMS-wrapped AES-256-GCM</td><td>3-5d</td></tr>
+<tr><td>6</td><td>MEDIUM</td><td>Two Kafka topic generations; next-gen contract unadopted on f1</td><td>reporting tasks.py:23; providhy_kafka @ development</td><td>migrate producers/consumers to the providhy_kafka topics</td><td>1-2w</td></tr>
+<tr><td>7</td><td>MEDIUM</td><td>providhy_kafka not pinned in any requirements.txt</td><td>all services</td><td>pin the version, ship in the base image</td><td>&lt;1d</td></tr>
+<tr><td>8</td><td>MEDIUM</td><td>events f1 has no kafka code; consumers exist only on uat; __pycache__ committed</td><td>events f1 vs uat</td><td>merge uat kafka_consumers into f1 or document the cut; gitignore __pycache__</td><td>1-2d</td></tr>
+<tr><td>9</td><td>MEDIUM</td><td>Dual reporting ingestion paths</td><td>reporting kafka_data_ingestor + kafka_consumer_service</td><td>one ingestion owner; make the other read-only</td><td>1w</td></tr>
+<tr><td>10</td><td>MEDIUM</td><td>God files (5686/4517/2094/2070/1887 lines)</td><td>see god-files table</td><td>split by aggregate</td><td>ongoing</td></tr>
+<tr><td>11</td><td>MEDIUM</td><td>REST_FRAMEWORK only in PROD/UAT, exception handler only - fail-open by omission</td><td>core/settings.py:141-144 (all services)</td><td>global deny-by-default authentication/permission classes</td><td>1-2d</td></tr>
+<tr><td>12</td><td>MEDIUM</td><td>PAYMENT_BACKEND_URL = config("PACKAGE_BACKEND_URL")</td><td>Sales dashboard/api_links.py:34</td><td>fix the env var</td><td>&lt;1h</td></tr>
+<tr><td>13</td><td>MEDIUM</td><td>manage.py runserver as the container web server</td><td>*/entrypoint.sh:23</td><td>gunicorn/uWSGI with real workers</td><td>1d</td></tr>
+<tr><td>14</td><td>LOW</td><td>Debug prints of IAM responses / PII / secrets</td><td>auth_backends.py:227,243,245,165 + copies</td><td>structured logging with redaction</td><td>&lt;1d</td></tr>
+<tr><td>15</td><td>LOW</td><td>request.user is a raw int across all services</td><td>all auth_backends.py</td><td>lightweight TenantUser proxy object</td><td>ongoing</td></tr>
+</tbody></table>
+</section><section class="sec" data-title="Direction of travel"><h2 id="direction-of-travel">Direction of travel</h2>
+<p>A prototype of where the event side of the platform is heading exists in this codebase (the <code>erp</code> prototype repo, not deployed): CQRS + event sourcing + a <strong>transactional outbox</strong> - the Django service writes domain state and an <code>OutboxEvent</code> in one database transaction; an <code>outbox_poller</code> (asyncpg, <code>FOR UPDATE SKIP LOCKED</code>) ships the rows to Kafka; a FastAPI gateway serves the read model with Redis-based idempotency. Components: <code>django_project</code>, <code>outbox_poller</code>, <code>read_model_consumer</code>, <code>consumer</code>, <code>saga_orchestrator</code>, <code>fastapi_gateway</code>.</p>
+<p>What that retires: the ad-hoc POST-to-sidecar publish step, the dual ingestion (findings #6, #9) and - combined with the 202 + outbox pattern - the synchronous registration cascade (finding #4). It does <em>not</em> fix the auth chain: that still needs the shared auth package plus token/permission caching (findings #1, #2).</p>
+</section><section class="sec" data-title="Branch caveats"><h2 id="branch-caveats">Branch caveats</h2>
+<ul>
+<li><strong>TMS</strong>: the local <code>f1-production</code> branch in the main checkout is behind <code>origin/f1-production</code>; this page traces the origin head (<code>56f9576</code>).</li>
+<li><strong>Accounting</strong>: the main checkout is parked on another branch (f1 is checked out in a sibling worktree); the trace used a worktree at f1 (<code>a60aaba</code>).</li>
+<li><strong>providhy_kafka</strong>: the package lives on its <code>development</code> branch (<code>4015222</code>); there is no f1 branch for it and no f1 service imports it.</li>
+<li><strong>events</strong>: see the branch note under <a href="#event-backbone">Event backbone</a> - its kafka consumers exist only on uat.</li>
+<li><strong>CDXE-REBOOT</strong>: out of scope for this page and this site (not part of the Providhy ERP deployment).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../guide/02-user-journeys.html"><div class="pn-dir">← Previous</div><div class="pn-name">User Journeys</div></a><a class="pn next" href="../guide/11-er-diagrams.html"><div class="pn-dir">Next →</div><div class="pn-name">ER Diagrams</div></a></div></main><aside id="toc"><h2>On this page</h2><ul>
+<li class="l2"><a href="#how-to-read">How to read this page</a></li>
+<li class="l2"><a href="#service-map">Service map</a></li>
+<li class="l2"><a href="#authentication-two-chains">Authentication: two chains</a></li>
+<li class="l3"><a href="#erp-auth-chain">ERP chain (per request)</a></li>
+<li class="l3"><a href="#federated-auth-chain">Federated chain (eSewa miniapp)</a></li>
+<li class="l3"><a href="#internal-s2s">Internal service-to-service</a></li>
+<li class="l3"><a href="#diverged-auth-copies">The 12-copies problem</a></li>
+<li class="l2"><a href="#registration-cascade">Tenant registration cascade</a></li>
+<li class="l2"><a href="#event-backbone">Event backbone (Kafka)</a></li>
+<li class="l3"><a href="#legacy-topics">Topics on f1 today</a></li>
+<li class="l3"><a href="#publish-path">How a record event is published</a></li>
+<li class="l3"><a href="#next-gen-contract">Next-generation contract</a></li>
+<li class="l3"><a href="#consumers">Consumers</a></li>
+<li class="l3"><a href="#events-branch-note">events service branch note</a></li>
+<li class="l2"><a href="#data-flow-state">Data flow and state</a></li>
+<li class="l2"><a href="#patterns-anti-patterns">Patterns and anti-patterns</a></li>
+<li class="l3"><a href="#patterns-keep">What to keep</a></li>
+<li class="l3"><a href="#patterns-hurt">What hurts</a></li>
+<li class="l3"><a href="#god-files">God files</a></li>
+<li class="l2"><a href="#findings-register">Findings register</a></li>
+<li class="l2"><a href="#direction-of-travel">Direction of travel</a></li>
+<li class="l2"><a href="#branch-caveats">Branch caveats</a></li>
+</ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>
