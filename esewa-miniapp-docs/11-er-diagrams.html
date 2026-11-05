@@ -1,5 +1,8 @@
 <!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ER Diagrams - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc current" href="11-er-diagrams.html"><span>ER Diagrams</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="11-er-diagrams.html#1-cross-service-entity-map">1. Cross-service entity map</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-03-iam-source-doc-03-section-6">2.03 IAM (source: doc 03 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-04-sales-source-doc-04-section-6">2.04 Sales (source: doc 04 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-05-cdxe-source-doc-05-section-6">2.05 CDXE (source: doc 05 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-06-projectmaster-source-doc-06-section-6">2.06 Projectmaster (source: doc 06 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-07-payment-esewa-app-source-doc-07-section-6">2.07 Payment (esewa app) (source: doc 07 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-08-tms-source-doc-08-section-6">2.08 TMS (source: doc 08 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-09-configuration-source-doc-09-section-6">2.09 Configuration (source: doc 09 section 6)</a><a class="sb-item sb-sub" href="11-er-diagrams.html#2-10-events-source-doc-10-section-6">2.10 Events (source: doc 10 section 6)</a></div><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>11 — Consolidated ER (cross-service + per-service)</h1>
 <blockquote>
+<p>Sync 2026-11-05: TMS Subscription gains <code>first_subscription_date</code>; IAM/Sales/Configuration schema unchanged (Sales/Configuration ID-table indexes only).</p>
+</blockquote>
+<blockquote>
 <p>How the miniapp&#39;s data lives across 8 databases, and how entities relate across service boundaries. Physical foreign keys exist only inside one service; <strong>dotted / LOGICAL links are cross-service correlations by string id</strong> (tenant_id, external_identifier, settlement id) — the federation&#39;s isolation model in picture form. Per-service field-level detail is in each doc&#39;s section 6 (ER).</p>
 </blockquote>
 </section><section class="sec" data-title="1. Cross-service entity map"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-cross-service-entity-map">1. Cross-service entity map</h2>
@@ -390,7 +393,7 @@
     Subscription ||--o{ Payment : &quot;subscription_id (string, no FK)&quot;
 
     Tenant {
-        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:79)&quot;
+        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:77)&quot;
         string name &quot;encrypted&quot;
         string email &quot;encrypted&quot;
         string contact &quot;encrypted&quot;
@@ -403,9 +406,9 @@
         string company_code &quot;provider code e.g. esewa (multicompany app)&quot;
     }
     ExternalTenantLink {
-        string provider_code &quot;unique together (models.py:465)&quot;
+        string provider_code &quot;unique together (models.py:428-455)&quot;
         string external_identifier &quot;wallet id&quot;
-        json fiscal_year &quot;marks config transferred (models.py:455)&quot;
+        json fiscal_year &quot;marks config transferred (models.py:442)&quot;
     }
     TenantPackage {
         string package_id &quot;PublicId of package-service id (models.py:105)&quot;
@@ -423,10 +426,11 @@
         json services_show
     }
     Subscription {
-        string unique_id &quot;SUBxxx (models.py:321)&quot;
+        string unique_id &quot;SUBxxx (models.py:311)&quot;
         int users
         string payment_period
         date subscribe_date
+        datetime first_subscription_date &quot;backfilled from first subscribe_date (models.py:291, 313-314)&quot;
         date expire_date
         int price
         string payment_status &quot;credit/paid/failed/pending (models.py:306)&quot;
@@ -485,7 +489,7 @@
     ID {
         int unique_id &quot;counter per (tenant_id, name)&quot;
         string name &quot;3-char prefix&quot;
-        string tenant_id
+        string tenant_id &quot;indexed (tenant_id,name,unique_id) 2026-11-05 (dashboard/models.py:11-20)&quot;
     }
     TenantServiceConfiguration ||--o{ ID : &quot;unique_id counters&quot;
 </pre></div>

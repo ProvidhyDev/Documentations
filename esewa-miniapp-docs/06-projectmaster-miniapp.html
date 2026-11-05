@@ -1,7 +1,8 @@
 <!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Projectmaster Miniapp - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc current" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#2-technical-overview">2. Technical overview</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#3-authentication-authorization">3. Authentication &amp; authorization</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#6-data-model">6. Data model</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#7-key-sequence-diagrams">7. Key sequence diagrams</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a><a class="sb-item sb-sub" href="06-projectmaster-miniapp.html#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></div><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Projectmaster — Federated Miniapp Documentation</h1>
-<p>Scope: the <code>miniapp</code> app of <code>E:\Work\ERP-Projectmaster</code> (Django service <code>projectmaster</code>, DB <code>Master</code>) — the eSewa miniapp surface for merchant customer master data (add / search / detail / edit / delete) plus three password-protected internal endpoints used by sibling services.
-Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, models.py, mixins.py, filters.py, registry.py, tasks.py, admin.py}</code>, <code>ERP-Projectmaster\core\{urls.py, settings.py}</code>, <code>ERP-Projectmaster\dashboard\{auth_backends.py, helper.py, async_func.py, send_requests.py, mixins.py, pagination.py, choices.py, messages.py, exception.py, api_links.py, kafka_function.py}</code>, <code>ERP-Projectmaster\customer\models.py</code>, <code>ERP-Projectmaster\supplier\models.py</code>, <code>ERP-Projectmaster\employee\models.py</code>, <code>ERP-Projectmaster\payment_term\models.py</code>, <code>ERP-Projectmaster\dashboard\models.py</code>, <code>ERP-Projectmaster\.env</code>, <code>ERP-Projectmaster\Dockerfile</code>, <code>ERP-Projectmaster\Jenkinsfile</code>, <code>ERP-Projectmaster\requirements.txt</code>; call sites in <code>Sales</code>, <code>CDXE-REBOOT</code>, <code>Payment-Service</code>, <code>miniapp-esewa</code>; installed DRF 3.18.3 source in <code>ERP-Projectmaster\.venv</code>.</p>
+<p>Scope: the <code>miniapp</code> app of <code>E:\Work\ERP-Projectmaster</code> (Django service <code>projectmaster</code>, DB <code>Master</code>) — the eSewa miniapp surface for merchant customer master data (add / search / detail / edit / delete) plus three password-protected internal endpoints used by sibling services. The 2026-11-05 production sync (e8c37ee0ef24 → 26cb555392e4) also moved code in the domain apps, so this document now covers the internal party-directory endpoints they expose (get-all customer/supplier/employee, payment-term tenant-list) and the party-detail behavior changes (confirmation-letter eligibility, locked PAN fields, the <code>add_edit</code> → <code>add</code>/<code>edit</code> permission split).
+Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, models.py, mixins.py, filters.py, registry.py, tasks.py, admin.py}</code>, <code>ERP-Projectmaster\core\{urls.py, settings.py}</code>, <code>ERP-Projectmaster\dashboard\{auth_backends.py, helper.py, async_func.py, send_requests.py, mixins.py, pagination.py, choices.py, messages.py, exception.py, api_links.py, kafka_function.py}</code>, <code>ERP-Projectmaster\customer\models.py</code>, <code>ERP-Projectmaster\supplier\models.py</code>, <code>ERP-Projectmaster\employee\models.py</code>, <code>ERP-Projectmaster\payment_term\models.py</code>, <code>ERP-Projectmaster\dashboard\models.py</code>, <code>ERP-Projectmaster\.env</code>, <code>ERP-Projectmaster\Dockerfile</code>, <code>ERP-Projectmaster\Jenkinsfile</code>, <code>ERP-Projectmaster\requirements.txt</code>; call sites in <code>Sales</code>, <code>CDXE-REBOOT</code>, <code>Payment-Service</code>, <code>miniapp-esewa</code>; installed DRF 3.18.3 source in <code>ERP-Projectmaster\.venv</code>; for the 2026-11-05 sync additionally <code>ERP-Projectmaster\customer\{urls.py, views.py, serializers.py}</code>, <code>ERP-Projectmaster\supplier\{urls.py, views.py, serializers.py}</code>, <code>ERP-Projectmaster\employee\{urls.py, views.py}</code>, <code>ERP-Projectmaster\payment_term\{urls.py, views.py}</code>, <code>ERP-Projectmaster\dashboard\{choices.py, messages.py}</code>, <code>ERP-Projectmaster\core\settings.py</code>.</p>
 <p>Base host (dev, public): <code>https://dev-projectmaster-api.providhy.com</code> — from frontend <code>.env.example</code> (<code>NEXT_PUBLIC_PROJECT_MASTER=&quot;dev-projectmaster&quot;</code>, <code>NEXT_PUBLIC_DOMAIN=&quot;-api.providhy.com/api/&quot;</code>, <code>miniapp-esewa\.env.example</code>) and SHARED-CONTEXT.md; the repo&#39;s own <code>.env</code> has <code>PROJECTMASTER_BACKEND_URL = localhost:8005</code> with the dev value commented out (<code>.env:31-32</code>). Internal (docker) base: <code>http://projectmaster:8000</code> (<code>.env:21</code>, <code>dashboard\api_links.py:10</code>).</p>
+<p><strong>Verified against</strong>: ERP-Projectmaster@26cb555392e47c87147c28edb1127673ab5c330f (2026-11-05). All <code>customer/</code>, <code>supplier/</code>, <code>employee/</code>, <code>payment_term/</code> and <code>dashboard/</code> citations in the sync notes use line numbers at that SHA (mirror tree read at the new SHA).</p>
 </section><section class="sec" data-title="1. Business overview (plain language for a NON-technical reader)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</h2>
 <p>Projectmaster is the &quot;company directory&quot; of the Providhy ERP. For every business (tenant) that uses the platform it keeps the master lists of the people and terms the business deals with: its <strong>customers</strong> (who it sells to on credit), <strong>suppliers</strong>, <strong>employees</strong>, and <strong>payment terms</strong> (how many days a buyer gets to pay). Everything else in the ERP — sales invoices, credit, payments — hangs off these lists, which is why the service is called &quot;project master&quot;.</p>
 <p>On top of the normal ERP screens, Projectmaster serves a special, smaller surface for the <strong>eSewa miniapp</strong> — the wallet/credit app that eSewa merchants (called ESM, eSewa Merchant) use. A merchant who runs a small shop can extend credit to a regular customer (&quot;buy now, pay later&quot;). To do that inside the miniapp, the merchant: adds the customer (name, phone, and optionally a link to that person&#39;s eSewa wallet), searches their customer list (with each customer&#39;s current credit balance and whether the wallet link is connected), opens a customer to see their balance and the five most recent credit records, edits basic details, or removes the customer. Behind the scenes the app assembles that balance and connection status from sibling services (Sales keeps the credit records, CDXE keeps the &quot;connection&quot; between a merchant and a wallet user, Payment tracks pending payment requests).</p>
@@ -9,7 +10,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <p>The business value: a merchant&#39;s credit book (who they are lending to and how much is owed) is managed in exactly one place, isolated per company, and safely linked to eSewa wallet identities so credit can be settled through the wallet.</p>
 </section><section class="sec" data-title="2. Technical overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="2-technical-overview">2. Technical overview</h2>
 <ul>
-<li><strong>Stack</strong>: Django (5.x per comment in <code>core\settings.py:16</code>), Django REST Framework <strong>3.18.3</strong> (<code>.venv\Lib\site-packages\djangorestframework-3.18.3.dist-info</code>; unpinned in <code>requirements.txt</code>), Python 3.11 (<code>Dockerfile:2</code>), PostgreSQL via <code>django_prometheus.db.backends.postgresql</code> (<code>core\settings.py:97-107</code>), DB name <code>Master</code> (<code>.env:10</code>), django-prometheus metrics (<code>core\settings.py:40,57,67</code>, <code>core\urls.py:14</code>), CORS with <code>Authorization</code> + <code>X-MINIAPP-TOKEN</code> allowed headers (<code>core\settings.py:160-163</code>), <code>python-decouple</code> config (<code>.env</code>).</li>
+<li><strong>Stack</strong>: Django (5.x per comment in <code>core\settings.py:16</code>), Django REST Framework <strong>3.18.3</strong> (<code>.venv\Lib\site-packages\djangorestframework-3.18.3.dist-info</code>; unpinned in <code>requirements.txt</code>), Python 3.11 (<code>Dockerfile:2</code>), PostgreSQL via <code>django_prometheus.db.backends.postgresql</code> (<code>core\settings.py:97-107</code>), DB name <code>Master</code> (<code>.env:10</code>), django-prometheus metrics (<code>core\settings.py:40,57,67</code>, <code>core\urls.py:14</code>), <code>DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000</code> (<code>core\settings.py:15</code> — raised for bulk upload handling; no view in this repo references the cap directly), CORS with <code>Authorization</code> + <code>X-MINIAPP-TOKEN</code> allowed headers (<code>core\settings.py:160-163</code>), <code>python-decouple</code> config (<code>.env</code>).</li>
 <li><strong>Apps</strong> (<code>core\settings.py:39-54</code>): <code>dashboard</code> (shared infrastructure: auth backends, helpers, outbound-call functions, pagination, mixins, choices, messages), <code>customer</code>, <code>supplier</code>, <code>employee</code>, <code>payment_term</code> (domain apps, each with its own dashboard-facing <code>/api/...</code> URL mount), <code>miniapp</code> (this surface). Note: the shared-context repo map mentions an <code>mcp_tools</code> app — it is <strong>not present</strong> in this checkout.</li>
 <li><strong>URL layout</strong> (<code>core\urls.py:7-16</code>): <code>api/dashboard/</code>, <code>api/payment-term/</code>, <code>api/supplier/</code>, <code>api/employee/</code>, <code>api/customer/</code>, and <strong><code>api/miniapp/</code></strong> (<code>core\urls.py:13</code>) — the miniapp mount. Admin is appended unconditionally (<code>core\urls.py:18-19</code>, URL from <code>PROJECTMASTER_ADMIN_URL</code>, <code>.env:50</code>).</li>
 <li><strong>Async/celery/kafka</strong>: one Celery <code>shared_task</code> exists — <code>send_activity_log</code> (<code>miniapp\tasks.py:11-53</code>) — but <code>core\settings.py</code> defines <strong>no</strong> <code>CELERY_BROKER_URL</code>/celery app config, and the <code>Dockerfile:12</code> CMD only runs <code>runserver</code> (no worker). The view calls the task directly (not <code>.delay()</code>), so it executes <strong>inline/synchronously</strong> inside the request (<code>miniapp\views.py:61,143,200</code>). <code>Redis</code> (<code>core\settings.py:184</code>, db 6) and a Kafka broker (<code>core\settings.py:185</code>) are configured; <code>dashboard\kafka_function.py:7-38</code> can produce to <code>master_events</code> via an HTTP producer, but <strong>nothing in the <code>miniapp</code> app touches Kafka</strong> (grep: no kafka references in <code>miniapp\</code>).</li>
@@ -29,13 +30,15 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <ul>
 <li><code>HasFederatedEntityPermission</code> (<code>auth_backends.py:222-229</code>), used by all three public miniapp views:<ol>
 <li><code>request.user_type</code> must equal the view&#39;s <code>required_user_type</code> — all three views require <strong><code>ESM</code> (eSewa Merchant)</strong> (<code>views.py:23, 84, 215</code>; <code>choices.py:349-351</code>).</li>
-<li>Delegates to <code>HasPermission</code> (<code>auth_backends.py:123-154</code>): POST + <code>subscription_expired</code> → <code>PermissionError</code> (125-126); <code>tenant_root</code> users are allowed without a call (127-128); otherwise <code>GET {IAM_API}api/internal-check-permissions/?password=&lt;INTERNAL_PASS&gt;&amp;user_id=&lt;user_id&gt;</code> (<code>auth_backends.py:131-133</code>; <code>helper.py:71</code>) and the response must contain the view&#39;s <code>required_feature_permission</code> <strong>PR301 &quot;Customer Creation&quot;</strong> (<code>views.py:21,82,213</code>; <code>choices.py:113</code>) with the required action: <strong><code>add_edit</code></strong> for create/edit/detail (views.py:22,83) and <strong><code>view</code></strong> for search (views.py:214; <code>choices.py:269-275</code>). IAM call failure → <code>TemporaryServiceUnavailableError</code> (134-135).</li>
+<li>Delegates to <code>HasPermission</code> (<code>auth_backends.py:123-154</code>): POST + <code>subscription_expired</code> → <code>PermissionError</code> (125-126); <code>tenant_root</code> users are allowed without a call (127-128); otherwise <code>GET {IAM_API}api/internal-check-permissions/?password=&lt;INTERNAL_PASS&gt;&amp;user_id=&lt;user_id&gt;</code> (<code>auth_backends.py:131-133</code>; <code>helper.py:71</code>) and the response must contain the view&#39;s <code>required_feature_permission</code> <strong>PR301 &quot;Customer Creation&quot;</strong> (<code>views.py:21,82,213</code>; <code>choices.py:113</code>) with the required action: <strong><code>add</code></strong> for create (views.py:22), <strong><code>edit</code></strong> for edit/detail (views.py:83) and <strong><code>view</code></strong> for search (views.py:214; action codes <code>dashboard\choices.py:270-274</code>). IAM call failure → <code>TemporaryServiceUnavailableError</code> (134-135).</li>
+<li><strong>Permission split (2026-11-05)</strong>: the old combined action <code>add_edit</code> no longer exists in <code>ActionChoices</code> — it is split into <code>ADD = &quot;add&quot;</code> and <code>EDIT = &quot;edit&quot;</code> (<code>choices.py:270-274</code>). Every view that checked <code>add_edit</code> now checks <code>add</code> on the create path and <code>edit</code> on the update path (see §4.4 and the flow notes); IAM must grant the two actions separately going forward.</li>
 </ol>
 </li>
 <li><code>InternalRequestPermission</code> (<code>auth_backends.py:157-163</code>), used by the three internal views: <strong>static shared password</strong> — POST compares <code>request.data[&quot;password&quot;]</code>, GET compares <code>request.GET[&quot;password&quot;]</code> against <code>INTERNAL_PASS</code> (<code>helper.py:125-128, 33</code>; <code>.env:11</code>). No <code>authentication_classes</code> is set on these views and no <code>REST_FRAMEWORK</code> default exists (<code>core\settings.py:91-94</code> commented out), so they run as <strong>anonymous + shared secret</strong>; there is no per-tenant authorization beyond the <code>tenant_id</code> the caller puts in the body.</li>
+<li><strong>Inline password checks (2026-11-05)</strong>: the new get-all party endpoints do NOT use <code>InternalRequestPermission</code>; they verify the body&#39;s <code>password</code> themselves with <code>helper.validate_internal_pass</code> and return 401 on mismatch — <code>CustomerGetALLAPIView</code> (<code>customer/views.py:556-568</code>), <code>SupplierGetALLAPIView</code> (<code>supplier/views.py:560-577</code>, declared <code>AllowAny</code> via a <code>permisson_classes</code> typo), <code>EmployeGetALLAPIView</code> (<code>employee/views.py:264-278</code>, <code>AllowAny</code>). <code>ListPaymentTermTenantView</code> uses the class (<code>payment_term/views.py:683-684</code>). Same trust model as above: shared secret + caller-supplied <code>tenant_id</code>, no per-tenant authorization.</li>
 </ul>
 <p><strong>Tenant scoping</strong>: <code>tenant_id</code> from the JWT (<code>request.auth</code>) is injected into the filterset data (<code>dashboard\mixins.py:21-23</code>) and into every serializer context (<code>views.py:30,109,229</code>); every Customer query also filters <code>customer_identity__provider_code = request.provider_code</code> (<code>views.py:93, 299; filters.py:22-24</code>) and excludes <code>active_status = &quot;inactive&quot;</code> (<code>filters.py:26-27; views.py:94, 300</code>). <code>MiniAppFilterMixin</code> injects <code>provider_code</code> into the filterset kwargs (<code>miniapp\mixins.py:11-21</code>); <code>FilteredAPIViewMixin</code> adds <code>tenant_id</code> + fiscal-year date bounds (<code>dashboard\mixins.py:14-45</code>; the date bounds are unused by <code>CustomerFilterSet</code>).</p>
-<p><strong>Which endpoints use what</strong>: all 5 federated endpoints (create/search/detail×3) use <code>FederatedIdentityAuthentication</code> + <code>HasFederatedEntityPermission</code> (views.py:19-23, 80-84, 211-215); the 3 internal endpoints use only <code>InternalRequestPermission</code> (views.py:256, 274, 324). No endpoint in the miniapp app uses different/extra auth.</p>
+<p><strong>Which endpoints use what</strong>: all 5 federated endpoints (create/search/detail×3) use <code>FederatedIdentityAuthentication</code> + <code>HasFederatedEntityPermission</code> (views.py:19-23, 80-84, 211-215); the 3 internal endpoints use only <code>InternalRequestPermission</code> (views.py:256, 274, 324). No endpoint in the miniapp app uses different/extra auth. The domain-app internal endpoints added in the 2026-11-05 sync use the inline shared-password pattern (§4.4).</p>
 </section><section class="sec" data-title="4. Exposed endpoint catalog"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-exposed-endpoint-catalog">4. Exposed endpoint catalog</h2>
 <p>Base: <code>https://dev-projectmaster-api.providhy.com</code> + mount <code>api/miniapp/</code> (<code>core\urls.py:13</code>).</p>
 <h3 id="4-1-public-miniapp-endpoints">4.1 Public miniapp endpoints</h3>
@@ -144,19 +147,75 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <tbody><tr>
 <td>9</td>
 <td>GET/POST</td>
-<td><a href="https://dev-projectmaster-api.providhy.com/">https://dev-projectmaster-api.providhy.com/</a><PROJECTMASTER_ADMIN_URL>/ (e.g. <code>hhhhhhh</code> per <code>.env:50</code>)</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/">https://dev-projectmaster-api.providhy.com/</a>&lt;PROJECTMASTER_ADMIN_URL&gt;/ (e.g. <code>hhhhhhh</code> per <code>.env:50</code>)</td>
 <td>Django admin, <code>CustomerIdentityLink</code> registered</td>
 <td><code>core\urls.py:18-19</code>, <code>miniapp\admin.py:2-4</code></td>
 <td>Manual inspection of the customer↔eSewa-identity link (Django admin auth, out of federated scope)</td>
 </tr>
 </tbody></table>
-<p>The domain apps&#39; own mounts (<code>api/customer/</code>, <code>api/supplier/</code>, <code>api/employee/</code>, <code>api/payment-term/</code>, <code>core\urls.py:8-12</code>) serve the regular ERP dashboard UI with IAM JWT auth — <strong>out of scope</strong> for this document.</p>
+<p>The domain apps&#39; own mounts (<code>api/customer/</code>, <code>api/supplier/</code>, <code>api/employee/</code>, <code>api/payment-term/</code>, <code>core\urls.py:8-12</code>) serve the regular ERP dashboard UI with IAM JWT auth — mostly <strong>out of scope</strong> for this document, with one exception: the internal party-directory endpoints added in the 2026-11-05 sync are sibling-service call points like §4.2, so they are documented below.</p>
+<h3 id="4-4-party-directory-internal-endpoints-added-2026-11-05">4.4 Party-directory internal endpoints (added 2026-11-05)</h3>
+<p>Base: <code>https://dev-projectmaster-api.providhy.com</code> + the domain-app mounts (<code>core\urls.py:8-12</code>). All take a JSON body; the party get-all endpoints verify <code>password</code> inline against <code>INTERNAL_PASS</code> (<code>helper.validate_internal_pass</code>, §3) and take <code>tenant_id</code> from the body.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>File:line</th>
+<th>Purpose (business)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/customer/get-all-customer/">https://dev-projectmaster-api.providhy.com/api/customer/get-all-customer/</a></td>
+<td><code>CustomerGetALLAPIView</code></td>
+<td><code>customer\urls.py:54</code>, <code>customer\views.py:556-568</code></td>
+<td>Bulk-dump every customer of a tenant (for the party directory / sync tooling); no auth class — body <code>password</code> check only</td>
+</tr>
+<tr>
+<td>11</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/supplier/get-all-supplier/">https://dev-projectmaster-api.providhy.com/api/supplier/get-all-supplier/</a></td>
+<td><code>SupplierGetALLAPIView</code></td>
+<td><code>supplier\urls.py:65</code>, <code>supplier\views.py:560-577</code></td>
+<td>Same for suppliers; <code>AllowAny</code> (<code>permisson_classes</code> typo at :561), 404 on <code>DoesNotExist</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/employee/get-all-employee/">https://dev-projectmaster-api.providhy.com/api/employee/get-all-employee/</a></td>
+<td><code>EmployeGetALLAPIView</code> (sic)</td>
+<td><code>employee\urls.py:21</code>, <code>employee\views.py:264-278</code></td>
+<td>Same for employees; <code>AllowAny</code>, 401/500 on failure</td>
+</tr>
+<tr>
+<td>13</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/payment-term/tenant-list/">https://dev-projectmaster-api.providhy.com/api/payment-term/tenant-list/</a></td>
+<td><code>ListPaymentTermTenantView</code></td>
+<td><code>payment_term\urls.py:37</code>, <code>payment_term\views.py:683-705</code></td>
+<td>List a tenant&#39;s payment terms as <code>{id, credit_period}</code> pairs (list or id-keyed map) — replaces the removed <code>test/</code> route</td>
+</tr>
+<tr>
+<td>14</td>
+<td>POST</td>
+<td><a href="https://dev-projectmaster-api.providhy.com/api/payment-term/transfer-payment-term/">https://dev-projectmaster-api.providhy.com/api/payment-term/transfer-payment-term/</a></td>
+<td><code>DefaultPaymentTermView</code></td>
+<td><code>payment_term\urls.py:6-10</code>, <code>payment_term\views.py:141-335</code></td>
+<td>Bulk-seed/rename the DEFAULT payment terms across many tenants in one call (migration endpoint, §5.9)</td>
+</tr>
+</tbody></table>
+<p><strong>Removed in this sync</strong>: <code>POST /api/payment-term/test/</code> (<code>TestInheritance</code>, an <code>AllPaymentTermView</code> subclass that returned its own queryset) — deleted from <code>payment_term\urls.py</code> and <code>payment_term\views.py</code>; its slot is taken by <code>tenant-list/</code> (new url at <code>payment_term\urls.py:37</code>, view <code>payment_term\views.py:683-705</code>).</p>
+<p><strong>Auth note (14)</strong>: <code>DefaultPaymentTermView</code> declares <strong>no</strong> authentication or permission class, and the global <code>REST_FRAMEWORK</code> block is commented out (<code>core\settings.py:92</code>) — so DRF defaults (anonymous + <code>AllowAny</code>) apply and the bulk migration is invocable by anyone who can reach the path. &gt; ⚠ unverified: whether a gateway/load-balancer rule blocks unauthenticated POSTs to <code>api/payment-term/transfer-payment-term/</code> — not verifiable from this repo. The previous implementation (now commented out at <code>payment_term\views.py:29-128</code>) was guarded by <code>InternalRequestPermission</code>.</p>
 </section><section class="sec" data-title="5. Per-endpoint flow trace"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-per-endpoint-flow-trace">5. Per-endpoint flow trace</h2>
 <p>Common pre-step for endpoints 1-5 (federated auth + permission): DRF authenticates via <code>FederatedIdentityAuthentication</code> (<code>dashboard\auth_backends.py:167-203</code>) → IAM <code>POST /api/external/token/verify/</code> (<code>auth_backends.py:178, 206-219</code>) → JWT claims onto request (<code>auth_backends.py:180-194</code>) → <code>HasFederatedEntityPermission</code> (<code>auth_backends.py:223-229</code> → <code>HasPermission:124-154</code>, IAM <code>GET api/internal-check-permissions/</code> for non-<code>tenant_root</code> users). Errors: 401 (<code>exception.py:4-6</code>), <code>PermissionError</code> → 403, <code>TemporaryServiceUnavailableError</code> → unhandled 500 (see §3).</p>
 <h3 id="5-1-post-api-miniapp-customer-merchant-adds-a-customer">5.1 POST /api/miniapp/customer/ — merchant adds a customer</h3>
 <ul>
 <li><strong>Request</strong>: JSON body — <code>name</code> (str, <strong>required</strong>, <code>views.py:27</code>), <code>mobile</code> (str, optional; 10 digits if present), <code>external_identifier</code> (str ≤100, optional; eSewa wallet identifier to link), <code>description</code> (str ≤500, optional), <code>is_provider_user</code> (bool, default false). Response fields restricted by the <code>fields</code> tuple (<code>views.py:35-43</code>): <code>id, unique_id, name, mobile, external_identifier, description, is_provider_user</code> (<code>serializers.py:28-35</code>).</li>
-<li><strong>Auth</strong>: ESM + feature PR301 + action <code>add_edit</code> (<code>views.py:19-24</code>).</li>
+<li><strong>Auth</strong>: ESM + feature PR301 + action <strong><code>add</code></strong> (2026-11-05 split from <code>add_edit</code>, <code>miniapp/views.py:18-24</code>; class at :18, action at :22).</li>
 <li><strong>Flow</strong>:<ol>
 <li>Auth/permission pre-step (§3).</li>
 <li><code>helper.valid_required_data([&quot;name&quot;], request.data)</code> (<code>views.py:27</code>; <code>helper.py:180-193</code>) → <code>FieldError</code> → 400 if missing/empty.</li>
@@ -211,7 +270,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <h3 id="5-3-get-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-customer-detail-with-credits">5.3 GET /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — customer detail with credits</h3>
 <ul>
 <li><strong>Request</strong>: path <code>pk</code> (int).</li>
-<li><strong>Auth</strong>: ESM + PR301 + action <strong><code>add_edit</code></strong> (<code>views.py:80-84</code>) — note: the read endpoint checks the write action, not <code>view</code> (observation).</li>
+<li><strong>Auth</strong>: ESM + PR301 + action <strong><code>edit</code></strong> (2026-11-05 split from <code>add_edit</code>, <code>miniapp/views.py:71-84</code>; class at :71, action at :83) — note: the read endpoint checks the write action, not <code>view</code> (observation).</li>
 <li><strong>Flow</strong>:<ol>
 <li>Auth/permission pre-step.</li>
 <li><code>get_query</code> (<code>views.py:100-101</code>, impl :88-98): <code>Customer.objects.select_related(&quot;customer_identity&quot;).get(tenant_id=request.auth, pk=pk, customer_identity__provider_code=..., active_status=&quot;active&quot;)</code> → <code>DoesNotExist</code> → 404 <code>{&quot;error&quot;: &quot;Record not found.&quot;}</code> (<code>views.py:103-107</code>; <code>messages.py:25</code> — second definition of <code>RECORD_NOT_FOUND</code> in <code>messages.py</code> wins).</li>
@@ -233,7 +292,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <h3 id="5-4-post-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-edit-customer">5.4 POST /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — edit customer</h3>
 <ul>
 <li><strong>Request</strong>: JSON body — <code>name</code> (str), <code>mobile</code> (str — <strong>cannot be changed</strong>), <code>description</code> (str ≤500); <code>external_identifier</code> / <code>is_provider_user</code> are accepted into validation then discarded.</li>
-<li><strong>Auth</strong>: ESM + PR301 + <code>add_edit</code> (<code>views.py:80-84</code>).</li>
+<li><strong>Auth</strong>: ESM + PR301 + <code>edit</code> (2026-11-05 split from <code>add_edit</code>, <code>miniapp/views.py:71-84</code>; action at :83).</li>
 <li><strong>Flow</strong>:<ol>
 <li><code>get_query</code> → 404 as in 5.3 (<code>views.py:116-124</code>).</li>
 <li><code>CustomerAddEditMiniAppSerializer(instance=query, data, context)</code> (<code>views.py:130-132</code>).</li>
@@ -251,7 +310,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <h3 id="5-5-delete-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-soft-delete-customer">5.5 DELETE /api/miniapp/customer/detail/<a href="int:pk">int:pk</a>/ — soft-delete customer</h3>
 <ul>
 <li><strong>Request</strong>: path <code>pk</code> (int); no body.</li>
-<li><strong>Auth</strong>: ESM + PR301 + <code>add_edit</code> (<code>views.py:80-84</code>).</li>
+<li><strong>Auth</strong>: ESM + PR301 + <code>edit</code> (2026-11-05 split from <code>add_edit</code>, <code>miniapp/views.py:71-84</code>; action at :83).</li>
 <li><strong>Flow</strong>:<ol>
 <li><code>get_query</code> → 404 (<code>views.py:152-158</code>).</li>
 <li><code>customer_identifier = query.customer_identity.external_identifier</code> (<code>views.py:159</code>) — may be <code>None</code> for customers added without an eSewa link (edge case: the downstream checks receive <code>null</code>).</li>
@@ -321,6 +380,66 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <li><strong>Errors</strong>: 403 (bad password); 400 (serializer invalid / no matching customer).</li>
 <li><strong>Known caller pattern</strong>: Sales batch jobs call with <code>tenant_id=None → &quot;all&quot;</code>, <code>multiple_tenants=True</code>, <code>all=True</code>, <code>return_data=True</code> to fetch customer data across all tenants in one shot (<code>Sales\miniapp\tasks.py:162-170, 277-285</code>).</li>
 </ul>
+<h3 id="5-9-the-2026-11-05-sync-domain-app-additions-flows">5.9 The 2026-11-05 sync — domain-app additions (flows)</h3>
+<p>The endpoints below are the party-directory surface added in this sync (catalog §4.4).</p>
+<p><strong>POST /api/customer/get-all-customer/</strong> (<code>customer/views.py:556-568</code>)</p>
+<ol>
+<li>Body: <code>password</code>, <code>tenant_id</code>. No auth/permission class — the only gate is <code>helper.validate_internal_pass(password)</code> → 401 on mismatch (<code>customer/views.py:558-562</code>).</li>
+<li><code>models.Customer.objects.filter(tenant_id=tenant_id)</code> serialized by <code>CustomerCustomSerializer</code> (<code>customer/views.py:564-566</code>; <code>customer/serializers.py:389+</code> — the compact ERP-facing serializer) → 200 list. No pagination, no active-status filter (inactive included).</li>
+</ol>
+<ul>
+<li><strong>Outbound calls</strong>: none. <strong>DB</strong>: read <code>Customer</code> only.</li>
+</ul>
+<p><strong>POST /api/supplier/get-all-supplier/</strong> (<code>supplier/views.py:560-577</code>)</p>
+<ol>
+<li>Same pattern: inline password check → 401 (<code>supplier/views.py:563-569</code>); <code>Supplier.objects.filter(tenant_id=...)</code> via <code>SupplierCustomSerializer</code> → 200 (<code>supplier/views.py:571-575</code>; <code>supplier/serializers.py:382+</code>); <code>DoesNotExist</code> → 404, declared <code>AllowAny</code> under the <code>permisson_classes</code> typo (<code>supplier/views.py:561</code>).</li>
+</ol>
+<ul>
+<li><strong>Outbound calls</strong>: none. <strong>DB</strong>: read <code>Supplier</code> only.</li>
+</ul>
+<p><strong>POST /api/employee/get-all-employee/</strong> (<code>employee/views.py:264-278</code>)</p>
+<ol>
+<li><code>@permission_classes([AllowAny])</code>; inline password check → 401 (<code>employee/views.py:267-276</code>); <code>Employee.objects.filter(tenant_id=...)</code> via <code>EmployeeCustomSerializer</code> → 200; any other exception → 500.</li>
+</ol>
+<ul>
+<li><strong>Outbound calls</strong>: none. <strong>DB</strong>: read <code>Employee</code> only.</li>
+<li><blockquote>
+<p>⚠ unverified: no active caller of any of the three get-all endpoints was found in the scanned sibling trees — likely consumed by the new Lenden party-directory surface; needs human confirmation.</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>POST /api/payment-term/tenant-list/</strong> (<code>payment_term/views.py:683-705</code>)</p>
+<ol>
+<li><code>InternalRequestPermission</code> (password in body, §3) (<code>payment_term/views.py:684</code>).</li>
+<li><code>tenant_id</code> required (<code>helper.valid_required_data</code>, :687); optional <code>payment_term_ids</code> filters by pk, optional <code>return_type</code> selects the shape (:689-691).</li>
+<li>Returns the tenant&#39;s <code>PaymentTerm</code> rows as <code>{id, credit_period}</code> values — a list when <code>return_type == &quot;list&quot;</code>, otherwise a dict keyed by row id (:693-705).</li>
+</ol>
+<ul>
+<li><strong>Outbound calls</strong>: none. <strong>DB</strong>: read <code>PaymentTerm</code> only.</li>
+</ul>
+<p><strong>POST /api/payment-term/transfer-payment-term/</strong> — bulk default payment-term migration (<code>payment_term/views.py:141-335</code>)</p>
+<ol>
+<li>Body: <code>tenant_id</code> (list) + <code>data</code> (dict keyed by <code>credit_period</code>, each value <code>{title, description}</code>); either missing → 400 &quot;tenant_ids and data are required.&quot; (<code>payment_term/views.py:166-172, 197-203</code>).</li>
+<li>Two batch reads: one query fetches every relevant existing term for ALL tenants (terms sharing a target credit_period, or already holding a target title case-insensitively) (<code>payment_term/views.py:208-236</code>); one query fetches the next free <code>PTM</code> id per tenant from the <code>ID</code> table (<code>:238-248</code>).</li>
+<li>Per-tenant planning is pure Python (<code>_Plan</code> dataclass, :131-138; <code>_plan_for_tenant</code> :253-274): for each target credit_period — (a) if the default title is already used by ANY term of that tenant (case-insensitive) → <strong>skip entirely</strong> (:261-264); (b) else if a term with the same credit_period exists → <strong>rename exactly one</strong> (the most recently created — <code>_latest_term_per_credit_period</code> :276-284 keeps the first seen of a <code>-created</code>-ordered read) to the default title/description and mark it <code>default=True</code>, <code>active_status=&quot;active&quot;</code> (:266-272, :286-291); (c) else <strong>create</strong> a new term with a freshly minted <code>PTM&lt;n&gt;</code> unique_id (:269-272, :293-313).</li>
+<li>One atomic persist: <code>bulk_create</code> for new terms + <code>ID</code> rows, <code>bulk_update</code> for renamed terms (fields <code>title, description, default, active_status</code>) (<code>_persist</code> :318-331) → 200 &quot;Default payment terms updated successfully.&quot;</li>
+<li>No activity log, no events call, no outbound HTTP. <strong>Auth</strong>: none declared — see the catalog auth note (§4.4): DRF defaults apply, and the previous <code>InternalRequestPermission</code>-guarded implementation is left as dead comment (<code>payment_term/views.py:29-128</code>).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST transfer-payment-term] --&gt; B{tenant_id and data present}
+  B --&gt;|no| C[400 required]
+  B --&gt;|yes| D[batch read existing terms and next PTM ids]
+  D --&gt; E[per tenant per credit_period]
+  E --&gt; F{title already used in tenant}
+  F --&gt;|yes| G[skip]
+  F --&gt;|no| H{term with same credit_period exists}
+  H --&gt;|yes| I[rename newest one to default title mark default]
+  H --&gt;|no| J[create new term with PTM id]
+  I --&gt; K[atomic bulk write]
+  J --&gt; K
+  G --&gt; K
+  K --&gt; L[200 updated]
+</pre></div>
 </section><section class="sec" data-title="6. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="6-data-model">6. Data model</h2>
 <p>Models in scope (everything the traced code touches): <code>Customer</code>, <code>CustomerCategory</code>, <code>CustomerIdentityLink</code> (miniapp), plus <code>Supplier</code>, <code>SupplierCategory</code>, <code>Employee</code>, <code>PaymentTerm</code>, and the <code>ID</code> counter table for the ER context. All concrete models extend abstract <code>TimeModel</code> (<code>created</code>/<code>modified</code>, <code>dashboard\models.py:8-13</code>) and carry a soft-tenant <code>tenant_id</code> CharField.</p>
 <div class="diagram"><pre class="mermaid-src">erDiagram
@@ -442,7 +561,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <tbody><tr>
 <td><code>Customer</code> (<code>customer\models.py:30-100</code>)</td>
 <td><code>tenant_id</code>, <code>unique_id</code> (<code>CUS&lt;n&gt;</code>, :78-81), <code>name</code>, <code>mobile</code>, <code>pan_number</code>, <code>gl_mapping</code>, <code>credit_limit</code>, <code>active_status</code>, <code>entry_by</code>, <code>as_supplier</code>, <code>payment_term</code></td>
-<td>Soft tenancy via <code>tenant_id</code> CharField; <strong>no DB unique constraint</strong> on (tenant_id, name/mobile) — uniqueness is enforced in serializers/views only; <code>payment_term</code> is a plain CharField (no FK to <code>PaymentTerm</code>); <code>locked_fields</code> property locks <code>pan_number</code> when synced transactions exist (:86-100, calls Sales)</td>
+<td>Soft tenancy via <code>tenant_id</code> CharField; <strong>no DB unique constraint</strong> on (tenant_id, name/mobile) — uniqueness is enforced in serializers/views only; <code>payment_term</code> is a plain CharField (no FK to <code>PaymentTerm</code>); <code>locked_fields</code> property (added 2026-11-05, :86-100) returns <code>[&quot;pan_number&quot;]</code> when Sales reports synced invoices/returns for the party AND the party currently has a PAN — surfaced in the read serializer as <code>locked_fields</code> (<code>customer/serializers.py:86, 95-96</code>) and enforced on edit by the PAN-lock in <code>CustomerSerializer.validate</code> (<code>customer/serializers.py:240-257</code>)</td>
 </tr>
 <tr>
 <td><code>CustomerCategory</code> (<code>customer\models.py:8-28</code>)</td>
@@ -455,9 +574,9 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <td>The miniapp&#39;s core join: one eSewa identity per customer row; no unique constraint on (provider_code, external_identifier, customer) — the &quot;already added&quot; check is application-level (<code>serializers.py:60-74</code>); registered in Django admin (<code>miniapp\admin.py:4</code>)</td>
 </tr>
 <tr>
-<td><code>Supplier</code> (<code>supplier\models.py:30-97</code>)</td>
+<td><code>Supplier</code> (<code>supplier\models.py:30-99</code>)</td>
 <td><code>tenant_id</code>, <code>unique_id</code> (<code>SUP&lt;n&gt;</code>), <code>name</code>, <code>as_customer</code>, <code>payment_term</code> (CharField)</td>
-<td>Not touched by the miniapp app; listed for ER context</td>
+<td>Not touched by the miniapp app; listed for ER context. 2026-11-05: <code>locked_fields</code> property (:83-97) — like Customer&#39;s but only for suppliers with <code>as_customer=True</code>, and WITHOUT the &quot;currently has a PAN&quot; condition (any synced transaction locks the field once the serializer checks it, <code>supplier/serializers.py:225-242</code>); <code>locked_fields</code> in the read serializer (<code>supplier/serializers.py:142, 149-150</code>)</td>
 </tr>
 <tr>
 <td><code>SupplierCategory</code> (<code>supplier\models.py:8-28</code>)</td>
@@ -472,7 +591,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <tr>
 <td><code>PaymentTerm</code> (<code>payment_term\models.py:7-29</code>)</td>
 <td><code>tenant_id</code>, <code>unique_id</code> (<code>PTM&lt;n&gt;</code>), <code>title</code>, <code>credit_period</code>, <code>default</code></td>
-<td>Soft-linked to Customer/Supplier via CharField <code>payment_term</code> (id/title as text) — <strong>no FK</strong>; the miniapp endpoints never read/write it (customer&#39;s <code>payment_term</code> stays empty in miniapp-created records)</td>
+<td>Soft-linked to Customer/Supplier via CharField <code>payment_term</code> (id/title as text) — <strong>no FK</strong>; the miniapp endpoints never read/write it (customer&#39;s <code>payment_term</code> stays empty in miniapp-created records). The <code>default</code> flag is new in this sync (migration <code>payment_term\migrations\0005_paymentterm_default.py</code>, model field <code>payment_term\models.py:17</code>); it marks the tenant&#39;s default term per credit_period and is managed by <code>POST /api/payment-term/transfer-payment-term/</code> (§5.9). Display label renamed in the searchable-feature registry: &quot;Payment Terms&quot; → <strong>&quot;Payment Period&quot;</strong> (<code>dashboard\choices.py:233</code>)</td>
 </tr>
 <tr>
 <td><code>ID</code> (<code>dashboard\models.py:16-53</code>)</td>
@@ -480,6 +599,15 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <td>Per-tenant, per-prefix counter used by <code>save()</code> hooks to mint <code>CUS&lt;n&gt;</code>/<code>SUP&lt;n&gt;</code>/…; not row-locked (concurrency risk in theory)</td>
 </tr>
 </tbody></table>
+<p><strong>Party-detail and edit changes (2026-11-05)</strong> — these affect the domain-app ERP endpoints (not the miniapp app):</p>
+<ol>
+<li><strong>Confirmation-letter eligibility in party detail</strong>: <code>GET /api/customer/detail/&lt;pk&gt;/</code> and <code>GET /api/supplier/detail/&lt;pk&gt;/</code> now append <code>confirmation_letter_eligible</code> to the read-serializer payload by calling the <strong>Reporting</strong> service — <code>customer/views.py:370-381</code> (<code>data.copy()</code> + field), <code>supplier/views.py:377-384</code>; helper <code>confirmation_letter_eligibility_check</code> posts <code>{password, unique_id, tenant_id}</code> to <code>POST {REPORTING_API}api/accounting/confirmation-eligibility-check/</code> (<code>dashboard\helper.py:466-477</code>; URL <code>dashboard\helper.py:120-122</code>) and returns the response&#39;s <code>is_eligible</code> (False on any non-200).</li>
+<li><strong>Locked PAN fields</strong>: both read serializers now expose <code>locked_fields</code> (Customer <code>customer/serializers.py:86</code>; Supplier <code>supplier/serializers.py:142</code>), computed by the model properties above via <code>synced_transaction_count</code> — a new helper that posts <code>{password, tenant_id, parties_unique_ids}</code> to <strong>Sales</strong> <code>POST /api/dashboard/ird-synced-transactions-count/</code> (<code>dashboard\helper.py:437-452</code>; URL <code>dashboard\helper.py:98</code>). Note the Customer model property carries two stray <code>print(data)</code> debug lines (<code>customer/models.py:89-90</code>) — shipped as-is.</li>
+<li><strong>PAN lock on edit</strong>: for e-billing tenants, changing an existing PAN while the party has synced IRD transactions is rejected with the new <code>LOCKED_PAN</code> message (&quot;PAN number cannot be edited because it has been reported to IRD on a synced document&quot;, <code>dashboard\messages.py:27</code>) — <code>customer/serializers.py:240-257</code>, <code>supplier/serializers.py:225-242</code> (supplier additionally requires <code>as_customer</code> on the synced-check at :226).</li>
+<li><strong>Search-select views de-coupled from cross-app HTTP</strong>: <code>CustomerSearchSelectView</code> (<code>customer/views.py:758-797</code>) and <code>SupplierSearchSelectView</code> (<code>supplier/views.py:789+</code>) now query both tables locally in one process — customers + suppliers flagged <code>as_customer</code> (or the inverse) — instead of the previous split of a local query plus an HTTP call to the other domain app&#39;s <code>as-customer/</code>/<code>as-supplier/</code> endpoint (old code left as comments, <code>customer/views.py:814-839</code>); the <code>status</code> query parameter no longer exists (active-only), and the <code>q</code> filter covers name/unique_id/entry_by (customer side) and name/unique_id (supplier side).</li>
+<li><strong>Permission split in domain apps</strong>: with <code>ActionChoices.ADD_EDIT</code> replaced by <code>ADD</code>/<code>EDIT</code> (<code>dashboard\choices.py:270-274</code>), every list/create/search view in <code>customer</code>, <code>supplier</code>, <code>employee</code> and <code>payment_term</code> now requests <code>ADD</code> and every update view requests <code>EDIT</code> — e.g. <code>customer/views.py:49, 102, 244, 345, 618, 676, 717</code>, <code>supplier/views.py:118, 170, 237, 299, 475, 562</code>, <code>payment_term/views.py:344, 397, 562</code>, <code>employee/views.py:49, 92, 303</code>. Notable: <code>EmployeeUpdate.post</code> requires <strong>ADD, not EDIT</strong> (<code>employee/views.py:89-95</code>) — the commit &quot;Employee does not require Edit permission&quot; is exactly that asymmetry.</li>
+<li><strong>Searchable features</strong>: <code>EXPENSE_ENTRY = AllFeatures.EXPENSE_CREATION.value, &quot;Expense&quot;</code> added to <code>SearchableFeatures</code> (<code>dashboard\choices.py:265</code>) alongside the renamed <code>PAYMENT_TERM_CREATION</code> &quot;Payment Period&quot; (<code>choices.py:233</code>) — these drive <code>helper.get_searchable_features</code> for the ERP dashboard search.</li>
+</ol>
 </section><section class="sec" data-title="7. Key sequence diagrams"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="7-key-sequence-diagrams">7. Key sequence diagrams</h2>
 <h3 id="7-1-merchant-adds-a-customer-frontend-projectmaster-iam-configuration-events">7.1 Merchant adds a customer (frontend → Projectmaster → IAM / Configuration / Events)</h3>
 <div class="diagram"><pre class="mermaid-src">sequenceDiagram
@@ -494,7 +622,7 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     PM-&gt;&gt;IAM: POST /api/external/token/verify/ (token, X-MINIAPP-TOKEN)
     IAM--&gt;&gt;PM: token valid
     PM-&gt;&gt;IAM: GET /api/internal-check-permissions/ (non-root users only)
-    IAM--&gt;&gt;PM: feature PR301 + action add_edit
+    IAM--&gt;&gt;PM: feature PR301 + action add
     PM-&gt;&gt;PM: validate name/identifier/mobile, duplicate check (CustomerIdentityLink)
     PM-&gt;&gt;CFG: POST /api/service-configuration/tenant/expose/ (gl_mapping, customer)
     CFG--&gt;&gt;PM: account_receivable id (or none)
@@ -567,6 +695,28 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
     CDXE--&gt;&gt;FE: 201 connection created
 </pre></div>
 <p>(Also used by CDXE <code>ApproveRejectConnection.post</code> on approve/reject to fetch the customer name for the notification/activity log — <code>CDXE-REBOOT\miniapp\views.py:189-207</code>.)</p>
+<h3 id="7-5-erp-party-detail-resolves-confirmation-letter-eligibility-and-locked-pan-fields-2026-11-05">7.5 ERP party detail resolves confirmation-letter eligibility and locked PAN fields (2026-11-05)</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    autonumber
+    participant FE as ERP dashboard frontend
+    participant PM as Projectmaster
+    participant IAM as IAM
+    participant RPT as Reporting
+    participant SALES as Sales
+
+    FE-&gt;&gt;PM: GET /api/customer/detail/{pk}/ (IAM JWT)
+    PM-&gt;&gt;IAM: auth and feature PR301 plus action edit
+    IAM--&gt;&gt;PM: ok
+    PM-&gt;&gt;PM: serialize Customer via CustomerReadSerializer
+    PM-&gt;&gt;PM: locked_fields property
+    PM-&gt;&gt;SALES: POST /api/dashboard/ird-synced-transactions-count/ (tenant_id, parties_unique_ids)
+    SALES--&gt;&gt;PM: invoice_count and return_count per party
+    PM-&gt;&gt;RPT: POST /api/accounting/confirmation-eligibility-check/ (tenant_id, unique_id)
+    RPT--&gt;&gt;PM: is_eligible
+    PM--&gt;&gt;FE: 200 party detail with locked_fields and confirmation_letter_eligible
+    Note over FE,PM: on edit a PAN change with synced txns is rejected with LOCKED_PAN
+</pre></div>
+<p>(Supplier detail is identical via <code>supplier/views.py:377-384</code>. Both outbound targets are new for this service: the Sales dashboard path from <code>dashboard\helper.py:98</code> and the Reporting path from <code>dashboard\helper.py:120-122</code>; see §9 rows 11-12.)</p>
 </section><section class="sec" data-title="8. Business process walkthrough (non-technical)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</h2>
 <h3 id="8-1-bikash-a-merchant-adds-a-customer-and-watches-the-credit-book">8.1 Bikash, a merchant, adds a customer and watches the credit book</h3>
 <p>Bikash runs a hardware shop and lends tools to regular customers before they pay. In his eSewa miniapp he opens &quot;Customers&quot; and adds &quot;Sita&#39;s Kitchen&quot; — a name, the customer&#39;s phone number, and, because Sita also has an eSewa wallet, he pastes Sita&#39;s wallet ID so the two accounts are linked. The system (Projectmaster) first checks that his login is a genuine eSewa merchant belonging to his company, and that his company&#39;s subscription allows creating customers. It stores the customer under his company alone — other companies in the platform can never see or touch this record — and, because the company has an &quot;accounts receivable&quot; default configured, it quietly tags the customer with the right accounting account so later invoices post correctly. A short activity note (&quot;Bikash created customer Sita&#39;s Kitchen&quot;) is written to the company&#39;s activity log.</p>
@@ -668,8 +818,24 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <td>Block deletion while a payment request is in flight</td>
 <td>Sync</td>
 </tr>
+<tr>
+<td>11</td>
+<td>Sales</td>
+<td><code>POST http://sales:8000/api/dashboard/ird-synced-transactions-count/</code> (helper.py:98, 437-452)</td>
+<td><code>GET /api/customer/detail/</code>, <code>GET /api/supplier/detail/</code>; customer/supplier edit (PAN-lock + <code>locked_fields</code>)</td>
+<td>Count of IRD-synced invoices/returns per party — drives <code>locked_fields</code> and the PAN lock (added 2026-11-05)</td>
+<td>Sync (non-200 → logged, treated as no-synced-txns)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Reporting</td>
+<td><code>POST http://reporting:8000/api/accounting/confirmation-eligibility-check/</code> (helper.py:120-122, 466-477)</td>
+<td><code>GET /api/customer/detail/</code>, <code>GET /api/supplier/detail/</code></td>
+<td>Confirmation-letter eligibility flag in party detail (added 2026-11-05)</td>
+<td>Sync (non-200 → <code>is_eligible</code> false)</td>
+</tr>
 </tbody></table>
-<p>No Kafka, no IAM token issuance, no TMS/accounting/reporting calls from the miniapp app. (Kafka producer exists in <code>dashboard\kafka_function.py</code> for the non-miniapp dashboard flows.)</p>
+<p>No Kafka, no IAM token issuance, no TMS/accounting/reporting calls <strong>from the miniapp app</strong> (rows 11-12 come from the domain apps&#39; ERP endpoints added in the 2026-11-05 sync). (Kafka producer exists in <code>dashboard\kafka_function.py</code> for the non-miniapp dashboard flows.)</p>
 </section><section class="sec" data-title="10. Inbound calls (who calls THIS service's miniapp/internal endpoints)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service&#39;s miniapp/internal endpoints)</h2>
 <table>
 <thead>
@@ -758,6 +924,41 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <td>Stub eSewa-user check; no caller found in any scanned repo (<code>Sales</code>, <code>CDXE-REBOOT</code>, <code>Payment-Service</code>, <code>TMS-service</code>, <code>Configuration-Service</code>, <code>ProductManagement</code>, <code>ERP-Project-Package</code>, <code>Website-Service</code>, <code>Migration-service</code>, <code>events</code>, <code>Accounting</code>, <code>Purchase</code>, <code>reporting</code>, <code>IAM-Backend</code>, <code>Document-Service</code>, <code>miniapp-esewa</code>)</td>
 <td>Registry (unused in-repo): <code>ERP-Projectmaster\miniapp\registry.py:10-12</code>; env pointing here: <code>ERP-Projectmaster\.env:49</code>; analogous unused env: <code>CDXE-REBOOT\.env:50</code></td>
 </tr>
+<tr>
+<td>12</td>
+<td>Unknown / none found (2026-11-05)</td>
+<td><code>POST .../api/customer/get-all-customer/</code></td>
+<td>Bulk customer dump for the party directory; no caller found in the scanned sibling trees</td>
+<td>Endpoint: <code>customer\urls.py:54</code>, <code>customer\views.py:556-568</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td>Unknown / none found (2026-11-05)</td>
+<td><code>POST .../api/supplier/get-all-supplier/</code></td>
+<td>Bulk supplier dump for the party directory; no caller found in the scanned sibling trees</td>
+<td>Endpoint: <code>supplier\urls.py:65</code>, <code>supplier\views.py:560-577</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td>Unknown / none found (2026-11-05)</td>
+<td><code>POST .../api/employee/get-all-employee/</code></td>
+<td>Bulk employee dump for the party directory; no caller found in the scanned sibling trees</td>
+<td>Endpoint: <code>employee\urls.py:21</code>, <code>employee\views.py:264-278</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td>Unknown / none found (2026-11-05)</td>
+<td><code>POST .../api/payment-term/tenant-list/</code></td>
+<td>Payment-term <code>{id, credit_period}</code> lookup for the party directory; no caller found in the scanned sibling trees</td>
+<td>Endpoint: <code>payment_term\urls.py:37</code>, <code>payment_term\views.py:683-705</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td>Unknown / none found (2026-11-05)</td>
+<td><code>POST .../api/payment-term/transfer-payment-term/</code></td>
+<td>One-shot bulk default payment-term migration across tenants; no caller found in the scanned sibling trees — likely a manual/ops run</td>
+<td>Endpoint: <code>payment_term\urls.py:6-10</code>, <code>payment_term\views.py:141-335</code></td>
+</tr>
 </tbody></table>
 </section><section class="sec" data-title="11. Unknowns &amp; assumptions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="11-unknowns-assumptions">11. Unknowns &amp; assumptions</h2>
 <ul>
@@ -777,6 +978,11 @@ Evidence: <code>ERP-Projectmaster\miniapp\{urls.py, views.py, serializers.py, mo
 <li><strong><code>entry_by</code> username mangling</strong>: <code>helper.get_username</code> strips the last <code>_segment</code> from the JWT <code>username</code> (<code>helper.py:196-201</code>) — presumably to normalize <code>name_suffix</code> style identities; the exact convention is <strong>inferred</strong>.</li>
 <li><strong><code>skip_mobile_validation</code></strong> (<code>serializers.py:37-41</code>) is set but never read in this serializer (observation).</li>
 <li><strong><code>mcp_tools</code> app</strong> listed in the shared-context repo map does not exist in this checkout (verified by directory listing).</li>
+<li><strong><code>transfer-payment-term</code> has no declared authentication</strong> (2026-11-05): <code>DefaultPaymentTermView</code> carries no auth/permission class and the global <code>REST_FRAMEWORK</code> block is commented out (<code>core\settings.py:92</code>), so DRF defaults (anonymous + <code>AllowAny</code>) apply — a bulk, multi-tenant, write-capable endpoint reachable without credentials at the service level. The superseded implementation (commented out, <code>payment_term\views.py:29-128</code>) was guarded by <code>InternalRequestPermission</code>. &gt; ⚠ unverified: whether an upstream gateway blocks unauthenticated traffic to <code>api/payment-term/transfer-payment-term/</code>; not answerable from this repo.</li>
+<li><strong>The four new party-directory endpoints have no discoverable caller</strong> (2026-11-05): get-all customer/supplier/employee and payment-term tenant-list were added in this sync; no call site exists in the scanned sibling trees. They are internal shared-secret (or unauthenticated, see above) endpoints, so the consumer is unverified — likely the Lenden party-directory surface.</li>
+<li><strong>Employee update permission asymmetry</strong> (2026-11-05): <code>EmployeeUpdate.post</code> requires action <strong><code>add</code></strong>, not <code>edit</code> (<code>employee/views.py:89-95</code>), unlike every other update view. This matches the commit subject (&quot;Employee does not require Edit permission&quot;) and is documented as observed behavior, not a spec.</li>
+<li><strong>Stray debug <code>print</code>s shipped in <code>Customer.locked_fields</code></strong> (<code>customer/models.py:89-90</code>) — will emit to stdout on every party-detail read; noted, not &quot;fixed&quot; (out of scope).</li>
+<li><strong>Supplier PAN-lock condition differs from Customer&#39;s</strong> (2026-11-05): the supplier serializer&#39;s synced-check additionally requires <code>as_customer</code> (<code>supplier/serializers.py:226</code>), while the <em>property</em> (<code>supplier/models.py:83-97</code>) has no &quot;currently has a PAN&quot; condition that the Customer property has (<code>customer/models.py:91</code>) — i.e. a supplier with synced txns but an empty PAN still reports <code>pan_number</code> in <code>locked_fields</code> while the Customer does not. Documented as observed asymmetry.</li>
 <li><strong>Line-number note</strong>: <code>miniapp\views.py</code> is 354 lines in this checkout (the task brief mentioned 320 — the file has since grown; all citations here use the current file).</li>
 </ul>
-</section></article><div class="pagenav"><a class="pn" href="05-cdxe-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">CDXE Miniapp</div></a><a class="pn next" href="07-payment-esewa.html"><div class="pn-dir">Next →</div><div class="pn-name">Payment + Frontend</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l2"><a href="#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-endpoints">4.1 Public miniapp endpoints</a></li><li class="l3"><a href="#4-2-internal-service-to-service-endpoints-same-service-called-by-other-services">4.2 Internal service-to-service endpoints (same service, called by OTHER services)</a></li><li class="l3"><a href="#4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</a></li><li class="l2"><a href="#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a></li><li class="l3"><a href="#5-1-post-api-miniapp-customer-merchant-adds-a-customer">5.1 POST /api/miniapp/customer/ — merchant adds a customer</a></li><li class="l3"><a href="#5-2-get-api-miniapp-customer-search-list-customers-with-credit-connection">5.2 GET /api/miniapp/customer/search/ — list customers with credit + connection</a></li><li class="l3"><a href="#5-3-get-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-customer-detail-with-credits">5.3 GET /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — customer detail with credits</a></li><li class="l3"><a href="#5-4-post-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-edit-customer">5.4 POST /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — edit customer</a></li><li class="l3"><a href="#5-5-delete-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-soft-delete-customer">5.5 DELETE /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — soft-delete customer</a></li><li class="l3"><a href="#5-6-post-api-miniapp-dummy-customer-check-stub-esewa-user-check-internal">5.6 POST /api/miniapp/dummy-customer-check/ — stub eSewa-user check (internal)</a></li><li class="l3"><a href="#5-7-post-api-miniapp-validate-customer-connection-is-this-an-active-provider-user-customer-internal">5.7 POST /api/miniapp/validate-customer-connection/ — is this an active provider-user customer? (internal)</a></li><li class="l3"><a href="#5-8-post-api-miniapp-customer-check-do-these-customers-exist-internal">5.8 POST /api/miniapp/customer-check/ — do these customers exist? (internal)</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-key-sequence-diagrams">7. Key sequence diagrams</a></li><li class="l3"><a href="#7-1-merchant-adds-a-customer-frontend-projectmaster-iam-configuration-events">7.1 Merchant adds a customer (frontend → Projectmaster → IAM / Configuration / Events)</a></li><li class="l3"><a href="#7-2-merchant-searches-customers-projectmaster-enriches-from-cdxe-sales">7.2 Merchant searches customers (Projectmaster enriches from CDXE + Sales)</a></li><li class="l3"><a href="#7-3-merchant-deletes-a-customer-payment-guard-sales-cdxe-cleanup-soft-delete">7.3 Merchant deletes a customer (Payment guard → Sales/CDXE cleanup → soft delete)</a></li><li class="l3"><a href="#7-4-cross-service-cdxe-connection-creation-validates-the-customer-at-projectmaster-internal-endpoint">7.4 Cross-service: CDXE connection creation validates the customer at Projectmaster (internal endpoint)</a></li><li class="l2"><a href="#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a></li><li class="l3"><a href="#8-1-bikash-a-merchant-adds-a-customer-and-watches-the-credit-book">8.1 Bikash, a merchant, adds a customer and watches the credit book</a></li><li class="l3"><a href="#8-2-sita-gets-connected-to-bikash-a-cross-company-handshake">8.2 Sita gets &quot;connected&quot; to Bikash — a cross-company handshake</a></li><li class="l3"><a href="#8-3-removing-a-customer-safely">8.3 Removing a customer safely</a></li><li class="l2"><a href="#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a></li><li class="l2"><a href="#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>
+</section></article><div class="pagenav"><a class="pn" href="05-cdxe-miniapp.html"><div class="pn-dir">← Previous</div><div class="pn-name">CDXE Miniapp</div></a><a class="pn next" href="07-payment-esewa.html"><div class="pn-dir">Next →</div><div class="pn-name">Payment + Frontend</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-business-overview-plain-language-for-a-non-technical-reader">1. Business overview (plain language for a NON-technical reader)</a></li><li class="l2"><a href="#2-technical-overview">2. Technical overview</a></li><li class="l2"><a href="#3-authentication-authorization">3. Authentication &amp; authorization</a></li><li class="l2"><a href="#4-exposed-endpoint-catalog">4. Exposed endpoint catalog</a></li><li class="l3"><a href="#4-1-public-miniapp-endpoints">4.1 Public miniapp endpoints</a></li><li class="l3"><a href="#4-2-internal-service-to-service-endpoints-same-service-called-by-other-services">4.2 Internal service-to-service endpoints (same service, called by OTHER services)</a></li><li class="l3"><a href="#4-3-admin-other-endpoints-in-scope">4.3 Admin/other endpoints in scope</a></li><li class="l3"><a href="#4-4-party-directory-internal-endpoints-added-2026-11-05">4.4 Party-directory internal endpoints (added 2026-11-05)</a></li><li class="l2"><a href="#5-per-endpoint-flow-trace">5. Per-endpoint flow trace</a></li><li class="l3"><a href="#5-1-post-api-miniapp-customer-merchant-adds-a-customer">5.1 POST /api/miniapp/customer/ — merchant adds a customer</a></li><li class="l3"><a href="#5-2-get-api-miniapp-customer-search-list-customers-with-credit-connection">5.2 GET /api/miniapp/customer/search/ — list customers with credit + connection</a></li><li class="l3"><a href="#5-3-get-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-customer-detail-with-credits">5.3 GET /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — customer detail with credits</a></li><li class="l3"><a href="#5-4-post-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-edit-customer">5.4 POST /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — edit customer</a></li><li class="l3"><a href="#5-5-delete-api-miniapp-customer-detail-a-href-int-pk-int-pk-a-soft-delete-customer">5.5 DELETE /api/miniapp/customer/detail/&lt;a href=&quot;int:pk&quot;&gt;int:pk&lt;/a&gt;/ — soft-delete customer</a></li><li class="l3"><a href="#5-6-post-api-miniapp-dummy-customer-check-stub-esewa-user-check-internal">5.6 POST /api/miniapp/dummy-customer-check/ — stub eSewa-user check (internal)</a></li><li class="l3"><a href="#5-7-post-api-miniapp-validate-customer-connection-is-this-an-active-provider-user-customer-internal">5.7 POST /api/miniapp/validate-customer-connection/ — is this an active provider-user customer? (internal)</a></li><li class="l3"><a href="#5-8-post-api-miniapp-customer-check-do-these-customers-exist-internal">5.8 POST /api/miniapp/customer-check/ — do these customers exist? (internal)</a></li><li class="l3"><a href="#5-9-the-2026-11-05-sync-domain-app-additions-flows">5.9 The 2026-11-05 sync — domain-app additions (flows)</a></li><li class="l2"><a href="#6-data-model">6. Data model</a></li><li class="l2"><a href="#7-key-sequence-diagrams">7. Key sequence diagrams</a></li><li class="l3"><a href="#7-1-merchant-adds-a-customer-frontend-projectmaster-iam-configuration-events">7.1 Merchant adds a customer (frontend → Projectmaster → IAM / Configuration / Events)</a></li><li class="l3"><a href="#7-2-merchant-searches-customers-projectmaster-enriches-from-cdxe-sales">7.2 Merchant searches customers (Projectmaster enriches from CDXE + Sales)</a></li><li class="l3"><a href="#7-3-merchant-deletes-a-customer-payment-guard-sales-cdxe-cleanup-soft-delete">7.3 Merchant deletes a customer (Payment guard → Sales/CDXE cleanup → soft delete)</a></li><li class="l3"><a href="#7-4-cross-service-cdxe-connection-creation-validates-the-customer-at-projectmaster-internal-endpoint">7.4 Cross-service: CDXE connection creation validates the customer at Projectmaster (internal endpoint)</a></li><li class="l3"><a href="#7-5-erp-party-detail-resolves-confirmation-letter-eligibility-and-locked-pan-fields-2026-11-05">7.5 ERP party detail resolves confirmation-letter eligibility and locked PAN fields (2026-11-05)</a></li><li class="l2"><a href="#8-business-process-walkthrough-non-technical">8. Business process walkthrough (non-technical)</a></li><li class="l3"><a href="#8-1-bikash-a-merchant-adds-a-customer-and-watches-the-credit-book">8.1 Bikash, a merchant, adds a customer and watches the credit book</a></li><li class="l3"><a href="#8-2-sita-gets-connected-to-bikash-a-cross-company-handshake">8.2 Sita gets &quot;connected&quot; to Bikash — a cross-company handshake</a></li><li class="l3"><a href="#8-3-removing-a-customer-safely">8.3 Removing a customer safely</a></li><li class="l2"><a href="#9-cross-service-call-map-outbound-calls-from-this-service">9. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#10-inbound-calls-who-calls-this-service-s-miniapp-internal-endpoints">10. Inbound calls (who calls THIS service's miniapp/internal endpoints)</a></li><li class="l2"><a href="#11-unknowns-assumptions">11. Unknowns &amp; assumptions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

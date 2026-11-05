@@ -7,6 +7,7 @@ management) is out of scope; see SHARED-CONTEXT.md for house rules.</p>
 <p>Base hosts (from E:\Work\TMS-service.env): docker internal <code>http://tms:8000</code>,
 dev-public <code>dev-tms-api.providhy.com</code> (settings.py:46 puts
 <code>TMS_BACKEND_URL</code> in ALLOWED_HOSTS). Postgres DB name: <code>TMS</code> (.env DB_NAME).</p>
+<p>Verified against TMS-service@0eeedb37eb949d88884aff8406d95bff2e91e407 (2026-11-05).</p>
 <hr>
 </section><section class="sec" data-title="1. Service identity"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="1-service-identity">1. Service identity</h2>
 <table>
@@ -257,7 +258,7 @@ src/services/api.ts:34-56).</p>
 </section><section class="sec" data-title="4. Data model (miniapp-relevant)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-data-model-miniapp-relevant">4. Data model (miniapp-relevant)</h2>
 <p>Tables live in Postgres DB &quot;TMS&quot;. EncryptedCharField = field-level AES
 encryption (settings.py:246-250, FIELD_ENCRYPTION_KEY). unique_id values come
-from the <code>ID</code> counter table (dashboard/models.py:8-43, createID).</p>
+from the <code>ID</code> counter table (dashboard/models.py:10-32, createID; a CONCURRENTLY-built index on (tenant_id, name, unique_id) was added - dashboard/migrations/0007).</p>
 <div class="diagram"><pre class="mermaid-src">erDiagram
     Company ||--o{ Tenant : &quot;company FK (PROTECT)&quot;
     Tenant ||--o{ TenantPackage : &quot;tenant_id&quot;
@@ -274,7 +275,7 @@ from the <code>ID</code> counter table (dashboard/models.py:8-43, createID).</p>
     Subscription ||--o{ Payment : &quot;subscription_id (string, no FK)&quot;
 
     Tenant {
-        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:79)&quot;
+        string tenant_id &quot;ES_XXXXXX for esewa; indexed (models.py:77)&quot;
         string name &quot;encrypted&quot;
         string email &quot;encrypted&quot;
         string contact &quot;encrypted&quot;
@@ -287,9 +288,9 @@ from the <code>ID</code> counter table (dashboard/models.py:8-43, createID).</p>
         string company_code &quot;provider code e.g. esewa (multicompany app)&quot;
     }
     ExternalTenantLink {
-        string provider_code &quot;unique together (models.py:465)&quot;
+        string provider_code &quot;unique together (models.py:428-455)&quot;
         string external_identifier &quot;wallet id&quot;
-        json fiscal_year &quot;marks config transferred (models.py:455)&quot;
+        json fiscal_year &quot;marks config transferred (models.py:442)&quot;
     }
     TenantPackage {
         string package_id &quot;PublicId of package-service id (models.py:105)&quot;
@@ -307,10 +308,11 @@ from the <code>ID</code> counter table (dashboard/models.py:8-43, createID).</p>
         json services_show
     }
     Subscription {
-        string unique_id &quot;SUBxxx (models.py:321)&quot;
+        string unique_id &quot;SUBxxx (models.py:311)&quot;
         int users
         string payment_period
         date subscribe_date
+        datetime first_subscription_date &quot;backfilled from first subscribe_date (models.py:291, 313-314)&quot;
         date expire_date
         int price
         string payment_status &quot;credit/paid/failed/pending (models.py:306)&quot;
@@ -468,23 +470,25 @@ Bulk-sets <strong>all</strong> active subscriptions of the tenant to active_stat
 miniapp-esewa</strong> (no subscriptions/cancel in frontend constants); likely
 reserved for an admin flow or future use.</p>
 <h3 id="5-5-post-api-tenant-external-register-tenant-provisioning-internal">5.5 POST /api/tenant/external-register/ — tenant provisioning (internal)</h3>
-<p>View: RegisterExternalEntityView, tenant_management/views.py:4784-4870.
-Auth: InternalRequestAuthentication (4789). Called by IAM during external
+<p>View: RegisterExternalEntityView, tenant_management/views.py:4723-4862.
+Auth: InternalRequestAuthentication (4724-4727; logger &quot;app.registration&quot; at 4720). Called by IAM during external
 registration: IAM-Backend/federated_identity/views.py:119-141
 (register_tenant_if_needed; URL built in heimer_auth/helpers.py:52-54, 86-91),
 invoked from ExternalRegistrationView.post (views.py:293-299). Not called by
 ExternalTokenView (login; views.py:348-359) — login never provisions.</p>
 <p>Request (from IAM): <code>{provider_code, external_identifier, name, contact, entity_type, password: INTERNAL_PASS}</code>.</p>
 <ol>
-<li>Serializer switch: default ExternalEntityRegisterSerializer; if
-<code>no_package_module</code> flag → WithOutPackage variant (4792-4798;
-serializers.py:494+).</li>
-<li>Idempotency (4837-4858): lookup ExternalTenantLink by
-(provider_code, external_identifier) (4800-4805); if missing,
-create_tenant in one atomic block (4807-4819): serializer.save() creates
-the tenant (serializers.py:380-443) plus an ExternalTenantLink;
-IntegrityError race → re-fetch the winner (4851-4853).</li>
-<li>Tenant creation (serializers.py:380-443):<ul>
+<li>Serializer: ExternalEntityRegisterSerializer (serializers.py:283+).
+Note: the <code>no_package_module</code> flag / WithOutPackage variant documented in
+the previous revision no longer exists at this SHA (verified absent from
+views.py and serializers.py) - removed without a replacement.</li>
+<li>Idempotency (4829-4862): lookup ExternalTenantLink by
+(provider_code, external_identifier) (4782-4790); if missing,
+create_tenant in one atomic block (4791-4811): serializer.save() creates
+the tenant (serializers.py:427-450) plus an ExternalTenantLink;
+IntegrityError race → re-fetch the winner (4841-4845). Every step is logged
+under IAM&#39;s trace_id (4730-4757).</li>
+<li>Tenant creation (serializers.py:427-450, package/subscription helpers 381-425):<ul>
 <li>name sanitized via <strong>outbound POST to Configuration
 <code>api/sanitization/form-data/</code></strong> (serializers.py:290-304,
 helpers.py:167).</li>
@@ -495,7 +499,7 @@ helpers.py:167).</li>
 map custom_functions.py:28-32); name, email=&quot;&quot;, contact,
 verification=VERIFIED, complete=True, active_status=ACTIVE,
 user_type=genuine_user (404-420).</li>
-<li><code>handle_package_creation</code> (421-441): for ESM (ESM check at
+<li><code>handle_package_creation</code> (381-400): for ESM (ESM check at
 serializers.py:374-378) → <strong>outbound GET to Package
 <code>api/check-package/</code> with provider_code + module [&quot;payment&quot;]</strong>
 (helpers.py:71, 268+); then creates TenantPackage + TenantPackageModule
@@ -503,24 +507,37 @@ rows (306-338) and TenantContracts via <code>helpers.checked_contract</code> →
 Package <code>api/check-contract/</code> (helpers.py:73; 340-378). Non-ESM →
 <strong>outbound GET <code>api/package/check-trial-package/</code></strong> (helpers.py:77)
 and trial package/modules.</li>
-<li><code>handle_subscription_creation</code> (443-477): for the payment module
+<li><code>handle_subscription_creation</code> (402-425): for the payment module
 (ESM) creates a <strong>trial CREDIT subscription</strong> (payment_status=CREDIT,
 active, expire_date=None, price=0, subscription_type=module_addition,
 users=1) + SubscriptionLog (action=trial, payment_status=CREDIT);
 package subscription → ACTIVE with expire_date None, price 0.</li>
 </ul>
 </li>
-<li>Config transfer, once per identity (4821-4835):
+<li>Config transfer, once per identity (4812-4827):
 <code>transfer_configuration_once</code> takes a row lock on the
 ExternalTenantLink (select_for_update); if fiscal_year is null it calls
 <strong>outbound POST to Configuration <code>api/dashboard/data-transfer/</code></strong>
-(custom_functions.py:570-587, helpers.py:161-163, timeout (2,6)) and
-stores the returned fiscal-year data as the &quot;transferred&quot; marker.
-What data-transfer does: doc 09 §6.1.</li>
-<li>Response 200 (4859-4870): tenant_id + TenantSerializer data (incl.
+(custom_functions.py:558-578, helpers.py:161-163, timeout (5,120) at<ol start="572">
+<li>with <code>mini_app: true</code> in the body (563) - so miniapp tenants get
+only the credit-settings row + fiscal year, not the full ERP CoA copy.
+The returned fiscal-year data (or {} when Configuration returned nothing)
+is stored as the &quot;transferred&quot; marker. Request failures now raise a
+ValidationError with the cause (566-575) instead of returning non-200
+silently. What data-transfer does: doc 09 §6.1.</li>
+</ol>
+</li>
+<li>Response 201 (4856-4862): tenant_id + serializer data (incl.
 subscribed_services, trial flag, user_range, payment_status).
-Errors: missing required fields → 400 (4842-4844); serializer errors →
-400 with INCORRECT_DATA_FORMAT (4854-4858).</li>
+Note: 201 is returned even when the tenant already existed (retry path).
+Errors: missing required fields (name, provider_code,
+external_identifier) → 400 (4838-4840); serializer errors →
+400 with INCORRECT_DATA_FORMAT (4846-4849).
+Bounded timeouts were also added to the package (helpers.py:283) and
+contract (helpers.py:309) lookups: a hung package service no longer holds
+the registration transaction open while IAM gives up. The company
+get_or_create no longer re-saves an existing company (serializers.py:451-455),
+removing a row lock on the shared company row during package HTTP calls.</li>
 </ol>
 <p>IAM side after success (IAM-Backend/federated_identity/views.py:285-316):
 creates ExternalEntity + CustomUser in one transaction, records funnel
@@ -858,9 +875,9 @@ is used by other TMS flows; miniapp/* has no kafka imports — grep-verified).</
 <td>400</td>
 </tr>
 <tr>
-<td>tenant views.py:4842-4858</td>
+<td>tenant views.py:4838-4849</td>
 <td>external-register bad payload</td>
-<td>400 INCORRECT_DATA_FORMAT</td>
+<td>400 INCORRECT_DATA_FORMAT (201 is returned even on retry of an existing identity)</td>
 </tr>
 <tr>
 <td>tenant views.py:4033-4035, 4069-4072</td>
@@ -868,7 +885,7 @@ is used by other TMS flows; miniapp/* has no kafka imports — grep-verified).</
 <td>400</td>
 </tr>
 <tr>
-<td>custom_functions.py:583-586</td>
+<td>custom_functions.py:566-575</td>
 <td>Configuration data-transfer unreachable/non-200</td>
 <td>ValidationError → 500 in external-register (registration fails; IAM retries are safe — idempotent link)</td>
 </tr>
@@ -877,7 +894,18 @@ is used by other TMS flows; miniapp/* has no kafka imports — grep-verified).</
 though the Subscription is PENDING until verify (views.py:181 vs 174-186).
 Edge: verify creates TenantPackage/TenantPackageModule if missing (264-280);
 it does not check for an already-active module subscription before creating
-them, so repeated verifies could stack rows (no guard found).</p>
+them, so repeated verifies could stack rows (no guard found).
+Edge (2026-11-05 sync): <code>Subscription.get_grace_handled_expiry_date</code> no longer
+returns the new expiry early — it now runs the grace-period math for all
+renewals and falls back to the new expiry only when expire_date/
+subscribe_date are missing (tenant_management/models.py:336-342). Subscriptions
+also record <code>first_subscription_date</code>, backfilled from the first
+subscribe_date on save (models.py:291, 313-314).
+Edge (2026-11-05 sync): the internal active-subscription activation
+(ActiveSubscriptionView, tenant_management/views.py:1076-1106) was rewritten
+as a single prefetch query (was three chained .get()s) and now falls back to
+the matching package&#39;s inactive subscription when the first one belongs to a
+different package.</p>
 <hr>
 </section><section class="sec" data-title="10. Unknowns &amp; open questions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-unknowns-open-questions">10. Unknowns &amp; open questions</h2>
 <ol>

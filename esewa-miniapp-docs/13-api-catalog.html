@@ -1,5 +1,8 @@
 <!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>API Catalog - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc" href="09-configuration-service.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc current" href="13-api-catalog.html"><span>API Catalog</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="13-api-catalog.html#iam-federated-identity-app-mount-api-external-doc-03">IAM — federated_identity app (mount /api/external/) — doc 03</a><a class="sb-item sb-sub" href="13-api-catalog.html#sales-miniapp-app-mount-api-miniapp-doc-04">Sales — miniapp app (mount /api/miniapp/) — doc 04</a><a class="sb-item sb-sub" href="13-api-catalog.html#cdxe-miniapp-app-mount-api-miniapp-doc-05">CDXE — miniapp app (mount /api/miniapp/) — doc 05</a><a class="sb-item sb-sub" href="13-api-catalog.html#projectmaster-miniapp-app-mount-api-miniapp-doc-06">Projectmaster — miniapp app (mount /api/miniapp/) — doc 06</a><a class="sb-item sb-sub" href="13-api-catalog.html#payment-service-esewa-app-mount-api-esewa-doc-07">Payment-Service — esewa app (mount /api/esewa/) — doc 07</a><a class="sb-item sb-sub" href="13-api-catalog.html#tms-miniapp-app-mount-api-miniapp-tenant-payment-doc-08">TMS — miniapp app (mount /api/miniapp/) + tenant + payment — doc 08</a><a class="sb-item sb-sub" href="13-api-catalog.html#configuration-service-service-configuration-mount-api-service-configuration-doc-09">Configuration-Service — service_configuration (mount /api/service-configuration/) — doc 09</a><a class="sb-item sb-sub" href="13-api-catalog.html#events-notification-app-activity-log-mounts-api-notification-api-activity-log-doc-10">Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10</a><a class="sb-item sb-sub" href="13-api-catalog.html#package-service-out-of-scope-referenced">Package service (out of scope, referenced)</a><a class="sb-item sb-sub" href="13-api-catalog.html#iam-heimer-auth-context-endpoints-used-by-miniapp-lifecycle-doc-03-8">IAM heimer_auth (context endpoints used by miniapp lifecycle, doc 03 §8)</a></div></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>13 — Global API Catalog (every in-scope endpoint)</h1>
 <blockquote>
+<p>Sync 2026-11-05: Sales ERP bulk status-change/check endpoints added (S31-S38); Projectmaster get-all party/employee APIs + default payment-term migration endpoints added (P7-P11, test/ route removed); TMS external-register returns 201 and is idempotent; Events email gateway added (E1-E3); Configuration TDS create/update now permission-guarded; all add_edit action tokens split into add/edit.</p>
+</blockquote>
+<blockquote>
 <p>One row per endpoint. Full paths use the dev public hosts (see .env of each repo).
 &quot;Auth&quot; column: FI = FederatedIdentityAuthentication (JWT+TOTP, service copy);
 FI-IAM = the IAM-local FederatedIdentityAuthentication (body provider_code+external_identifier lookup);
@@ -219,7 +222,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>S8</td>
 <td>POST</td>
-<td>$SALES/api/miniapp/dispute/cancel/<dispute_id>/</td>
+<td>$SALES/api/miniapp/dispute/cancel/&lt;dispute_id&gt;/</td>
 <td>CreditDisputeCancelView</td>
 <td>FI</td>
 <td>Cancel dispute</td>
@@ -235,7 +238,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>S10</td>
 <td>GET</td>
-<td>$SALES/api/miniapp/dispute/detail/<dispute_id>/</td>
+<td>$SALES/api/miniapp/dispute/detail/&lt;dispute_id&gt;/</td>
 <td>CreditDisputeDetailView</td>
 <td>FI</td>
 <td>Dispute detail</td>
@@ -379,7 +382,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>S28</td>
 <td>GET</td>
-<td>$SALES/api/miniapp/dispute/detail/customer/<dispute_id>/</td>
+<td>$SALES/api/miniapp/dispute/detail/customer/&lt;dispute_id&gt;/</td>
 <td>CreditDisputeDetailViewForCustomer</td>
 <td>INT</td>
 <td>Internal: dispute detail (customer)</td>
@@ -399,6 +402,74 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <td>CreditOverviewForAdminView</td>
 <td>FI(admin)</td>
 <td>Admin: credit overview</td>
+</tr>
+</tbody></table>
+<p>ERP-side (same service, mounted /api/sales/invoice/ + /api/sales/return/ - doc 04 §5.31; ERP portal JWT, not the miniapp surface):</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S31</td>
+<td>POST</td>
+<td>$SALES/api/sales/invoice/status/bulk/</td>
+<td>SalesInvoiceBulkStatusChangeAPIView</td>
+<td>Bulk status change, oldest-first, limit BULK_STATUS_CHANGE_LIMIT</td>
+</tr>
+<tr>
+<td>S32</td>
+<td>POST</td>
+<td>$SALES/api/sales/invoice/status/bulk/check/</td>
+<td>SalesInvoiceBulkStatusCheckAPIView</td>
+<td>Dry-run check; returns unique_id per record</td>
+</tr>
+<tr>
+<td>S33</td>
+<td>POST</td>
+<td>$SALES/api/sales/invoice/cancel-submission/bulk/</td>
+<td>SalesInvoiceBulkSubmissionCancelAPIView</td>
+<td>Bulk cancel-submission</td>
+</tr>
+<tr>
+<td>S34</td>
+<td>POST</td>
+<td>$SALES/api/sales/invoice/cancel-submission/bulk/check/</td>
+<td>SalesInvoiceBulkSubmissionCancelCheckAPIView</td>
+<td>Dry-run cancel-submission check</td>
+</tr>
+<tr>
+<td>S35</td>
+<td>POST</td>
+<td>$SALES/api/sales/return/status/bulk/</td>
+<td>SalesReturnBulkStatusChangeAPIView</td>
+<td>Bulk status change (returns)</td>
+</tr>
+<tr>
+<td>S36</td>
+<td>POST</td>
+<td>$SALES/api/sales/return/status/bulk/check/</td>
+<td>SalesReturnBulkStatusCheckAPIView</td>
+<td>Dry-run check (returns)</td>
+</tr>
+<tr>
+<td>S37</td>
+<td>POST</td>
+<td>$SALES/api/sales/return/cancel-submission/bulk/</td>
+<td>SalesReturnBulkSubmissionCancelAPIView</td>
+<td>Bulk cancel-submission (returns)</td>
+</tr>
+<tr>
+<td>S38</td>
+<td>POST</td>
+<td>$SALES/api/sales/return/cancel-submission/bulk/check/</td>
+<td>SalesReturnBulkSubmissionCancelCheckAPIView</td>
+<td>Dry-run cancel-submission check (returns)</td>
 </tr>
 </tbody></table>
 </section><section class="sec" data-title="CDXE — miniapp app (mount /api/miniapp/) — doc 05"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="cdxe-miniapp-app-mount-api-miniapp-doc-05">CDXE — miniapp app (mount /api/miniapp/) — doc 05</h2>
@@ -456,7 +527,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>C6</td>
 <td>POST</td>
-<td>$CDXE/api/miniapp/approve-reject-connection/<connection_id>/</td>
+<td>$CDXE/api/miniapp/approve-reject-connection/&lt;connection_id&gt;/</td>
 <td>ApproveRejectConnection</td>
 <td>FI</td>
 <td>Customer approves/rejects</td>
@@ -528,7 +599,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>C15</td>
 <td>POST</td>
-<td>$CDXE/api/miniapp/payment/request/pay/<payment_request_id>/</td>
+<td>$CDXE/api/miniapp/payment/request/pay/&lt;payment_request_id&gt;/</td>
 <td>ApproveDeclinePaymentRequest</td>
 <td>FI</td>
 <td>Customer pays/declines request</td>
@@ -568,7 +639,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>C20</td>
 <td>POST</td>
-<td>$CDXE/api/miniapp/dispute/cancel/<dispute_id>/</td>
+<td>$CDXE/api/miniapp/dispute/cancel/&lt;dispute_id&gt;/</td>
 <td>CreditDisputeCancelView</td>
 <td>FI</td>
 <td>Cancel dispute</td>
@@ -584,7 +655,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>C22</td>
 <td>GET</td>
-<td>$CDXE/api/miniapp/dispute/detail/<dispute_id>/</td>
+<td>$CDXE/api/miniapp/dispute/detail/&lt;dispute_id&gt;/</td>
 <td>CreditDisputeDetailView</td>
 <td>FI</td>
 <td>Dispute detail</td>
@@ -659,6 +730,60 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <td>Validate miniapp customer</td>
 </tr>
 </tbody></table>
+<p>ERP-side (same service, not the miniapp surface - doc 06 §4.4):</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P7</td>
+<td>POST</td>
+<td>$PM/api/customer/get-all-customer/</td>
+<td>customer/views.py:556-568</td>
+<td>Get all customers (internal password body; no auth class) - NEW</td>
+</tr>
+<tr>
+<td>P8</td>
+<td>POST</td>
+<td>$PM/api/supplier/get-all-supplier/</td>
+<td>supplier/views.py:560-577</td>
+<td>Get all suppliers (AllowAny - see doc 06 §11) - NEW</td>
+</tr>
+<tr>
+<td>P9</td>
+<td>POST</td>
+<td>$PM/api/employee/get-all-employee/</td>
+<td>employee/views.py:264-278</td>
+<td>Get all employees (AllowAny) - NEW</td>
+</tr>
+<tr>
+<td>P10</td>
+<td>POST</td>
+<td>$PM/api/payment-term/tenant-list/</td>
+<td>payment_term/views.py:683-705</td>
+<td>Tenants with default payment terms (InternalRequestPermission) - NEW</td>
+</tr>
+<tr>
+<td>P11</td>
+<td>POST</td>
+<td>$PM/api/payment-term/transfer-payment-term/</td>
+<td>payment_term/views.py:141-335</td>
+<td>Bulk default-term migration (unverified: no auth declared) - NEW</td>
+</tr>
+<tr>
+<td>—</td>
+<td>POST</td>
+<td>$PM/api/payment-term/test/</td>
+<td>(TestInheritance)</td>
+<td>REMOVED 2026-11-05 (slot taken by tenant-list/)</td>
+</tr>
+</tbody></table>
 </section><section class="sec" data-title="Payment-Service — esewa app (mount /api/esewa/) — doc 07"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="payment-service-esewa-app-mount-api-esewa-doc-07">Payment-Service — esewa app (mount /api/esewa/) — doc 07</h2>
 <table>
 <thead>
@@ -690,7 +815,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>E3</td>
 <td>POST</td>
-<td>$PAY/api/esewa/payment/request/cancel/<payment_id>/</td>
+<td>$PAY/api/esewa/payment/request/cancel/&lt;payment_id&gt;/</td>
 <td>EsewaPaymentRequestCancelAPIView</td>
 <td>FI</td>
 <td>Cancel payment request</td>
@@ -698,7 +823,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>E4</td>
 <td>POST</td>
-<td>$PAY/api/esewa/payment/request/pay/<payment_id>/</td>
+<td>$PAY/api/esewa/payment/request/pay/&lt;payment_id&gt;/</td>
 <td>EsewaPaymentRequestPayAPIView</td>
 <td>FI</td>
 <td>Pay payment request (eSewa ePay)</td>
@@ -898,6 +1023,9 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <td>Platform/CMS config management (context only in doc 09)</td>
 </tr>
 </tbody></table>
+<blockquote>
+<p>Sync 2026-11-05: no endpoints added/removed. TDS create/update are now permission-guarded (HasPermission + ADD/EDIT actions); POST /api/dashboard/data-transfer/ gained a <code>mini_app</code> body flag that returns only the credit-settings row + fiscal year (doc 09 §6.3); config detail/status POST require the EDIT action instead of the removed ADD_EDIT.</p>
+</blockquote>
 </section><section class="sec" data-title="Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="events-notification-app-activity-log-mounts-api-notification-api-activity-log-doc-10">Events — notification_app + activity_log (mounts /api/notification/, /api/activity_log/) — doc 10</h2>
 <table>
 <thead>
@@ -959,6 +1087,43 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <td>Activity log list</td>
 </tr>
 </tbody></table>
+<p>email_app (internal email plumbing, doc 10 §4.4):</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Method</th>
+<th>Full path</th>
+<th>View</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>POST</td>
+<td>$EVT/api/email/gateway/</td>
+<td>EmailGatewayView</td>
+<td>INT</td>
+<td>202 + delegate to registered mail handler (type: providhy_email | package_mail) - NEW 2026-11-05</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>POST</td>
+<td>$EVT/api/email/send-providhy-email/</td>
+<td>SendProvidhyEmail</td>
+<td>INT</td>
+<td>UNVERIFIED-bug: delegates to type &quot;providy_email&quot; (typo) → silent no-op, answers 200</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>POST</td>
+<td>$EVT/api/email/send-package-detail-email/</td>
+<td>SendPackageDetailEmail</td>
+<td>INT</td>
+<td>Delegates to package_mail (celery apply_async, recipients from ExecutiveMail)</td>
+</tr>
+</tbody></table>
 </section><section class="sec" data-title="Package service (out of scope, referenced)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="package-service-out-of-scope-referenced">Package service (out of scope, referenced)</h2>
 <table>
 <thead>
@@ -1013,7 +1178,7 @@ Flow detail: follow the &quot;Doc&quot; link to the per-endpoint trace section.<
 <tr>
 <td>H5</td>
 <td>GET</td>
-<td>$IAM/api/payment-success-callback/<user_id>/</td>
+<td>$IAM/api/payment-success-callback/&lt;user_id&gt;/</td>
 <td>Payment redirect callback</td>
 </tr>
 </tbody></table>

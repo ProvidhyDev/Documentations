@@ -1,4 +1,5 @@
 <!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Configuration Service - eSewa Miniapps Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8590c'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3Ee%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="index.html">eSewa Miniapps <span>Docs</span></a><div class="top-actions"><button id="exportBtn" class="btn">Export PDF</button><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div id="exportbar" class="exportbar" hidden><span id="exportCount" class="eb-count">0 sections selected</span><span class="eb-spacer"></span><button class="btn" id="selAll">Select all</button><button class="btn" id="selNone">Clear</button><button class="btn primary" id="exportGo">Export as PDF</button><button class="btn ghost" id="exportClose">Close</button></div><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here</h2><a class="sb-item sb-doc" href="00-README.html"><span>Index &amp; Reading Guide</span></a><a class="sb-item sb-doc" href="01-overview.html"><span>Overview</span></a></div><div class="sb-group"><h2>Feature Guides</h2><a class="sb-item sb-doc" href="M-merchant-side.html"><span>Merchant Side</span></a><a class="sb-item sb-doc" href="C-customer-side.html"><span>Customer Side</span></a></div><div class="sb-group"><h2>Deep-Dive (per service)</h2><a class="sb-item sb-doc" href="02-authentication-deep-dive.html"><span>Authentication</span></a><a class="sb-item sb-doc" href="03-iam-federated-identity.html"><span>IAM Federated Identity</span></a><a class="sb-item sb-doc" href="04-sales-miniapp.html"><span>Sales Miniapp</span></a><a class="sb-item sb-doc" href="05-cdxe-miniapp.html"><span>CDXE Miniapp</span></a><a class="sb-item sb-doc" href="06-projectmaster-miniapp.html"><span>Projectmaster Miniapp</span></a><a class="sb-item sb-doc" href="07-payment-esewa.html"><span>Payment + Frontend</span></a><a class="sb-item sb-doc" href="08-tms-registration-config.html"><span>TMS Registration and Config</span></a><a class="sb-item sb-doc current" href="09-configuration-service.html"><span>Configuration Service</span></a><div class="sb-subwrap"><a class="sb-item sb-sub" href="09-configuration-service.html#1-service-identity">1. Service identity</a><a class="sb-item sb-sub" href="09-configuration-service.html#2-url-surface">2. URL surface</a><a class="sb-item sb-sub" href="09-configuration-service.html#3-auth-mechanism">3. Auth mechanism</a><a class="sb-item sb-sub" href="09-configuration-service.html#4-data-model">4. Data model</a><a class="sb-item sb-sub" href="09-configuration-service.html#5-how-per-tenant-service-configuration-works">5. How per-tenant service configuration works</a><a class="sb-item sb-sub" href="09-configuration-service.html#6-endpoint-traces">6. Endpoint traces</a><a class="sb-item sb-sub" href="09-configuration-service.html#7-cross-service-call-map-outbound-calls-from-this-service">7. Cross-service call map (outbound calls from this service)</a><a class="sb-item sb-sub" href="09-configuration-service.html#8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</a><a class="sb-item sb-sub" href="09-configuration-service.html#9-business-process-walkthrough-non-technical">9. Business process walkthrough (non-technical)</a><a class="sb-item sb-sub" href="09-configuration-service.html#10-unknowns-assumptions">10. Unknowns &amp; assumptions</a><a class="sb-item sb-sub" href="09-configuration-service.html#11-cross-references">11. Cross-references</a></div><a class="sb-item sb-doc" href="10-events-miniapp.html"><span>Events Miniapp</span></a></div><div class="sb-group"><h2>Cross-Cutting</h2><a class="sb-item sb-doc" href="11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-foot">16 documents - traced from production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h1>Configuration-Service — Service Configuration for the Federated Miniapps</h1>
+<p>Verified against Configuration-Service@0f37ed5bc3896ecf0ffd6cd8dfe96a56bb6a9762 (2026-11-05).</p>
 <p>Federated miniapps documentation, part 09. Scope: the <code>service_configuration</code>
 app (all endpoints, full traces for the two federated miniapp endpoints) and
 the project package <code>configuration_service</code> (settings/urls/celery — there is
@@ -302,20 +303,20 @@ Postgres DB name: <code>Configuration</code> (.env DB_NAME).</p>
 <td>POST</td>
 <td><a href="https://dev-configuration-api.providhy.com/api/dashboard/data-transfer/">https://dev-configuration-api.providhy.com/api/dashboard/data-transfer/</a></td>
 <td>DataTransferExposeView (dashboard/views.py:1165)</td>
-<td>internal password (custom check) — called by TMS at registration</td>
+<td>internal password (custom check) — called by TMS at registration; body flag <code>mini_app: true</code> switches to the miniapp transfer (credit settings + fiscal year only, views.py:1175-1186)</td>
 </tr>
 <tr>
 <td>28</td>
 <td>POST</td>
 <td><a href="https://dev-configuration-api.providhy.com/api/dashboard/tenant-fy-essence/">https://dev-configuration-api.providhy.com/api/dashboard/tenant-fy-essence/</a></td>
-<td>TenantFYEssenceExposeView (dashboard/views.py:1321)</td>
+<td>TenantFYEssenceExposeView (dashboard/views.py:1335)</td>
 <td>internal password — called by IAM/TMS/Sales/CDXE/Payment</td>
 </tr>
 <tr>
 <td>29</td>
 <td>POST</td>
 <td><a href="https://dev-configuration-api.providhy.com/api/dashboard/transfer-fiscal-year/">https://dev-configuration-api.providhy.com/api/dashboard/transfer-fiscal-year/</a></td>
-<td>CreateTenantFiscalYear (dashboard/views.py:1284)</td>
+<td>CreateTenantFiscalYear (dashboard/views.py:1298)</td>
 <td>InternalRequestPermission — called by IAM</td>
 </tr>
 <tr>
@@ -331,21 +332,21 @@ transfer-fiscal-year/ (191), industry/get-detail/ (67-70).
 sanitization/urls.py: form-data/ (13), search-form-data/ (14).</p>
 </section><section class="sec" data-title="3. Auth mechanism"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="3-auth-mechanism">3. Auth mechanism</h2>
 <h3 id="3-1-federatedidentityauthentication-the-two-miniapp-views">3.1 FederatedIdentityAuthentication (the two miniapp views)</h3>
-<p>dashboard/auth_backends.py:93-132 — same design as the TMS copy (doc 08 §3):</p>
+<p>dashboard/auth_backends.py:102-131 — same design as the TMS copy (doc 08 §3):</p>
 <ol>
-<li>JWT via <code>helpers.get_access_token(request, access_token_key= &quot;miniAppAccessToken&quot;)</code> (auth_backends.py:96; helpers.py:140+) — cookie,
-Bearer header, or body key.</li>
-<li><code>validate_token_with_external_iam(token, headers={X-MINIAPP-TOKEN: &lt;TOTP&gt;})</code> (auth_backends.py:99-104) POSTs to IAM
-<code>{IAM_SERVICE}api/external/token/verify/</code> (auth_backends.py:117-120) —
+<li>JWT via <code>helpers.get_access_token(request, access_token_key= &quot;miniAppAccessToken&quot;)</code> (auth_backends.py:105-107; helpers.py:140+) —
+cookie, Bearer header, or body key.</li>
+<li><code>validate_token_with_external_iam(token, headers={X-MINIAPP-TOKEN: &lt;TOTP&gt;})</code> (auth_backends.py:110-113, 134-151) POSTs to IAM
+<code>{IAM_SERVICE}api/external/token/verify/</code> (auth_backends.py:135) —
 IAM enforces the TOTP (pyotp, 20 s step, ±5 window, secret
 CUSTOM_KEY_ESEWA) plus JWT validity before returning 200.</li>
 <li>Local decode of the JWT <strong>without signature verification</strong>
-(<code>api_key=False, verify=False</code>, auth_backends.py:106-107) fills
-request.user_id/tenant_id/subscribed_services/provider_code/user_type/
-tenant_root/username/external_identifier/subscription_expired
-(auth_backends.py:108-115). Returns (user_id, tenant_id) →
-<code>request.auth</code> = tenant_id string.</li>
-<li>On any failure: 401 CustomAuthenticationFailed (auth_backends.py:124-126).</li>
+(<code>verify=False</code>, auth_backends.py:114) fills
+request.provider_code/user_type/tenant_root/user_permissions/
+subscribed_service/username/external_identifier/subscription_expired
+(auth_backends.py:115-127). Returns (user_id, tenant_id) →
+<code>request.auth</code> = tenant_id string (auth_backends.py:128).</li>
+<li>On any failure: 401 CustomAuthenticationFailed (auth_backends.py:130-131).</li>
 </ol>
 <h3 id="3-2-other-auth-permission-classes-used-by-this-app">3.2 Other auth/permission classes used by this app</h3>
 <ul>
@@ -355,11 +356,22 @@ portal JWT validated against IAM <code>api/internal-check-permissions/</code>
 user_permissions, subscribed_service, fiscal_year. Used by the portal
 tenant configuration views (3, 4, 5, 6, 11, 13, 20) and the miniapp detail
 view&#39;s <em>parent class</em>.</li>
-<li><code>HasPermission</code> (auth_backends.py:213-233): 403 when
-request.subscription_expired (POST only); allow if request.tenant_root,
-else requires the CONFIGURATION_SETTINGS permission in
-request.user_permissions.</li>
-<li><code>EbillingPermission</code> (auth_backends.py:236-259): object-level — blocks
+<li><code>HasPermission</code> (auth_backends.py:154-190): 403 when
+request.subscription_expired (POST only); allow if request.tenant_root;
+else requires the view&#39;s required_feature_permission +
+required_action_permission to match a grant from IAM
+<code>api/internal-check-permissions/</code> (auth_backends.py:172-189). Since delta
+0f37ed5 the IAM permission fetch is cached on the view instance
+(<code>_user_permissions_</code>) so a request that checks several permissions hits
+IAM only once (auth_backends.py:161-168).</li>
+<li>Action model change (delta 0f37ed5, choices.py:502-510): the old
+<code>ADD_EDIT</code> action no longer exists — it was split into separate <code>ADD</code>
+(choices.py:503) and <code>EDIT</code> (choices.py:504) actions. Views were updated
+to match: tenant config detail POST now requires EDIT (views.py:358),
+tenant config status POST requires EDIT (views.py:482), cost-term create/
+update/search POST require ADD (cost_term/views.py:37, 91, 158), TDS type
+create requires ADD and update requires EDIT (tds_type/views.py:77, 97).</li>
+<li><code>EbillingPermission</code> (auth_backends.py:237-262): object-level — blocks
 eBilling tenants from UNIQUE_ID (non-PRODUCT_FLOW), NEGATIVE_INVENTORY, and
 MASTER_SETTINGS/PRINT_TEMPLATE rows (those are managed server-side for
 eBilling).</li>
@@ -372,9 +384,35 @@ eBilling).</li>
 <p>Note on inheritance: the miniapp detail view (431-432) subclasses
 TenantServiceConfigurationDetailView, which carries the class decorators
 <code>@permission_classes([HasPermission, EbillingPermission])</code>
-(views.py:350-351); the miniapp subclass inherits both permission classes, so
+(views.py:349-350); the miniapp subclass inherits both permission classes, so
 the merchant&#39;s request must pass HasPermission (tenant_root or
-CONFIGURATION_SETTINGS permission; not subscription-expired on POST).</p>
+CONFIGURATION_SETTINGS permission; not subscription-expired on POST). Since
+delta 0f37ed5 the merchant&#39;s POST additionally needs the EDIT action on the
+CONFIGURATION_SETTINGS feature (inherited from views.py:356-361) instead of
+the old ADD_EDIT action.</p>
+<h3 id="3-3-tds-type-and-cost-term-permission-enforcement-delta-0f37ed5">3.3 TDS type and cost term permission enforcement (delta 0f37ed5)</h3>
+<ul>
+<li>TDS type endpoints (mounted <code>/api/tds/</code>) now enforce <code>HasPermission</code>
+(tds_type/views.py:131-134): TDSTypeView carries
+required_feature_permission = CONFIGURATION_SETTINGS (tds_type/views.py:26).
+<code>initial()</code> runs the request validations <em>before</em> the permission check
+(tds_type/views.py:42-51); <code>create()</code> checks the ADD action and
+<code>update</code> (POST .../tds/{pk}/update/) checks the EDIT action via
+<code>check_providhy_permission</code> (tds_type/views.py:72-74, 76-77, 95-97).
+This fixes a hole where TDS create/update previously ran no action-level
+permission check at all.</li>
+<li>Cost term endpoints keep the same shape but their POST action changed from
+ADD_EDIT to ADD (cost_term/views.py:37, 91, 158) as part of the action
+split.</li>
+<li>New AllFeatures report codes for permission configuration (choices.py:493-498):
+TRIAL_BALANCE_REPORT PR819, BALANCE_SHEET_REPORT PR820,
+PROFIT_LOSS_STATEMENT_REPORT PR821, GENERAL_LEDGER_SUMMARY_REPORT PR850,
+GENERAL_LEDGER_REPORT PR822.</li>
+<li>New InvalidDataFormat exception (dashboard/exception.py:21-22) with message
+<code>&quot;{} should be a {}&quot;</code> (dashboard/messages.py:30), raised by the
+TenantServiceConfigurationSerializer starting_number transform
+(service_configuration/serializers.py:11-23, 53-62) — see §6.2.</li>
+</ul>
 <hr>
 </section><section class="sec" data-title="4. Data model"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="4-data-model">4. Data model</h2>
 <div class="diagram"><pre class="mermaid-src">erDiagram
@@ -404,15 +442,26 @@ CONFIGURATION_SETTINGS permission; not subscription-expired on POST).</p>
     }
     TenantServiceConfiguration ||--o{ ID : &quot;unique_id counters&quot;
 </pre></div>
+<p>Note: ID carries the composite index id_tenant_name_uid_idx on (tenant_id, name, unique_id) (dashboard/models.py:15-19), added in delta 0f37ed5.</p>
 <p>Two flat tables (service_configuration/models.py):</p>
 <ul>
 <li><strong>DefaultServiceConfiguration</strong> (models.py:6-19, db_table
 DefaultServiceConfiguration): platform-wide default configuration rows.
 Seeded on first access from the hard-coded <code>workflows()</code> catalog
-(views.py:34-46, defaults.py:206+) — approval workflows, purchase/sales
+(views.py:34-46, defaults.py:212+) — approval workflows, purchase/sales
 flows, expense config, product config, GL mapping, master settings — with
 per-status default values (defaults.py, ~700 lines of defaults incl.
-default_chart_of_accounts, workflows() at 206).</li>
+default_chart_of_accounts, workflows() at 212). The credit-settings
+defaults (credit_period 15, credit_limit 100000) are now also exposed as
+the module constant <code>CREDIT_SETTINGS_DEFAULT</code> (defaults.py:206-209), used
+both by workflows() and by the miniapp transfer fallback (§6.3).</li>
+<li><strong>ID</strong> (dashboard/models.py:6-21, db_table ID): unique_id counter per
+(tenant_id, name). Since delta 0f37ed5 it declares the composite index
+id_tenant_name_uid_idx on (tenant_id, name, unique_id)
+(dashboard/models.py:11-20) so createID&#39;s exists()/MAX() lookups
+(dashboard/models.py:26-31) stop full-scanning the table; shipped as
+migration 0011 built CONCURRENTLY / non-atomic
+(dashboard/migrations/0011_id_tenant_name_uid_idx.py:5-21).</li>
 <li><strong>TenantServiceConfiguration</strong> (models.py:22-43, db_table
 TenantServiceConfiguration): per-tenant override rows, keyed by
 (tenant_id, configuration_type, configuration_status). unique_id from the
@@ -429,7 +478,7 @@ cash_account, TDS_Receivable, TDS_Payable, <strong>credit_settings</strong> (the
 one), print_template, excise_duty (203-228).</p>
 <p>Tenant fiscal-year / currency / datepicker rows live in the dashboard app
 (TenantFiscalYear, TenantDatepicker, TenantCurrency — referenced by
-dashboard/views.py:1340-1410), not in service_configuration.</p>
+dashboard/views.py:1335-1438), not in service_configuration.</p>
 <hr>
 </section><section class="sec" data-title="5. How per-tenant service configuration works"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="5-how-per-tenant-service-configuration-works">5. How per-tenant service configuration works</h2>
 <ol>
@@ -438,10 +487,15 @@ DefaultServiceConfiguration rows are created from <code>workflows()</code>
 (views.py:34-46). Each row = (configuration_type, configuration_status,
 value-JSON, active_status).</li>
 <li><strong>Tenant transfer</strong>: when a tenant is created (TMS external-register →
-data-transfer, §6.1) the default rows are copied into
-TenantServiceConfiguration for the tenant (dashboard/views.py:1179,
+data-transfer, §6.3) the default rows are copied into
+TenantServiceConfiguration for the tenant (dashboard/views.py:1192,
 transfer.configuration_transfer), plus chart of accounts, fiscal year
-essence, payment terms, cost terms, TDS types.</li>
+essence, payment terms, cost terms, TDS types. Since delta 0f37ed5 a
+request with <code>mini_app: true</code> skips the ERP transfer entirely and sends
+only the master_settings credit row (falling back to the code default
+when the platform default row is missing) plus the fiscal year essence
+(dashboard/views.py:1175-1186,
+dashboard/data_transfer.py:338-367, defaults.py:206-209).</li>
 <li><strong>Portal edit</strong>: portal users CRUD tenant rows via the tenant/ endpoints
 (3-6); each save only updates that tenant&#39;s row — no fan-out.</li>
 <li><strong>Runtime read</strong>: business services read tenant config either by calling
@@ -482,7 +536,7 @@ Exception → 500 SERVER_EXCEPTION (338-341).</li>
 <p>View: TenantServiceConfigurationMiniappDetailView (views.py:431-432) —
 auth override only; inherits from TenantServiceConfigurationDetailView
 (views.py:349-428) with permission_classes [HasPermission, EbillingPermission]
-(350-351).</p>
+(349-350).</p>
 <p>Frontend callers:</p>
 <ul>
 <li>GET — same ConfigProvider flow as 6.1 does not use detail; the
@@ -498,19 +552,30 @@ the list response (credit-management/index.tsx:72+).</li>
 <li>Auth + permissions (§3.1, §3.2).</li>
 <li>Row lookup by pk (371-375); 404 if missing or tenant mismatch
 (376-383 — the pk must belong to request.auth&#39;s tenant).</li>
-<li>EbillingPermission object check (auth_backends.py:236-259) may 403 for
+<li>EbillingPermission object check (auth_backends.py:237-262) may 403 for
 eBilling tenants on unique-id / negative-inventory / print-template rows.</li>
 <li>Returns the row&#39;s value (392-401).</li>
 </ol>
 <p>POST flow (views.py:403-428):</p>
 <ol>
-<li>Auth + HasPermission (tenant_root or CONFIGURATION_SETTINGS;
-subscription_expired → 403 on POST).</li>
+<li>Auth + HasPermission (tenant_root or CONFIGURATION_SETTINGS with the
+EDIT action; subscription_expired → 403 on POST; required action set in
+initial() at views.py:356-361).</li>
 <li>Row lookup by pk, scoped to the tenant (405-411); 404 otherwise.</li>
 <li>EbillingPermission object check.</li>
 <li>Updates the row: serializer update path
-(serializers.py:27-30 — UNIQUE_ID non-PRODUCT_FLOW rows are force-kept
-active) applied to the value fields; save (412-421).</li>
+(serializers.py:69-76 — UNIQUE_ID non-PRODUCT_FLOW rows are force-kept
+active) applied to the value fields; save (412-421). Since delta 0f37ed5
+the serializer also validates via <code>validate()</code> (serializers.py:53-62):
+for PURCHASE_FLOW/SALES_FLOW UNIQUE_ID rows the value&#39;s starting_number
+is coerced to int (serializers.py:11-23) and a non-numeric value raises
+InvalidDataFormat &quot;starting number should be a number&quot;
+(serializers.py:16-21, dashboard/messages.py:30).<blockquote>
+<p>unverified: which portal screens actually submit a non-numeric
+starting number — the transform looks like a fix for a reported bad-value
+case; no frontend evidence in scope.</p>
+</blockquote>
+</li>
 <li>Response 200 with the updated value (422-428). Errors: 400
 INCORRECT_DATA_FORMAT on validation (424-426); 500 on exception.</li>
 </ol>
@@ -520,48 +585,58 @@ refetches the list (config-context refetchCreditSettings) and the credit
 features (Credit service / CDXE / Sales) read the same row on their next
 request — pull-based (§5.5).</p>
 <h3 id="6-3-post-api-dashboard-data-transfer-onboarding-called-by-tms">6.3 POST /api/dashboard/data-transfer/  (onboarding, called by TMS)</h3>
-<p>View: DataTransferExposeView (dashboard/views.py:1165-1271). Auth: internal
+<p>View: DataTransferExposeView (dashboard/views.py:1165-1285). Auth: internal
 password check on (password, tenant_id) via
 <code>custom.post_request_data_check_transfer_for_tenant</code> (1169-1172).
 Caller: TMS RegisterExternalEntityView.transfer_configuration_once
 (TMS-service dashboard/custom_functions.py:570-587) — once per external
 identity, row-locked on the TMS side (TMS tenant_management/views.py:4821-4835).</p>
-<p>Flow (1168-1271):</p>
-<ol>
-<li>transfer_chart_of_account(tenant_id) (1176) — copies default COA accounts
-into the tenant&#39;s dashboard tables.</li>
-<li>transfer.configuration_transfer(tenant_id, coa_ok) (1179) — copies
+<p>Flow (1168-1285):</p>
+<ol start="0">
+<li><strong>Miniapp branch (new in delta 0f37ed5)</strong>: if <code>request.data.get(&quot;mini_app&quot;) is True</code>, the view runs only <code>transfer.transfer_credit_settings(tenant_id)</code>
+(1178) — which creates/updates the tenant&#39;s single master_settings
+credit_settings row (credit_limit/credit_period), using the platform
+DefaultServiceConfiguration row when present and otherwise the code
+default CREDIT_SETTINGS_DEFAULT (data_transfer.py:338-367,
+defaults.py:206-209) — then <code>transfer.transfer_fiscal_essence(tenant_id)</code>
+(1179, data_transfer.py:408) and returns 200 with the serialized FY data
+(1180-1186). The ERP CoA/config/terms transfer below is not run for
+miniapp tenants (code comment at 1176-1177).</li>
+<li>transfer_chart_of_account(tenant_id) (1189) — copies default COA accounts
+into the tenant&#39;s dashboard tables (data_transfer.py:15).</li>
+<li>transfer.configuration_transfer(tenant_id, coa_ok) (1192) — copies
 DefaultServiceConfiguration rows into TenantServiceConfiguration for the
-tenant (the tenant&#39;s entire service/module configuration baseline).</li>
-<li>transfer.transfer_fiscal_essence(tenant_id) (1181-1183) — creates the
+tenant (the tenant&#39;s entire service/module configuration baseline;
+data_transfer.py:88).</li>
+<li>transfer.transfer_fiscal_essence(tenant_id) (1194-1196) — creates the
 tenant&#39;s active TenantFiscalYear (+ currency/datepicker essence) and
-returns serialized FY data.</li>
-<li>transfer_payment_terms (1184), transfer_cost_terms (1185),
-transfer_tds_type (1186).</li>
+returns serialized FY data (data_transfer.py:408).</li>
+<li>transfer_payment_terms (1197), transfer_cost_terms (1198),
+transfer_tds_type (1199).</li>
 <li>Optional ?mannual_transfer → POST the FY to IAM
-<code>api/tenant/update-fiscal-year/</code> (1188-1208, APILinks.UPDATE_TENANT_FY,
+<code>api/tenant/update-fiscal-year/</code> (1201-1221, APILinks.UPDATE_TENANT_FY,
 helpers.py:47-49,113).</li>
-<li>All three core transfers must succeed (1210) → then for eBilling tenants
+<li>All three core transfers must succeed (1223) → then for eBilling tenants
 rewrites UNIQUE_ID + PRINT_TEMPLATE config values with company prefix /
-FY suffix (1219-1261).</li>
-<li>Response 200 <code>{message, data: &lt;serialized FY data&gt;}</code> (1263-1269) —
+FY suffix (1232-1275).</li>
+<li>Response 200 <code>{message, data: &lt;serialized FY data&gt;}</code> (1277-1283) —
 TMS stores data in ExternalTenantLink.fiscal_year as the &quot;transferred&quot;
-marker. Any failure → 500 SERVER_EXCEPTION (1271).</li>
+marker. Any failure → 500 SERVER_EXCEPTION (1285).</li>
 </ol>
 <h3 id="6-4-post-api-dashboard-tenant-fy-essence-internal-many-callers">6.4 POST /api/dashboard/tenant-fy-essence/  (internal, many callers)</h3>
-<p>View: TenantFYEssenceExposeView (dashboard/views.py:1321-1420). Auth:
-internal password check (1325-1328). Returns for a tenant (or all tenants):
-active-or-pk TenantFiscalYear + TenantDatepicker + TenantCurrency (1339-1410);
-all=true returns the batch (1362-1403). Callers (evidence §9): IAM
+<p>View: TenantFYEssenceExposeView (dashboard/views.py:1335-1438). Auth:
+internal password check (1339-1342). Returns for a tenant (or all tenants):
+active-or-pk TenantFiscalYear + TenantDatepicker + TenantCurrency (1343-1426);
+all=true returns the batch incl. the previous locked FY (1377-1415). Callers (evidence §9): IAM
 (heimer_auth/helpers.py:43-45,77-79), TMS (helpers.py:165), Sales
 (helper.py:165), CDXE (helpers.py:32,48), Payment-Service (helpers.py:26).</p>
 <h3 id="6-5-post-api-dashboard-transfer-fiscal-year-internal-iam-caller">6.5 POST /api/dashboard/transfer-fiscal-year/  (internal, IAM caller)</h3>
-<p>View: CreateTenantFiscalYear (dashboard/views.py:1284-1318). Auth:
+<p>View: CreateTenantFiscalYear (dashboard/views.py:1298-1332). Auth:
 InternalRequestPermission. Body {tenant_id, for_normal_user?}: if not
-for_normal_user, runs transfer_fiscal_essence first (1297-1303) then returns
-the active FY serialized (1304-1312). Called by IAM
+for_normal_user, runs transfer_fiscal_essence first (1311-1317) then returns
+the active FY serialized (1318-1326). Called by IAM
 (heimer_auth/helpers.py:47-49,80-82). Errors: missing tenant_id → 400
-(1292-1296); FY not transferred → 400 FISCAL_YEAR_NOT_TRANSFERED (1300-1303).</p>
+(1306-1310); FY not transferred → 400 FISCAL_YEAR_NOT_TRANSFERED (1313-1317).</p>
 <h3 id="6-6-post-api-sanitization-form-data-internal-name-sanitize">6.6 POST /api/sanitization/form-data/  (internal, name sanitize)</h3>
 <p>View: SanitizationFormExposeView (sanitization/views.py:114-128). Auth:
 internal password check on (password, data) (117-118). Loads the latest
@@ -628,7 +703,7 @@ eSewa flow; used generally by portal-era services).</p>
 <td>2</td>
 <td>IAM</td>
 <td>POST <a href="http://iam:8000/api/tenant/update-fiscal-year/">http://iam:8000/api/tenant/update-fiscal-year/</a> (helpers.py:47-49,113)</td>
-<td>POST /api/dashboard/data-transfer/?mannual_transfer=... (views.py:1188-1208)</td>
+<td>POST /api/dashboard/data-transfer/?mannual_transfer=... (views.py:1201-1221)</td>
 <td>Push transferred FY to IAM</td>
 <td>Sync (optional flag)</td>
 </tr>
@@ -663,7 +738,7 @@ eSewa flow; used generally by portal-era services).</p>
 <td>3</td>
 <td>TMS-service</td>
 <td>POST /api/dashboard/data-transfer/</td>
-<td>One-time config/COA/FY transfer on external registration</td>
+<td>One-time config/COA/FY transfer on external registration; with mini_app: true only the credit settings row + fiscal year are transferred (views.py:1175-1186)</td>
 <td>TMS custom_functions.py:570-587; tenant_management/views.py:4821-4835</td>
 </tr>
 <tr>
@@ -746,7 +821,7 @@ eSewa flow; used generally by portal-era services).</p>
 </tbody></table>
 </section><section class="sec" data-title="9. Business process walkthrough (non-technical)"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="9-business-process-walkthrough-non-technical">9. Business process walkthrough (non-technical)</h2>
 <h3 id="9-1-a-new-esewa-merchant-s-configuration-appears-out-of-nowhere">9.1 A new eSewa merchant&#39;s configuration appears out of nowhere</h3>
-<p>When the eSewa wallet first registers a merchant (TMS external-register, doc 08 section 5.5), TMS asks this service&#39;s <strong>data-transfer</strong> endpoint to set up the merchant&#39;s company paperwork: a full copy of the platform&#39;s default business rules (who approves what, how invoices number themselves, which accounting account credit posts to, fiscal year, payment terms, cost terms, TDS types). From that moment the merchant&#39;s company has its own configuration rows. When the merchant then opens the miniapp, the app&#39;s startup step quietly calls the federated tenant/miniapp/ endpoint to fetch the master_settings block — inside it sits the credit_settings row: the merchant&#39;s default <strong>credit limit</strong> and <strong>credit period</strong> (how many days a customer has to pay). Every credit feature in the miniapp reads that same row, so one number is the single source of truth.</p>
+<p>When the eSewa wallet first registers a merchant (TMS external-register, doc 08 section 5.5), TMS asks this service&#39;s <strong>data-transfer</strong> endpoint to set up the merchant&#39;s company paperwork. Since delta 0f37ed5 the miniapp variant is deliberately lean: with the mini_app flag the service writes just one configuration row — the master_settings credit_settings row carrying the merchant&#39;s default <strong>credit limit</strong> and <strong>credit period</strong> (taken from the platform default row, or from a hard-coded fallback of credit period 15 / credit limit 100,000 when that default row is missing on older databases) — plus the merchant&#39;s fiscal year. The full ERP paperwork (approval workflows, invoice numbering, accounting accounts, payment terms, cost terms, TDS types) is only transferred for regular ERP tenants. From that moment the merchant&#39;s company has its own configuration rows. When the merchant then opens the miniapp, the app&#39;s startup step quietly calls the federated tenant/miniapp/ endpoint to fetch the master_settings block — inside it sits the credit_settings row: the merchant&#39;s default <strong>credit limit</strong> and <strong>credit period</strong> (how many days a customer has to pay). Every credit feature in the miniapp reads that same row, so one number is the single source of truth.</p>
 <h3 id="9-2-the-merchant-tightens-credit">9.2 The merchant tightens credit</h3>
 <p>In Profile &gt; Credit management the merchant sets &quot;no customer may owe more than Rs 50,000, and must pay within 30 days&quot;. The miniapp posts the new values to the federated detail endpoint; the service validates the login (merchant, active subscription, permission) and updates only that company&#39;s row. There is no push — the next time any credit screen (or the backend credit services) reads the setting, they see the new values. That is what keeps a small merchant&#39;s risk rules simple: change it once, it applies everywhere.</p>
 </section><section class="sec" data-title="10. Unknowns &amp; assumptions"><label class="seckb" title="Include this section in the PDF export"><input type="checkbox"></label><h2 id="10-unknowns-assumptions">10. Unknowns &amp; assumptions</h2>
@@ -764,4 +839,4 @@ eSewa flow; used generally by portal-era services).</p>
 <li>Sales/CDXE/Payment FY reads and PM GL read: docs 04/05/06 section 9 call maps.</li>
 <li>Auth mechanism (federated verify + TOTP on IAM side): doc 02 section 3.2, doc 03.</li>
 </ul>
-</section></article><div class="pagenav"><a class="pn" href="08-tms-registration-config.html"><div class="pn-dir">← Previous</div><div class="pn-name">TMS Registration and Config</div></a><a class="pn next" href="10-events-miniapp.html"><div class="pn-dir">Next →</div><div class="pn-name">Events Miniapp</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-service-identity">1. Service identity</a></li><li class="l2"><a href="#2-url-surface">2. URL surface</a></li><li class="l3"><a href="#2-1-service-configuration-service-configuration-urls-py-mounted-at-code-api-service-configuration-code-urls-py-18">2.1 service_configuration (service_configuration/urls.py) — mounted at &lt;code&gt;/api/service-configuration/&lt;/code&gt; (urls.py:18)</a></li><li class="l3"><a href="#2-2-dashboard-app-endpoints-on-the-miniapp-onboarding-path">2.2 dashboard app endpoints on the miniapp onboarding path</a></li><li class="l2"><a href="#3-auth-mechanism">3. Auth mechanism</a></li><li class="l3"><a href="#3-1-federatedidentityauthentication-the-two-miniapp-views">3.1 FederatedIdentityAuthentication (the two miniapp views)</a></li><li class="l3"><a href="#3-2-other-auth-permission-classes-used-by-this-app">3.2 Other auth/permission classes used by this app</a></li><li class="l2"><a href="#4-data-model">4. Data model</a></li><li class="l2"><a href="#5-how-per-tenant-service-configuration-works">5. How per-tenant service configuration works</a></li><li class="l2"><a href="#6-endpoint-traces">6. Endpoint traces</a></li><li class="l3"><a href="#6-1-get-api-service-configuration-tenant-miniapp-federated">6.1 GET /api/service-configuration/tenant/miniapp/  ★ federated</a></li><li class="l3"><a href="#6-2-get-post-api-service-configuration-tenant-miniapp-detail-pk-federated">6.2 GET/POST /api/service-configuration/tenant/miniapp/detail/{pk}/  ★ federated</a></li><li class="l3"><a href="#6-3-post-api-dashboard-data-transfer-onboarding-called-by-tms">6.3 POST /api/dashboard/data-transfer/  (onboarding, called by TMS)</a></li><li class="l3"><a href="#6-4-post-api-dashboard-tenant-fy-essence-internal-many-callers">6.4 POST /api/dashboard/tenant-fy-essence/  (internal, many callers)</a></li><li class="l3"><a href="#6-5-post-api-dashboard-transfer-fiscal-year-internal-iam-caller">6.5 POST /api/dashboard/transfer-fiscal-year/  (internal, IAM caller)</a></li><li class="l3"><a href="#6-6-post-api-sanitization-form-data-internal-name-sanitize">6.6 POST /api/sanitization/form-data/  (internal, name sanitize)</a></li><li class="l3"><a href="#6-7-post-api-service-configuration-tenant-update-unique-id-configuration">6.7 POST /api/service-configuration/tenant/update-unique-id-configuration/</a></li><li class="l3"><a href="#6-8-post-api-service-configuration-tenant-ensure-configuration-bulk">6.8 POST /api/service-configuration/tenant/ensure-configuration/ (+ bulk)</a></li><li class="l3"><a href="#6-9-post-api-service-configuration-tenant-create-configuration-v1">6.9 POST /api/service-configuration/tenant/create/configuration/ (+ v1)</a></li><li class="l3"><a href="#6-10-post-api-service-configuration-tenant-expose">6.10 POST /api/service-configuration/tenant/expose/</a></li><li class="l2"><a href="#7-cross-service-call-map-outbound-calls-from-this-service">7. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</a></li><li class="l2"><a href="#9-business-process-walkthrough-non-technical">9. Business process walkthrough (non-technical)</a></li><li class="l3"><a href="#9-1-a-new-esewa-merchant-s-configuration-appears-out-of-nowhere">9.1 A new eSewa merchant's configuration appears out of nowhere</a></li><li class="l3"><a href="#9-2-the-merchant-tightens-credit">9.2 The merchant tightens credit</a></li><li class="l2"><a href="#10-unknowns-assumptions">10. Unknowns &amp; assumptions</a></li><li class="l2"><a href="#11-cross-references">11. Cross-references</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>
+</section></article><div class="pagenav"><a class="pn" href="08-tms-registration-config.html"><div class="pn-dir">← Previous</div><div class="pn-name">TMS Registration and Config</div></a><a class="pn next" href="10-events-miniapp.html"><div class="pn-dir">Next →</div><div class="pn-name">Events Miniapp</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#1-service-identity">1. Service identity</a></li><li class="l2"><a href="#2-url-surface">2. URL surface</a></li><li class="l3"><a href="#2-1-service-configuration-service-configuration-urls-py-mounted-at-code-api-service-configuration-code-urls-py-18">2.1 service_configuration (service_configuration/urls.py) — mounted at &lt;code&gt;/api/service-configuration/&lt;/code&gt; (urls.py:18)</a></li><li class="l3"><a href="#2-2-dashboard-app-endpoints-on-the-miniapp-onboarding-path">2.2 dashboard app endpoints on the miniapp onboarding path</a></li><li class="l2"><a href="#3-auth-mechanism">3. Auth mechanism</a></li><li class="l3"><a href="#3-1-federatedidentityauthentication-the-two-miniapp-views">3.1 FederatedIdentityAuthentication (the two miniapp views)</a></li><li class="l3"><a href="#3-2-other-auth-permission-classes-used-by-this-app">3.2 Other auth/permission classes used by this app</a></li><li class="l3"><a href="#3-3-tds-type-and-cost-term-permission-enforcement-delta-0f37ed5">3.3 TDS type and cost term permission enforcement (delta 0f37ed5)</a></li><li class="l2"><a href="#4-data-model">4. Data model</a></li><li class="l2"><a href="#5-how-per-tenant-service-configuration-works">5. How per-tenant service configuration works</a></li><li class="l2"><a href="#6-endpoint-traces">6. Endpoint traces</a></li><li class="l3"><a href="#6-1-get-api-service-configuration-tenant-miniapp-federated">6.1 GET /api/service-configuration/tenant/miniapp/  ★ federated</a></li><li class="l3"><a href="#6-2-get-post-api-service-configuration-tenant-miniapp-detail-pk-federated">6.2 GET/POST /api/service-configuration/tenant/miniapp/detail/{pk}/  ★ federated</a></li><li class="l3"><a href="#6-3-post-api-dashboard-data-transfer-onboarding-called-by-tms">6.3 POST /api/dashboard/data-transfer/  (onboarding, called by TMS)</a></li><li class="l3"><a href="#6-4-post-api-dashboard-tenant-fy-essence-internal-many-callers">6.4 POST /api/dashboard/tenant-fy-essence/  (internal, many callers)</a></li><li class="l3"><a href="#6-5-post-api-dashboard-transfer-fiscal-year-internal-iam-caller">6.5 POST /api/dashboard/transfer-fiscal-year/  (internal, IAM caller)</a></li><li class="l3"><a href="#6-6-post-api-sanitization-form-data-internal-name-sanitize">6.6 POST /api/sanitization/form-data/  (internal, name sanitize)</a></li><li class="l3"><a href="#6-7-post-api-service-configuration-tenant-update-unique-id-configuration">6.7 POST /api/service-configuration/tenant/update-unique-id-configuration/</a></li><li class="l3"><a href="#6-8-post-api-service-configuration-tenant-ensure-configuration-bulk">6.8 POST /api/service-configuration/tenant/ensure-configuration/ (+ bulk)</a></li><li class="l3"><a href="#6-9-post-api-service-configuration-tenant-create-configuration-v1">6.9 POST /api/service-configuration/tenant/create/configuration/ (+ v1)</a></li><li class="l3"><a href="#6-10-post-api-service-configuration-tenant-expose">6.10 POST /api/service-configuration/tenant/expose/</a></li><li class="l2"><a href="#7-cross-service-call-map-outbound-calls-from-this-service">7. Cross-service call map (outbound calls from this service)</a></li><li class="l2"><a href="#8-inbound-callers-with-evidence">8. Inbound callers (with evidence)</a></li><li class="l2"><a href="#9-business-process-walkthrough-non-technical">9. Business process walkthrough (non-technical)</a></li><li class="l3"><a href="#9-1-a-new-esewa-merchant-s-configuration-appears-out-of-nowhere">9.1 A new eSewa merchant's configuration appears out of nowhere</a></li><li class="l3"><a href="#9-2-the-merchant-tightens-credit">9.2 The merchant tightens credit</a></li><li class="l2"><a href="#10-unknowns-assumptions">10. Unknowns &amp; assumptions</a></li><li class="l2"><a href="#11-cross-references">11. Cross-references</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="assets/site.js"></script></body></html>

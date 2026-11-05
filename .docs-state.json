@@ -1,14 +1,14 @@
 {
   "version": 1,
-  "updated": "2026-11-04",
-  "note": "Seeded from local checkouts in E:/Work (the exact code the docs were traced against). Prefix matching is fine; the watcher normalizes to full SHAs on its first run.",
+  "updated": "2026-11-05",
+  "note": "Seeded from local checkouts in E:/Work (the exact code the docs were traced against). Prefix matching is fine; the watcher normalizes to full SHAs on its first run. 2026-11-05 sync: IAM, Sales, ERP-Projectmaster, TMS, Configuration, events moved - docs 03/04/06/08/09/10 + derived 11/12/13 re-verified and rebuilt.",
   "site": "https://providhydev.github.io/Documentations/esewa-miniapp-docs/",
   "docsDir": "esewa-miniapp-docs",
   "repos": {
     "ProvidhyDev/IAM-Backend": {
       "path": "E:/Work/IAM-Backend",
       "branch": "production",
-      "sha": "81493132b90a",
+      "sha": "9de19ae7b9c66e0cee82cf8dce9f686381ee5dc2",
       "docs": [
         "03-iam-federated-identity"
       ]
@@ -16,7 +16,7 @@
     "ProvidhyDev/Sales": {
       "path": "E:/Work/Sales",
       "branch": "production",
-      "sha": "b18a5124bfe3",
+      "sha": "a7fdde2d55d0ba94a80404eb7b4e39ecf2b0aa14",
       "docs": [
         "04-sales-miniapp"
       ]
@@ -32,7 +32,7 @@
     "ProvidhyDev/ERP-Projectmaster": {
       "path": "E:/Work/ERP-Projectmaster",
       "branch": "production",
-      "sha": "e8c37ee0ef24",
+      "sha": "26cb555392e47c87147c28edb1127673ab5c330f",
       "docs": [
         "06-projectmaster-miniapp"
       ]
@@ -48,7 +48,7 @@
     "ProvidhyDev/TMS-service": {
       "path": "E:/Work/TMS-service",
       "branch": "production",
-      "sha": "38cf8e00c82c",
+      "sha": "0eeedb37eb949d88884aff8406d95bff2e91e407",
       "docs": [
         "08-tms-registration-config"
       ]
@@ -56,7 +56,7 @@
     "ProvidhyDev/Configuration-Service": {
       "path": "E:/Work/Configuration-Service",
       "branch": "production",
-      "sha": "9a4929b40c39",
+      "sha": "0f37ed5bc3896ecf0ffd6cd8dfe96a56bb6a9762",
       "docs": [
         "09-configuration-service"
       ]
@@ -64,7 +64,7 @@
     "ProvidhyDev/events": {
       "path": "E:/Work/events",
       "branch": "production",
-      "sha": "916cf2797128",
+      "sha": "b6aa069fdd7fd2758789a1b381dfe167dbb0c9fb",
       "docs": [
         "10-events-miniapp"
       ]
