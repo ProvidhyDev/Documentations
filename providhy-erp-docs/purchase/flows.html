@@ -1,0 +1,1546 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Purchase - Business Flows (Traced) - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc current" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced)</h1>
+<p>At runtime the Purchase service is the purchase-side transaction engine of the ERP. It owns seven document types - requisition, purchase order, purchase invoice, purchase return, supplier payment, cheque (a flag on the supplier payment row) and expense entry - and every document lives the same lifecycle: draft, submitted_for_approval, approved, plus the escape hatches cancelled and rejected. A single status endpoint per document type drives all state changes; which transitions are legal is decided at request time by the tenant&#39;s approval-work configuration fetched from the Configuration service (BASIC flow with an approver role, or CUSTOM flow with compulsion checks), and the per-action permission (add_edit vs approve_cancel) is decided before that, by the IAM permission check. The stock ledger does not live here: approving or cancelling an invoice or return moves stock by calling the ProductManagement service over internal password-gated HTTP endpoints, and the accounting journal is posted by the Accounting service, called through Celery tasks (which in several places run synchronously in the request thread). Every state change emits an activity log through the Events service, with a notification on submit and reject; most transitions also emit a Kafka record through the Kafka producer service - the supplier payment and cheque endpoints are the exception and emit no Kafka at all.</p>
+<p>Citations are relative to the service repo root at sha ad05cc9b47e36020b61ac46ed701781aeefbf7d3.</p>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>Catalog: 108 routes, 79 latest, 29 superseded (catalog/Purchase.json). The GRN and GRN-return apps (16 latest routes) are out of scope per the confirmed exclusions; the eSewa miniapp / federated domain does not exist in this service (zero matches for miniapp, federated or esewa in the source tree), so no miniapp rows are listed. Superseded routes are listed one line each; the invoice and return v1 lifecycle routes are marked superseded in the catalog but are still live in urls.py and are the only implementation of those flows, so they are deep-traced in their sections and flagged.</p>
+<p>Auth shorthand: IAM = IAMAuthenticationBackendPurchase (dashboard/auth_backends.py:25-58); perm = HasPermission (dashboard/auth_backends.py:74-134) with the feature/action pair; internal = shared internal password in query or body (InternalRequestPermission, auth_backends.py:137-148, or validate_internal_pass in the view body). Features (dashboard/choices.py:173-181): requisition PR1101, order PR1102, invoice PR1105, return PR1106, payment PR1107, expense PR1108; cheques use the accounting feature PR1308 (cheque/views.py:629).</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Endpoint(s)</th>
+<th>Method</th>
+<th>Class</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Requisition</td>
+<td>/api/purchase/requisition/</td>
+<td>GET</td>
+<td>READ</td>
+<td>list for a status, user-scoped rows (views.py:40-57)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/api/purchase/requisition/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>create; header and items sanitized via Configuration; no journal, no events, no Kafka at create (views.py:59-89)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/detail/</td>
+<td>GET</td>
+<td>READ</td>
+<td>detail with row visibility (views.py:112-133)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/detail/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>update; deletes and re-creates all line items (views.py:134-169)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/detail-no-perm/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only, no feature-permission gate (views.py:170-200)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/delete/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>draft-only, creator-only delete (views.py:202-250)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>submit / approve / cancel - section below</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>reject or revert to draft - section below</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>filtered search (views.py:646-694)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>approved-requisition picker, IAM only (views.py:695-734)</td>
+</tr>
+<tr>
+<td>Requisition</td>
+<td>/list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>internal password; flat list for accounting (views.py:736-753)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/purchase/order/</td>
+<td>GET</td>
+<td>READ</td>
+<td>list for a status (views.py:46-64)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/purchase/order/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>create; header and item totals computed, grn_count and invoice_count seeded to the line quantity (views.py:65-96, serializers.py:428-494)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/detail/</td>
+<td>GET</td>
+<td>READ</td>
+<td>detail (views.py:119-138)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/detail/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>update; item diffing keeps existing line ids (views.py:140-178, serializers.py:496-570)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/detail-no-perm/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only (views.py:179-209)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/delete/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>draft-only delete (views.py:210-248)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>submit / approve / cancel - section below</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>reject or revert - section below</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>search with supplier enrichment (views.py:707-764)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>approved-order picker (views.py:765-814)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>internal password; accounting (views.py:815-842)</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/report-po/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>approved orders by fiscal-year date range for reports (views.py:843-881)</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/purchase/invoice/v2/</td>
+<td>GET</td>
+<td>READ</td>
+<td>latest list (views.py:141-158); v1 list route superseded</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/purchase/invoice/v2/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>latest create; payment_allocations stored as JSON on the row, no journal at create (views.py:160-220, serializers.py:1391-1678)</td>
+</tr>
+<tr>
+<td>Invoice (superseded, live)</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>v1 status change - still the only live implementation, traced in the section below (views.py:623-1315)</td>
+</tr>
+<tr>
+<td>Invoice (superseded, live)</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>v1 reject/revert - traced in the section below (views.py:1317-1436)</td>
+</tr>
+<tr>
+<td>Invoice (superseded)</td>
+<td>/  /detail/  /detail-no-perm/  /delete/  /search/</td>
+<td>GET/POST</td>
+<td>READ / RECORD</td>
+<td>v1 list, detail/update, detail-no-perm, delete, search (views.py:44-547, 1439-1512)</td>
+</tr>
+<tr>
+<td>Invoice (superseded)</td>
+<td>/list/  /approval-list/  /approval-list-notification/  /ageing/  /ageing-v2/  /annex-report/  /detail-cheque/  /list-count/  /recent-transaction/ family</td>
+<td>GET</td>
+<td>READ / OPS</td>
+<td>internal-password S2S reads for accounting, reports, notification screens, ageing (views.py:1513-2098)</td>
+</tr>
+<tr>
+<td>Invoice (superseded)</td>
+<td>/update-remaining-amount/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>bulk fix of remaining_amount; NO authentication and NO permission class at all (views.py:1687-1719) - flagged</td>
+</tr>
+<tr>
+<td>Return</td>
+<td>/api/purchase/return/v2/</td>
+<td>GET</td>
+<td>READ</td>
+<td>latest list (views.py:133-150)</td>
+</tr>
+<tr>
+<td>Return</td>
+<td>/api/purchase/return/v2/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>latest create (views.py:152-203)</td>
+</tr>
+<tr>
+<td>Return (superseded, live)</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>v1 status change - only live implementation, traced below (views.py:375-848)</td>
+</tr>
+<tr>
+<td>Return (superseded, live)</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>v1 reject/revert - traced below (views.py:882-995)</td>
+</tr>
+<tr>
+<td>Return (superseded)</td>
+<td>/  /detail/  /detail-no-perm/  /delete/  /search/  /search/select/  /list/</td>
+<td>GET/POST</td>
+<td>READ / RECORD</td>
+<td>v1 list, detail/update, no-perm detail, delete, search, picker, accounting list (views.py:39-374, 996-1174)</td>
+</tr>
+<tr>
+<td>Return (superseded)</td>
+<td>/debug/redis/kafka/  /debug/redis/kafka/clear/</td>
+<td>GET/DELETE</td>
+<td>OPS</td>
+<td>debug read/clear of the Redis Kafka queue; no auth class (views.py:849-878) - flagged</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/api/purchase/payment/</td>
+<td>GET</td>
+<td>READ</td>
+<td>list for a status (views.py:64-84)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/api/purchase/payment/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>create with supplier, source account, TDS and bank-charge rules (views.py:85-125, serializers.py:51-263)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/detail/</td>
+<td>GET</td>
+<td>READ</td>
+<td>detail (views.py:127-190)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/detail/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>update draft (views.py:191-231)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/delete/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>draft-only delete (views.py:232-285)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>submit / approve / cancel - section below</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>reject or revert - section below (views.py:872-978)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>search with supplier and account enrichment (views.py:286-388)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/supplier-invoice-list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>payable invoices and expenses for a supplier plus advance summary (views.py:389-546)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/quick/frontend/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>quick payment from the invoice or expense screen - creates an APPROVED payment and its journal directly (views.py:979-1130)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/get-fetch-supplier-payments-internal/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>fetch payments by ids, internal (views.py:1137-1153)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/quick-payment-check/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>is_quick_payment flag check, internal (views.py:1154-1174)</td>
+</tr>
+<tr>
+<td>Payment</td>
+<td>/get-supplier-advance/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>supplier advance summary, internal (views.py:1175-1231)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/purchase/cheque/</td>
+<td>GET</td>
+<td>READ</td>
+<td>cheque list (cheque/views.py:40-184)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/purchase/cheque/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>create - a cheque is a SupplierPayment row with is_cheque (cheque/views.py:40-184, models via supplier_payment)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/detail/</td>
+<td>GET</td>
+<td>READ</td>
+<td>detail (cheque/views.py:185-313)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/detail/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>update draft (cheque/views.py:185-313)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/delete/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>draft-only delete (cheque/views.py:592-611)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>record status plus cheque settlement status (cleared / bounced / void) - section below</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/cancel-submission/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>reject or revert - section below (cheque/views.py:1092-1185)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>merged cheque search (cheque/views.py:383-484)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/delete-internal/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>internal delete used by the sales-side cheque flow (cheque/views.py:612-624)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/modify-cheque/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>internal cheque modification (cheque/views.py, urls.py)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/notf-issued-due-date/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>near-due issue-date list, internal (cheque/views.py:485-548)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/api/purchase/expense/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>create with attachment validation (expense/views.py:116-151)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/detail/<id>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>detail (expense/views.py:237-255, 275-279)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/detail/<id>/</td>
+<td>POST/PUT/PATCH</td>
+<td>RECORD</td>
+<td>draft edit (expense/views.py:237-274)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/delete/<id>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>draft-only delete (expense/views.py:347-370)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/status/<id>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>submit / approve / cancel / reject - section below (expense/views.py:431-454)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/cancel-submission/<id>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>reject or revert - section below (expense/views.py:375-428)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>filtered search (expense/views.py:154-199)</td>
+</tr>
+<tr>
+<td>Expense</td>
+<td>/check-reference/</td>
+<td>POST</td>
+<td>READ</td>
+<td>duplicate invoice-reference pre-flight check (expense/views.py:561-586)</td>
+</tr>
+<tr>
+<td>GRN</td>
+<td>/api/purchase/grn/ - 8 routes</td>
+<td>all</td>
+<td>EXCLUDED</td>
+<td>GRN family not used in ProvidhyERP - not documented, not traced</td>
+</tr>
+<tr>
+<td>GRN return</td>
+<td>/api/purchase/grn-return/ - 8 routes</td>
+<td>all</td>
+<td>EXCLUDED</td>
+<td>GRN family not used in ProvidhyERP - not documented, not traced</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/analytics/</td>
+<td>GET</td>
+<td>READ</td>
+<td>counts for the purchase dashboard (dashboard/views.py:124-285)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/approval-list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>submissions due for the user, S2S (dashboard/views.py:82-123)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/choice-list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>static choice lists (dashboard/views.py:404-423)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/get-total-payment/</td>
+<td>GET</td>
+<td>READ</td>
+<td>total paid against a reference, S2S (dashboard/views.py:938-965)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/purchase-recent-txn-party/</td>
+<td>GET</td>
+<td>READ</td>
+<td>recent transactions per party, S2S (dashboard/views.py:966-1014)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/recent-transaction/v2/</td>
+<td>GET</td>
+<td>READ</td>
+<td>document timeline for a product, S2S (dashboard/views.py:524-670); v1 route superseded</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/add-fiscal-year/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>stamp fiscal year onto all purchase documents, internal (dashboard/views.py:671-699)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/check-reconciliation/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>resend unsynced approved documents to the Kafka consumer, internal (dashboard/views.py:700-937)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/tenant-data-deletion/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>destructive tenant wipe, internal (dashboard/views.py:294-403)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/log-viewer/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>log file reader, internal (dashboard/views.py:1015-1074)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>/api/dashboard/qa/bulk-create/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>QA bulk test-data factory (dashboard/views.py:1075+)</td>
+</tr>
+<tr>
+<td>Root</td>
+<td>/swagger/  /redoc/</td>
+<td>GET</td>
+<td>READ</td>
+<td>drf-yasg API docs, AllowAny (core/urls.py:20, 40-44)</td>
+</tr>
+<tr>
+<td>Root</td>
+<td>/sentry-debug/</td>
+<td>all</td>
+<td>DEAD</td>
+<td>commented out in core/urls.py:50-51 - catalog artifact</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>none</td>
+<td>-</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>no federated / eSewa miniapp routes exist in this service (grep of source: 0 matches); nothing to list</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Requisition - status and cancel-submission"><h2 id="requisition-status-and-cancel-submission">Requisition - status and cancel-submission</h2>
+<p>What happens: one POST endpoint moves a requisition through its whole lifecycle. The request body carries the target status (submitted_for_approval, approved or cancelled) and the tenant&#39;s approval-work configuration decides which shape the state machine has: in the BASIC flow the creator submits to a named approval_user and only that user can approve, the creator can self-approve a draft, and approved requisitions can be cancelled by anyone in the tenant; in the CUSTOM flow only approve (from draft or submitted) and cancel-of-approved are legal, each guarded by a compulsion check. Submit and approve re-validate every product against the ProductManagement service before touching the row. A second endpoint, cancel-submission, sends a submitted requisition back to draft either as a plain revert (creator only) or as a rejection (anyone else, with comment, rejected flag and an error notification). There is no journal, no stock and no Kafka on the Kafka side of things except the record events - the requisition is a paper document.</p>
+<h3 id="trace-post-api-purchase-requisition-status-pk">Trace (POST /api/purchase/requisition/status/<pk>/)</h3>
+<ol>
+<li>Auth: IAMAuthenticationBackendPurchase validates the token via IAM POST {IAM}api/token/verify/ (dashboard/auth_backends.py:25-58, 61-71); HasPermission then denies non-GET on an expired subscription, passes tenant_root, otherwise GETs {IAM}api/internal-check-permissions/ and requires feature PR1101 plus the action for the call (dashboard/auth_backends.py:102-134). initial() sets the action: anything other than submit requires approve_cancel (purchase/purchase_requisition/views.py:258-266).</li>
+<li>The row is fetched tenant-scoped, 400-style ValidationError when missing (views.py:268-277).</li>
+<li>Inside one atomic, the tenant&#39;s APPROVAL_WORK/FLOW configuration is fetched from the Configuration service; missing configuration is a 503 (views.py:280-317, dashboard/send_request.py:26-46, dashboard/helper.py:109).</li>
+<li>BASIC flow routing: submit only from draft; approve from submitted only when the caller is the approval_user, or from draft only when the caller is the entry_by, with the compulsion check (compulsion=true means &quot;must be submitted first&quot;) on both approve branches; cancel from submitted only by the approval_user, or from approved by anyone (views.py:319-357, dashboard/helper.py:816-821).</li>
+<li>CUSTOM flow routing: approve from any state except cancelled, cancel only from approved; both go through the custom compulsion check (compulsion=true means &quot;must be draft first&quot;) (views.py:300-317, dashboard/helper.py:824-829).</li>
+<li>Submit: every item&#39;s product is re-validated in one ProductManagement check-multiple call (views.py:360-372, dashboard/helper.py:525-529, dashboard/helper.py:138); the approval fields are set, the rejection fields cleared, row saved (views.py:374-382); then a BASIC notification to the approval_user, an activity log, and a Kafka record with the full KafkaPurchaseRequisitionSerializerForRecord payload (views.py:384-412, dashboard/custom_functions.py:30-52, 55-74, dashboard/kafka_function.py:47-79, purchase/purchase_requisition/serializers.py:325-349).</li>
+<li>Approve: same product re-validation; approved_by/date/time/comment set, rejection cleared, saved (views.py:418-442); activity log plus a Kafka approval record (views.py:444-464). No notification on approve.</li>
+<li>Cancel: related purchase orders that are approved or submitted block the cancel (views.py:470-490); otherwise cancelled_by/date/comment set, saved; activity log plus a minimal Kafka cancel message (id, unique_id, transaction_type) (views.py:491-524).</li>
+</ol>
+<h3 id="trace-post-api-purchase-requisition-cancel-submission-pk">Trace (POST /api/purchase/requisition/cancel-submission/<pk>/)</h3>
+<ol>
+<li>Auth: same backend, feature PR1101, action pinned to VIEW even for POST (views.py:527-536) - the role rules are enforced in the body instead.</li>
+<li>Only a submitted row can be touched (views.py:556-567).</li>
+<li>Rejection branch (type=rejection, caller not the creator): status back to draft, rejected flag/comment/by/date set, approval fields cleared; activity log, an ERROR notification, and a Kafka record carrying the REJECTED status value (views.py:568-603).</li>
+<li>Revert branch (no type, caller is the creator): status back to draft, approval fields cleared; activity log and a Kafka record - which is also stamped with the REJECTED status value even though the HTTP answer says reverted (views.py:605-629).</li>
+<li>Any other combination (wrong user, wrong type, not submitted) is a 400 (views.py:631-642).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Events service: notification on submit and rejection, activity log on every transition (dashboard/custom_functions.py:30-52, 55-74, dashboard/helper.py:105-106).</li>
+<li>Kafka producer: full record on submit and approve, minimal id message on cancel and rejection (dashboard/kafka_function.py:47-79).</li>
+<li>ProductManagement: product check-multiple on submit and approve (dashboard/helper.py:138).</li>
+<li>Configuration: approval-work configuration read on every status call (dashboard/helper.py:109).</li>
+<li>No journal, no stock movement, no supplier ledger change.</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create
+    draft --&gt; submitted : submit for approval
+    draft --&gt; approved : self approve, custom flow
+    submitted --&gt; approved : approver approves
+    submitted --&gt; draft : creator reverts
+    submitted --&gt; draft : rejected, by approver
+    approved --&gt; cancelled : cancel
+    rejected --&gt; draft : rejected stays draft with rejected flag
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status] --&gt; B{tenant flow config}
+    B --&gt;|none| E[503 service unavailable]
+    B --&gt;|BASIC| C{target status}
+    C --&gt;|submit from draft| S[validate products, set approver, notify, log, kafka]
+    C --&gt;|approve from submitted| D{caller is approval user}
+    D --&gt;|yes| AP[compulsion check, approve, log, kafka]
+    D --&gt;|no| X[invalid approve request]
+    C --&gt;|approve from draft| F{caller is entry by}
+    F --&gt;|yes| AP
+    C --&gt;|cancel| G{current status}
+    G --&gt;|submitted| H{caller is approval user}
+    H --&gt;|yes| CN[check linked orders, cancel, log, kafka]
+    G --&gt;|approved| CN
+    G --&gt;|other| Y[invalid cancel request]
+    B --&gt;|CUSTOM| I{target status}
+    I --&gt;|approve| J[compulsion check, approve]
+    I --&gt;|cancel from approved| K[check linked orders, cancel]
+    I --&gt;|other| Z[invalid status]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP frontend
+    participant PU as Purchase
+    participant CFG as Configuration
+    participant PM as ProductManagement
+    participant EV as Events
+    participant KF as Kafka producer
+    FE-&gt;&gt;PU: POST status submitted_for_approval
+    PU-&gt;&gt;CFG: get approval work flow config
+    CFG--&gt;&gt;PU: BASIC flow
+    PU-&gt;&gt;PM: product check multiple for all items
+    PM--&gt;&gt;PU: products valid
+    PU-&gt;&gt;PU: save submitted row
+    PU-&gt;&gt;EV: create notification for approver
+    PU-&gt;&gt;EV: create activity log
+    PU-&gt;&gt;KF: submit for approval record with full payload
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Submit when already submitted</td>
+<td>400 unknown status from the basic-flow router</td>
+<td>views.py:322-326</td>
+</tr>
+<tr>
+<td>Approve from submitted by anyone but the approval_user</td>
+<td>400 invalid approve request</td>
+<td>views.py:329-340</td>
+</tr>
+<tr>
+<td>Approve a draft by its creator (BASIC)</td>
+<td>allowed, compulsion checked</td>
+<td>views.py:333-338</td>
+</tr>
+<tr>
+<td>Approve with compulsion=true in BASIC</td>
+<td>rejected unless the row is submitted</td>
+<td>views.py:331-332, dashboard/helper.py:816-821</td>
+</tr>
+<tr>
+<td>Approve with compulsion=true in CUSTOM</td>
+<td>rejected unless the row is still draft</td>
+<td>views.py:304-309, dashboard/helper.py:824-829</td>
+</tr>
+<tr>
+<td>Cancel a requisition with an active order</td>
+<td>blocked with a validation error</td>
+<td>views.py:470-490</td>
+</tr>
+<tr>
+<td>Cancel in the CUSTOM flow</td>
+<td>only legal from approved</td>
+<td>views.py:310-314</td>
+</tr>
+<tr>
+<td>Revert a submitted row as the creator</td>
+<td>back to draft, message says reverted, but the Kafka record is stamped rejected</td>
+<td>views.py:605-629</td>
+</tr>
+<tr>
+<td>Rejection by the creator himself</td>
+<td>falls into the 400 branch - only a non-creator can reject</td>
+<td>views.py:568, 631-634</td>
+</tr>
+<tr>
+<td>Delete after submission</td>
+<td>400, only drafts of the entry_by are deletable</td>
+<td>views.py:214-250</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Order - status and cancel-submission"><h2 id="order-status-and-cancel-submission">Order - status and cancel-submission</h2>
+<p>What happens: the purchase order follows the same lifecycle engine as the requisition, with two additions. First, an order can be created against an approved requisition, in which case every state transition re-runs the requisition quantity math - approving or cancelling must keep the requisition item&#39;s remaining counter and used_status consistent. Second, an order is the anchor document of the receiving chain: cancelling it is blocked while any GRN or purchase invoice against it is still approved or submitted. Approving an order that came from a requisition also consumes the requisition item&#39;s remaining quantity. No stock moves and no journal is posted from the order endpoints - stock-in happens later at invoice (or GRN) approval.</p>
+<h3 id="trace-post-api-purchase-order-status-pk">Trace (POST /api/purchase/order/status/<pk>/)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1102, approve_cancel for anything but submit (purchase/purchase_order/views.py:249-262).</li>
+<li>Tenant-scoped fetch (views.py:264-271); fiscal-year check on po_date is commented out (views.py:305).</li>
+<li>Configuration fetch, 503 when absent (views.py:298-340, dashboard/send_request.py:26-46).</li>
+<li>BASIC submit: when an order has a requisition, each item&#39;s quantity is validated against the requisition item&#39;s remaining (validation_check.py:31-46) and the requisition used_status is recomputed (validation_check.py:7-28); without a requisition, each product is validated via ProductManagement (views.py:414-482); approval fields set, rejection cleared, saved; notification to the approver, activity log, Kafka record with full payload (views.py:414-482).</li>
+<li>BASIC approve: from submitted by the approval_user, or from draft by the creator, with the compulsion check; the requisition quantity validation runs again before the approved fields are written; activity log and Kafka (views.py:484-554, 522-554).</li>
+<li>BASIC cancel: check_cancellation refuses the cancel when a GRN or a purchase invoice against the order is approved or submitted (views.py:273-296); from submitted the requisition quantities are rolled back before the cancel (views.py:555-564, 565-591); from approved the same rollback then the cancel; activity log and minimal Kafka message.</li>
+<li>CUSTOM flow: approve from any state except cancelled (compulsion checked), cancel only from approved (views.py:321-340).</li>
+</ol>
+<h3 id="trace-post-api-purchase-order-cancel-submission-pk">Trace (POST /api/purchase/order/cancel-submission/<pk>/)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, action pinned to VIEW (views.py:592-601).</li>
+<li>get_object is NOT tenant-scoped - it fetches the order by pk alone (views.py:603-608) - any authenticated user can address another tenant&#39;s order here (flagged).</li>
+<li>Rejection branch (non-creator, submitted): requisition quantities re-validated when the order has a requisition (views.py:610-616, 630-642); rejected flag/comment/by/date set, approval fields cleared, saved; activity log, ERROR notification, Kafka record stamped rejected (views.py:644-668).</li>
+<li>Revert branch (creator, no type): same requisition validation, status back to draft; activity log and a Kafka record also stamped rejected while the answer says reverted (views.py:670-695).</li>
+<li>Anything else is a 400 (views.py:696-703).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Events service: notification on submit and rejection; activity log on every transition (dashboard/custom_functions.py:30-74).</li>
+<li>Kafka: full record on submit and approve, minimal message on cancel and rejection (dashboard/kafka_function.py:47-79).</li>
+<li>ProductManagement: product checks on submit and approve (dashboard/helper.py:513-529).</li>
+<li>Configuration: approval-work config per call.</li>
+<li>Requisition rows: remaining and used_status counters are mutated on submit, approve and cancel when the order is requisition-backed (purchase/purchase_order/validation_check.py:7-65).</li>
+<li>No journal, no stock movement.</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, optional requisition
+    draft --&gt; submitted : submit for approval
+    draft --&gt; approved : self approve
+    submitted --&gt; approved : approver approves
+    submitted --&gt; draft : creator reverts
+    submitted --&gt; draft : rejected by approver
+    approved --&gt; cancelled : cancel, blocked by active grn or invoice
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status cancelled] --&gt; B{active grn on order}
+    B --&gt;|yes| X1[400 cannot cancel, linked to active grn]
+    B --&gt;|no| C{active invoice on order}
+    C --&gt;|yes| X2[400 cannot cancel, linked to active invoice]
+    C --&gt;|no| D{current status}
+    D --&gt;|submitted| E{caller is approval user}
+    E --&gt;|yes| F{order has requisition}
+    E --&gt;|no| X3[invalid cancel]
+    D --&gt;|approved| F
+    F --&gt;|yes| G[rollback requisition quantities, recompute used status]
+    F --&gt;|no| H[set cancelled fields]
+    G --&gt; H
+    H --&gt; I[activity log, minimal kafka message]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP frontend
+    participant PU as Purchase
+    participant PM as ProductManagement
+    participant EV as Events
+    participant KF as Kafka
+    FE-&gt;&gt;PU: POST status approved
+    PU-&gt;&gt;PU: requisition quantity validation
+    PU-&gt;&gt;PM: product check per item
+    PM--&gt;&gt;PU: valid
+    PU-&gt;&gt;PU: save approved row
+    PU-&gt;&gt;EV: activity log
+    PU-&gt;&gt;KF: approval record with full payload
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create against a requisition that is not approved</td>
+<td>400 at create, requisition must exist and be approved</td>
+<td>serializers.py:416-426</td>
+</tr>
+<tr>
+<td>Order line quantity exceeds the requisition item remaining</td>
+<td>400 purchase quantity message</td>
+<td>validation_check.py:31-46</td>
+</tr>
+<tr>
+<td>Cancel with an approved invoice on the order</td>
+<td>blocked</td>
+<td>views.py:286-296</td>
+</tr>
+<tr>
+<td>Cancel with a submitted GRN on the order</td>
+<td>blocked</td>
+<td>views.py:274-284</td>
+</tr>
+<tr>
+<td>Approve from submitted by a user who is not the approval_user</td>
+<td>400 invalid approve request</td>
+<td>views.py:484-500</td>
+</tr>
+<tr>
+<td>Revert an order that belongs to another tenant</td>
+<td>the lookup is not tenant-scoped - the call proceeds (security flag)</td>
+<td>views.py:603-608</td>
+</tr>
+<tr>
+<td>Revert a requisition-backed order</td>
+<td>requisition remaining is restored before the row goes back to draft</td>
+<td>views.py:670-677, validation_check.py:49-65</td>
+</tr>
+<tr>
+<td>Submit without a requisition</td>
+<td>per-item product validation via ProductManagement instead</td>
+<td>views.py:437-449</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Invoice - status, cancel-submission and the quick payment"><h2 id="invoice-status-cancel-submission-and-the-quick-payment">Invoice - status, cancel-submission and the quick payment</h2>
+<p>What happens: the purchase invoice is the heaviest document in the service. The catalog marks the whole v1 invoice family as superseded and lists only /v2/ as latest, but /v2/ exists for list and create only - the status, cancel-submission and delete views are the v1 classes, still registered and still the only implementation of the flow (flagged). Approving an invoice is a cross-service transaction: depending on the tenant&#39;s valuation configuration the stock is valued at this moment (new batches are created in ProductManagement and the stock-in call goes out), the linked purchase order&#39;s remaining-invoice counter is consumed, and - when the tenant has accounting automation configured - the accounting journal is posted by calling the Celery journal task directly in the request thread (not via .delay). Cancelling an approved invoice reverses the order counter and cancels the journal. An approved invoice can also be paid through the quick-payment path, which mints approved supplier payment rows from the payment_allocations JSON stored on the invoice row at create time.</p>
+<h3 id="trace-post-api-purchase-invoice-status-pk-view-at-purchase-purchase-invoice-views-py-623">Trace (POST /api/purchase/invoice/status/<pk>/, view at purchase/purchase_invoice/views.py:623)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1105, approve_cancel for anything but submit (views.py:623-637).</li>
+<li>Tenant-scoped fetch with items prefetched (views.py:639-648); fiscal-year check on entry_date via the Configuration fiscal-info window (views.py:656, dashboard/custom_functions.py:252-285).</li>
+<li>Configuration fetch, 503 when absent (views.py:657-690).</li>
+<li>BASIC submit: from draft only; the linked purchase order must exist and not be cancelled (views.py:755-761, 763-772); each item&#39;s product is validated and its quantity checked against the order item&#39;s remaining invoice_count (views.py:773-790, purchase/purchase_invoice/validation_check.py); approval fields set, rejection cleared, saved; notification to the approver, activity log, Kafka submit record with full payload (views.py:791-820).</li>
+<li>BASIC approve from submitted: caller must be the approval_user and the compulsion must pass (views.py:703-716); then handle_approval - from submitted it runs approval_calc_part and then approved_last_flow (views.py:841-854).</li>
+<li>approval_calc_part (the money path): per item, if the product is batch-kept and the tenant&#39;s PURCHASE_FLOW/FLOW configuration has valuation_feature purchase_invoice, new batches without an id are created through the ProductManagement create-endpoint and the batch_info is rewritten with the new ids and a return_count (views.py:990-1115, 856-972, dashboard/helper.py:103); then the stock-in payload (product, batch id, primary_quantity, entry_status approved) is POSTed to ProductManagement&#39;s purchase-invoice manipulation endpoint v1 or v2 depending on the row&#39;s revamped flag (views.py:1117-1138, dashboard/helper.py:91-97, 1123-1138).</li>
+<li>approved_last_flow: approved_by/date/time/comment written, rejection cleared, saved (views.py:1016-1040); the PURCHASE_FLOW/AUTOMATION configuration is read and when present the journal creation Celery task is called synchronously with the invoice id (views.py:1041-1056); activity log; a dual Kafka call sends the main approval payload and the approval-record payload (views.py:1057-1069, dashboard/kafka_function.py:4-44); if the invoice row has payment_allocations JSON, post_quick_supplier_payment mints one APPROVED quick payment per allocation through the payment serializer, queues each payment&#39;s journal on transaction commit, revalidates the supplier remaining, and logs a payment activity plus success notification (views.py:1071-1077, dashboard/custom_functions.py:288-377).</li>
+<li>BASIC cancel: blocked when a non-quick approved payment is allocated on the invoice items (views.py:1140-1146); from submitted the order counters are rolled back and the row cancelled (views.py:1182-1196); from approved the rollback plus cancellation_calc_part sends the stock-out reversal to ProductManagement with entry_status cancelled (views.py:1163-1196, 1198-1235); cancelled() writes the cancelled fields, cancels the journal via the Celery cancel task when the journal flag is set, logs, and emits the minimal Kafka message (views.py:1236-1270).</li>
+<li>CUSTOM flow: approve from any state except cancelled (compulsion checked), cancel only from approved (views.py:672-688).</li>
+</ol>
+<h3 id="trace-post-api-purchase-invoice-cancel-submission-pk-view-at-views-py-1317">Trace (POST /api/purchase/invoice/cancel-submission/<pk>/, view at views.py:1317)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, action pinned to VIEW (views.py:1317-1327).</li>
+<li>get_object is NOT tenant-scoped (views.py:1329-1336) - same security flag as the order revert.</li>
+<li>Fiscal-year check (views.py:1360).</li>
+<li>Rejection (non-creator, submitted): the linked order counters are rolled back when the order exists and is not cancelled (views.py:1338-1347, 1362-1373); rejected fields set, saved; activity log, ERROR notification, Kafka record stamped rejected (views.py:1375-1399).</li>
+<li>Revert (creator, no type): same order rollback, status back to draft; activity log and Kafka record stamped rejected while the answer says reverted (views.py:1401-1426).</li>
+<li>Anything else is a 400 (views.py:1428-1435).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>ProductManagement: product checks on every transition (dashboard/helper.py:513-529); new batch creation at approve when valuation is at the invoice (views.py:856-972, dashboard/helper.py:103); stock-in at approve and stock-out reversal at cancel of an approved invoice (views.py:990-1138, 1198-1235).</li>
+<li>Accounting service: journal creation task called synchronously at approve when the automation config exists (views.py:1041-1056, purchase/purchase_invoice/tasks.py:40-71, dashboard/journal.py:7-36); journal cancellation task at cancel of a journaled invoice (views.py:1236-1270, tasks.py:104-120, dashboard/journal.py:39-57); failures are parked in the FailedJournalCreation table and retried by the beat task (tasks.py:63-71, 74-101).</li>
+<li>Purchase order: invoice_count remaining counter consumed at submit and approve, restored at cancel and rejection (purchase/purchase_invoice/validation_check.py, views.py:1163-1196).</li>
+<li>Events: notification on submit and rejection, activity log everywhere, plus a payment activity and success notification when quick payments are minted (dashboard/custom_functions.py:30-74, 288-377).</li>
+<li>Kafka: submit/approve emit two messages (main + record), cancel/reject emit one minimal message (dashboard/kafka_function.py:4-79).</li>
+<li>Supplier payments: quick payments minted at approve from the payments JSON field (purchase/purchase_invoice/models.py:113, views.py:1071-1077).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, optional po reference
+    draft --&gt; submitted : submit, po counters consumed
+    draft --&gt; approved : self approve, valuation stock in
+    submitted --&gt; approved : approver approves, stock in, journal
+    submitted --&gt; draft : creator reverts, po counters restored
+    submitted --&gt; draft : rejected by approver, po counters restored
+    approved --&gt; cancelled : cancel, stock out reversal, journal cancel
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status approved] --&gt; B{current status}
+    B --&gt;|draft and caller is entry by| C[po and item quantity checks]
+    B --&gt;|submitted and caller is approval user| D[compulsion check]
+    B --&gt;|other| X[400 unknown status]
+    C --&gt; E[approval calc part]
+    D --&gt; E
+    E --&gt; F{product batch kept}
+    F --&gt;|yes and valuation is purchase invoice| G[create missing batches in product service]
+    F --&gt;|no| H[build stock in payload]
+    G --&gt; H
+    H --&gt; I[post stock in to product management]
+    I --&gt; J[write approved fields]
+    J --&gt; K{accounting automation config}
+    K --&gt;|yes| L[journal task called synchronously]
+    K --&gt;|no| M[no journal]
+    L --&gt; N[activity log, dual kafka]
+    M --&gt; N
+    N --&gt; O{payment allocations json}
+    O --&gt;|yes| P[mint quick payments, journal per payment on commit]
+    O --&gt;|no| Q[done]
+    P --&gt; Q
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status cancelled] --&gt; B{approved non quick payment on items}
+    B --&gt;|yes| X1[400 cannot cancel with approved payment]
+    B --&gt;|no| C{current status}
+    C --&gt;|draft| D[write cancelled fields]
+    C --&gt;|submitted| E{po exists and not cancelled}
+    C --&gt;|approved| F{po exists and not cancelled}
+    C --&gt;|other| X2[400 unknown status]
+    E --&gt;|yes| G[restore po invoice counters]
+    E --&gt;|no| D
+    F --&gt;|yes| G
+    F --&gt;|no| H[stock out reversal to product management]
+    G --&gt; H
+    H --&gt; D
+    D --&gt; I{journal flag set}
+    I --&gt;|yes| J[journal cancellation task]
+    I --&gt;|no| K[activity log, minimal kafka]
+    J --&gt; K
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP frontend
+    participant PU as Purchase
+    participant CFG as Configuration
+    participant PM as ProductManagement
+    participant ACC as Accounting
+    participant EV as Events
+    participant KF as Kafka
+    FE-&gt;&gt;PU: POST status approved
+    PU-&gt;&gt;CFG: purchase flow flow and automation configs
+    CFG--&gt;&gt;PU: valuation and automation
+    PU-&gt;&gt;PM: create missing batches
+    PM--&gt;&gt;PU: new batch ids
+    PU-&gt;&gt;PM: purchase invoice inventory manipulation approved
+    PM--&gt;&gt;PU: stock in done
+    PU-&gt;&gt;ACC: create journal via journal task
+    ACC--&gt;&gt;PU: journal created, journal flag set
+    PU-&gt;&gt;EV: activity log
+    PU-&gt;&gt;KF: approval main and approval record
+    PU-&gt;&gt;PU: mint quick payments from stored allocations
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve a batch product with valuation at the invoice</td>
+<td>missing batches are created in ProductManagement first, then the stock-in call carries the new batch ids</td>
+<td>views.py:990-1115, 856-972</td>
+</tr>
+<tr>
+<td>Approve a batch product with valuation elsewhere</td>
+<td>no batch creation and no stock-in call from this service at approve time</td>
+<td>views.py:990-1005</td>
+</tr>
+<tr>
+<td>Approve with the automation config present</td>
+<td>the journal task runs in the request thread, not in a worker - the request is held open for the Accounting call</td>
+<td>views.py:1041-1056, purchase/purchase_invoice/tasks.py:40-71</td>
+</tr>
+<tr>
+<td>Approve with the automation config absent</td>
+<td>no journal is posted at all</td>
+<td>views.py:1041-1056</td>
+</tr>
+<tr>
+<td>Journal call fails</td>
+<td>the row is parked in FailedJournalCreation for the beat retry, the HTTP answer is still 200</td>
+<td>purchase/purchase_invoice/tasks.py:63-71, 74-101</td>
+</tr>
+<tr>
+<td>Cancel an approved invoice with a journaled entry</td>
+<td>stock-out reversal plus journal cancellation task</td>
+<td>views.py:1198-1270</td>
+</tr>
+<tr>
+<td>Cancel an invoice that has an approved non-quick payment</td>
+<td>400, cancel blocked</td>
+<td>views.py:1140-1146</td>
+</tr>
+<tr>
+<td>Create with payment_allocations over the remaining amount</td>
+<td>400 at create, total allocated may not exceed remaining after TDS</td>
+<td>serializers.py:1519-1561</td>
+</tr>
+<tr>
+<td>Create with quick payments</td>
+<td>the allocations are stored as JSON on the row; payments are minted only when the invoice is approved</td>
+<td>models.py:113, views.py:1071-1077</td>
+</tr>
+<tr>
+<td>Post the same invoice for payment twice via quick payment</td>
+<td>second pass fails the remaining-amount validation in payment_remaining_amount_validation</td>
+<td>purchase/supplier_payment/validation_check.py:59-71</td>
+</tr>
+<tr>
+<td>/update-remaining-amount/ called by anyone</td>
+<td>no auth, no permission - anonymous bulk reset of remaining_amount for unPAID zero-remaining invoices</td>
+<td>views.py:1687-1719</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Return - status, cancel-submission and the invoice ledger"><h2 id="return-status-cancel-submission-and-the-invoice-ledger">Return - status, cancel-submission and the invoice ledger</h2>
+<p>What happens: the purchase return is the supplier-side mirror of the sales return - a credit note against an approved purchase invoice. The same lifecycle engine applies (BASIC or CUSTOM from the Configuration service), with two money-side side effects that set it apart from the order and requisition flows. First, approving or cancelling a return rewrites the referenced invoice&#39;s remaining_amount (minus the grand total on approve, plus on cancel) and emits an extra Kafka record stamped update_remaining on the purchase invoice. Second, approving a return - and cancelling an approved one - moves stock: the stock-out that returns goods to the supplier, but only when the tenant&#39;s PURCHASE_FLOW/FLOW valuation configuration names purchase_invoice; the call goes to the ProductManagement purchase-return manipulation endpoint, v1 or v2 by the row&#39;s revamped flag. When the tenant has a PURCHASE_FLOW/AUTOMATION configuration, the journal is posted by calling the Celery journal task directly in the request thread. Submit is deliberately quiet: product re-checks and quantity validation only - no stock, no journal, no ledger write.</p>
+<h3 id="trace-post-api-purchase-return-status-pk-view-at-purchase-purchase-return-views-py-375">Trace (POST /api/purchase/return/status/<pk>/, view at purchase/purchase_return/views.py:375)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1106, approve_cancel for anything but submit (views.py:375-389).</li>
+<li>Tenant-scoped fetch with ValidationError when missing (views.py:391-396); fiscal-year check on entry_date (views.py:398-405).</li>
+<li>Configuration fetch, 503 when absent (views.py:406-411, 441, dashboard/send_request.py:26-46).</li>
+<li>BASIC routing (views.py:443-473): submit only from draft (446-452); approve after the basic compulsion check - from submitted by the approval_user or from draft by the creator (454-456, 661-673); cancel from submitted by the approval_user or from approved by anyone (458-467); otherwise 400 invalid status (469-473).</li>
+<li>CUSTOM routing (views.py:420-441): approve from any state except cancelled, after the custom compulsion check; cancel only from approved.</li>
+<li>Submit (views.py:603-659): the reference invoice must not be cancelled (605-608); per item a product check via helper.get_product_data plus return-quantity validation against the invoice (610-614); return_check on the invoice (615); approval fields set and rejection cleared (617-625); notification to the approver and activity log (627-641); Kafka PURCHASE_RETURN_SUBMIT_FOR_APPROVAL_RECORD with the full record payload (642-655).</li>
+<li>Approve (views.py:661-794): draft-by-creator runs approved_if_draft - the quantity and invoice checks (708-722) - then approved_last_flow; submitted-by-approver runs approval_calc_part then approved_last_flow (668-771). approval_calc_part builds the stock payload and, only when the PURCHASE_FLOW/FLOW configuration&#39;s valuation_feature is purchase_invoice, POSTs it to the purchase-return inventory manipulation endpoint, v2 when the row is revamped (724-745, 796-816, 824-838). approved_last_flow decrements the invoice remaining and emits the update_remaining Kafka record (749, 680-706); writes the approved fields (751-760); calls the journal creation task synchronously when the PURCHASE_FLOW/AUTOMATION configuration exists (761-768, purchase/purchase_invoice/tasks.py); activity log (770-776); dual Kafka via call_kafka_for_bill (778-790).</li>
+<li>Cancel (views.py:481-601): submitted runs cancelled_roll_back_if_submit - invoice and quantity re-validation, then cancelled() with no stock call (484-486, 516-532); approved runs cancelled_roll_back - the same re-validation plus cancellation_calc_part, the stock-out reversal gated on the valuation config (487-490, 499-571). cancelled() credits the invoice remaining back with the update_remaining Kafka record (575, 680-706), writes the cancelled fields, runs the journal cancellation task when the journal flag is set (577-585), activity log (587-593), minimal Kafka PURCHASE_RETURN_CANCEL (596-601). The draft branch of handle_cancellation (482-483) is unreachable: neither the BASIC router nor the CUSTOM router offers cancel from draft (flagged).</li>
+</ol>
+<h3 id="trace-post-api-purchase-return-cancel-submission-pk-view-at-views-py-882">Trace (POST /api/purchase/return/cancel-submission/<pk>/, view at views.py:882)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1106, action pinned to VIEW (views.py:882-892).</li>
+<li>get_object is NOT tenant-scoped - it fetches by pk alone (views.py:894-899) - the same security flag as the order revert and the invoice cancel-submission.</li>
+<li>Only a submitted row can be touched (views.py:918-929); fiscal-year check on entry_date (928).</li>
+<li>validate_invoice_items re-runs the reference-invoice and quantity checks, clears the submission fields and sets draft (views.py:901-916; called at 931 and 964).</li>
+<li>Rejection (type=rejection, non-creator): rejected flag, comment, by and date; activity log; ERROR notification; Kafka record stamped rejected (views.py:930-961).</li>
+<li>Revert (no type, creator): activity log and a Kafka record also stamped rejected, while the HTTP answer says reverted (views.py:963-982).</li>
+<li>Any other combination is a 400 (views.py:984-992).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>ProductManagement: product check per item on submit, approve and cancel (views.py:610-615, 715-720, 506-511); stock-out on approve when valuation is at the invoice and the stock-out reversal on cancel of an approved return (views.py:724-745, 534-571, 824-838).</li>
+<li>Purchase invoice ledger: remaining_amount decremented on approve and credited back on cancel, each with an extra update_remaining Kafka record on the invoice (views.py:680-706).</li>
+<li>Accounting: journal creation task called synchronously at approve when the automation config exists; journal cancellation task at cancel of a journaled return (views.py:761-768, 582-585, purchase/purchase_invoice/tasks.py:40-120).</li>
+<li>Events: notification on submit and rejection; activity log on every transition (dashboard/custom_functions.py:30-74).</li>
+<li>Kafka: full record on submit; dual main-plus-record on approve; minimal id message on cancel; a rejected-stamped record on both cancel-submission branches (views.py:642-655, 778-790, 596-601, 952-957, 973-978).</li>
+<li>The debug/redis/kafka routes (views.py:849-878) read and clear the Redis Kafka queue with no authentication class - flagged in the table.</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, reference invoice
+    draft --&gt; submitted : submit, product and quantity checks
+    draft --&gt; approved : self approve, stock out, invoice remaining minus
+    submitted --&gt; approved : approver approves, stock out, journal
+    submitted --&gt; draft : creator reverts, invoice checks rerun
+    submitted --&gt; draft : rejected by approver
+    approved --&gt; cancelled : cancel, stock out reversal, invoice remaining plus
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status approved] --&gt; B{current status}
+    B --&gt;|draft and caller is entry by| C[product and quantity checks]
+    B --&gt;|submitted and caller is approval user| C
+    B --&gt;|other| X[400 unknown status]
+    C --&gt; D{valuation feature is purchase invoice}
+    D --&gt;|yes| E[stock out to product management, v1 or v2]
+    D --&gt;|no| F[no stock call]
+    E --&gt; G[invoice remaining minus grand total, update remaining kafka]
+    F --&gt; G
+    G --&gt; H{automation config}
+    H --&gt;|yes| I[journal task called synchronously]
+    H --&gt;|no| J[no journal]
+    I --&gt; K[activity log, dual kafka]
+    J --&gt; K
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status cancelled] --&gt; B{current status}
+    B --&gt;|submitted| C[invoice and quantity checks, no stock call]
+    B --&gt;|approved| E[invoice and quantity checks]
+    B --&gt;|other| X[400 invalid cancel request]
+    C --&gt; D[credit invoice remaining back, cancelled fields, minimal kafka]
+    E --&gt; F{valuation feature is purchase invoice}
+    F --&gt;|yes| G[stock out reversal to product management]
+    F --&gt;|no| D
+    G --&gt; D
+    D --&gt; H{journal flag}
+    H --&gt;|yes| I[journal cancellation task]
+    H --&gt;|no| J[done]
+    I --&gt; J
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve when valuation is not at the invoice</td>
+<td>no stock call from this service at all</td>
+<td>views.py:724-745</td>
+</tr>
+<tr>
+<td>Cancel a submitted return</td>
+<td>invoice re-validated, no stock call, remaining credited back</td>
+<td>views.py:516-532, 575</td>
+</tr>
+<tr>
+<td>Cancel an approved return with valuation at the invoice</td>
+<td>stock-out reversal plus remaining credit-back</td>
+<td>views.py:534-571</td>
+</tr>
+<tr>
+<td>Cancel from draft</td>
+<td>rejected by the BASIC and CUSTOM routers - the draft branch in handle_cancellation is unreachable</td>
+<td>views.py:458-467, 482-483</td>
+</tr>
+<tr>
+<td>Reference invoice already cancelled</td>
+<td>400 reference-not-valid on every transition and on cancel-submission</td>
+<td>views.py:501-504, 902-903</td>
+</tr>
+<tr>
+<td>Cancel-submission of another tenant&#39;s return</td>
+<td>the lookup is not tenant-scoped - the call proceeds (security flag)</td>
+<td>views.py:894-899</td>
+</tr>
+<tr>
+<td>Revert a submitted return</td>
+<td>back to draft, message says reverted, Kafka record stamped rejected</td>
+<td>views.py:963-982</td>
+</tr>
+<tr>
+<td>Approve with the automation config present</td>
+<td>the journal task runs in the request thread, not a worker</td>
+<td>views.py:761-768</td>
+</tr>
+<tr>
+<td>Return row without an invoice reference</td>
+<td>update_remaining_from_invoice is a no-op</td>
+<td>views.py:683-685</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Payment - status, cancel-submission, quick payment and the verified eSewa exclusion"><h2 id="payment-status-cancel-submission-quick-payment-and-the-verified-esewa-exclusion">Payment - status, cancel-submission, quick payment and the verified eSewa exclusion</h2>
+<p>What happens: the supplier payment is the money-out document - an advance to the supplier, a payment allocated to purchase invoices and expense entries, or a cheque (a flagged row of the same model, traced in its own section). The lifecycle engine is the usual BASIC/CUSTOM split, with one conspicuous difference from every other document in this service: no Kafka is emitted on any payment lifecycle transition - the only events are the notification on submit and the activity log on each transition. Approving with apply_advance deducts from the supplier&#39;s DR opening balance first and then FIFO from the advance_amount of earlier approved payments; the item allocations are validated against the invoice remaining amounts. The journal is posted asynchronously via the Celery .delay, unlike the invoice and return paths that call the task in the request thread. The quick-payment path bypasses the workflow entirely: it mints one APPROVED quick payment per allocation straight from the invoice or expense screen, each with its own journal queued on commit. Verified exclusion: the eSewa Payment-Service is not referenced anywhere in this service (grep for esewa, miniapp and federated over the whole source tree returns zero matches). The payment code is ledger-only: source_account is a bank or cash GL account with optional TDS and bank-charge legs, and payment_method is a display field (supplier_payment/models.py:15-47, supplier_payment/serializers.py:51-263). It is not a gateway to a payment provider and is not modeled as a path.</p>
+<h3 id="trace-post-api-purchase-payment-status-pk-view-at-purchase-supplier-payment-views-py-547">Trace (POST /api/purchase/payment/status/<pk>/, view at purchase/supplier_payment/views.py:547)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1107, approve_cancel for anything but submit (views.py:547-561).</li>
+<li>Tenant-scoped fetch (views.py:563-570); fiscal-year check on payment_date (views.py:572-576).</li>
+<li>Configuration fetch, 503 when absent (views.py:582-587, 612, dashboard/send_request.py:26-46).</li>
+<li>BASIC routing (views.py:614-652): submit from draft; approve from submitted by the approval_user or from draft by the creator, both after the basic compulsion check (623-635); cancel from submitted by the approval_user or from approved by anyone (645-652); otherwise invalid status (642-643).</li>
+<li>CUSTOM routing (views.py:595-611): approve from any state except cancelled, after the custom compulsion check; cancel only from approved.</li>
+<li>Submit (views.py:654-683): approval fields set, rejection cleared; notification to the approver and activity log. No Kafka.</li>
+<li>Approve (views.py:685-782): with apply_advance, deduct from the supplier DR opening - the min of the remaining opening and the allocation sum - and persist the new remaining via helper.supplier_remaining_update (697-713); then deduct FIFO from the advance_amount of earlier approved non-cheque payments (716-740, supplier_payment/models.py:116-124); validate the item allocations against the invoice remaining via payment_remaining_amount_validation (741-748, validation_check.py:25); write the approved fields (750-759); queue the journal creation task with .delay when the PURCHASE_FLOW/AUTOMATION configuration exists (761-769, purchase/purchase_invoice/tasks.py:40-71); activity log (771-777). No Kafka, no notification.</li>
+<li>Cancel (views.py:833-868): restore the deductions - opening first, then the exact earlier deductions in LIFO order (838, 784-831); re-validate the allocations (839-845); write the cancelled fields and zero deduction_from_opening (846-852); queue the journal cancellation task with .delay when the journal flag is set (854-856, tasks.py:104-120); activity log (858-864). No Kafka.</li>
+</ol>
+<h3 id="trace-post-api-purchase-payment-cancel-submission-pk-view-at-views-py-872">Trace (POST /api/purchase/payment/cancel-submission/<pk>/, view at views.py:872)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1107, action pinned to VIEW (views.py:872-882).</li>
+<li>get_object is NOT tenant-scoped - it fetches by pk alone (views.py:884-891) - the same security flag as the order revert, the invoice and return cancel-submissions.</li>
+<li>Only a submitted row can be touched (views.py:893-906); fiscal-year check (898).</li>
+<li>Rejection (type=rejection, non-creator): rejected fields; activity log; ERROR notification (views.py:907-940).</li>
+<li>Revert (no type, creator): back to draft with an activity log (views.py:942-963).</li>
+<li>Any other combination is a 400 (views.py:965-972). No Kafka in either branch.</li>
+</ol>
+<h3 id="trace-post-api-purchase-payment-quick-frontend-view-at-views-py-979">Trace (POST /api/purchase/payment/quick/frontend/, view at views.py:979)</h3>
+<ol>
+<li>Auth: IAM + HasPermission - feature PR1105, the purchase invoice feature, not PR1107, and action VIEW (views.py:978-988).</li>
+<li>Request: payment_allocations is required, plus invoice_id or expense_entry (views.py:1034-1046); the reference is fetched by id - note the reference fetch is not tenant-scoped (views.py:1001-1008); the reference&#39;s remaining_amount caps the total allocation (views.py:990-999).</li>
+<li>Per allocation a SupplierPayment is created already APPROVED with is_quick_payment, one item allocated to the invoice or the expense, and the journal creation task queued on commit (views.py:1050-1099, serializers.py:51-263).</li>
+<li>After the transaction the allocations are re-validated against the supplier remaining with the quick-payment flag (views.py:1106-1116, validation_check.py:25); an activity log entry is written on the reference (views.py:1118-1125).</li>
+<li>The expense side of the same path works because get_current_reference accepts an expense id and get_supplier derives the supplier from the entity fields (views.py:1001-1032); a debug print of the payment payload ships in production (views.py:1080, flagged).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Events: notification on submit and rejection; activity log on submit, approve, cancel, quick payment and cancel-submission (views.py:665-679, 771-777, 858-864, 918-955, 1118-1125).</li>
+<li>Accounting: journal creation .delay at approve when the automation config exists; journal cancellation .delay at cancel of a journaled payment; quick payments queue their own journals on commit (views.py:761-769, 854-856, 1095-1099).</li>
+<li>Supplier ledger: opening-balance and FIFO advance deductions at approve; LIFO restore at cancel (views.py:697-740, 784-831); invoice remaining validated at approve and cancel (views.py:741-748, 839-845).</li>
+<li>Kafka: none - no endpoint in this app emits a Kafka record.</li>
+<li>The internal routes quick-payment-check, get-fetch-supplier-payments-internal and get-supplier-advance are shared-password endpoints (views.py:1137-1231).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, advance or allocations
+    draft --&gt; submitted : submit, notification
+    draft --&gt; approved : self approve
+    submitted --&gt; approved : approver approves, advance deduction, journal delay
+    submitted --&gt; draft : creator reverts
+    submitted --&gt; draft : rejected by approver
+    approved --&gt; cancelled : cancel, LIFO restore, journal cancel delay
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status approved] --&gt; B{current status}
+    B --&gt;|draft and caller is entry by| C[compulsion check]
+    B --&gt;|submitted and caller is approval user| C
+    B --&gt;|other| X[400 invalid approve request]
+    C --&gt; D{apply advance}
+    D --&gt;|yes| E[deduct supplier DR opening]
+    D --&gt;|no| F[skip deductions]
+    E --&gt; G[FIFO deduct earlier approved advances]
+    G --&gt; H[validate allocations against invoice remaining]
+    F --&gt; H
+    H --&gt; I[write approved fields]
+    I --&gt; J{automation config}
+    J --&gt;|yes| K[journal creation delay]
+    J --&gt;|no| L[no journal]
+    K --&gt; M[activity log, no kafka]
+    L --&gt; M
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status cancelled] --&gt; B{current status}
+    B --&gt;|submitted and caller is approval user| C[restore opening and LIFO advances]
+    B --&gt;|approved| C
+    B --&gt;|other| X[400 invalid cancel request]
+    C --&gt; D[validate allocations against invoice remaining]
+    D --&gt; E[write cancelled fields, zero opening deduction]
+    E --&gt; F{journal flag}
+    F --&gt;|yes| G[journal cancellation delay]
+    F --&gt;|no| H[activity log, no kafka]
+    G --&gt; H
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP frontend
+    participant PU as Purchase
+    participant ACC as Accounting
+    participant EV as Events
+    FE-&gt;&gt;PU: POST quick frontend, allocations plus invoice or expense id
+    PU-&gt;&gt;PU: cap total allocation at reference remaining
+    loop per allocation
+        PU-&gt;&gt;PU: create approved quick payment with one item
+        PU-&gt;&gt;ACC: journal creation delay on commit
+    end
+    PU-&gt;&gt;PU: revalidate supplier remaining with quick payment flag
+    PU-&gt;&gt;EV: activity log on the reference
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve with apply_advance and a DR opening</td>
+<td>the opening is deducted first, earlier advances top up the rest in FIFO order</td>
+<td>views.py:697-740</td>
+</tr>
+<tr>
+<td>Approve an allocation over the invoice remaining</td>
+<td>400 from payment_remaining_amount_validation</td>
+<td>views.py:741-748, validation_check.py:25</td>
+</tr>
+<tr>
+<td>Cancel an approved payment with deductions</td>
+<td>opening restored, then the exact earlier deductions in LIFO order</td>
+<td>views.py:784-831</td>
+</tr>
+<tr>
+<td>Quick payment against an expense entry</td>
+<td>the same endpoint, the item stores the expense id and the supplier comes from the entity fields</td>
+<td>views.py:1001-1032, 1070-1077</td>
+</tr>
+<tr>
+<td>Quick payment over the remaining amount</td>
+<td>400 at the allocation cap check</td>
+<td>views.py:990-999</td>
+</tr>
+<tr>
+<td>Quick payment on another tenant&#39;s invoice</td>
+<td>the reference lookup is not tenant-scoped - flagged</td>
+<td>views.py:1001-1008</td>
+</tr>
+<tr>
+<td>Any payment lifecycle transition</td>
+<td>no Kafka record is emitted - verified across the whole app</td>
+<td>views.py:547-1136</td>
+</tr>
+<tr>
+<td>Cancel-submission of another tenant&#39;s payment</td>
+<td>the lookup is not tenant-scoped - the call proceeds (security flag)</td>
+<td>views.py:884-891</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Cheque - record status and settlement status"><h2 id="cheque-record-status-and-settlement-status">Cheque - record status and settlement status</h2>
+<p>What happens: a cheque is a SupplierPayment row flagged is_cheque - the BouncedCheques model in purchase/cheque/models.py:13 subclasses it for the bounced view. The status endpoint moves two state axes in one call: the record status (draft, submitted, approved, cancelled - the usual engine) and the settlement status of the cheque itself (pending, cleared, bounced, void, with an expired guard). The request may carry status, cheque_status or both - approve-and-clear is one call. Two notable behaviors: the endpoint only implements the BASIC flow - a tenant on the CUSTOM flow gets a 400 not-updated for every status call (views.py:1076-1088) - and, like plain payments, the cheque endpoints emit no Kafka at all. Approving a cheque that settles validates the allocations and queues the journal, but unlike plain supplier payments it performs no opening/advance deductions; it is cancelling a CLEARED cheque that restores the deductions.</p>
+<h3 id="trace-post-api-purchase-cheque-status-pk-view-at-purchase-cheque-views-py-625">Trace (POST /api/purchase/cheque/status/<pk>/, view at purchase/cheque/views.py:625)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1308 (the accounting cheques feature), approve_cancel for anything but submit (views.py:625-647, dashboard/choices.py:199).</li>
+<li>Request validation inside the atomic: at least one of status or cheque_status is required; both are checked against their choice lists; submit requires approval_user (views.py:999-1024).</li>
+<li>Settlement guards: no settlement change before the row is approved (views.py:1033-1037); no change once the cheque is expired (views.py:1039-1043, supplier_payment/models.py:134-136); settlement moves only out of pending (views.py:1045-1056).</li>
+<li>Configuration fetch (views.py:1058-1063); can_settle_cheque computed on the model (views.py:1072-1074, supplier_payment/models.py:159).</li>
+<li>BASIC settlement-first branch (views.py:832-849): an approved row can be marked bounced or void directly - bounced stores the bounce reason - without touching the record status.</li>
+<li>BASIC record routing: submit from draft (views.py:851-855, 726-756); approve from submitted by the approval_user, from draft by the creator, or an approved row cleared in the same call, all after the basic compulsion check (views.py:857-887); cancel from submitted by the approval_user or from approved by anyone (views.py:889-909).</li>
+<li>approved() (views.py:758-830): blocks approval when any allocated invoice is already fully paid (views.py:761-763, supplier_payment/models.py:153-157); when can_settle_cheque, validates the allocations and queues journal_creation_task.delay when the PURCHASE_FLOW/AUTOMATION configuration exists (views.py:765-790, purchase/purchase_invoice/tasks.py:40-71); record and settlement fields written (views.py:794-807); activity log only when the row was not already approved (views.py:809-816).</li>
+<li>cancelled() (views.py:911-949): when the cheque was cleared, restores the opening and LIFO advance deductions and re-validates the allocations (views.py:912-925, 951-997); cancelled fields written and deduction_from_opening zeroed; journal cancellation .delay when the journal flag is set (views.py:927-937); activity log (views.py:939-945).</li>
+<li>After a 200 result the row is saved a second time and the events fan out: an activity log per settlement change and, when a user other than the creator changed the approved row, a notification to the creator - success on cleared, warning on bounced or void (views.py:1080-1083, 656-704).</li>
+<li>CUSTOM flow: unhandled - the endpoint falls through to 400 not-updated for every transition (views.py:1085-1088).</li>
+</ol>
+<h3 id="trace-post-api-purchase-cheque-cancel-submission-pk-view-at-views-py-1092">Trace (POST /api/purchase/cheque/cancel-submission/<pk>/, view at views.py:1092)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1308, action pinned to VIEW (views.py:1092-1102).</li>
+<li>get_object is tenant-scoped and filtered to is_cheque rows - unlike the payment and return cancel-submission endpoints (views.py:1104-1111).</li>
+<li>Only a submitted row can be touched (views.py:1113-1126); fiscal-year check on cheque_date (1118).</li>
+<li>Rejection (type=rejection, non-creator): rejected fields; activity log; ERROR notification (views.py:1127-1156).</li>
+<li>Revert (no type, creator): back to draft with an activity log (views.py:1158-1175).</li>
+<li>Any other combination is a 400 (views.py:1177-1184). No Kafka.</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Events: notification on submit and rejection; activity log on submit, approve, cancel and every settlement change (views.py:738-752, 809-816, 939-945, 656-704).</li>
+<li>Accounting: journal creation .delay at a settling approve when the automation config exists; journal cancellation .delay at cancel of a journaled cheque (views.py:782-790, 935-937).</li>
+<li>Supplier ledger: no deductions at cheque approve; opening and LIFO advance restore only when cancelling a cleared cheque (views.py:912-925, 951-997).</li>
+<li>Kafka: none.</li>
+<li>The notf-issued-due-date route is an internal near-due list for the notification job and modify-cheque a shared-password bulk flag fix (views.py:485-548, temp_views.py).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, supplier cheque
+    draft --&gt; submitted : submit, notification
+    draft --&gt; approved : self approve
+    submitted --&gt; approved : approver approves
+    submitted --&gt; draft : creator reverts
+    submitted --&gt; draft : rejected by approver
+    approved --&gt; cancelled : cancel, journal cancel delay
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; pending : row approved, settlement starts pending
+    pending --&gt; cleared : clear, notification success
+    pending --&gt; bounced : bounce with reason, notification warning
+    pending --&gt; void : void by user, notification warning
+    pending --&gt; expired : expiry, no further changes allowed
+    cleared --&gt; [*] : cancel restores deductions
+    bounced --&gt; [*] : cancel
+    void --&gt; [*] : cancel
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status] --&gt; B{status or cheque status sent}
+    B --&gt;|neither| X1[400 at least one required]
+    B --&gt; C{row approved}
+    C --&gt;|no and cheque status set| X2[400 cannot settle before approval]
+    C --&gt;|yes and expired| X3[400 cannot change expired]
+    C --&gt; D{target}
+    D --&gt;|submit from draft| E[set approver, notify, log]
+    D --&gt;|approve| F{caller authorized}
+    F --&gt;|yes| G[compulsion check, fully paid check, journal delay when settling]
+    F --&gt;|no| X4[400 invalid approve request]
+    D --&gt;|cancel| H[restore when cleared, journal cancel, log]
+    D --&gt;|settlement only on approved| I[set settlement, log, notify when other user]
+    D --&gt;|other| X5[400 invalid status]
+    G --&gt; J{tenant flow config}
+    I --&gt; J
+    E --&gt; J
+    H --&gt; J
+    J --&gt;|BASIC| K[save again, fan out events]
+    J --&gt;|CUSTOM| X6[400 not updated, custom flow unhandled]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tenant on the CUSTOM flow calls the status endpoint</td>
+<td>400 not-updated for every transition - only BASIC is implemented</td>
+<td>views.py:1076-1088</td>
+</tr>
+<tr>
+<td>Approve a cheque allocated to a fully paid invoice</td>
+<td>400 fully-paid-invoice</td>
+<td>views.py:761-763</td>
+</tr>
+<tr>
+<td>Approve plus clear in one call</td>
+<td>both axes move, single activity log</td>
+<td>views.py:857-887, 794-807</td>
+</tr>
+<tr>
+<td>Mark an approved cheque bounced</td>
+<td>settlement set with the bounce reason, record status untouched</td>
+<td>views.py:832-849</td>
+</tr>
+<tr>
+<td>Cancel a cleared cheque</td>
+<td>opening and LIFO advance deductions restored, allocations re-validated</td>
+<td>views.py:912-925</td>
+</tr>
+<tr>
+<td>Cancel a cheque that never cleared</td>
+<td>no ledger restore - only the cancelled fields and the journal cancel</td>
+<td>views.py:911-949</td>
+</tr>
+<tr>
+<td>A user other than the creator settles the cheque</td>
+<td>the creator gets a notification; no notification when the creator acts</td>
+<td>views.py:694-704</td>
+</tr>
+<tr>
+<td>Settlement transition other than out of pending</td>
+<td>400 cannot change from current to new</td>
+<td>views.py:1045-1056</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Expense - the registry-driven lifecycle"><h2 id="expense-the-registry-driven-lifecycle">Expense - the registry-driven lifecycle</h2>
+<p>What happens: the expense entry is the odd one out - a router-based ViewSet with a static, registry-driven state machine instead of the Configuration-service flow. Legal transitions are fixed: draft to submit or approve, submitted to approve, reject or cancel, approved to cancel (views.py:292-311), and a reject lands the row back on draft (views.py:546-547). The role rules live in the same registry: the creator submits and self-approves, the approval_user approves and rejects, and an approved expense can be cancelled by anyone unless a non-quick approved supplier payment is allocated on it (views.py:313-345). Approving an expense mints quick supplier payments from the payment_allocations stored on the row; cancelling voids them. The Kafka and journal work is scheduled on transaction commit, and the journal at approve is called synchronously in the request thread - with no automation-config gate, unlike the invoice and return paths.</p>
+<h3 id="trace-post-api-purchase-expense-status-id-view-at-purchase-expense-views-py-431">Trace (POST /api/purchase/expense/status/<id>/, view at purchase/expense/views.py:431)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1108; initial() maps POST status to approve_cancel for anything but submit, and create/edit/delete/cancel-submission to add_edit, GET to view (views.py:24-55).</li>
+<li>Tenant-scoped fetch (views.py:84-98, 432-438).</li>
+<li>validate_status_change: the status value check, the transition registry, the user registry, and the no-active-payment cancel block (views.py:281-345).</li>
+<li>handle_kafka is queued on commit: only supplier and customer entity types emit; approve sends the dual record via call_kafka_for_bill, submit and cancel send a single record (views.py:481-511, 442).</li>
+<li>handle_status_change: submit stores the approval_user (required); every branch writes status, comment, date and changed-by; reject maps to draft; approve mints the quick supplier payments via post_quick_supplier_payment_for_expense; cancel voids them via void_quick_supplier_payment (views.py:534-558, dashboard/custom_functions.py:380, 497).</li>
+<li>handle_post_status_change is queued on commit: the events fan-out - notification on submit, activity log on approve and cancel (views.py:456-479) - and the journals: journal_creation_task called synchronously at approve, journal_cancellation_task.delay at cancel (views.py:519-532, purchase/purchase_invoice/tasks.py).</li>
+<li>Response is 200 with id, unique_id and an updated message (views.py:446-454).</li>
+</ol>
+<h3 id="trace-post-api-purchase-expense-cancel-submission-id-view-at-views-py-375">Trace (POST /api/purchase/expense/cancel-submission/<id>/, view at views.py:375)</h3>
+<ol>
+<li>Auth: IAM + HasPermission, feature PR1108, action add_edit (views.py:35-55, 375-377).</li>
+<li>Only a submitted row can be touched (views.py:383-387).</li>
+<li>Rejection (type=rejection): status_changed_by and the comment are stored and an ERROR notification is sent (views.py:390-401).</li>
+<li>Revert (no type): the approval fields are cleared (views.py:402-406).</li>
+<li>Both branches set draft, save, write an activity log and emit the EXPENSE_ENTRY_REJECT_RECORD Kafka record (views.py:408-422) - a revert is reported as rejected to Kafka.</li>
+</ol>
+<h3 id="trace-post-api-purchase-expense-check-reference-view-at-views-py-561">Trace (POST /api/purchase/expense/check-reference/, view at views.py:561)</h3>
+<p>Duplicate pre-flight: given an invoice_reference and an optional id, it reports whether another expense in the tenant already carries that reference - a check on the same row returns exists false (views.py:560-586).</p>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Kafka: on commit only; approve dual, submit/cancel single; suppressed for non supplier/customer entity types (views.py:481-511); reject record on both cancel-submission branches (views.py:417-422).</li>
+<li>Accounting: journal creation at approve - synchronous, no automation-config gate; journal cancellation .delay at cancel (views.py:519-532, purchase/purchase_invoice/tasks.py:40-120).</li>
+<li>Supplier payments: quick payments minted at approve from the stored allocations and voided at cancel (views.py:552-557, dashboard/custom_functions.py:380, 497).</li>
+<li>Events: notification on submit and rejection; activity log on approve and cancel and on cancel-submission (views.py:456-479, 410-416).</li>
+<li>Create validates attachment file types before saving (views.py:116-131, expense/utils.py).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft : create, optional attachments
+    draft --&gt; submitted : submit, creator only, notification
+    draft --&gt; approved : self approve, quick payments minted
+    submitted --&gt; approved : approval user approves, quick payments minted
+    submitted --&gt; draft : revert by creator
+    submitted --&gt; draft : rejected by approval user
+    submitted --&gt; cancelled : cancel, blocked by active payment
+    approved --&gt; cancelled : cancel, quick payments voided, journal cancel
+    draft --&gt; [*] : delete, draft only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST status] --&gt; B{transition registry}
+    B --&gt;|draft to submit| C[creator only, approval user required]
+    B --&gt;|draft to approved| D[creator only]
+    B --&gt;|submitted to approved| E[approval user only]
+    B --&gt;|submitted to rejected| F[approval user only, lands on draft]
+    B --&gt;|submitted or approved to cancelled| G[any user]
+    B --&gt;|other| X[400 invalid transition]
+    G --&gt; H{non quick approved payment allocated}
+    H --&gt;|yes| X2[400 cannot cancel, active payment]
+    H --&gt;|no| I[set cancelled fields, void quick payments]
+    D --&gt; J[set approved fields, mint quick payments]
+    E --&gt; J
+    C --&gt; K[set submitted fields, notify on commit]
+    F --&gt; L[set draft fields, reject kafka on commit]
+    J --&gt; M[on commit, dual kafka, journal task synchronous]
+    I --&gt; P[on commit, single kafka, journal cancellation delay]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve from submitted by the creator</td>
+<td>400 - only the approval_user may approve from submitted</td>
+<td>views.py:313-333</td>
+</tr>
+<tr>
+<td>Reject from draft</td>
+<td>400 - the registry does not allow it</td>
+<td>views.py:292-311</td>
+</tr>
+<tr>
+<td>Cancel with an approved non-quick payment on the row</td>
+<td>400, the active-payment block</td>
+<td>views.py:335-345</td>
+</tr>
+<tr>
+<td>Approve an expense with stored payment_allocations</td>
+<td>quick supplier payments are minted through the payment serializer</td>
+<td>views.py:552-553, dashboard/custom_functions.py:380</td>
+</tr>
+<tr>
+<td>Cancel an approved expense</td>
+<td>the minted quick payments are voided</td>
+<td>views.py:554-557</td>
+</tr>
+<tr>
+<td>Approve an expense entry</td>
+<td>the journal task runs in the request thread with no automation-config gate</td>
+<td>views.py:519-526</td>
+</tr>
+<tr>
+<td>Kafka for a non supplier/customer entity type</td>
+<td>suppressed in handle_kafka</td>
+<td>views.py:482-486</td>
+</tr>
+<tr>
+<td>Revert a submitted expense</td>
+<td>back to draft, but the Kafka record is stamped rejected</td>
+<td>views.py:402-422</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Verified exclusions"><h2 id="verified-exclusions">Verified exclusions</h2>
+<ul>
+<li>eSewa / Payment-Service: zero matches for esewa, miniapp or federated in the Purchase source tree (grep over all .py files). The supplier payment code is ledger-only - source_account is a bank or cash GL account with optional TDS and bank-charge legs, payment_method is a display field (supplier_payment/models.py:15-47, supplier_payment/serializers.py:51-263) - so there is no payment-provider integration to model.</li>
+<li>Miniapp / federated domain: does not exist in this service; nothing to list.</li>
+<li>GRN family (grn, grn-return - 16 latest routes): excluded per the confirmed exclusions; not documented, not traced.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../purchase/expense.html"><div class="pn-dir">← Previous</div><div class="pn-name">Purchase - Expense</div></a><a class="pn next" href="../purchase/invoice.html"><div class="pn-dir">Next →</div><div class="pn-name">Purchase - Invoice</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l2"><a href="#requisition-status-and-cancel-submission">Requisition - status and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-purchase-requisition-status-pk">Trace (POST /api/purchase/requisition/status/&lt;pk&gt;/)</a></li><li class="l3"><a href="#trace-post-api-purchase-requisition-cancel-submission-pk">Trace (POST /api/purchase/requisition/cancel-submission/&lt;pk&gt;/)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#order-status-and-cancel-submission">Order - status and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-purchase-order-status-pk">Trace (POST /api/purchase/order/status/&lt;pk&gt;/)</a></li><li class="l3"><a href="#trace-post-api-purchase-order-cancel-submission-pk">Trace (POST /api/purchase/order/cancel-submission/&lt;pk&gt;/)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#invoice-status-cancel-submission-and-the-quick-payment">Invoice - status, cancel-submission and the quick payment</a></li><li class="l3"><a href="#trace-post-api-purchase-invoice-status-pk-view-at-purchase-purchase-invoice-views-py-623">Trace (POST /api/purchase/invoice/status/&lt;pk&gt;/, view at purchase/purchase_invoice/views.py:623)</a></li><li class="l3"><a href="#trace-post-api-purchase-invoice-cancel-submission-pk-view-at-views-py-1317">Trace (POST /api/purchase/invoice/cancel-submission/&lt;pk&gt;/, view at views.py:1317)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#return-status-cancel-submission-and-the-invoice-ledger">Return - status, cancel-submission and the invoice ledger</a></li><li class="l3"><a href="#trace-post-api-purchase-return-status-pk-view-at-purchase-purchase-return-views-py-375">Trace (POST /api/purchase/return/status/&lt;pk&gt;/, view at purchase/purchase_return/views.py:375)</a></li><li class="l3"><a href="#trace-post-api-purchase-return-cancel-submission-pk-view-at-views-py-882">Trace (POST /api/purchase/return/cancel-submission/&lt;pk&gt;/, view at views.py:882)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#payment-status-cancel-submission-quick-payment-and-the-verified-esewa-exclusion">Payment - status, cancel-submission, quick payment and the verified eSewa exclusion</a></li><li class="l3"><a href="#trace-post-api-purchase-payment-status-pk-view-at-purchase-supplier-payment-views-py-547">Trace (POST /api/purchase/payment/status/&lt;pk&gt;/, view at purchase/supplier_payment/views.py:547)</a></li><li class="l3"><a href="#trace-post-api-purchase-payment-cancel-submission-pk-view-at-views-py-872">Trace (POST /api/purchase/payment/cancel-submission/&lt;pk&gt;/, view at views.py:872)</a></li><li class="l3"><a href="#trace-post-api-purchase-payment-quick-frontend-view-at-views-py-979">Trace (POST /api/purchase/payment/quick/frontend/, view at views.py:979)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#cheque-record-status-and-settlement-status">Cheque - record status and settlement status</a></li><li class="l3"><a href="#trace-post-api-purchase-cheque-status-pk-view-at-purchase-cheque-views-py-625">Trace (POST /api/purchase/cheque/status/&lt;pk&gt;/, view at purchase/cheque/views.py:625)</a></li><li class="l3"><a href="#trace-post-api-purchase-cheque-cancel-submission-pk-view-at-views-py-1092">Trace (POST /api/purchase/cheque/cancel-submission/&lt;pk&gt;/, view at views.py:1092)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#expense-the-registry-driven-lifecycle">Expense - the registry-driven lifecycle</a></li><li class="l3"><a href="#trace-post-api-purchase-expense-status-id-view-at-purchase-expense-views-py-431">Trace (POST /api/purchase/expense/status/&lt;id&gt;/, view at purchase/expense/views.py:431)</a></li><li class="l3"><a href="#trace-post-api-purchase-expense-cancel-submission-id-view-at-views-py-375">Trace (POST /api/purchase/expense/cancel-submission/&lt;id&gt;/, view at views.py:375)</a></li><li class="l3"><a href="#trace-post-api-purchase-expense-check-reference-view-at-views-py-561">Trace (POST /api/purchase/expense/check-reference/, view at views.py:561)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#verified-exclusions">Verified exclusions</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

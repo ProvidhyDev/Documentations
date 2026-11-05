@@ -1,0 +1,997 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Reporting - Business Flows (Traced) - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc current" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced)</h1>
+<p>This service is a <strong>read-only reporting warehouse</strong> (Django 5 + DRF) with seven apps mounted under <code>/api/{dashboard,sales,purchase,inventory,accounting,system,analytics}/</code> (<code>Reporting/urls.py:25-31</code>). It never reads the module databases directly. The module services publish domain events to Kafka — the canonical topics are <code>accounting_events</code>, <code>inventory_events</code>, <code>purchase_events</code>, <code>sales_events</code> (listed in <code>dashboard/tasks.py:23</code> and created by the daily 23:59 Celery beat job, <code>Reporting/celery.py:14-19</code>) — and a long-running <code>kafka_consumer</code> management command (<code>group.id=reporting-consumer-group</code>, <code>auto.offset.reset=earliest</code>, <code>dashboard/management/commands/kafka_consumer.py:74-93</code>) subscribes to whatever topics the <code>KAFKA_TOPICS</code> env var enumerates (<code>kafka_consumer.py:90-92</code>) and routes <strong>every message by its key</strong> — <code>inventory</code> / <code>purchase</code> / <code>sales</code> / <code>accounting</code> / <code>master</code> — into local tables. Events materialize into transaction views (<code>SalesTransactionView</code>, <code>PurchaseTransactionView</code>, <code>AccountingTransactionView</code>, <code>ProductTransactionView</code>) and product master rows (<code>ProductMaterializeView</code>), and each event triggers a <strong>delete-the-whole-fiscal-year + rebuild</strong> of the affected ledger — <code>TransactionLedgerView</code> for accounting (<code>accounting/account_ledger.py:213-246</code>) or the <code>InventoryValuationReport</code> FIFO ledger for stock (<code>dashboard/kafka_data_ingestor.py:630-639</code>). All report endpoints compute on the fly from those local tables, plus live COA/master fetches via <code>APILinks</code>, running on the read replica by default (<code>Reporting/settings.py:112,121</code>; forced master reads via <code>force_database</code>, <code>Reporting/db_routers.py:29-44</code>).</p>
+<p>The practical consequence: the service&#39;s real transactional core is <strong>ingestion</strong>, not the HTTP surface. Of the 46 latest-version HTTP routes, 27 are READ, 14 are internal OPS endpoints, 4 are admin-triggered transactional flows (opening-history transfer + three sync endpoints), 1 (CDXE) belongs to the excluded miniapp domain, and 0 are plain CRUD/RECORD endpoints. The <code>kafka_consumer</code> command is a fifth transactional entry point and the only continuous write engine in the service.</p>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>Latest-version routes (46), classified. Class: READ = computes from local tables, no state change; RECORD = plain create/update of one business record (none exist); TRANSACTION = mutates warehouse state beyond a single row (ledger rebuilds, bulk history writes, sync); OPS = internal/admin utility, no business flow.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Endpoint(s)</th>
+<th>Method</th>
+<th>Class</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kafka (non-HTTP)</td>
+<td><code>dashboard/management/commands/kafka_consumer.py</code></td>
+<td>CMD</td>
+<td>TRANSACTION</td>
+<td>The write engine. Traced below per topic</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td><code>/api/sales/report/v2/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>9 report types dispatched by <code>?report=</code>; per-type feature permission swapped in <code>initial()</code> (<code>sales/views.py:25-65</code>)</td>
+</tr>
+<tr>
+<td>Purchase</td>
+<td><code>/api/purchase/report/v2/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Mirror of the sales dispatch over <code>PurchaseTransactionView</code></td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td><code>/api/inventory/report/v3/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Valuation report over the consumer-built <code>InventoryValuationReport</code> tables; per-report-type feature (<code>inventory/views.py:335-359</code>)</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td><code>/api/inventory/cdxe/</code></td>
+<td>POST</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>eSewa CDXE integration, Fernet per-tenant API-key auth (<code>dashboard/auth_backends.py:143-180</code>, <code>inventory/views.py:67-71</code>). No deep trace per scope addendum</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/report/v3/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>TB / BS / P&amp;L / ledgers / summaries by <code>?report=</code>; per-type feature (<code>accounting/views.py:53-93</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/ap-ar-party-breakdown/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Party-wise AR/AP from the ledger; feature <code>BALANCE_SHEET_REPORT</code> (<code>accounting/views.py:304-307</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/supplier-ageing-report/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Open purchase-side invoices binned by days (<code>accounting/views.py:330-334</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/customer-ageing-report/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Open sales-side invoices binned by days (<code>accounting/views.py:463-467</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/vat-summary-report/v2/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>VAT fields over sales/purchase invoice + return views (<code>accounting/views.py:572-575</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/transaction-report/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Cross-module transaction feed, paginated (<code>accounting/views.py:1012-1015</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/transaction-report-export-list/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Same query, no pagination (<code>accounting/views.py:1252-1255</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/ageing-report/cms/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Internal (shared internal password, <code>accounting/views.py:1316-1317</code>); CMS copy of ageing</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/get_closing_amount/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Closing inventory amount from valuation tables (<code>accounting/views.py:1536</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/bill-ageing/&lt;party_type&gt;/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td><code>party_type</code> selects customer vs supplier side; feature per side (<code>accounting/views.py:1617-1655</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/financial-position/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Financial overview vs financial transactions (<code>accounting/views.py:1544-1588</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/tds-report/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Transaction views joined with TDS master fetched live from the Configuration service (<code>accounting/views.py:1925-1928</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/party-confirmation-letter/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Party balance + transaction list for confirmation letters (<code>accounting/views.py:1982-2020</code>)</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td><code>/api/accounting/confirmation-eligibility-check/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal (shared internal password, <code>accounting/views.py:2126-2127</code>); gates the confirmation letter</td>
+</tr>
+<tr>
+<td>System</td>
+<td><code>/api/system/report/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Proxies activity-log / user-logs to the events service (<code>system/views.py:20-38</code>)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/</code></td>
+<td>GET/POST</td>
+<td>OPS</td>
+<td>Ping / health</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/choices/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Report choice lists</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/choices-internal/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal report-name search for global search</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/kafka-test/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Test producer writing a message to a topic</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/kafka-topic-creation/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Idempotent topic creation (same job as the daily 23:59 beat, <code>Reporting/celery.py:14-19</code>)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/delete-all-migrations/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Deletes <code>django_migrations</code> rows by app (raw SQL)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/delete-all-table/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Drops a table or view by name (raw SQL)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/list-all-migrations/</code></td>
+<td>GET</td>
+<td>OPS</td>
+<td>Lists migrations</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/delete-migration-id/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Deletes one migration row</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/transfer-opening-history/</code></td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Year-end opening transfer from the four masters. Traced below</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/delete-history/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Deletes the opening-history tables</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/opening-history-detail/</code></td>
+<td>GET</td>
+<td>OPS</td>
+<td>Admin read of entity opening-history rows</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/sync-create-record/</code></td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Known-IDs reconciliation sync. Traced below</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/sync-create-record-v3/</code></td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Re-publishes events via the remote Kafka producer. Traced below</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/sync-accounting-report/</code></td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Rebuilds persisted TB / P&amp;L / BS snapshots. Traced below</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/tenant-data-deletion/</code></td>
+<td>POST</td>
+<td>OPS</td>
+<td>Deletes tenant data by allowlist (includes the orphan <code>InventoryMonthlyClosing</code>, <code>dashboard/views.py:1296</code>)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/log-viewer/</code></td>
+<td>GET</td>
+<td>OPS</td>
+<td>BasicAuth + staff; tails log files into a template (<code>dashboard/views.py:1227-1274</code>)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/get-party-closing-balance/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Party closing balances for report UIs (<code>dashboard/views.py:1420</code>)</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/api/dashboard/kafka-test-from-master/</code></td>
+<td>GET</td>
+<td>OPS</td>
+<td>Reads <code>KafkaTestModel</code> success/failure marker rows (<code>dashboard/views.py:1474-1546</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/recent-transactions/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Widget over the local transaction views (<code>analytics/views.py:117-120</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/business-overview/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>KPI widget (<code>analytics/views.py:32-36</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/receivable-ageing-summary/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Subclasses the customer ageing report view (<code>analytics/views.py:348-349</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/payable-ageing-summary/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>Supplier-side summary (<code>analytics/views.py:386-389</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/receivable-payable-summary/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>(<code>analytics/views.py:536-539</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/revenue-inflow/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>(<code>analytics/views.py:791-794</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/cash-in-cash-out/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>(<code>analytics/views.py:671-674</code>)</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>/api/analytics/financial-position-insight/</code></td>
+<td>GET</td>
+<td>READ</td>
+<td>(<code>analytics/views.py:919-922</code>)</td>
+</tr>
+</tbody></table>
+<p><strong>Counts:</strong> 46 latest = 27 READ + 14 OPS + 4 TRANSACTION + 0 RECORD + 1 EXCLUDED. Plus the non-HTTP <code>kafka_consumer</code> command (TRANSACTION).</p>
+<p><strong>Superseded routes</strong> (still present in <code>urls.py</code>, no deep trace): <code>/api/sales/report/item-wise/</code> (<code>sales/urls.py:12</code>), <code>/api/purchase/report/item-wise/</code> (<code>purchase/urls.py:12</code>), <code>/api/inventory/report/closing/</code> (<code>inventory/urls.py:6</code>), <code>/api/accounting/report/cms/</code> (<code>accounting/urls.py:57</code>).</p>
+<h3 id="auth-pattern-applies-to-the-rows-above">Auth pattern (applies to the rows above)</h3>
+<ul>
+<li>IAM endpoints: <code>IAMAuthenticationReportBackend</code> — no subscribed-service check, requires <code>email_verified</code>, and <strong>live-validates</strong> the token on every request via <code>validate_token_with_iam</code> (POST to <code>{APILinks.IAM_API}api/token/verify/</code>, <code>dashboard/auth_backends.py:64-104</code>) — plus <code>HasPermission</code>, which on every request does a live GET to the IAM permission endpoint and matches <code>view.required_feature_permission</code> / <code>view.required_action_permission</code>; <code>tenant_root</code> bypasses; a missing attribute denies (<code>:107-140</code>). Report views swap <code>required_feature_permission</code> per <code>?report=</code> value inside <code>initial()</code> (<code>sales/views.py:25-65</code>, <code>accounting/views.py:53-93</code>, <code>system/views.py:27-38</code>).</li>
+<li>Internal OPS endpoints: shared internal password (<code>InternalRequestAuthentication</code> / <code>InternalRequestPermission</code>, <code>:183-207</code>) or BasicAuth + staff (<code>log-viewer</code>, <code>dashboard/views.py:1227-1274</code>).</li>
+<li>CDXE: <code>APIKeyAuthentication</code> Fernet-decrypts <code>X-API-Key</code> with a per-tenant key and compares the result to the tenant id (<code>:143-180</code>) — <strong>not</strong> a static <code>ESEWA_API_KEY</code> as <code>overview.md</code> describes.</li>
+<li>The separate <code>IAMAuthenticationBackend</code> (requires <code>ACCOUNTING</code> in <code>subscribed_services</code>, <code>:29-61</code>) exists but is not used by any current report view.</li>
+</ul>
+</section><section class="sec" data-title="Kafka consumer ingestion (CMD kafka_consumer) — TRANSACTION"><h2 id="kafka-consumer-ingestion-cmd-kafka-consumer-transaction">Kafka consumer ingestion (CMD kafka_consumer) — TRANSACTION</h2>
+<p><strong>What happens.</strong> A standalone management command polls the subscribed topics one message at a time (<code>kafka_consumer.py:49-71</code>). Each JSON message is routed by its key to one of five handlers, which upsert the event into the module&#39;s local transaction view and then replay the affected ledger <strong>for the whole fiscal year</strong> from those rows. Cancellations and rejections are themselves events: they flip the transaction view&#39;s status (or delete the recorded row) and trigger the same full-year rebuild, so every ledger at any moment equals a deterministic replay of everything stored. There is no retry and no dead-letter queue: exceptions are recorded in the <code>KafkaTestModel</code> table and the loop continues, and with confluent-kafka&#39;s default auto-commit a failed message is not redelivered — it is lost until a sync endpoint replays it.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><strong>Consumer init</strong> — <code>kafka_consumer.py:74-93</code>: builds the consumer with <code>group.id=reporting-consumer-group</code> (<code>:77</code>) and <code>auto.offset.reset=earliest</code> (<code>:78</code>); subscribes to the topics listed in the <code>KAFKA_TOPICS</code> env var, defaulting to an empty list (<code>:90-92</code>). The four canonical topics are listed in <code>dashboard/tasks.py:23</code>.</li>
+<li><strong>Poll loop</strong> — <code>kafka_consumer.py:49-71</code>: <code>consumer.poll(1.0)</code>; parses the JSON value and decodes the key, then <code>route_message</code>. Broker errors: <code>PARTITION_EOF</code> is tolerated, anything else raises <code>KafkaException</code> and terminates the process (<code>:95-103</code>). JSON or handler exceptions go to <code>handle_exception</code> (<code>:305-315</code>) which writes a <code>KafkaTestModel</code> row <code>{msg_key}_processing_error_{tenant_id}</code> with the exception text (<code>:313-314</code>) and continues.</li>
+<li><strong>Key routing</strong> — <code>kafka_consumer.py:106-118</code>: key→handler map for <code>inventory</code>, <code>purchase</code>, <code>sales</code>, <code>accounting</code>, <code>master</code> (<code>:107-113</code>); an unknown key logs a warning and the message is dropped (<code>:118</code>).</li>
+<li><strong>inventory key</strong> — <code>kafka_consumer.py:121-133</code>:<ul>
+<li><code>product_creation</code> / <code>product_edition</code> → <code>process_product_operation</code> (<code>kafka_data_ingestor.py:38-161</code>): <code>update_or_create</code> of a <code>ProductMaterializeView</code> row per tenant/product/batch with the full product-master field map (opening rate/quantity/amount, GL ids, variants, valuation method; <code>:94-158</code>). Pure master mirror, no ledger effect.</li>
+<li><code>new_batch_creation</code> → <code>create_new_batch</code> (<code>kafka_consumer.py:327-374</code>): plain <code>create()</code> of a <code>ProductMaterializeView</code> row with the field map at <code>:335-371</code> — note this path has <strong>no dedupe</strong>, unlike the product-operation path.</li>
+<li><code>stock_adjustment_approval</code> → <code>create_product_transaction</code> (<code>kafka_data_ingestor.py:492-578</code>).</li>
+<li><code>stock_adjustment_cancel</code> → <code>cancel_product_transaction</code> (<code>kafka_consumer.py:376-418</code>): sets <code>status=cancelled</code> on the matching <code>ProductTransactionView</code> rows (<code>:397-399</code>), dedupes affected products (<code>:401-415</code>), then <code>initiate_valuation_cancel_call</code> (<code>:417</code>) → full-FY valuation rebuild.</li>
+</ul>
+</li>
+<li><strong>purchase key</strong> — <code>kafka_consumer.py:136-178</code>:<ul>
+<li>Invoice/return <code>approval</code> → <code>create_product_transaction</code> (<code>:168-169</code>) — the stock movement for a purchase invoice lands in the inventory domain, not a purchase ledger.</li>
+<li><code>*_submit_for_approval_record</code> and <code>*_approval_record</code> → <code>create_purchase_transaction</code> (<code>kafka_data_ingestor.py:405-489</code>): idempotent create/update of <code>PurchaseTransactionView</code> rows keyed on (tenant, entry_id, unique_id, transaction_type); uses the payload&#39;s <code>discount_percentage</code> (<code>:458</code>).</li>
+<li><code>*_cancel</code> → <code>cancel_product_transaction</code> + <code>cancel_purchase_transaction</code> (<code>:170-172</code>; <code>:440-458</code> sets <code>status=cancelled</code> on the purchase rows).</li>
+<li><code>*_reject_record</code> → <code>reject_purchase_transaction</code> (<code>:175-176</code>; <code>:460-478</code> <strong>deletes</strong> the last matching <code>PurchaseTransactionView</code> row).</li>
+<li><strong>Bug</strong>: <code>PURCHASE_ORDER_CANCEL</code> and <code>PURCHASE_REQUISITION_CANCEL</code> are listed without <code>.value</code> (<code>:158-159</code>), and <code>PURCHASE_REQUISITION_APPROVAL_RECORD</code> / <code>PURCHASE_ORDER_APPROVAL_RECORD</code> likewise (<code>:164-165</code>). An enum member never equals the string action, so purchase-order and requisition cancel/record events fall through the if/elif chain and are <strong>silently dropped</strong>.</li>
+</ul>
+</li>
+<li><strong>sales key</strong> — <code>kafka_consumer.py:181-227</code>: same shape as purchase, all members carry <code>.value</code> (correct): invoice/return approval → <code>create_product_transaction</code> (<code>:217-218</code>); submit/record → <code>create_sales_transaction</code> (<code>kafka_data_ingestor.py:316-402</code>; sales field map at <code>:348-401</code> uses <code>discount_percent</code>, vs <code>discount_percentage</code> in the purchase twin at <code>:458</code>); cancel → <code>cancel_product_transaction</code> + <code>cancel_sales_transaction</code> (<code>:219-221</code>; <code>:500-518</code>); reject → <code>reject_sales_transaction</code> (<code>:224-225</code>; <code>:480-498</code> deletes the last row).</li>
+<li><strong>accounting key</strong> — <code>kafka_consumer.py:230-251</code>: JV / payment / receipt / contra <code>*_approval_record</code> → <code>create_accounting_transaction</code> (<code>kafka_data_ingestor.py:202-297</code>): per journal line, resolves the account (<code>:226-231</code>), then <code>AccountingTransactionView.create</code> with the field map incl. <code>jv_unique_id</code> = journal detail id, <code>entry_id</code> = voucher item id, <code>account_detail</code>, <code>parties_detail</code>, <code>cr_dr</code>, <code>remain_amount</code>, <code>fiscal_year</code> (<code>:233-273</code>), dedupe (<code>:279-291</code>), inside <code>transaction.atomic</code> (<code>:218</code>), then <code>initiate_account_ledger_call</code> (<code>:292</code>) → per-account full-FY ledger rebuild. <code>*_cancel</code> → <code>cancel_accounting_transaction</code> (<code>:520-562</code>): sets <code>status=cancelled</code> (<code>:542-544</code>), collects the affected account/party pairs, <code>initiate_account_ledger_cancel_call</code> (<code>:561</code>). <strong>Any other action value</strong> → writes a leftover test row <code>KafkaTestModel(action=&quot;KAfka_SASL&quot;, message=&quot;Test success&quot;)</code> and nothing else (<code>:250-251</code>).</li>
+<li><strong>master key</strong> — <code>kafka_consumer.py:254-302</code>: only <code>action == &quot;parties_opening&quot;</code> is handled (anything else warns and drops, <code>:266-270</code>). Builds a <code>ledger_payload</code> where a supplier maps to CR/liabilities and a customer to DR/assets (<code>:288-292</code>), then calls <code>accounting_ledger_report(...)</code> with <code>party_opening_update=True</code> when <code>data.update</code> is set, else <code>party_creation=True</code> (<code>:298</code>, <code>:302</code>) — the only path that writes party opening rows into the ledger <strong>without</strong> a transaction-view row.</li>
+<li><strong>Ledger rebuild (accounting)</strong> — <code>accounting/account_ledger.py:185-492</code>: resolves the fiscal year from the entry date (<code>:198-203</code>); deletes <strong>all</strong> <code>TransactionLedgerView</code> rows for that tenant+FY (<code>:213-237</code>); replays every approved <code>AccountingTransactionView</code> row of the FY ordered by (entry_date, id) (<code>:240-246</code>); party ledgers seed from the previous FY closing via <code>get_previous_fy_account_close</code> (<code>:305-330</code>, <code>:849-870</code>) and build opening rows (<code>:350-418</code>); account-ledger rows built per account (<code>:420-445</code>); one <code>bulk_create</code> (<code>:466</code>) plus a <code>KafkaTestModel</code> success marker (<code>:467-469</code>). <strong>The advisory lock is commented out in the live path (<code>:206-212</code>)</strong>, so two events for the same tenant can interleave the delete/rebuild. Errors are logged to <code>KafkaTestModel</code> with a traceback and then re-raised (<code>:476-491</code>).</li>
+</ol>
+<h3 id="per-topic-what-model-each-record-becomes">Per topic — what model each record becomes</h3>
+<table>
+<thead>
+<tr>
+<th>Key / action</th>
+<th>Handler</th>
+<th>Model(s) written</th>
+<th>Ledger effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>inventory / product_creation, product_edition</td>
+<td><code>process_product_operation</code></td>
+<td><code>ProductMaterializeView</code> (update_or_create)</td>
+<td>none</td>
+</tr>
+<tr>
+<td>inventory / new_batch_creation</td>
+<td><code>create_new_batch</code></td>
+<td><code>ProductMaterializeView</code> (create, no dedupe)</td>
+<td>none</td>
+</tr>
+<tr>
+<td>inventory / stock_adjustment_approval</td>
+<td><code>create_product_transaction</code></td>
+<td><code>ProductTransactionView</code></td>
+<td>full-FY valuation rebuild</td>
+</tr>
+<tr>
+<td>inventory / stock_adjustment_cancel</td>
+<td><code>cancel_product_transaction</code></td>
+<td><code>ProductTransactionView</code> status=cancelled</td>
+<td>full-FY valuation rebuild</td>
+</tr>
+<tr>
+<td>purchase / invoice+return approval</td>
+<td><code>create_product_transaction</code></td>
+<td><code>ProductTransactionView</code></td>
+<td>full-FY valuation rebuild</td>
+</tr>
+<tr>
+<td>purchase / submit_for_approval_record, approval_record</td>
+<td><code>create_purchase_transaction</code></td>
+<td><code>PurchaseTransactionView</code></td>
+<td>none (reports read the view directly)</td>
+</tr>
+<tr>
+<td>purchase / cancel</td>
+<td>both</td>
+<td><code>ProductTransactionView</code> + <code>PurchaseTransactionView</code> status=cancelled</td>
+<td>valuation rebuild</td>
+</tr>
+<tr>
+<td>purchase / reject_record</td>
+<td><code>reject_purchase_transaction</code></td>
+<td>deletes <code>PurchaseTransactionView</code> row</td>
+<td>none</td>
+</tr>
+<tr>
+<td>purchase / order+requisition cancel, order+requisition record</td>
+<td>—</td>
+<td><strong>dropped (enum bug)</strong></td>
+<td>none</td>
+</tr>
+<tr>
+<td>sales / invoice+return approval</td>
+<td><code>create_product_transaction</code></td>
+<td><code>ProductTransactionView</code></td>
+<td>full-FY valuation rebuild</td>
+</tr>
+<tr>
+<td>sales / submit_for_approval_record, approval_record</td>
+<td><code>create_sales_transaction</code></td>
+<td><code>SalesTransactionView</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td>sales / cancel</td>
+<td>both</td>
+<td><code>ProductTransactionView</code> + <code>SalesTransactionView</code> status=cancelled</td>
+<td>valuation rebuild</td>
+</tr>
+<tr>
+<td>sales / reject_record</td>
+<td><code>reject_sales_transaction</code></td>
+<td>deletes <code>SalesTransactionView</code> row</td>
+<td>none</td>
+</tr>
+<tr>
+<td>accounting / JV+payment+receipt+contra approval_record</td>
+<td><code>create_accounting_transaction</code></td>
+<td><code>AccountingTransactionView</code> (one row per journal line)</td>
+<td>full-FY <code>TransactionLedgerView</code> rebuild per account/party</td>
+</tr>
+<tr>
+<td>accounting / cancel</td>
+<td><code>cancel_accounting_transaction</code></td>
+<td><code>AccountingTransactionView</code> status=cancelled</td>
+<td>full-FY rebuild for affected accounts/parties</td>
+</tr>
+<tr>
+<td>accounting / any other action</td>
+<td>—</td>
+<td><code>KafkaTestModel</code> test row only</td>
+<td>none</td>
+</tr>
+<tr>
+<td>master / parties_opening</td>
+<td><code>handle_master</code></td>
+<td>none (no transaction view)</td>
+<td>ledger opening rows / party opening update</td>
+</tr>
+</tbody></table>
+<h3 id="failure-behaviour">Failure behaviour</h3>
+<ul>
+<li>Handler exception → <code>KafkaTestModel</code> row <code>{msg_key}_processing_error_{tenant_id}</code> with the exception text (<code>kafka_consumer.py:305-315</code>); the loop continues. No retry, no DLQ; with auto-commit the offset has already advanced, so the event is lost until replayed via <code>sync-create-record</code> / <code>sync-create-record-v3</code>.</li>
+<li>Non-EOF broker errors raise <code>KafkaException</code> and kill the process (<code>kafka_consumer.py:95-103</code>) — recovery is a supervisor restart from the last committed offset.</li>
+<li>Unknown message key → warning + drop (<code>kafka_consumer.py:118</code>); unknown accounting action → fake &quot;success&quot; row (<code>kafka_consumer.py:251</code>).</li>
+<li><code>create_sales_transaction</code> has an <code>update_remaining</code> branch that dereferences the record without a None check (<code>kafka_data_ingestor.py:338-340</code>) — such a payload for an unknown invoice raises into <code>handle_exception</code>.</li>
+<li>Rebuilds swallow nothing: <code>accounting_ledger_report</code> logs to <code>KafkaTestModel</code> then re-raises (<code>accounting/account_ledger.py:476-491</code>); the valuation cancel path raises <code>RuntimeError</code> with the traceback on lock failure (<code>kafka_data_ingestor.py:769-772, 1141-1161</code>).</li>
+</ul>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Rows written: <code>ProductMaterializeView</code>, <code>ProductTransactionView</code>, <code>PurchaseTransactionView</code>, <code>SalesTransactionView</code>, <code>AccountingTransactionView</code>, <code>TransactionLedgerView</code> (deleted then rebuilt per FY), <code>InventoryValuationReport</code> + <code>InventoryValuationBatchReport</code> (deleted then rebuilt per FY), <code>KafkaTestModel</code> (success + failure markers).</li>
+<li>Advisory lock per (tenant, product) for valuation rebuilds (<code>kafka_data_ingestor.py:621</code>); the accounting rebuild&#39;s lock is commented out (<code>accounting/account_ledger.py:206-212</code>).</li>
+<li>No Kafka produces, no HTTP side effects, no emitted events — the consumer writes only to its own database.</li>
+<li>Cost: every event costs O(FY) work — a delete + full replay of that tenant&#39;s affected ledger.</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Document lifecycle as the consumer sees it (one view row per event, status flips on cancel, row deletion on reject):</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; Submitted
+    Submitted --&gt; Recorded : submit_for_approval_record
+    Submitted --&gt; Approved : approval
+    Recorded --&gt; Approved : approval_record
+    Approved --&gt; Cancelled : cancel
+    Submitted --&gt; Rejected : reject_record
+    Recorded --&gt; Rejected : reject_record
+    Approved --&gt; [*]
+    Cancelled --&gt; [*]
+    Rejected --&gt; [*]
+</pre></div>
+<p>Key routing per message (unknown keys and the accounting else-branch are dead ends):</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[Kafka message] --&gt; B{message key}
+    B --&gt;|inventory| C[inventory handler]
+    B --&gt;|purchase| D[purchase handler]
+    B --&gt;|sales| E[sales handler]
+    B --&gt;|accounting| F[accounting handler]
+    B --&gt;|master| G[master handler]
+    B --&gt;|unknown key| H[warn and drop]
+    C --&gt;|product creation or edition| I[ProductMaterializeView upsert]
+    C --&gt;|new batch| J[ProductMaterializeView create]
+    C --&gt;|stock adjustment approval| K[ProductTransactionView create]
+    C --&gt;|stock adjustment cancel| L[rows to cancelled + valuation rebuild]
+    D --&gt;|invoice or return approval| M[ProductTransactionView create]
+    D --&gt;|record actions| N[PurchaseTransactionView upsert]
+    D --&gt;|cancel| O[both views cancelled + valuation rebuild]
+    D --&gt;|reject record| P[delete last PurchaseTransactionView row]
+    D --&gt;|order or requisition cancel and record| Q[dropped by enum bug]
+    E --&gt;|invoice or return approval| R[ProductTransactionView create]
+    E --&gt;|record actions| S[SalesTransactionView upsert]
+    E --&gt;|cancel| T[both views cancelled + valuation rebuild]
+    E --&gt;|reject record| U[delete last SalesTransactionView row]
+    F --&gt;|approval record| V[AccountingTransactionView per line + ledger rebuild]
+    F --&gt;|cancel| W[rows to cancelled + ledger rebuild]
+    F --&gt;|any other action| X[KafkaTestModel KAfka_SASL row]
+    G --&gt;|parties_opening| Y[ledger opening rows]
+    G --&gt;|any other action| Z[warn and drop]
+</pre></div>
+<p>Approve path end to end (sales invoice approval, one of the four topics):</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant M as Sales module
+    participant K as Kafka sales_events topic
+    participant C as kafka_consumer command
+    participant P as ProductTransactionView table
+    participant V as InventoryValuationReport table
+    M-&gt;&gt;K: publish event with key sales and action sales_invoice_approval
+    K-&gt;&gt;C: poll returns message
+    C-&gt;&gt;P: create rows per product line (atomic)
+    C-&gt;&gt;V: delete all FY rows for each product
+    C-&gt;&gt;P: replay all approved stock transactions in date order
+    C-&gt;&gt;V: bulk create rebuilt FIFO ledger rows
+    C-&gt;&gt;C: KafkaTestModel success marker row
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sales invoice approved</td>
+<td><code>ProductTransactionView</code> rows created (stock out) and the product&#39;s full-FY FIFO ledger rebuilt under the advisory lock; the <code>SalesTransactionView</code> row only appears when a separate record event arrives</td>
+<td><code>kafka_consumer.py:217-218</code>; <code>kafka_data_ingestor.py:492-578, 604-662</code></td>
+</tr>
+<tr>
+<td>Quotation submitted for approval</td>
+<td><code>SalesTransactionView</code> row upserted; no ledger rebuild — the sales book report reads the view directly</td>
+<td><code>kafka_consumer.py:222-223</code>; <code>kafka_data_ingestor.py:316-402</code></td>
+</tr>
+<tr>
+<td>Purchase invoice cancelled</td>
+<td>Stock and purchase rows both set to cancelled; valuation rebuilt; the purchase row stays readable with cancelled status (reports filter by status)</td>
+<td><code>kafka_consumer.py:170-172, 397-399, 455-457</code></td>
+</tr>
+<tr>
+<td>Purchase order record event</td>
+<td>Dropped — the enum member without <code>.value</code> never matches the string action</td>
+<td><code>kafka_consumer.py:164-165</code></td>
+</tr>
+<tr>
+<td>Delivery note rejected</td>
+<td>Last <code>SalesTransactionView</code> row deleted; no ledger effect (quotes/orders/DNs never touch the ledger)</td>
+<td><code>kafka_consumer.py:224-225, 495-497</code></td>
+</tr>
+<tr>
+<td>Payment voucher cancelled</td>
+<td><code>AccountingTransactionView</code> rows set to cancelled; every affected account and party gets a full-FY <code>TransactionLedgerView</code> rebuild; note the collected <code>unique_id</code> is always None (see Untraced)</td>
+<td><code>kafka_consumer.py:248-249, 539-561</code></td>
+</tr>
+<tr>
+<td>Unknown accounting action</td>
+<td>Only a <code>KafkaTestModel</code> row <code>KAfka_SASL</code> / &quot;Test success&quot; is written</td>
+<td><code>kafka_consumer.py:250-251</code></td>
+</tr>
+<tr>
+<td>Supplier parties_opening</td>
+<td>Ledger opening rows written for the supplier under liabilities with a CR opening</td>
+<td><code>kafka_consumer.py:275-302</code></td>
+</tr>
+<tr>
+<td>Malformed JSON payload</td>
+<td><code>handle_exception</code> writes <code>{key}_processing_error_None</code>; the loop continues</td>
+<td><code>kafka_consumer.py:62-67, 305-315</code></td>
+</tr>
+<tr>
+<td>Two events for the same tenant interleave (accounting)</td>
+<td>Both can delete then rebuild the FY ledger — no lock in the live path; last writer wins</td>
+<td><code>accounting/account_ledger.py:206-212</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Inventory - stock valuation (rebuild on every stock movement) — TRANSACTION"><h2 id="inventory-stock-valuation-rebuild-on-every-stock-movement-transaction">Inventory - stock valuation (rebuild on every stock movement) — TRANSACTION</h2>
+<p><strong>What happens.</strong> There is no incremental valuation. Whenever a stock movement lands (purchase invoice/return approval, sales invoice/return approval, stock adjustment approval or cancel), the consumer calls <code>initiate_valuation_call</code> / <code>initiate_valuation_cancel_call</code> (<code>kafka_data_ingestor.py:1141-1161</code>), which takes a per-(tenant, product) advisory lock, deletes every <code>InventoryValuationReport</code> / <code>InventoryValuationBatchReport</code> row for that product in the current fiscal year (<code>:630-639</code>), and rebuilds the entire FIFO ledger from scratch: opening + all approved <code>ProductTransactionView</code> rows. The HTTP endpoints <code>/api/inventory/report/v3/</code> (and superseded <code>/api/inventory/report/closing/</code>) only read the rebuilt tables.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><strong>Trigger</strong> — per product of the event: <code>initiate_valuation_call(product_data_list)</code> loops and calls <code>inventory_valuation_report_consumer</code> (<code>kafka_data_ingestor.py:1141-1149</code>); the cancel path calls <code>inventory_valuation_report_on_cancel_consumer</code> (<code>:1152-1161, 749-815</code>), which runs on the <code>reporting</code> DB alias (<code>:764-768</code>) and raises <code>RuntimeError</code> if the advisory lock cannot be acquired (<code>:769-772</code>). Any failure is wrapped in <code>RuntimeError</code> with a traceback (<code>:1146-1160</code>) and lands in <code>KafkaTestModel</code> via <code>handle_exception</code>.</li>
+<li><strong>Delete FY rows</strong> — <code>inventory_valuation_report_consumer</code> (<code>:604-662</code>): inside <code>transaction.atomic</code> (<code>:619</code>), <code>acquire_lock_in_transaction_safe(tenant_id, product_id)</code> (<code>:621</code>); FY start computed from the event date (<code>:627</code>); deletes both valuation tables&#39; rows with <code>entry_date &gt;= fy_start_date</code> (<code>:630-639</code>).</li>
+<li><strong>Opening</strong> — <code>get_initial_product_data</code> (<code>:645, 701-716</code>) seeds the starting closing qty/amount/rate, the <code>qty_rate_stack</code>, and the <code>sale_data_stack</code> from the previous ledger state; <strong>no monthly closing exists</strong> — the seed ultimately comes from <code>get_product_wise_opening</code> (<code>inventory/ledger.py:57-89</code>), which reads <code>ProductOpeningHistory</code> (written by transfer-opening-history at year end) plus the product master. Batch info is loaded separately when a batch ledger exists (<code>kafka_data_ingestor.py:647-649, 718-747</code>).</li>
+<li><strong>Replay</strong> — <code>_build_full_ledger_from_scratch</code> (<code>:817-959</code>) → <code>process_product_transactions</code> (<code>:960-1138</code>): each approved transaction is converted to primary-unit qty/rate by <code>product_transaction_conversion</code> (<code>inventory/ledger.py:92-187</code> — groups by entry_id, converts units, folds in discounts to an average rate <code>:124-138</code>), additional costs are applied (<code>:190-224</code>), then transactions are walked in date order feeding <code>get_valuation_ledger</code> (non-batch <code>kafka_data_ingestor.py:999-1008</code>, batch <code>:1045-1054</code>); the posted rate per line is <code>final_total / qty</code> (<code>:984-996, 1030-1042</code>).</li>
+<li><strong>FIFO core</strong> — <code>get_valuation_ledger</code> (<code>inventory/ledger.py:250-491</code>):<ul>
+<li><strong>Inward</strong> (<code>purchase_invoice</code>, <code>sales_return</code>, adjustment ADDITION; <code>:288-301</code>): purchases push (qty, rate) onto <code>qty_rate_stack</code>. A <strong>sales return</strong> does not take its own rate — it looks up the consuming invoice&#39;s recorded stack under the key <code>{unique_id}_{entry_id}</code> in <code>sale_data_stack</code>, walks it in reverse, and values the return at the <strong>original consumed rates</strong> (<code>:302-344</code>).</li>
+<li><strong>Outward</strong> (<code>sales_invoice</code>, <code>purchase_return</code>; <code>:292-295</code>, pop loop <code>:437-467</code>): FIFO pop from the stack; a sales invoice additionally <strong>records the consumed stack</strong> under its own key in <code>sale_data_stack</code> so a later return can reverse exactly those layers.</li>
+<li><strong>Adjustment DEDUCTION</strong> (<code>:425-448</code>): pops from the <strong>reversed</strong> stack (most recent layer first) — adjustments are valued LIFO.</li>
+<li><strong>Anything else</strong> (<code>:476-485</code>): a row is still written, with particular <code>unknown</code> and method <code>none</code>, and no quantity change.</li>
+<li>Every row stores the running closing qty/amount/rate plus the surviving stacks, so the ledger is self-describing.</li>
+</ul>
+</li>
+<li><strong>Persist</strong> — <code>bulk_create</code> of the rebuilt <code>InventoryValuationReport</code> rows (<code>kafka_data_ingestor.py:949</code>) and <code>InventoryValuationBatchReport</code> rows (<code>:953</code>), plus a <code>KafkaTestModel</code> success marker (<code>:956</code>), all inside the same atomic block as the delete.</li>
+</ol>
+<h3 id="diagrams">Diagrams</h3>
+<p>FIFO branching per transaction line:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[Transaction line in date order] --&gt; B{type}
+    B --&gt;|purchase_invoice| C[push qty and rate onto stack]
+    B --&gt;|sales_return| D[reverse the consumed invoice stack and value at original rates]
+    B --&gt;|adjustment ADDITION| C
+    B --&gt;|sales_invoice| E[FIFO pop and record consumed stack under invoice key]
+    B --&gt;|purchase_return| E
+    B --&gt;|adjustment DEDUCTION| F[pop from reversed stack, LIFO]
+    B --&gt;|anything else| G[row written with particular unknown and method none]
+    C --&gt; H[closing qty and amount increase]
+    D --&gt; H
+    E --&gt; I[closing qty and amount decrease]
+    F --&gt; I
+    H --&gt; J[row persisted with running closing and stacks]
+    I --&gt; J
+    G --&gt; J
+</pre></div>
+<p>Rebuild lifecycle per event (the unit of work, including the error path):</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; Lock
+    Lock --&gt; DeleteFYRows : advisory lock acquired
+    Lock --&gt; Fail : lock not acquired on cancel path
+    DeleteFYRows --&gt; SeedOpening : from ProductOpeningHistory and master
+    SeedOpening --&gt; Replay : walk approved transactions in date order
+    Replay --&gt; BulkCreate : FIFO ledger rows built
+    BulkCreate --&gt; [*]
+    Fail --&gt; [*]
+    Replay --&gt; Fail : any exception raises RuntimeError
+</pre></div>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Deleted + recreated: all FY rows of <code>InventoryValuationReport</code> and <code>InventoryValuationBatchReport</code> for the touched products (delete scoped by <code>entry_date &gt;= fy_start</code>, <code>kafka_data_ingestor.py:630-639, 784-793</code>).</li>
+<li>Advisory lock per (tenant, product) held for the whole rebuild (<code>kafka_data_ingestor.py:621</code>).</li>
+<li>No other tables touched, no Kafka, no HTTP.</li>
+</ul>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Purchase invoice approved, 100 units at 10</td>
+<td>Stack becomes 100@10; the product&#39;s FY ledger is rebuilt from opening</td>
+<td><code>inventory/ledger.py:288-345</code></td>
+</tr>
+<tr>
+<td>Sales invoice for 40 units</td>
+<td>FIFO pops 40@10; the consumed stack is recorded under the invoice key for later reversal</td>
+<td><code>inventory/ledger.py:437-467</code></td>
+</tr>
+<tr>
+<td>Sales return of 15 units</td>
+<td>Reverses the invoice&#39;s recorded stack; the return is valued at the original rate 10, not the current stack top</td>
+<td><code>inventory/ledger.py:302-344</code></td>
+</tr>
+<tr>
+<td>Stock adjustment DEDUCTION of 5 units</td>
+<td>Pops the most recent layer first (LIFO)</td>
+<td><code>inventory/ledger.py:425-448</code></td>
+</tr>
+<tr>
+<td>Unknown transaction type in a stock row</td>
+<td>Row written with particular unknown and method none; quantities unchanged</td>
+<td><code>inventory/ledger.py:476-485</code></td>
+</tr>
+<tr>
+<td>Second event for the same product while a rebuild is in flight</td>
+<td>The advisory lock serializes; the cancel path raises RuntimeError when the lock is unavailable and the event is captured in KafkaTestModel</td>
+<td><code>kafka_data_ingestor.py:621, 769-772</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Dashboard - transfer-opening-history — TRANSACTION"><h2 id="dashboard-transfer-opening-history-transaction">Dashboard - transfer-opening-history — TRANSACTION</h2>
+<p><strong>What happens.</strong> Year-end operation: one POST pulls opening balances for the given tenant(s) from the four master services (supplier/customer openings, product openings, account openings), writes them into this service&#39;s four opening-history tables in a single transaction, and records <code>ActionModel</code> markers per (tenant, action type) for idempotency. The write-back of closing balances to the master services exists in code but is <strong>commented out</strong> — the masters are never told back. There is no monthly closing anywhere in the service; <code>InventoryMonthlyClosing</code> (<code>inventory/models.py:192</code>) is an orphan model.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><code>POST /api/dashboard/transfer-opening-history/</code> — <code>dashboard/views.py:495-648</code>. Shared internal <code>PASSWORD</code> check (<code>:520-521</code>); body is <code>{tid: {np_end_date, ...}}</code>.</li>
+<li>The whole handler runs inside <code>transaction.atomic</code> (<code>:506</code>).</li>
+<li>Idempotency: <code>existing_action_tenants_by_type</code> reads the <code>ActionModel</code> markers per action type (<code>:531-535</code>); a tenant already marked for a module is skipped for that module.</li>
+<li>Fetch: <code>async_fetch_all_openings</code> GETs <code>GET_SUP_CUS_OPENING_URL</code>, <code>GET_PRODUCT_OPENING_URL</code>, <code>GET_ACCOUNT_OPENING_URL</code> on the master services (<code>:537-545</code>).</li>
+<li>Per tenant: supplier/customer opening-history rows (<code>:547-571</code>; the closing-balance write-back is commented at <code>:577-580</code>), product opening (<code>:582-589</code>; write-back commented <code>:591-593</code>), account opening (<code>:595-605</code>; write-back commented <code>:607-614</code>).</li>
+<li>Persist: four <code>bulk_create(..., batch_size=1000)</code> into the four <code>*OpeningHistory</code> tables (<code>:616-631</code>); <code>ActionModel</code> markers bulk-created per tenant/action type (<code>:632-639</code>; the final write-back block <code>:640-650</code> is also commented).</li>
+<li>Returns 200 with counts (<code>:645-648</code>).</li>
+</ol>
+<h3 id="diagrams">Diagrams</h3>
+<p>Per-tenant x per-module processing with idempotency skip:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST with tenant ids and password] --&gt; B{password ok}
+    B --&gt;|no| C[401]
+    B --&gt;|yes| D[load existing ActionModel markers]
+    D --&gt; E{for each tenant}
+    E --&gt; F{supplier or customer module already done}
+    F --&gt;|yes| G[skip this module]
+    F --&gt;|no| H[write supplier and customer opening history rows]
+    H --&gt; I{product module already done}
+    I --&gt;|yes| G
+    I --&gt;|no| J[write product opening history rows]
+    J --&gt; K{account module already done}
+    K --&gt;|yes| G
+    K --&gt;|no| L[write account opening history rows]
+    L --&gt; M[bulk create ActionModel markers]
+    G --&gt; M
+    M --&gt; N[200 with counts]
+</pre></div>
+<p>Where the opening data comes from:</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant O as Operations caller
+    participant R as reporting service
+    participant S as Supplier or Customer master
+    participant P as Product master
+    participant A as Account master
+    O-&gt;&gt;R: POST transfer-opening-history with tid and np_end_date
+    R-&gt;&gt;S: GET supplier and customer openings
+    R-&gt;&gt;P: GET product openings
+    R-&gt;&gt;A: GET account openings
+    R-&gt;&gt;R: bulk create four opening-history tables (batch size 1000)
+    R-&gt;&gt;R: bulk create ActionModel markers
+    R--&gt;&gt;O: 200 with counts
+</pre></div>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Rows: <code>SupplierOpeningHistory</code>, <code>CustomerOpeningHistory</code>, <code>ProductOpeningHistory</code>, <code>AccountOpeningHistory</code>, <code>ActionModel</code>.</li>
+<li>No HTTP writes to the masters (commented out), no Kafka.</li>
+<li>These opening tables are the seed for valuation (<code>get_product_wise_opening</code>, <code>inventory/ledger.py:57-89</code>) and for the accounting ledger&#39;s party opening rows and previous-FY carryover (<code>accounting/account_ledger.py:305-330, 350-418</code>).</li>
+</ul>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Re-sent tenant that was already closed</td>
+<td>Per-module skip via the <code>ActionModel</code> markers; nothing rewritten</td>
+<td><code>dashboard/views.py:531-535</code></td>
+</tr>
+<tr>
+<td>Wrong password</td>
+<td>401 before any read or write</td>
+<td><code>dashboard/views.py:520-521</code></td>
+</tr>
+<tr>
+<td>A master opening endpoint fails mid-run</td>
+<td>Exception inside the atomic block rolls back everything; no partial opening state</td>
+<td><code>dashboard/views.py:506, 537-545</code></td>
+</tr>
+<tr>
+<td>Closing balances propagated to the masters</td>
+<td>Does not happen — all write-back code is commented out</td>
+<td><code>dashboard/views.py:577-580, 591-593, 607-614, 640-650</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Dashboard - sync tracker ops (sync-create-record / sync-create-record-v3 / sync-accounting-report) — TRANSACTION"><h2 id="dashboard-sync-tracker-ops-sync-create-record-sync-create-record-v3-sync-accounting-report-transaction">Dashboard - sync tracker ops (sync-create-record / sync-create-record-v3 / sync-accounting-report) — TRANSACTION</h2>
+<p><strong>What happens.</strong> Three internal, password-protected endpoints that repair the warehouse. <code>sync-create-record</code> takes known entry IDs, asks each module&#39;s own sync endpoint to resend the full payloads, and stores them with the same save helpers the consumer path uses. <code>sync-create-record-v3</code> re-publishes raw events to a remote Kafka producer service so the normal consumer path replays them. <code>sync-accounting-report</code> rebuilds the persisted TB/P&amp;L/BS snapshot tables. The first two stamp <code>SyncTracker</code> rows (per-tenant last sync time); the third returns 202 immediately after starting the per-tenant rebuilds.</p>
+<h3 id="trace-sync-create-record-code-post-api-dashboard-sync-create-record-code">Trace — sync-create-record (<code>POST /api/dashboard/sync-create-record/</code>)</h3>
+<ol>
+<li><code>dashboard/views.py:1018-1188</code>. Internal password check (<code>:1026-1030</code>); no tenant in the body → enumerate <strong>all</strong> tenants from <code>TENANT_LIST_URL</code> (<code>:1031-1035</code>).</li>
+<li>Payload build: known entry IDs per module plus product IDs — <code>build_payload_for_tenant</code> (<code>dashboard/sync_data.py:175-207</code>) produces <code>{password, tid: {txn_type: [entry_ids], product: [product_ids]}}</code>.</li>
+<li>Per module: POST to the module&#39;s own records-sync URL (e.g. <code>PRODUCT_RECORDS_SYNC_URL</code>, <code>dashboard/views.py:1077-1079</code>; sales/purchase/accounting analogous), then store the response with <code>save_product_transactions</code> / <code>save_product_materialize</code> / <code>save_sales_transactions</code> / <code>save_purchase_transactions</code> / <code>save_accounting_transactions</code> (<code>dashboard/sync_data.py:20-164</code>) — the same upserts the consumer would have done, so the ledger/valuation rebuild semantics are identical.</li>
+<li><code>create_sync_tracker_record</code> stamps <code>SyncTracker(tenant, service, last_sync_time)</code> (<code>dashboard/sync_data.py:166-172</code>).</li>
+<li>Any module error → 400 (<code>dashboard/views.py:1187-1188</code>).</li>
+</ol>
+<ul>
+<li><strong>Bug</strong>: the existing-ID dedupe inside every <code>save_*</code> helper is <strong>not scoped by tenant</strong> (<code>dashboard/sync_data.py:47-51, 72-74, 99-103, 127-131</code>) — if two tenants share an entry id, the second tenant&#39;s rows are skipped as &quot;already synced&quot;.</li>
+</ul>
+<h3 id="trace-sync-create-record-v3-code-post-api-dashboard-sync-create-record-v3-code">Trace — sync-create-record-v3 (<code>POST /api/dashboard/sync-create-record-v3/</code>)</h3>
+<ol>
+<li><code>dashboard/views.py:1366-1417</code>. Password (<code>:1371-1374</code>); requires <code>action</code> / <code>data</code> / <code>event_type</code> / <code>event_topic</code> (<code>:1376-1378</code>); all-tenant fallback via <code>TENANT_LIST_URL</code> (<code>:1379-1383</code>).</li>
+<li>Per tenant: POST <code>{action, data, tenant_id}</code> to <code>APILinks.KAFKA_PRODUCER_URL</code> using a <code>requests.Session</code> (<code>:1399-1403</code>) — the producer re-publishes onto Kafka and the normal consumer picks the event up, so all consumer side effects (ledgers, valuation, markers) apply.</li>
+<li>Returns 202 with per-tenant HTTP status codes (<code>:1410-1417</code>).</li>
+</ol>
+<h3 id="trace-sync-accounting-report-code-post-api-dashboard-sync-accounting-report-code">Trace — sync-accounting-report (<code>POST /api/dashboard/sync-accounting-report/</code>)</h3>
+<ol>
+<li><code>dashboard/views.py:1191-1224</code>. Password (<code>:1196-1199</code>); all tenants when none given (<code>:1200-1208</code>).</li>
+<li>Per tenant, rebuild the persisted reports in fixed order — trial balance → profit &amp; loss → balance sheet (<code>:1215-1217</code>, calls <code>trigger_persisted_trial_balance_report</code> <code>accounting/trial_balance_ledger.py:510</code>, <code>trigger_persisted_pl_report</code> <code>accounting/profit_loss_ledger.py:425</code>, <code>trigger_persisted_balance_sheet_report</code> <code>accounting/balance_sheet_ledger.py:421</code>). The order is required because the BS reads the persisted P&amp;L net profit for retained earnings (comment <code>:1210-1214</code>; <code>_persisted_pl_net_profit</code>, <code>accounting/balance_sheet_ledger.py:49-64</code>).</li>
+<li>Each trigger collects all of the tenant&#39;s ledger entry dates, dedupes the fiscal years, and rebuilds each FY (full rebuild vs incremental per the key (tenant, date_type, fiscal_year, parent_id, child_id) — <code>accounting/trial_balance_ledger.py:253-291</code>; P&amp;L <code>profit_loss_ledger.py:379-424</code>; BS <code>balance_sheet_ledger.py:141-180</code>). Each trigger runs in a nested savepoint and logs errors to <code>KafkaTestModel</code> instead of failing the batch (<code>accounting/trial_balance_ledger.py:555-557, 574-586</code>).</li>
+<li><strong>Key fact</strong>: the per-transaction triggers that would keep these snapshots fresh are <strong>commented out</strong> in the live ingestion path (<code>accounting/account_ledger.py:470-474</code>). The only live call sites are these three lines — so the persisted TB/P&amp;L/BS snapshots are stale until someone calls this endpoint.</li>
+<li>Returns 202 &quot;Reconciliation started&quot; (<code>:1218-1224</code>).</li>
+</ol>
+<h3 id="diagrams">Diagrams</h3>
+<p>sync-create-record flow:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST with entry ids and password] --&gt; B{password ok}
+    B --&gt;|no| C[401]
+    B --&gt;|yes| D{tenants given}
+    D --&gt;|no| E[fetch all tenants from TMS]
+    D --&gt;|yes| F[per-tenant payload build]
+    E --&gt; F
+    F --&gt; G[POST to product module sync endpoint]
+    G --&gt; H[save_product_materialize + save_product_transactions]
+    H --&gt; I[POST to sales module sync endpoint]
+    I --&gt; J[save_sales_transactions]
+    J --&gt; K[POST to purchase module sync endpoint]
+    K --&gt; L[save_purchase_transactions]
+    L --&gt; M[POST to accounting module sync endpoint]
+    M --&gt; N[save_accounting_transactions]
+    N --&gt; O[stamp SyncTracker last_sync_time]
+    O --&gt; P{any module error}
+    P --&gt;|yes| Q[400]
+    P --&gt;|no| R[200]
+</pre></div>
+<p>sync-create-record-v3 flow:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST with action and data and event_topic] --&gt; B{password and fields valid}
+    B --&gt;|no| C[400 or 401]
+    B --&gt;|yes| D{tenants given}
+    D --&gt;|no| E[fetch all tenants from TMS]
+    D --&gt;|yes| F[loop tenants]
+    E --&gt; F
+    F --&gt; G[POST event to remote Kafka producer URL]
+    G --&gt; H[consumer picks event up normally]
+    H --&gt; I[202 with per-tenant status codes]
+</pre></div>
+<p>sync-accounting-report flow:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST with password] --&gt; B{password ok}
+    B --&gt;|no| C[401]
+    B --&gt;|yes| D{tenants given}
+    D --&gt;|no| E[fetch all tenants from TMS]
+    D --&gt;|yes| F[loop tenants]
+    E --&gt; F
+    F --&gt; G[rebuild persisted trial balance per FY in savepoint]
+    G --&gt; H[rebuild persisted profit and loss per FY in savepoint]
+    H --&gt; I[rebuild persisted balance sheet per FY in savepoint]
+    I --&gt; J[202 Reconciliation started]
+</pre></div>
+<p>Snapshot freshness — why the persisted reports go stale:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; Fresh : sync-accounting-report rebuild
+    Fresh --&gt; Stale : any new accounting event (trigger commented out)
+    Stale --&gt; Fresh : sync-accounting-report rebuild
+</pre></div>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>sync-create-record: re-upserts into all transaction-view tables via the <code>save_*</code> helpers; <code>SyncTracker</code> rows per (tenant, service).</li>
+<li>sync-create-record-v3: Kafka messages via the remote producer; all normal consumer side effects follow.</li>
+<li>sync-accounting-report: <code>TrialBalanceReportView</code> / <code>ProfitAndLossReportView</code> / <code>BalanceSheetReportView</code> rows rebuilt per FY; per-FY errors land in <code>KafkaTestModel</code>.</li>
+</ul>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One sales invoice row missing after a consumer failure</td>
+<td><code>sync-create-record</code> with that entry id re-pulls the full payload from the sales module and upserts it; <code>SyncTracker</code> stamped</td>
+<td><code>dashboard/views.py:1018-1188</code>; <code>dashboard/sync_data.py:70-94, 166-172</code></td>
+</tr>
+<tr>
+<td>Same entry id exists under two tenants</td>
+<td>Second tenant&#39;s rows skipped by the un-tenant-scoped dedupe</td>
+<td><code>dashboard/sync_data.py:47-51, 72-74, 99-103, 127-131</code></td>
+</tr>
+<tr>
+<td>Replay a raw event instead of pulling payloads</td>
+<td>v3 re-publishes it; the consumer rebuilds ledgers exactly as on first delivery</td>
+<td><code>dashboard/views.py:1366-1417</code></td>
+</tr>
+<tr>
+<td>Persisted P&amp;L is a day behind the live ledger</td>
+<td>Nobody calls <code>sync-accounting-report</code>; the per-event trigger is commented out in the ingest path</td>
+<td><code>accounting/account_ledger.py:470-474</code>; <code>dashboard/views.py:1215-1217</code></td>
+</tr>
+<tr>
+<td>One tenant&#39;s TB rebuild fails</td>
+<td>Savepoint rolls back that tenant&#39;s TB; P&amp;L and BS for that tenant still run; error row in KafkaTestModel</td>
+<td><code>accounting/trial_balance_ledger.py:555-557, 574-586</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Report endpoints — query assembly (READ)"><h2 id="report-endpoints-query-assembly-read">Report endpoints — query assembly (READ)</h2>
+<p>All 27 READ endpoints compute from the local tables on every request; none of them write. The auth pattern is the one described in the classification section (live IAM token verify + live per-feature permission check, feature swapped per <code>?report=</code> in <code>initial()</code>).</p>
+<p><strong>One-liners (beyond the four headline blocks below):</strong></p>
+<ul>
+<li><code>/api/sales/report/v2/</code> — dispatches 9 types (quotation, sales order, delivery note, return DN, sales book, sales return, sales register, sales return register, materialised view) by <code>?report=</code>; register types take a month plus fiscal-year bounds (<code>sales/views.py:128-264</code>).</li>
+<li><code>/api/purchase/report/v2/</code> — mirror of the sales dispatch over <code>PurchaseTransactionView</code>.</li>
+<li><code>/api/inventory/report/v3/</code> — reads the consumer-built <code>InventoryValuationReport</code> / <code>InventoryValuationBatchReport</code> tables per report type (<code>inventory/views.py:335-484</code>).</li>
+<li><code>/api/accounting/ap-ar-party-breakdown/</code> — party-wise AR/AP balances from <code>TransactionLedgerView</code> (<code>accounting/views.py:304-307</code>).</li>
+<li><code>/api/accounting/supplier-ageing-report/</code> / <code>customer-ageing-report/</code> — open invoice lines from the purchase/sales transaction views plus payment ledger rows, binned into ageing buckets (<code>accounting/views.py:425-432, 537-542</code>).</li>
+<li><code>/api/accounting/vat-summary-report/v2/</code> — VAT fields over sales and purchase invoice + return views (<code>accounting/views.py:627-667</code>).</li>
+<li><code>/api/accounting/transaction-report/</code> — cross-module feed over the four transaction views, paginated (<code>accounting/views.py:1012-1015</code>); <code>transaction-report-export-list/</code> is the identical query without pagination (<code>accounting/views.py:1252-1255</code>).</li>
+<li><code>/api/accounting/ageing-report/cms/</code> — internal-password copy of the ageing report for CMS (<code>accounting/views.py:1316-1317</code>).</li>
+<li><code>/api/accounting/get_closing_amount/</code> — closing inventory amount from the valuation tables (<code>accounting/views.py:1536</code>).</li>
+<li><code>/api/accounting/bill-ageing/&lt;party_type&gt;/</code> — <code>party_type</code> selects the customer or supplier side; the required feature and transaction types are set per side (<code>accounting/views.py:1626-1655</code>).</li>
+<li><code>/api/accounting/financial-position/</code> — financial overview vs financial transactions by <code>?report=</code> (<code>accounting/views.py:1555-1588</code>).</li>
+<li><code>/api/accounting/tds-report/</code> — transaction views joined with TDS master data fetched live from the Configuration service (<code>accounting/views.py:1925-1928</code>).</li>
+<li><code>/api/accounting/party-confirmation-letter/</code> — party balance plus transaction list for confirmation letters (<code>accounting/views.py:1982-2020</code>).</li>
+<li><code>/api/system/report/</code> — proxies the activity-log report to the events service (<code>system/views.py:20-38</code>).</li>
+<li><code>/api/dashboard/choices/</code> — report choice lists.</li>
+<li><code>/api/dashboard/get-party-closing-balance/</code> — party closing balances from the ledger for report UIs (<code>dashboard/views.py:1420</code>).</li>
+<li>The 8 analytics widgets — business overview, recent transactions, receivable/payable ageing summaries, receivable-vs-payable, revenue inflow, cash in/out, financial position insight — all aggregate the same local tables, each with its own feature permission (<code>analytics/views.py:32-922</code>).</li>
+</ul>
+<h3 id="trial-balance-how-the-query-is-assembled">Trial balance — how the query is assembled</h3>
+<p>Entry: <code>GET /api/accounting/report/v3/?report=trial_balance</code> → <code>trial_balance_report_v3</code> (<code>accounting/report_v3.py:385-585</code>).</p>
+<ol>
+<li>The chart of accounts is fetched live per tenant (<code>custom.get_coa_accounting</code>, <code>report_v3.py:405</code>); AR and AP are pinned to GL codes 11601 and 21901 (<code>:408-409</code>).</li>
+<li>Ledger rows: <code>TransactionLedgerView</code> filtered by tenant with <code>entry_date</code> cast to a date field (<code>:433-435</code>).</li>
+<li>Opening: for YEARLY/FY the opening is the last ledger row before the FY start (or the sum of rows flagged opening), falling back to the COA opening; for TODAY/DAYS/CUSTOM it is the last row before <code>from_date</code> (<code>:455-508</code>).</li>
+<li>In-range movements are summed to the closing per account, signed by the account&#39;s natural dr/cr (<code>:511-530</code>).</li>
+<li>GL 12501 override: the row is renamed &quot;Opening Inventory&quot;, its opening is taken from the product opening (<code>get_product_opening</code>) and its transaction totals are zeroed (<code>:549-564</code>).</li>
+<li>AR/AP party entries are appended from the party ledgers (<code>:576+</code>).</li>
+</ol>
+<p>Everything is computed on request from <code>TransactionLedgerView</code>; the persisted <code>TrialBalanceReportView</code> rows are a separate snapshot maintained only by <code>sync-accounting-report</code>.</p>
+<h3 id="profit-loss-how-the-query-is-assembled">Profit &amp; loss — how the query is assembled</h3>
+<p>Entry: <code>?report=profit_loss</code> → <code>profit_and_loss_report_v3</code> (<code>accounting/report_v3.py:1378-1511</code>).</p>
+<ol>
+<li>COA filtered to income/expense accounts only (<code>:1399-1405</code>); each account&#39;s latest balance up to <code>to_date</code> comes from <code>get_opening_of_ledger_balance</code> (<code>accounting/profit_loss_ledger.py:503-576</code>) and is sign-adjusted by the account&#39;s natural dr/cr (<code>report_v3.py:1424-1428</code>).</li>
+<li>Fixed COA-code buckets: Sales 42300, Direct income 41000, Purchases 51600, Direct expenses 51000, Indirect income 42000, Indirect expense 51300 (<code>report_v3.py:1460-1494</code>).</li>
+<li>COGS = opening inventory (<code>get_product_opening</code>) + purchases + direct expenses − closing inventory (from the valuation tables via <code>get_tenant_product_closing</code>, <code>report_v3.py:1467-1471</code>) — assembled at <code>:1472-1485</code>.</li>
+<li>Gross profit = sales − COGS (<code>:1488-1490</code>); net = gross + indirect income − indirect expense (<code>:1500-1504</code>). With <code>internal=True</code> the function returns only the net profit (<code>:1505-1506</code>) — that is the value the balance sheet plugs into retained earnings.</li>
+</ol>
+<h3 id="balance-sheet-how-the-query-is-assembled">Balance sheet — how the query is assembled</h3>
+<p>Entry: <code>?report=balance_sheet</code> → <code>balance_sheet_report_v3</code> (<code>accounting/report_v3.py:1157-1315</code>).</p>
+<ol>
+<li>COA filtered to asset/liabilities/equity accounts (<code>:1181-1196</code>); the product closing (valuation) is fetched once up front (<code>:1204</code>).</li>
+<li>Per account: latest ledger balance up to <code>to_date</code>, signed by natural dr/cr (<code>:1225-1240</code>), with two overrides — GL 12501 becomes &quot;Closing Inventory&quot; valued from the valuation closing (<code>:1209-1211</code>), and a retained-earnings equity account gets the period&#39;s net profit by calling <code>profit_and_loss_report_v3(internal=True, product_closing=...)</code> (<code>:1212-1224</code>).</li>
+<li>Accounts are grouped under their COA subgroups, then aggregated into main groups (<code>:1244-1297</code>).</li>
+<li>Balancing: <code>diff = assets − (liabilities + equity)</code> is added back as a &quot;Difference in Opening Balance&quot; line so the sheet always balances (<code>:1302-1313</code>).</li>
+</ol>
+<h3 id="sales-book-how-the-query-is-assembled">Sales book — how the query is assembled</h3>
+<p>Entry: <code>GET /api/sales/report/v2/?report=sales_book</code> → view dispatch (<code>sales/views.py:128-141</code>) → <code>sales_invoice_v2</code> (<code>sales/report_v2.py:323-449</code>).</p>
+<ol>
+<li>Base filters: <code>transaction_type=sales_invoice</code>, status (default approved), date range, customer — <code>customer=all</code> removes the filter (<code>report_v2.py:326-337</code>; date mechanics in <code>sales/views.py:104-117</code>).</li>
+<li>Row projection is an explicit field list over <code>SalesTransactionView</code>, ordered by entry date desc (<code>report_v2.py:340-367</code>); per row the customer detail is resolved by helper and zero amounts are returned as null (<code>:371-417</code>).</li>
+<li>Direct-JV sales rows are appended from the ledger and the whole list re-sorted by date (<code>:419-430</code>).</li>
+<li>Totals (grand, taxable, non-taxable, VAT, discount, export) are aggregated in the DB via <code>qs.aggregate</code> (<code>:433-447</code>).</li>
+<li>Pagination is optional — <code>paginate_if_required</code> returns a paginated response when requested (<code>sales/views.py:266-270</code>).</li>
+</ol>
+</section><section class="sec" data-title="Untraced / unverified"><h2 id="untraced-unverified">Untraced / unverified</h2>
+<ul>
+<li><strong>Superseded routes</strong> (still in <code>urls.py</code>, no deep trace): <code>/api/sales/report/item-wise/</code> (<code>sales/urls.py:12</code>), <code>/api/purchase/report/item-wise/</code> (<code>purchase/urls.py:12</code>), <code>/api/inventory/report/closing/</code> (<code>inventory/urls.py:6</code>), <code>/api/accounting/report/cms/</code> (<code>accounting/urls.py:57</code>, internal CMS copy of the v3 dispatch).</li>
+<li><strong><code>/api/inventory/cdxe/</code></strong> — excluded (miniapp domain) per scope addendum. Auth is Fernet per-tenant API-key (<code>dashboard/auth_backends.py:143-180</code>); <code>overview.md</code> describes a static <code>ESEWA_API_KEY</code>, which does not match the code.</li>
+<li><strong>Monthly closing does not exist as a process.</strong> <code>InventoryMonthlyClosing</code> (<code>inventory/models.py:192</code>) is orphaned — its only references are the model, Django admin (<code>inventory/admin.py:106-107</code>), the tenant-data-deletion allowlist (<code>dashboard/views.py:1296</code>) and migrations. The only closing flow in the service is the year-end opening transfer above.</li>
+<li><strong>Dead code</strong>: <code>handle_multiple_purchase_actions</code> (<code>kafka_consumer.py:420-438</code>) is defined but never called; <code>create_master_transaction</code> (<code>kafka_data_ingestor.py:164-199</code>) is superseded by the inline <code>handle_master</code>; <code>sync_single_tenant</code> (<code>dashboard/tasks.py:56</code>) has no call site anywhere in the service (not in the beat schedule, not in any view) — reachable only by manual Celery invocation.</li>
+<li><strong>Cancel payload quirk</strong>: <code>cancel_accounting_transaction</code> collects <code>account.get(&quot;unique_id&quot;)</code> but the <code>values()</code> projection (<code>account_id, entity_id, entity_type</code>) does not include it, so the ledger-cancel call always receives <code>unique_id=None</code> (<code>kafka_consumer.py:539-555</code>).</li>
+<li><strong>Cross-service calls are invoked but not traced</strong> (targets live in other services): TMS tenant list (<code>TENANT_LIST_URL</code>), the four module records-sync endpoints, the three master opening endpoints, IAM token verify + permission check, the remote Kafka producer (<code>KAFKA_PRODUCER_URL</code>), and the events-service activity log.</li>
+<li><strong>Analytics widget internals</strong> beyond auth and source tables were not traced.</li>
+<li><strong><code>update_remaining</code> sales payload path</strong> (<code>kafka_data_ingestor.py:338-340</code>): no producer of it exists in this service; treated as legacy.</li>
+<li><strong>Celery beat</strong> schedules exactly one job — daily 23:59 topic creation (<code>Reporting/celery.py:14-19</code>; a comment in that file says &quot;6:00 AM&quot;, which is wrong).</li>
+<li>The persisted-report <strong>incremental</strong> update branches (<code>_tb_incremental_update</code>, <code>_pl_incremental_update</code>, <code>_bs_incremental_update</code>) exist and are used by the triggers when only some accounts changed; the sync endpoint passes <code>account_id=None</code>, so the rebuilds that run in practice are the full ones.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../reporting/analytics.html"><div class="pn-dir">← Previous</div><div class="pn-name">Reporting - Analytics (Dashboard Insights)</div></a><a class="pn next" href="../reporting/reports.html"><div class="pn-dir">Next →</div><div class="pn-name">Reporting - Reports</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l3"><a href="#auth-pattern-applies-to-the-rows-above">Auth pattern (applies to the rows above)</a></li><li class="l2"><a href="#kafka-consumer-ingestion-cmd-kafka-consumer-transaction">Kafka consumer ingestion (CMD kafka_consumer) — TRANSACTION</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#per-topic-what-model-each-record-becomes">Per topic — what model each record becomes</a></li><li class="l3"><a href="#failure-behaviour">Failure behaviour</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#inventory-stock-valuation-rebuild-on-every-stock-movement-transaction">Inventory - stock valuation (rebuild on every stock movement) — TRANSACTION</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#dashboard-transfer-opening-history-transaction">Dashboard - transfer-opening-history — TRANSACTION</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#dashboard-sync-tracker-ops-sync-create-record-sync-create-record-v3-sync-accounting-report-transaction">Dashboard - sync tracker ops (sync-create-record / sync-create-record-v3 / sync-accounting-report) — TRANSACTION</a></li><li class="l3"><a href="#trace-sync-create-record-code-post-api-dashboard-sync-create-record-code">Trace — sync-create-record (&lt;code&gt;POST /api/dashboard/sync-create-record/&lt;/code&gt;)</a></li><li class="l3"><a href="#trace-sync-create-record-v3-code-post-api-dashboard-sync-create-record-v3-code">Trace — sync-create-record-v3 (&lt;code&gt;POST /api/dashboard/sync-create-record-v3/&lt;/code&gt;)</a></li><li class="l3"><a href="#trace-sync-accounting-report-code-post-api-dashboard-sync-accounting-report-code">Trace — sync-accounting-report (&lt;code&gt;POST /api/dashboard/sync-accounting-report/&lt;/code&gt;)</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#report-endpoints-query-assembly-read">Report endpoints — query assembly (READ)</a></li><li class="l3"><a href="#trial-balance-how-the-query-is-assembled">Trial balance — how the query is assembled</a></li><li class="l3"><a href="#profit-loss-how-the-query-is-assembled">Profit &amp; loss — how the query is assembled</a></li><li class="l3"><a href="#balance-sheet-how-the-query-is-assembled">Balance sheet — how the query is assembled</a></li><li class="l3"><a href="#sales-book-how-the-query-is-assembled">Sales book — how the query is assembled</a></li><li class="l2"><a href="#untraced-unverified">Untraced / unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

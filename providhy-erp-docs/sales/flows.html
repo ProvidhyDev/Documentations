@@ -1,0 +1,1856 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sales - Business Flows (Traced) - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc current" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced)</h1>
+<p>At runtime the Sales service is a Django/DRF document manager with an approval engine on top. Every document (quotation, order, delivery note, delivery note return, invoice, return, customer payment, cheque) follows the same skeleton: a request is authenticated by IAMAuthenticationBackendSales (dashboard/auth_backends.py:19-51), which calls the IAM service /api/token/verify/ and only proceeds when the tenant is subscribed to SALES and the email is verified; HasPermission (dashboard/auth_backends.py:67-121) then enforces the per-view feature and action permission, with tenant-root bypass and an IAM internal-check-permissions call for non-GET writes. The status endpoints fetch the tenant approval-workflow configuration from the Configuration service (dashboard/send_requests.py get_configuration, URL dashboard/helper.py:162) and run either the basic flow (draft to submit to approve to cancel, self-approve allowed from draft) or the custom flow (any non-cancelled state can approve; cancel only from approved). Documents linked to inventory (order, delivery note, delivery note return, invoice, return) call the ProductManagement inventory manipulation API on every state move so reserved/issued stock follows the document lifecycle; invoices, returns, payments and cheques additionally post accounting journals through Celery tasks that call the Accounting service, and e-billing tenants push every approved bill to the IRD CBMS API (<a href="https://cbapi.ird.gov.np/api/bill">https://cbapi.ird.gov.np/api/bill</a>, dashboard/helper.py:31) through a Celery retry task. Nothing in the payment endpoints touches an external payment provider - the eSewa Payment-Service path is not used in ProvidhyERP, payments are recorded locally and settled by journal posting.</p>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>Latest-version routes only. Class: READ = list/search/detail, RECORD = simple create/update/delete, TRANSACTION = state-changing business flow (deep-traced below), OPS = internal or ops endpoint, EXCLUDED = not documented in these pages.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Endpoint(s)</th>
+<th>Method</th>
+<th>Class</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create, validated via write-only serializer</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail with feature check</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update, draft/rejected only</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only, no feature check</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Basic/custom approval flow, see section</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject or revert, see section</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password, flat list for accounting</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen, user row filter</td>
+</tr>
+<tr>
+<td>Quotation</td>
+<td>/api/sales/quotation/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Embedded picker, no feature check</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update, draft only</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + stock reservation, see section</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert + stock release, see section</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>/api/sales/order/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Approved-order picker</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/v2/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create (v2 only, superseded v1 not documented)</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + stock issue, see section</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert + stock release, see section</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Picker</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/report-dn/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Report picker</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/import/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Excel import (creates orders/DNs)</td>
+</tr>
+<tr>
+<td>Delivery note</td>
+<td>/api/sales/delivery-note/import/item/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Imported-item detail</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/v2/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create (v2 only)</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + stock return, see section</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert, see section</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password</td>
+</tr>
+<tr>
+<td>Delivery note return</td>
+<td>/api/sales/delivery-note-return/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Create; for e-billing tenants this auto-approves, posts to IRD and journals, see section</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + stock + IRD + journal, see section</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert + stock release, see section</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/print/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Mark invoice printed, activity log</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/approval-list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, approved list for accounting</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen with ebilling filters</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Picker</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/retry/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Re-post failed IRD bill via Celery, see section</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/sales-invoice-approved-all/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal flat approved list</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/update-remaining-amount/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Recalculate remaining_amount to grand_total</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/ageing/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, unpaid balances for accounting</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/ageing-v2/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, ageing report</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/annex-report/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal annex report</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/detail-cheque/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal, cheque-ready invoice details</td>
+</tr>
+<tr>
+<td>Invoice</td>
+<td>/api/sales/invoice/list-internal/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal list</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Create; e-billing tenants auto-approve + IRD credit note, see section</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/detail-no-perm/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM only</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + stock + IRD + journal, see section</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert + stock release, see section</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/print/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Mark printed</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/retry/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Re-post failed IRD credit note, see section</td>
+</tr>
+<tr>
+<td>Sales return</td>
+<td>/api/sales/return/fix-approved-datetime/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Backfill approved_date_time, ops repair</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List by status</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create (draft)</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>List screen</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/customer-invoice-list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Invoices allocatable to a payment</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Draft only</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approval flow + customer account journal, see section</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert, see section</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/quick/frontend/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>One-step approved payment against an invoice, see section</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/quick-payment-check/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, quick-payment eligibility</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/fetch-internal/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal, fetch by ids (no tenant filter)</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/get-customer-advance/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, customer advance summary</td>
+</tr>
+<tr>
+<td>Customer payment</td>
+<td>/api/sales/payment/customer-payment-info/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Payment summary for an invoice</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Create received cheque (is_cheque customer payment)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/detail/<pk>/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Detail</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/detail/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Update</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Search</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/status/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Record status + cheque lifecycle deposit/clear/bounce/void, see section</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/cancel-submission/<pk>/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Reject/revert, see section</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/delete/<pk>/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Delete, draft rules in base class</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/delete-internal/<pk>/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password delete</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/list-internal/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal list (used by other services)</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/notf-issued-due-date/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal, due-date sweep notifications</td>
+</tr>
+<tr>
+<td>Cheque</td>
+<td>/api/sales/cheque/modify-cheque/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal, migration flagging</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Create e-billing bill, auto-approve + IRD post, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approve (draft to approved with IRD post); cancel is rejected in code, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/print/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Mark printed</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/retry/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Explicit IRD re-post via Celery, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/return/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Create credit note, auto-approve + IRD post, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/return/status/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Credit note status, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/return/print/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Mark printed</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/sales/billing/return/retry/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Credit note IRD re-post, see section</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/config/ird-config/</td>
+<td>GET/POST</td>
+<td>RECORD</td>
+<td>Tenant IRD PAN/e-permit/credentials setup</td>
+</tr>
+<tr>
+<td>Ebilling</td>
+<td>/api/config/ird-config-internal/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal, other services read tenant IRD config</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/credit/* (user/search, merchant/search, ledger, customer, overview, create, search, detail, pay)</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp routes, separate docs domain</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/dispute/* (raise, cancel, search, detail, customer, admin)</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp routes</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/settlement/* (manual/create, detail, search, customer, internal)</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp routes</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/payment/request/ and settle</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp routes</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/records/delete/customer/</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp routes</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/miniapp/admin/* (dispute search/detail, credit overview)</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Federated eSewa miniapp admin routes</td>
+</tr>
+<tr>
+<td>Miniapp</td>
+<td>/api/dashboard/delete-miniapp-records/</td>
+<td>*</td>
+<td>EXCLUDED - miniapp domain</td>
+<td>Miniapp record deletion, dashboard app</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Quotation - status change and cancel-submission"><h2 id="quotation-status-change-and-cancel-submission">Quotation - status change and cancel-submission</h2>
+<p>What happens: A draft quotation moves through the tenant&#39;s configured approval workflow. In the basic flow it must be submitted for approval (to someone else), then approved by that approver, or approved directly from draft by its creator; in the custom flow any non-cancelled state can be approved in one step. Approval and cancel only flip local state - no stock, no journal, no IRD - but every move writes an activity log, a notification and a Kafka record. A submitted quotation can be rejected (by the approver) or reverted to draft (by its creator), both of which re-emit the reject Kafka record.</p>
+<h3 id="trace-post-api-sales-quotation-status">Trace - POST /api/sales/quotation/status/</h3>
+<ol>
+<li>Auth: IAMAuthenticationBackendSales verifies the JWT at IAM and requires the SALES subscription and verified email (dashboard/auth_backends.py:19-51). Permission: SALES_QUOTATION + VIEW, escalated to APPROVE_CANCEL when the requested status is not submit_for_approval (sales/sales_quotation/views.py:211-224, HasPermission at dashboard/auth_backends.py:67-121).</li>
+<li>Tenant-scoped fetch; 404-equivalent ValidationError when missing (views.py:226-231).</li>
+<li>The tenant approval-workflow configuration is fetched from the Configuration service (views.py:338-343, helper.CONFIGURATION_URL dashboard/helper.py:162). title basic routes to the basic flow, custom to the custom flow, and a missing configuration raises a 503 TemporaryServiceUnavailableError (views.py:344-352).</li>
+<li>Submit (basic, draft only): self-submission is rejected (views.py:356-357); every item product is validated through the PMS product check (views.py:358-370); the approval_user must exist in the tenant (views.py:372-373, helper.validate_approval_user); approval fields are set, prior rejected fields are cleared (custom.clear_rejected_fields, dashboard/custom_functions.py:187), and the row is saved (views.py:375-382).</li>
+<li>Approve (basic): allowed from submit_for_approval by the named approver, or from draft by the creator (views.py:239-252, 260-269); the basic-flow compulsion check runs first (views.py:295, helper.check_for_basic_flow_compulsions). Approve from submit additionally validates products (views.py:421-424). Approval fields, save, activity log, Kafka approval record (views.py:420-467; record SALES_QUOTATION_APPROVAL_RECORD views.py:453-467).</li>
+<li>Cancel (basic): only from approved, or from submit_for_approval by the named approver (views.py:254-258, 301-309); a linked sales order in submit or approved state blocks the move (views.py:274-287). Cancel fields, save, activity log, Kafka cancel record (views.py:469-516).</li>
+<li>Custom flow: approve from any non-cancelled state after the custom compulsion check (views.py:313-328), cancel only from approved.</li>
+<li>Error paths: wrong approver or state returns INVALID_APPROVE_REQUEST (views.py:299), INVALID_CANCEL_REQUEST (views.py:309), INVALID_STATUS (views.py:311), no configuration gives 503 (views.py:352).</li>
+</ol>
+<h3 id="trace-post-api-sales-quotation-cancel-submission">Trace - POST /api/sales/quotation/cancel-submission/</h3>
+<ol>
+<li>Only valid while in submit_for_approval (views.py:518-531).</li>
+<li>Rejection branch (request type rejection, caller is the approval_user): rejected fields are set, an ERROR notification and a rejection activity log are written, and the Kafka reject record is emitted (views.py:546-597).</li>
+<li>Revert branch (caller is the entry_by, no type): approval fields are cleared, CANCEL_SUBMISSION activity log, same Kafka reject record type (views.py:568-605).</li>
+<li>Any other caller/state returns 400 INVALID_REQUEST (views.py:607-609).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Events notification to the approver on submit - custom.send_notification (dashboard/custom_functions.py:33, view views.py:384-390)</li>
+<li>Activity log entries for submit, approve, cancel, rejection, revert - custom.create_activity_log (custom_functions.py:66; views.py:391, 443, 492, 546, 583)</li>
+<li>Kafka records via call_kafka (dashboard/kafka_function.py:65): submit, approval, cancel, reject (views.py:403, 453, 501, 592)</li>
+<li>PMS product validation HTTP call on submit (views.py:362-370)</li>
+<li>No inventory, no journal, no IRD interaction</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Document lifecycle:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit
+  draft --&gt; approved : approve from draft by creator
+  submit_for_approval --&gt; approved : approve by approver
+  submit_for_approval --&gt; draft : reject by approver
+  submit_for_approval --&gt; draft : revert by creator
+  approved --&gt; cancelled : cancel
+  draft --&gt; draft : approve rejected state in custom flow
+  cancelled --&gt; [*]
+</pre></div>
+<p>Basic vs custom dispatch:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST status] --&gt; B{approval config title}
+  B --&gt;|basic| C{requested status}
+  B --&gt;|custom| D{requested status}
+  B --&gt;|missing| E[503 service unavailable]
+  C --&gt;|submit from draft| F[validate products and approver]
+  C --&gt;|approve from submit| G{caller is approver}
+  C --&gt;|approve from draft| H{caller is creator}
+  C --&gt;|cancel from approved| I[cancel and log]
+  C --&gt;|other| J[400 invalid status]
+  F --&gt; K[notify and kafka submit]
+  G --&gt;|yes| L[approve and kafka]
+  G --&gt;|no| M[400 invalid approve request]
+  H --&gt;|yes| L
+  H --&gt;|no| M
+  D --&gt;|approve from non-cancelled| L
+  D --&gt;|cancel from approved| I
+  D --&gt;|other| J
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve from draft, basic flow, creator</td>
+<td>Allowed, one-step approve with basic compulsion check</td>
+<td>views.py:239-252, 294-297</td>
+</tr>
+<tr>
+<td>Approve from draft, basic flow, non-creator</td>
+<td>400 INVALID_APPROVE_REQUEST</td>
+<td>views.py:260-269, 299</td>
+</tr>
+<tr>
+<td>Approve from submit, wrong user</td>
+<td>400 INVALID_APPROVE_REQUEST</td>
+<td>views.py:263-268, 299</td>
+</tr>
+<tr>
+<td>Cancel approved quotation with live linked order</td>
+<td>Blocked, linked record error</td>
+<td>views.py:274-287</td>
+</tr>
+<tr>
+<td>Tenant has no approval workflow configuration</td>
+<td>503 service unavailable</td>
+<td>views.py:352</td>
+</tr>
+<tr>
+<td>Submit to yourself</td>
+<td>400 you cannot submit to yourself</td>
+<td>views.py:356-357</td>
+</tr>
+<tr>
+<td>Rejected quotation re-submitted</td>
+<td>Rejected fields cleared on save</td>
+<td>views.py:380-382</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Order - status change and cancel-submission"><h2 id="order-status-change-and-cancel-submission">Order - status change and cancel-submission</h2>
+<p>What happens: A sales order behaves like a quotation but reserves stock in the ProductManagement service on every state move - submit reserves, approve converts the reservation into issued stock, cancel rolls it back, and cancel-submission releases it. Orders that reference a quotation additionally enforce that the quotation is not cancelled and that per-item quantities stay within the remaining quoted quantities. Cancel is blocked while a linked delivery note or invoice is live.</p>
+<h3 id="trace-post-api-sales-order-status">Trace - POST /api/sales/order/status/</h3>
+<ol>
+<li>Auth and permission as in quotation, feature SALES_ORDER, action VIEW to APPROVE_CANCEL (sales/sales_order/views.py:240-258).</li>
+<li>Tenant-scoped fetch (views.py:259-266).</li>
+<li>Configuration fetch from the Configuration service; basic vs custom dispatch; 503 when missing (views.py:421-436, dashboard/helper.py:162).</li>
+<li>Submit (basic, draft only): self-submission rejected (views.py:441-442). When the order references a quotation: the quotation must not be cancelled, each item is checked against remaining quotation quantities, and the whole quotation is re-validated (views.py:444-455). A stock payload is built per item (product, primary quantity, batch flag - views.py:519-527) and posted to the PMS check-manipulation API with entry_status submit (views.py:464-474, helper.INVENTORY_MANIPULATION_API dashboard/helper.py:101); a 4xx from PMS raises the PMS error, 5xx raises service unavailable (views.py:668-686). Approval user validated (views.py:476-477); fields set, save, notification, activity log, Kafka submit record (views.py:478-510).</li>
+<li>Approve: same quotation guards and stock call with entry_status approved (views.py:535-570); then approval fields, save, activity log, Kafka approval record (views.py:572-598).</li>
+<li>Cancel: cancel_check blocks when a linked delivery note or sales invoice is in submit or approved state (views.py:289-312); from submit only the approver may cancel, from approved anyone with the action (views.py:348-369); stock rollback call with entry_status cancelled (views.py:600-636), then cancel fields, save, activity log, Kafka cancel record (views.py:643-666).</li>
+<li>Custom flow: approve from any state with custom compulsion check, cancel only from approved (views.py:400-410).</li>
+<li>Error paths: INVENTORY_NOT_FOUND when PMS returns 4xx or a JSON decode failure (views.py:673-686), INVALID_APPROVE_REQUEST (views.py:381), INVALID_CANCEL_REQUEST (views.py:390), INVALID_STATUS (views.py:396), 503 (views.py:436).</li>
+</ol>
+<h3 id="trace-post-api-sales-order-cancel-submission">Trace - POST /api/sales/order/cancel-submission/</h3>
+<ol>
+<li>Only while in submit_for_approval, and only by the creator or the approval_user (views.py:707-717).</li>
+<li>Stock reservation released by a PMS call with entry_status cancel_submission (views.py:727-735); referenced quotations are re-validated first (views.py:718-726, 816-826).</li>
+<li>Rejection branch: type rejection with the approver - rejected fields, rejection activity log and ERROR notification, Kafka reject record (views.py:738-773).</li>
+<li>Revert branch: creator without type - approval_user cleared, CANCEL_SUBMISSION activity log, same Kafka reject record (views.py:774-793).</li>
+<li>Otherwise 400 INVALID_REQUEST (views.py:794-796).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>PMS inventory reservation, issue, release and cancel-submission release via check-manipulation (views.py:471, 565, 631, 733; helper.py:101)</li>
+<li>Notification on submit (views.py:485-491), ERROR notification on rejection (views.py:749-757)</li>
+<li>Activity logs for submit, approve, cancel, rejection, revert (views.py:492, 582, 652, 741, 775)</li>
+<li>Kafka records submit, approval, cancel, reject (views.py:504, 592, 661, 764, 784)</li>
+<li>Quotation quantity and validity checks against the referenced quotation (views.py:444-455, 816-826)</li>
+<li>No journal, no IRD</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Lifecycle with stock side:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit and reserve stock
+  draft --&gt; approved : approve from draft and issue stock
+  submit_for_approval --&gt; approved : approve and issue stock
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert and release stock
+  approved --&gt; cancelled : cancel and roll back stock
+  cancelled --&gt; [*]
+</pre></div>
+<p>Stock call variants:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[State move on order] --&gt; B{references quotation}
+  B --&gt;|yes| C{quotation cancelled}
+  C --&gt;|yes| D[400 referenced quotation invalid]
+  C --&gt;|no| E[item quantity within remaining quote]
+  B --&gt;|no| F[build item payload]
+  E --&gt; F
+  F --&gt; G{entry status}
+  G --&gt;|submit| H[PMS reserve stock]
+  G --&gt;|approved| I[PMS issue stock]
+  G --&gt;|cancelled| J[PMS roll back stock]
+  G --&gt;|cancel_submission| K[PMS release reservation]
+  H --&gt; L{PMS response}
+  I --&gt; L
+  J --&gt; L
+  K --&gt; L
+  L --&gt;|200| M[save status and emit events]
+  L --&gt;|4xx| N[400 with PMS error text]
+  L --&gt;|5xx| O[400 service unavailable]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Submit order whose quotation was cancelled</td>
+<td>400 referenced quotation invalid</td>
+<td>views.py:444-446</td>
+</tr>
+<tr>
+<td>Approve with item quantity above remaining quotation quantity</td>
+<td>400 quantity not validated</td>
+<td>views.py:448-449, 820-824</td>
+</tr>
+<tr>
+<td>Cancel approved order with a live delivery note</td>
+<td>Blocked linked record error</td>
+<td>views.py:289-303</td>
+</tr>
+<tr>
+<td>PMS returns 4xx on stock call</td>
+<td>400 with the PMS error payload</td>
+<td>views.py:675-683</td>
+</tr>
+<tr>
+<td>Non-creator reverts a submitted order</td>
+<td>400 invalid request</td>
+<td>views.py:774-796</td>
+</tr>
+<tr>
+<td>Tenant without approval config</td>
+<td>503 service unavailable</td>
+<td>views.py:436</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Delivery note - status change and cancel-submission"><h2 id="delivery-note-status-change-and-cancel-submission">Delivery note - status change and cancel-submission</h2>
+<p>What happens: A delivery note issues stock when it leaves draft. The same basic/custom approval engine applies, but every state move posts a stock payload that carries batch ids and a reference flag (order vs independent) to the PMS check-manipulation API, using the v2 endpoint for revamped notes. Cancellation is blocked while a linked delivery note return or sales invoice is live, and cancel from an active state rolls stock back before the status is saved.</p>
+<h3 id="trace-post-api-sales-delivery-note-status">Trace - POST /api/sales/delivery-note/status/</h3>
+<ol>
+<li>Auth and permission as before, feature DELIVERY_NOTE (sales/delivery_note/views.py:317-330).</li>
+<li>Tenant-scoped fetch (views.py:332-337).</li>
+<li>Configuration fetch and dispatch; 503 when missing (views.py:374-380, 444, dashboard/helper.py:162).</li>
+<li>Basic flow in one branch per requested status: submit from draft (views.py:381-387), approve from submit by the approver or from draft by the creator after the basic compulsion check (views.py:389-407), cancel from submit by the approver or from approved (views.py:408-420).</li>
+<li>Stock call per item: product, batch_id, primary quantity, batch flag, plus reference order or independent (views.py:554-584 for approve, 631-670 for submit, 491-526 for cancel rollback). Revamped notes hit the v2 PMS endpoint, others the v1 endpoint (views.py:520-523; helper.DRN_MANIPULATION_API / DRN_MANIPULATION_API_V2, dashboard/helper.py:102-103).</li>
+<li>Order-referenced notes additionally validate the referenced sales order is not cancelled and that item quantities stay within the remaining order quantities (views.py:557-569, 634-646).</li>
+<li>Submit: approval user validated, fields set, save, notification, activity log, Kafka submit record (views.py:672-717).</li>
+<li>Approve: approval fields, save, activity log, Kafka approval record (views.py:594-629).</li>
+<li>Cancel: rollback stock call first when coming from an active state (views.py:470-489, 491-526), then cancel fields, save, activity log, Kafka cancel record (views.py:528-552).</li>
+<li>Custom flow: approve from any non-cancelled state after the custom compulsion check, cancel branch present (views.py:426-443).</li>
+</ol>
+<h3 id="trace-post-api-sales-delivery-note-cancel-submission">Trace - POST /api/sales/delivery-note/cancel-submission/</h3>
+<ol>
+<li>Only from submit_for_approval (views.py:769-800).</li>
+<li>Stock reservation released via PMS (views.py:844-849).</li>
+<li>Rejection by the approver or revert by the creator with activity log, ERROR notification on rejection, and Kafka reject record (views.py:855-920).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>PMS stock issue on approve/submit, rollback on cancel, release on cancel-submission (views.py:521, 587, 665, 844; helper.py:101)</li>
+<li>Notification and activity log per move (views.py:684-697, 605-611, 537-543, 855-870, 893-902)</li>
+<li>Kafka records submit, approval, cancel, reject (views.py:703, 615, 547, 878, 902)</li>
+<li>Referenced sales order quantity and status checks (views.py:557-569, 801-823)</li>
+<li>No journal, no IRD</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit and reserve stock
+  draft --&gt; approved : approve from draft and issue stock
+  submit_for_approval --&gt; approved : approve and issue stock
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert and release stock
+  approved --&gt; cancelled : cancel and roll back stock
+  cancelled --&gt; [*]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[State move on delivery note] --&gt; B{note references sales order}
+  B --&gt;|yes| C{order cancelled}
+  C --&gt;|yes| D[400 referenced order invalid]
+  C --&gt;|no| E[item quantity within remaining order]
+  B --&gt;|no| F[payload reference independent]
+  E --&gt; F
+  F --&gt; G{revamped note}
+  G --&gt;|yes| H[PMS v2 manipulation]
+  G --&gt;|no| I[PMS v1 manipulation]
+  H --&gt; J{PMS response}
+  I --&gt; J
+  J --&gt;|200| K[save status and emit events]
+  J --&gt;|non-200| L[400 inventory not found]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cancel approved DN with a live sales return</td>
+<td>Blocked linked record error</td>
+<td>views.py:346-353</td>
+</tr>
+<tr>
+<td>Approve DN whose referenced order is cancelled</td>
+<td>400 referenced order invalid</td>
+<td>views.py:557-559</td>
+</tr>
+<tr>
+<td>Revamped DN state move</td>
+<td>v2 PMS endpoint used</td>
+<td>views.py:520-523</td>
+</tr>
+<tr>
+<td>Non-creator revert of submitted DN</td>
+<td>400 invalid request</td>
+<td>views.py:796-799, 917-919</td>
+</tr>
+<tr>
+<td>PMS 5xx during stock call</td>
+<td>400 service unavailable</td>
+<td>views.py:736-740</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Delivery note return - status change and cancel-submission"><h2 id="delivery-note-return-status-change-and-cancel-submission">Delivery note return - status change and cancel-submission</h2>
+<p>What happens: A delivery note return pushes stock back to inventory. It runs the same basic/custom engine, but the stock calls target the dedicated note-return PMS endpoints instead of the generic check-manipulation API. Notably the cancel-submission path re-validates the referenced delivery note quantities but does not itself release the stock reservation.</p>
+<h3 id="trace-post-api-sales-delivery-note-return-status">Trace - POST /api/sales/delivery-note-return/status/</h3>
+<ol>
+<li>Auth and permission, feature RETURNS_DELIVERY_NOTE (sales/delivery_note_return/views.py:312-334).</li>
+<li>Tenant-scoped fetch (views.py:325-334).</li>
+<li>Configuration fetch and basic/custom dispatch; 503 when missing (views.py:346-360, dashboard/helper.py:162).</li>
+<li>Basic submit from draft (views.py:362-385, 452-456); stock call per item with product, batch and quantity (views.py:505-523, helper.INVENTORY_MANIPULATION_RDN_API dashboard/helper.py:105, v2 at helper.py:106-108).</li>
+<li>Basic approve from submit by approver or from draft by creator (views.py:368-373); stock call (views.py:560-576); approval fields, save, activity log, Kafka approval record (views.py:578-590 region).</li>
+<li>Basic cancel only from approved (views.py:437-450, 374-380); rollback stock call then cancel fields, activity log, Kafka cancel record (views.py:585-640 region).</li>
+<li>Custom flow: approve from draft only per the ApproverUser.SELF check, cancel from approved (views.py:387-401, 403-450).</li>
+<li>Error paths: INVALID_APPROVE_REQUEST (views.py:373), INVALID_CANCEL_REQUEST (views.py:380), INVALID_STATUS (views.py:382), 503 (views.py:360).</li>
+</ol>
+<h3 id="trace-post-api-sales-delivery-note-return-cancel-submission">Trace - POST /api/sales/delivery-note-return/cancel-submission/</h3>
+<ol>
+<li>Only from submit_for_approval, creator or approver (views.py:754-784).</li>
+<li>Referenced delivery note quantity re-validation; no PMS stock release call in this branch (views.py:785-786, 858-863).</li>
+<li>Rejection by the approver sets rejected fields, writes a rejection activity log and ERROR notification, Kafka reject record (views.py:789-828).</li>
+<li>Revert by the creator clears the approval user, CANCEL_SUBMISSION activity log, same Kafka reject record (views.py:829-852).</li>
+<li>Otherwise 400 INVALID_REQUEST (views.py:854-856).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>PMS note-return stock manipulation on submit/approve/cancel (views.py:516-518, 571-573, 594-596; helper.py:105-109)</li>
+<li>Activity log, ERROR notification on rejection, Kafka reject record (views.py:792-820, 830-844)</li>
+<li>Referenced DN quantity checks (views.py:858-863)</li>
+<li>No journal, no IRD</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit and reserve return stock
+  draft --&gt; approved : approve from draft custom flow
+  submit_for_approval --&gt; approved : approve by approver
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert
+  approved --&gt; cancelled : cancel and restore stock
+  cancelled --&gt; [*]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[State move on delivery note return] --&gt; B{basic or custom config}
+  B --&gt;|basic submit| C[stock call note-return API]
+  B --&gt;|basic approve| D[approver or creator check]
+  B --&gt;|basic cancel| E{status approved}
+  D --&gt; C
+  C --&gt; F{PMS response}
+  F --&gt;|200| G[save and emit events]
+  F --&gt;|non-200| H[400 inventory not found]
+  E --&gt;|yes| I[stock restore call then cancel]
+  E --&gt;|no| J[400 invalid cancel request]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cancel from submit_for_approval</td>
+<td>400 invalid cancel request, cancel needs approved</td>
+<td>views.py:437-450, 374-380</td>
+</tr>
+<tr>
+<td>Revert submitted DNR</td>
+<td>No stock release call, only DN quantity re-validation</td>
+<td>views.py:785-786, 858-863</td>
+</tr>
+<tr>
+<td>Rejection activity log entry</td>
+<td>Logged under SALES_ORDER feature, a copy-paste artifact</td>
+<td>views.py:792-798</td>
+</tr>
+<tr>
+<td>Custom flow approve from submit</td>
+<td>Not allowed, only draft self-approve</td>
+<td>views.py:390-395</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Invoice - create, status change, cancel-submission, retry, print"><h2 id="invoice-create-status-change-cancel-submission-retry-print">Invoice - create, status change, cancel-submission, retry, print</h2>
+<p>What happens: The sales invoice is the service&#39;s money document. A non-e-billing tenant can only ever create a draft (any attempt to create a non-draft bill is rejected), then drives it through the standard approval workflow, where every move also manipulates PMS stock. An e-billing tenant instead creates or approves the bill in one step: the invoice is auto-approved, a unique bill number is generated, the bill is pushed to the Nepal IRD CBMS API by a Celery retry task, quick payments are posted from the payment allocations, a Kafka bill record is emitted and an accounting journal is queued. Cancelled invoices roll stock back, void their quick payments and cancel the journal.</p>
+<h3 id="trace-post-api-sales-invoice-v2-create">Trace - POST /api/sales/invoice/v2/ (create)</h3>
+<ol>
+<li>Auth and permission, feature SALES_INVOICE, action ADD_EDIT (class SalesInvoiceListCreateRevamped, sales/sales_invoice/views.py:289).</li>
+<li>Required fields customer, items, entry_date, invoice_date; each item needs product_id, quantity, uom, rate (views.py:420-434). Fiscal year injected (views.py:435), fiscal-year validity checked (views.py:448-449).</li>
+<li>Serialized by SalesInvoiceSerializerWriteOnlyRevamped with an is_ebilling_user flag in context (views.py:436-445); uploaded images go to the Document service (views.py:454-456, helper.upload_image dashboard/helper.py).</li>
+<li>Non-e-billing tenant: draft=false is rejected outright with the e-billing error message (views.py:457-462); a unique_id is generated with the fiscal-year np name (views.py:537-543) and the row stays draft (views.py:544-553).</li>
+<li>E-billing tenant, draft=false: unique bill number generated (views.py:468-471); the tenant PAN is checked against the TMS service and must be verified (views.py:473-479, helper.TMS_PAN_INFO dashboard/helper.py:75); the tenant IRDConfiguration must exist with cbms enabled, otherwise IRD_CONFIG_MISSING (views.py:481-504).</li>
+<li>The bill is then auto-approved in place: stock is issued by the approval inventory call (post_bill, views.py:507), the approval flow runs (approved_last_flow, views.py:508), quick payments are posted from payment_allocations (views.py:511-512, custom.post_quick_customer_payment dashboard/custom_functions.py:529), and the Kafka bill record is emitted (views.py:514-528). An InvoiceFailed marker row is created and the Celery task retry_failed_invoice is scheduled with a 3 second countdown to push the bill to IRD (views.py:486-494); ebilling_status is set to posted (views.py:500-502).</li>
+</ol>
+<h3 id="trace-post-api-sales-invoice-status-non-e-billing-path">Trace - POST /api/sales/invoice/status/ (non-e-billing path)</h3>
+<ol>
+<li>Auth and permission, feature SALES_INVOICE; action VIEW escalated to APPROVE_CANCEL unless submitting (sales/sales_invoice/views.py:756-769).</li>
+<li>Tenant-scoped fetch (views.py:771-778); fiscal-year validity on the invoice entry date (views.py:801).</li>
+<li>Subscribed e-billing tenants must have an IRDConfiguration with cbms enabled before anything else (views.py:803-808), and are blocked from the classic submit and cancel branches (views.py:824-825, 851-852, 883-884) - they must use the ebilling endpoints.</li>
+<li>Configuration fetch and basic/custom dispatch; 503 when missing (views.py:813-819, 890).</li>
+<li>Basic submit (draft only): referenced sales order or delivery note must not be cancelled and item quantities must stay within the remaining reference quantities; stock reservation call with the invoice payload (views.py:1068-1108); then notification, activity log, Kafka submit record (views.py:1126-1145).</li>
+<li>Basic approve (from submit by approver, or from draft by creator, after basic compulsion): stock issue call (views.py:1225-1242), then approved_last_flow (views.py:1244-1347):<ul>
+<li>non-e-billing: approval activity log (views.py:1294-1301)</li>
+<li>approval fields, save (views.py:1303-1311)</li>
+<li>SALES_FLOW automation configuration read from the Configuration service (views.py:1312-1317)</li>
+<li>Kafka bill record (views.py:1318-1329)</li>
+<li>quick payments posted from payment_allocations (views.py:1331-1332, 1349-1353)</li>
+<li>if the automation configuration exists, the journal creation Celery task is invoked synchronously for the invoice (views.py:1334-1338)</li>
+</ul>
+</li>
+<li>Basic cancel: blocked while a linked sales return is live (views.py:780-794); from submit only the approver, from approved anyone with the action (views.py:850-864); stock rollback call with origin and both_addition flags (views.py:990-1032); then cancelled(): cancel fields, save, the invoice&#39;s quick payments are voided (custom.void_quick_customer_payment, views.py:1044, custom_functions.py:624), activity log, Kafka cancel record, and the journal cancellation Celery task when a journal exists (views.py:1034-1066).</li>
+<li>Custom flow: approve from any non-cancelled state (views.py:870-878), cancel from approved (views.py:879-888).</li>
+<li>Error paths: EBILL_ERROR_MESSAGE for e-billing tenants on submit/cancel (views.py:824-825, 851-852), IRD_CONFIG_MISSING (views.py:808), INVALID_APPROVE_REQUEST (views.py:848), INVALID_CANCEL_REQUEST (views.py:864), INVALID_STATUS (views.py:867), 503 (views.py:890).</li>
+</ol>
+<h3 id="trace-post-api-sales-invoice-cancel-submission">Trace - POST /api/sales/invoice/cancel-submission/</h3>
+<ol>
+<li>E-billing tenants are rejected immediately (views.py:1438-1439).</li>
+<li>Only from submit_for_approval, by the creator or the approval_user (views.py:1447-1451).</li>
+<li>Reference guards: a cancelled sales order or delivery note blocks the move; referenced items are re-validated against remaining reference quantities; independent invoices skip the reference checks (views.py:1452-1512).</li>
+<li>Stock reservation released via the PMS call with entry_status cancel_submission (views.py:1471-1479, 1505-1512; helper.INVOICE_INVENTORY_MANIPULATION_API dashboard/helper.py:129-134).</li>
+<li>Rejection by the approver: rejected fields, rejection activity log and ERROR notification, Kafka reject record (views.py:1515-1554).</li>
+<li>Revert by the creator: approval_user cleared, CANCEL_SUBMISSION activity log, same Kafka reject record (views.py:1555-1578).</li>
+</ol>
+<h3 id="trace-post-api-sales-invoice-retry">Trace - POST /api/sales/invoice/retry/</h3>
+<ol>
+<li>Permission APPROVE_CANCEL on SALES_INVOICE (views.py:1935-1957).</li>
+<li>Only an approved invoice that has not yet synced with IRD may be re-posted (views.py:1975-1981); nepali_entry_date is saved first (views.py:1972-1974).</li>
+<li>An InvoiceFailed marker is created, ebilling_status set to posted, and the Celery task retry_failed_invoice is scheduled with a 2 second countdown (views.py:1982-1990). The actual IRD HTTP call happens inside the task, not in the request.</li>
+</ol>
+<h3 id="the-celery-ird-pipeline-shared-by-create-approve-retry">The Celery IRD pipeline (shared by create, approve, retry)</h3>
+<ol>
+<li>retry_failed_invoice loads InvoiceFailed rows, checks tenant eligibility for bill posting (custom.is_eligible_for_bill_post, custom_functions.py:683) and skips already-synced invoices (sales/sales_invoice/tasks.py:359-398).</li>
+<li>Buyer PAN and name come from the customer/supplier check service; a missing buyer PAN parks the invoice as pending with an activity log note (tasks.py:400-433).</li>
+<li>Seller PAN comes from the TMS tenant PAN info endpoint (tasks.py:437-439).</li>
+<li>The bill payload is built and posted to <a href="https://cbapi.ird.gov.np/api/bill">https://cbapi.ird.gov.np/api/bill</a> with the tenant&#39;s IRD username and decrypted password (post_to_ird, tasks.py:60-131; helper.POST_BILL_TO_IRD dashboard/helper.py:31).</li>
+<li>Success: sync_with_ird, is_bill_active and isrealtime are set, ebilling_status posted, activity log, and a Kafka update for reporting (tasks.py:447-464).</li>
+<li>Failure: the InvoiceFailed row keeps its status code and response text, its retry count increments, the invoice is parked as pending with a failed activity log; at MAX_RETRIES the marker is dropped (tasks.py:466-501).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>PMS stock reservation on submit, issue on approve, rollback on cancel, release on cancel-submission (views.py:1083-1108, 1236-1242, 990-1032, 1471-1512; helper.py:129-134)</li>
+<li>Journal creation on approve (Celery task, views.py:1338; tasks.py:543-571) and journal cancellation on cancel (views.py:1063-1066; tasks.py:604-616)</li>
+<li>Quick customer payments created on approve (views.py:1331-1332, 1349-1353) and voided on cancel (views.py:1044)</li>
+<li>IRD CBMS posting via Celery with retry bookkeeping (views.py:486-494, 1982-1990; tasks.py:359-504)</li>
+<li>Notifications, activity logs, Kafka bill/submit/approve/cancel/reject records (views.py:1126-1145, 1294-1329, 1049-1061, 1518-1570)</li>
+<li>TMS PAN verification on e-billing create (views.py:473-479)</li>
+<li>Document upload (views.py:454-456)</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Document lifecycle including the e-billing track:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit and reserve stock
+  draft --&gt; approved : e-billing auto-approve on create
+  submit_for_approval --&gt; approved : approve and issue stock
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert and release stock
+  approved --&gt; cancelled : cancel roll back stock void payments cancel journal
+  approved --&gt; approved : IRD posted by celery task
+  cancelled --&gt; [*]
+</pre></div>
+<p>Create branching by tenant type:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST invoice v2] --&gt; B{e-billing subscribed}
+  B --&gt;|no| C{draft flag false}
+  C --&gt;|yes| D[400 e-billing error]
+  C --&gt;|no| E[create draft with unique id]
+  B --&gt;|yes| F{draft flag true}
+  F --&gt;|yes| E
+  F --&gt;|no| G{tenant PAN verified at TMS}
+  G --&gt;|no| H[400 e-billing not verified]
+  G --&gt;|yes| I{IRD cbms config exists}
+  I --&gt;|no| J[400 IRD config missing]
+  I --&gt;|yes| K[approve in place]
+  K --&gt; L[issue stock and post quick payments]
+  L --&gt; M[kafka bill record]
+  M --&gt; N[celery task posts bill to IRD]
+  N --&gt; O[201 created]
+</pre></div>
+<p>Approve/cancel sequence with services:</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant U as User
+  participant S as Sales service
+  participant C as Configuration
+  participant P as PMS inventory
+  participant A as Accounting
+  participant K as Kafka
+  U -&gt;&gt; S: POST status approved
+  S -&gt;&gt; C: fetch approval workflow config
+  C --&gt;&gt; S: basic or custom
+  S -&gt;&gt; P: issue stock for items
+  P --&gt;&gt; S: 200
+  S -&gt;&gt; S: save approved fields
+  S -&gt;&gt; K: call kafka bill record
+  S -&gt;&gt; A: journal creation task
+  A --&gt;&gt; S: journal posted
+  S --&gt;&gt; U: 200 approved
+</pre></div>
+<p>Cancel sequence:</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant U as User
+  participant S as Sales service
+  participant P as PMS inventory
+  participant A as Accounting
+  participant K as Kafka
+  U -&gt;&gt; S: POST status cancelled
+  S -&gt;&gt; S: block if live sales return exists
+  S -&gt;&gt; P: roll back stock with origin flag
+  P --&gt;&gt; S: 200
+  S -&gt;&gt; S: void quick payments
+  S -&gt;&gt; K: kafka cancel record
+  S -&gt;&gt; A: journal cancellation task when journal set
+  S --&gt;&gt; U: 200 cancelled
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Non-e-billing tenant creates with draft=false</td>
+<td>400 e-billing error, only drafts allowed</td>
+<td>views.py:457-462</td>
+</tr>
+<tr>
+<td>E-billing tenant submits a draft via classic status</td>
+<td>400 e-billing error, use billing endpoints</td>
+<td>views.py:824-825, 892-894</td>
+</tr>
+<tr>
+<td>E-billing tenant without cbms config approves</td>
+<td>Stock reverted via revert API, activity log, 400 IRD config missing</td>
+<td>views.py:1273-1293</td>
+</tr>
+<tr>
+<td>Tenant PAN not verified at TMS</td>
+<td>400 e-billing not verified</td>
+<td>views.py:473-479</td>
+</tr>
+<tr>
+<td>Approve with payment allocations</td>
+<td>Quick approved payments created and journaled</td>
+<td>views.py:1331-1332, 1349-1353</td>
+</tr>
+<tr>
+<td>No SALES_FLOW automation config</td>
+<td>No journal task, everything else still happens</td>
+<td>views.py:1334-1338</td>
+</tr>
+<tr>
+<td>Cancel invoice with quick payments</td>
+<td>Quick payments voided, journal cancelled</td>
+<td>views.py:1044, 1063-1066</td>
+</tr>
+<tr>
+<td>IRD post fails in celery</td>
+<td>Invoice parked pending, retry count increments, dropped at max retries</td>
+<td>tasks.py:466-501</td>
+</tr>
+<tr>
+<td>Retry an already synced invoice</td>
+<td>400 cannot be posted at the moment</td>
+<td>views.py:1975-1981</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Sales return - create, status change, cancel-submission, retry"><h2 id="sales-return-create-status-change-cancel-submission-retry">Sales return - create, status change, cancel-submission, retry</h2>
+<p>What happens: A sales return (credit note) mirrors the invoice flow in reverse. It deducts stock on approval through the dedicated sales-return PMS endpoints, decrements the referenced invoice&#39;s remaining_amount and pushes a Kafka update for it, posts the accounting journal on approval (and cancels it on cancel), and for e-billing tenants posts a credit note to IRD through the same Celery retry machinery. One quirk: the basic-flow approve branch runs the custom-flow compulsion check.</p>
+<h3 id="trace-post-api-sales-return-v2-create">Trace - POST /api/sales/return/v2/ (create)</h3>
+<ol>
+<li>Required fields and item validation as for the invoice (sales/sales_return/views.py:249-320 region).</li>
+<li>E-billing tenants with a non-draft create: the return is auto-approved - unique id with the RETURN prefix, stock deduction call, approval fields, ebilling_status posted, InvoiceFailed marker plus the Celery retry task with a 3 second countdown (views.py:399-436; tasks.retry_failed_sales_return sales/sales_invoice/tasks.py:222-356).</li>
+<li>Non-e-billing tenants create a draft return with a unique id (views.py:249-320 region).</li>
+<li>Journal creation on the e-billing auto-approve path is gated by the SALES_FLOW automation configuration (views.py:274-281).</li>
+</ol>
+<h3 id="trace-post-api-sales-return-status">Trace - POST /api/sales/return/status/</h3>
+<ol>
+<li>Auth and permission, feature SALES_RETURN, action VIEW to APPROVE_CANCEL (sales/sales_return/views.py:771-791).</li>
+<li>Tenant-scoped fetch (views.py:786-791); fiscal-year validity (views.py:798).</li>
+<li>Configuration fetch and dispatch; 503 when missing (views.py:802-808, 869).</li>
+<li>Basic submit (draft only): stock call for the return (views.py:877-944 region; helper.SRETURN_INVENTORY_MANIPULATION_API dashboard/helper.py:138-143); notification, activity log, Kafka submit record (views.py:1000-1019).</li>
+<li>Basic approve: from submit by approver or from draft by creator - both run the custom-flow compulsion check (views.py:817-835); stock deduction call (views.py:1075-1088); then approved_last_flow (views.py:1090-1198):<ul>
+<li>e-billing branch: unique id, IRD cbms check, InvoiceFailed marker, Celery retry task, ebilling_status posted (views.py:1092-1114); missing IRD config reverts stock via the return revert API, writes an activity log and raises IRD_CONFIG_MISSING (views.py:1122-1142)</li>
+<li>the referenced invoice&#39;s remaining_amount is decreased by the return total and a Kafka update_remaining record is emitted for the invoice (views.py:1153, 1200-1225)</li>
+<li>approval fields, save (views.py:1154-1162)</li>
+<li>SALES_FLOW automation config gates the journal creation task (views.py:1164-1171)</li>
+<li>Kafka bill record (views.py:1179-1189)</li>
+</ul>
+</li>
+<li>Basic cancel: from submit by approver or from approved (views.py:836-847); stock restore call, then cancel fields, activity log, Kafka cancel record, journal cancellation task when a journal exists (views.py:877-975 region; journal at views.py:954-955), and the referenced invoice&#39;s remaining_amount is increased back (views.py:1209-1211).</li>
+<li>Custom flow: approve from any non-cancelled state (views.py:853-861); cancel is blocked for e-billing tenants (views.py:862-867).</li>
+<li>Error paths: INVALID_APPROVE_REQUEST (views.py:835), INVALID_CANCEL_REQUEST (views.py:847), INVALID_STATUS (views.py:850), 503 (views.py:869).</li>
+</ol>
+<h3 id="trace-post-api-sales-return-cancel-submission">Trace - POST /api/sales/return/cancel-submission/</h3>
+<ol>
+<li>Only from submit_for_approval, creator or approver (sales/sales_return/views.py:1293-1340 region).</li>
+<li>Rejection by the approver or revert by the creator with activity log, ERROR notification on rejection and the Kafka reject record (views.py:1338-1390).</li>
+</ol>
+<h3 id="trace-post-api-sales-return-retry">Trace - POST /api/sales/return/retry/</h3>
+<ol>
+<li>Same shape as the invoice retry but for credit notes: only an approved, not-yet-synced return is accepted, an InvoiceFailed marker is created, ebilling_status posted and the Celery task retry_failed_sales_return scheduled (sales/sales_return/views.py:618-724 region; task at sales/sales_invoice/tasks.py:222-356, posting to the IRD credit-note endpoint via post_to_ird with the sales-return builder at tasks.py:175-220).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>PMS sales-return stock deduction on approve, restore on cancel (views.py:1075-1088, 939-944; helper.py:138-146)</li>
+<li>Referenced invoice remaining_amount adjusted up and down, plus a Kafka update_remaining record (views.py:1200-1225)</li>
+<li>Journal creation on approve, journal cancellation on cancel (views.py:1164-1171, 954-955; tasks.py:543-616)</li>
+<li>IRD credit-note posting via Celery with retry bookkeeping (views.py:1102-1110, 618-724 region; tasks.py:222-356)</li>
+<li>Notifications, activity logs, Kafka submit/approve/cancel/reject records (views.py:1000-1019, 1144-1189, 959-971, 1338-1390)</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit
+  draft --&gt; approved : e-billing auto-approve on create
+  submit_for_approval --&gt; approved : approve deduct stock
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert
+  approved --&gt; cancelled : cancel restore stock and refund invoice balance
+  approved --&gt; approved : IRD credit note posted by celery
+  cancelled --&gt; [*]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[Approve sales return] --&gt; B{e-billing tenant}
+  B --&gt;|yes| C{IRD cbms config}
+  C --&gt;|no| D[revert stock and 400 IRD missing]
+  C --&gt;|yes| E[mark posted and queue celery IRD push]
+  B --&gt;|no| F[approval activity log]
+  E --&gt; G[decrease invoice remaining amount]
+  F --&gt; G
+  G --&gt; H[kafka update remaining for invoice]
+  H --&gt; I{SALES_FLOW automation config}
+  I --&gt;|yes| J[journal creation task]
+  I --&gt;|no| K[no journal]
+  J --&gt; L[kafka bill record]
+  K --&gt; L
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant U as User
+  participant S as Sales service
+  participant P as PMS inventory
+  participant A as Accounting
+  participant K as Kafka
+  participant I as IRD CBMS
+  U -&gt;&gt; S: POST status approved
+  S -&gt;&gt; P: deduct return stock
+  P --&gt;&gt; S: 200
+  S -&gt;&gt; S: decrease referenced invoice remaining
+  S -&gt;&gt; K: update remaining for invoice
+  S -&gt;&gt; A: journal creation task
+  S --&gt;&gt; U: 200 approved
+  S --&gt;&gt; K: bill record
+  Note over S,I: celery task posts credit note to IRD
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Basic flow approve from draft</td>
+<td>Runs the custom compulsion check, a copy artifact</td>
+<td>views.py:817-835</td>
+</tr>
+<tr>
+<td>Return approved without a referenced invoice</td>
+<td>No remaining_amount adjustment</td>
+<td>views.py:1203-1205</td>
+</tr>
+<tr>
+<td>Return cancelled</td>
+<td>Referenced invoice remaining restored</td>
+<td>views.py:1209-1211</td>
+</tr>
+<tr>
+<td>E-billing return with missing IRD config</td>
+<td>Stock reverted, activity log, 400 IRD config missing</td>
+<td>views.py:1122-1142</td>
+</tr>
+<tr>
+<td>Custom flow cancel for e-billing tenant</td>
+<td>400 e-billing error</td>
+<td>views.py:862-867</td>
+</tr>
+<tr>
+<td>IRD credit note post fails in celery</td>
+<td>Pended with retry count, dropped at max</td>
+<td>tasks.py:222-356</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Customer payment - create, status change, cancel-submission, quick payment"><h2 id="customer-payment-create-status-change-cancel-submission-quick-payment">Customer payment - create, status change, cancel-submission, quick payment</h2>
+<p>What happens: A customer payment records money received from a customer and, on approval, posts an account-receivable journal to the Accounting service. The normal path is draft, submit, approve, with cancel rolling the journal back. There is also a one-step quick payment endpoint used when an invoice is paid at billing time: it creates the payment already approved, posts the journal on commit and adjusts the customer&#39;s remaining balances. There is no external payment-provider call anywhere in this area - the eSewa Payment-Service path is not used in ProvidhyERP, everything is local model state plus the accounting journal.</p>
+<h3 id="trace-post-api-sales-payment-create">Trace - POST /api/sales/payment/ (create)</h3>
+<ol>
+<li>Auth and permission, feature CUSTOMER_PAYMENT, action ADD_EDIT (sales/customer_payment/views.py:42-54).</li>
+<li>Required fields customer, received_account, amount, payment_date; bank and TDS fields are conditionally required (views.py:78-93); fiscal-year validity on the payment date (views.py:96-97).</li>
+<li>Fiscal year injected and the row is created as a draft through the write-only serializer inside one atomic transaction (views.py:99-118). No journal, no events at creation.</li>
+</ol>
+<h3 id="trace-post-api-sales-payment-status">Trace - POST /api/sales/payment/status/</h3>
+<ol>
+<li>Auth and permission, action VIEW to APPROVE_CANCEL (sales/customer_payment/views.py:510-531 region).</li>
+<li>Tenant-scoped fetch (views.py:526-531); fiscal-year validity (views.py:542).</li>
+<li>Configuration fetch and basic/custom dispatch; 503 when missing (views.py:544-574, dashboard/helper.py:162).</li>
+<li>Basic submit (draft only): approval fields set, rejected fields cleared, save, notification to the approver, activity log (views.py:616-649).</li>
+<li>Basic approve (from submit by the approver, or from draft by the creator, after the basic compulsion check - views.py:576-605): the customer account is fetched, opening-balance and allocation deductions are computed against the customer&#39;s remaining opening amount (views.py:651-722 region); payment fields and save; the journal creation Celery task is delayed for the payment (views.py:723-731); activity log (views.py:732-745 region).</li>
+<li>Basic cancel (from submit by the approver, or from approved - views.py:607-614): customer balance restorations, cancel fields, save, journal cancellation Celery task when a journal exists (views.py:823-827), activity log.</li>
+<li>Custom flow: approve from any non-cancelled state after the custom compulsion check, cancel only from approved (views.py:557-572).</li>
+<li>Error paths: INVALID_APPROVE_REQUEST (views.py:597), INVALID_CANCEL_REQUEST (views.py:614), INVALID_STATUS (views.py:572, 605), 503 (views.py:574).</li>
+</ol>
+<h3 id="trace-post-api-sales-payment-cancel-submission">Trace - POST /api/sales/payment/cancel-submission/</h3>
+<ol>
+<li>Only from submit_for_approval (sales/customer_payment/views.py:845-890 region).</li>
+<li>Rejection by the approver: rejected fields, rejection activity log, ERROR notification (views.py:864-920 region).</li>
+<li>Revert by the creator: approval fields cleared, CANCEL_SUBMISSION activity log (views.py:892-940 region).</li>
+</ol>
+<h3 id="trace-post-api-sales-payment-quick-frontend">Trace - POST /api/sales/payment/quick/frontend/</h3>
+<ol>
+<li>Permission stays at VIEW for POST (sales/customer_payment/views.py:952-961).</li>
+<li>Required fields payment_allocations and invoice_id (views.py:979-982); the invoice must exist and the total allocated may not exceed its remaining amount (views.py:963-991).</li>
+<li>For each allocation an already-approved CustomerPayment row is created with is_quick_payment set, the approving user as both entry_by and approval_user, and the invoice allocated (views.py:993-1031); the journal creation task is scheduled with on_commit and delay per payment (views.py:1034-1038).</li>
+<li>Invoice remaining amounts and the customer&#39;s opening balances are validated and updated through the payment validation checks (views.py:1045-1048, validation_check.py).</li>
+<li>A payment activity log is written against the invoice (views.py:1055-1062).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Journal creation on approve (Celery .delay, views.py:723-731; tasks.py:543-571) using the customer account-receivable journal endpoint (dashboard/journal.py:20-31, helper.CUSTOMER_PYAMENT_JOURNAL_API dashboard/helper.py:150-152) and cancellation on cancel (views.py:823-827; journal.py:34-51, helper.py:153-155)</li>
+<li>Journal creation on quick payment via on_commit delay (views.py:1034-1038)</li>
+<li>Customer opening/remaining balance deductions and restorations (views.py:651-722 region, 823-827 region)</li>
+<li>Notifications, activity logs (views.py:627-641, 732-745 region, 892-940 region, 1055-1062)</li>
+<li>No Kafka records in this area, no IRD, no stock, no external payment provider</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create
+  draft --&gt; submit_for_approval : submit and notify approver
+  draft --&gt; approved : approve from draft and post journal
+  submit_for_approval --&gt; approved : approve by approver and post journal
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert
+  approved --&gt; cancelled : cancel and cancel journal
+  cancelled --&gt; [*]
+  [*] --&gt; approved : quick payment creates approved directly
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant U as User
+  participant S as Sales service
+  participant A as Accounting
+  U -&gt;&gt; S: POST status approved
+  S -&gt;&gt; S: compute customer balance deductions
+  S -&gt;&gt; S: save approved fields
+  S -&gt;&gt; A: customer create journal task
+  A --&gt;&gt; S: 200
+  S --&gt;&gt; U: 200 approved
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quick payment exceeding invoice remaining</td>
+<td>400 cannot allocate more than remaining</td>
+<td>views.py:963-972</td>
+</tr>
+<tr>
+<td>Quick payment journal</td>
+<td>Delayed with on_commit per allocation</td>
+<td>views.py:1034-1038</td>
+</tr>
+<tr>
+<td>Cancel approved payment</td>
+<td>Customer balances restored, journal cancelled</td>
+<td>views.py:823-827</td>
+</tr>
+<tr>
+<td>Approve from draft, non-creator</td>
+<td>400 invalid approve request</td>
+<td>views.py:590-597</td>
+</tr>
+<tr>
+<td>Custom flow approve</td>
+<td>Allowed from any non-cancelled state</td>
+<td>views.py:561-566</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Cheque - create, status change, cancel-submission"><h2 id="cheque-create-status-change-cancel-submission">Cheque - create, status change, cancel-submission</h2>
+<p>What happens: A received cheque is a customer payment flagged as a cheque, with a second lifecycle on top of the record workflow: pending, cleared, bounced, void. Record status follows the usual approval flow, and approving a payable cheque posts the customer journal; marking it cleared settles the customer&#39;s opening/advance balances and queues the journal, while cancelling restores them. Cheque-level status moves are only allowed once the record is approved and never after expiry.</p>
+<h3 id="trace-post-api-sales-cheque-create">Trace - POST /api/sales/cheque/ (create)</h3>
+<ol>
+<li>Auth and permission, feature CHEQUES (sales/cheque/views.py:38-101 region).</li>
+<li>The cheque is created as a CustomerPayment with is_cheque set; an activity log entry is written (views.py:102-176, activity at views.py:153).</li>
+</ol>
+<h3 id="trace-post-api-sales-cheque-status">Trace - POST /api/sales/cheque/status/</h3>
+<ol>
+<li>Auth and permission, feature CHEQUES, action VIEW to APPROVE_CANCEL (sales/cheque/views.py:663-684 region).</li>
+<li>Tenant-scoped fetch; fiscal-year validity on the cheque date (views.py:1055-1056).</li>
+<li>Input guards: at least one of cheque_status or record status is required; both values must be valid; submitting requires an approval_user (views.py:1031-1053).</li>
+<li>Cheque-status guards: not before approval, not after expiry, and only from pending to another cheque state (views.py:1062-1085).</li>
+<li>Configuration fetch (views.py:1087-1092); only the basic flow is handled - a non-basic result falls through to 400 NOT_UPDATED (views.py:1105-1117).</li>
+<li>Record transitions: submit (notification and activity log), approve (customer balance deductions, journal creation task delayed when the cheque settles - views.py:698-843 region, journal at views.py:824), cancel (balance restoration, journal cancellation task when a journal exists - views.py:966-970 region).</li>
+<li>Cheque-state transitions: cleared, bounced with reason, void - validated by validate_set_cheque_status_fields (views.py:706-715 region), saved on the 200 result.</li>
+<li>After a successful 200 the row is saved and send_events_for_cheque writes a cheque-status activity log and a notification to the entry-by user when a different user made the change (views.py:656-704 region, 1109-1112).</li>
+<li>Error paths: 400 for the guard failures above and NOT_UPDATED when the flow does not match (views.py:1034-1117).</li>
+</ol>
+<h3 id="trace-post-api-sales-cheque-cancel-submission">Trace - POST /api/sales/cheque/cancel-submission/</h3>
+<ol>
+<li>Only from submit_for_approval (sales/cheque/views.py:1121-1160 region).</li>
+<li>Rejection by a non-creator: rejected fields, rejection activity log, ERROR notification (views.py:1158-1192).</li>
+<li>Revert by the creator: approval fields cleared, CANCEL_SUBMISSION activity log (views.py:1194-1215).</li>
+<li>Otherwise 400 INVALID_REQUEST (views.py:1217-1223).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Journal creation on approval when the cheque settles (Celery delay, views.py:824; tasks.py:543-571) and cancellation on cancel (views.py:966-967; tasks.py:604-616)</li>
+<li>Customer opening/advance balance deductions on settle, restoration on cancel (views.py:698-843 region, 966-970 region)</li>
+<li>Activity logs and notifications for submit, approve, cancel, cheque-state changes, rejection, revert (views.py:698-800 region, 843, 970, 1170-1207)</li>
+<li>No Kafka records, no IRD, no stock</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Record plus cheque-state machine:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create cheque
+  draft --&gt; submit_for_approval : submit
+  draft --&gt; approved : approve from draft
+  submit_for_approval --&gt; approved : approve by approver
+  submit_for_approval --&gt; draft : reject
+  submit_for_approval --&gt; draft : revert
+  approved --&gt; cancelled : cancel
+  cancelled --&gt; [*]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  pending : only after record approved
+  pending --&gt; cleared : mark cleared settle and journal
+  pending --&gt; bounced : mark bounced with reason
+  pending --&gt; void : mark void
+  cleared --&gt; [*]
+  bounced --&gt; [*]
+  void --&gt; [*]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST cheque status] --&gt; B{cheque status given}
+  B --&gt;|yes| C{record approved}
+  C --&gt;|no| D[400 before approval]
+  C --&gt;|yes| E{cheque not expired}
+  E --&gt;|no| F[400 expired cheque]
+  E --&gt;|yes| G{move from pending}
+  G --&gt;|no| H[400 invalid cheque move]
+  G --&gt;|yes| I[validate cheque fields]
+  B --&gt;|no| J[record status branch]
+  I --&gt; K[save and emit cheque events]
+  J --&gt; K
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cheque status before approval</td>
+<td>400 cannot change before approval</td>
+<td>views.py:1062-1066</td>
+</tr>
+<tr>
+<td>Change an expired cheque</td>
+<td>400 cannot change expired cheque</td>
+<td>views.py:1068-1072</td>
+</tr>
+<tr>
+<td>cleared to bounced</td>
+<td>400 invalid cheque move, only from pending</td>
+<td>views.py:1074-1085</td>
+</tr>
+<tr>
+<td>Approve a payable cheque</td>
+<td>Journal creation task delayed</td>
+<td>views.py:824</td>
+</tr>
+<tr>
+<td>Cancel an approved settled cheque</td>
+<td>Balances restored, journal cancelled</td>
+<td>views.py:966-970</td>
+</tr>
+<tr>
+<td>Custom flow configuration</td>
+<td>Not handled, 400 not updated</td>
+<td>views.py:1105-1117</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Ebilling - billing invoice, billing return, retry, ird-config"><h2 id="ebilling-billing-invoice-billing-return-retry-ird-config">Ebilling - billing invoice, billing return, retry, ird-config</h2>
+<p>What happens: The ebilling app is the e-invoicing front door for tenants subscribed to the E_BILLING service (every view carries the extra HasEbilling permission, dashboard/auth_backends.py:134-141). Creating a bill auto-approves it, issues stock, posts quick payments, emits the Kafka bill record and pushes the bill to the IRD CBMS API through the Celery retry task - the request itself never waits on IRD. The status endpoint only allows approving a draft into approved (which also posts to IRD); the cancel branch is unreachable because it raises before doing anything. The retry endpoint re-drives failed posts on demand.</p>
+<h3 id="trace-post-api-sales-billing-billing-invoice-create">Trace - POST /api/sales/billing/ (billing invoice create)</h3>
+<ol>
+<li>Permission HasPermission plus HasEbilling (sales/ebilling/views.py:306-307 region for the status class, and the create class at views.py:48).</li>
+<li>Same required fields and serializer as the invoice v2 create (views.py:163-215).</li>
+<li>Draft mode: a plain draft bill is saved, no impacts, no unique id (views.py:222-230).</li>
+<li>Post-bill mode: the e-billing subscription is enforced (views.py:232-234); a unique bill number with the fiscal-year np name is generated (views.py:236-242).</li>
+<li>The bill is auto-approved in place: stock issued (post_bill, views.py:245, 120-162), approval flow with the SALES_FLOW automation config gating the journal task (approved_last_flow, views.py:246, 709), quick payments from allocations (views.py:248-250), Kafka bill record (views.py:252-265).</li>
+<li>The tenant PAN must be verified at TMS (views.py:267-275); the tenant must be eligible for bill posting, otherwise the created bill is returned with a cannot-post-to-IRD note and no marker (views.py:277-287).</li>
+<li>Otherwise an InvoiceFailed marker is created, ebilling_status posted, and the Celery task retry_failed_invoice runs without a countdown (views.py:288-295).</li>
+</ol>
+<h3 id="trace-post-api-sales-billing-status">Trace - POST /api/sales/billing/status/</h3>
+<ol>
+<li>Permission HasPermission plus HasEbilling (sales/ebilling/views.py:306-307).</li>
+<li>Configuration fetch; only basic or custom titles are accepted (views.py:339-350).</li>
+<li>Approve: only from draft by the creator, after the basic compulsion check (views.py:351-361). handle_approval re-validates the IRD configuration, creates the InvoiceFailed marker, schedules the Celery task with a countdown, sets ebilling_status posted, emits the Kafka bill record and runs the journal task when the automation config exists (views.py:561-720; IRD at views.py:644-674, Kafka at views.py:697, journal at views.py:709). A missing IRD configuration writes an activity log and fails (views.py:669-674).</li>
+<li>Cancel: the branch raises INVALID_CANCEL_REQUEST before any work - cancelled bills cannot be cancelled from this endpoint (views.py:362-363).</li>
+<li>Any other status raises the e-billing error (views.py:371-372); no configuration raises 503 (views.py:374).</li>
+</ol>
+<h3 id="trace-post-api-sales-billing-retry">Trace - POST /api/sales/billing/retry/</h3>
+<ol>
+<li>Only an approved invoice that has not synced with IRD is accepted (sales/ebilling/views.py:868-947 region; guard at views.py:901-914).</li>
+<li>InvoiceFailed marker, ebilling_status posted, Celery task scheduled with a countdown (views.py:941-947).</li>
+</ol>
+<h3 id="trace-post-api-sales-billing-return-and-status-and-retry">Trace - POST /api/sales/billing/return/ and /status/ and /retry/</h3>
+<ol>
+<li>The credit-note mirror of the billing invoice flow: create auto-approves and posts a credit note to IRD (sales/ebilling/views.py:958-1192; journal gate views.py:989-997, Kafka views.py:1140, IRD marker and celery task views.py:1166-1176).</li>
+<li>Status: approve from draft (views.py:1214-1260, 1262-1418), cancel branch unreachable (views.py:1214-1260 region mirrors the invoice), IRD post with retry task (views.py:1333-1373), journal (views.py:1396), Kafka (views.py:1401).</li>
+<li>Retry mirrors the invoice retry for credit notes (views.py:1610-1686; task sales/sales_invoice/tasks.py:222-356).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Auto-approval: stock issue, journal task, quick payments, Kafka bill record (views.py:245-265, 958-1176)</li>
+<li>IRD CBMS posting via Celery with InvoiceFailed bookkeeping and TMS PAN checks (views.py:267-295; tasks.py:60-131, 222-504)</li>
+<li>Activity logs for the e-billing bill and credit-note variants (custom.create_activity_log_ebilling_bill / _return, custom_functions.py)</li>
+<li>ird-config stores the tenant PAN, e-permit and IRD credentials (config_setup/views.py)</li>
+<li>No local cancel path for bills, no stock release from these endpoints</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<p>Create with IRD eligibility:</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST billing] --&gt; B{draft}
+  B --&gt;|yes| C[save draft and return]
+  B --&gt;|no| D{e-billing subscribed}
+  D --&gt;|no| E[400 e-billing error]
+  D --&gt;|yes| F[generate unique bill number]
+  F --&gt; G[approve in place stock journal quick payments kafka]
+  G --&gt; H{tenant PAN verified at TMS}
+  H --&gt;|no| I[400 not verified]
+  H --&gt;|yes| J{eligible for bill post}
+  J --&gt;|no| K[201 created but cannot post to IRD]
+  J --&gt;|yes| L[failed marker plus celery task to IRD]
+  L --&gt; M[201 created]
+</pre></div>
+<p>Celery IRD retry loop:</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant S as Sales service
+  participant Q as Celery queue
+  participant T as TMS service
+  participant I as IRD CBMS
+  S -&gt;&gt; Q: retry failed invoice with countdown
+  Q -&gt;&gt; T: fetch seller pan
+  T --&gt;&gt; Q: pan number
+  Q -&gt;&gt; I: post bill json
+  alt IRD ok
+    I --&gt;&gt; Q: 200
+    Q -&gt;&gt; S: sync with ird set and activity log
+  else IRD error
+    I --&gt;&gt; Q: error status
+    Q -&gt;&gt; S: increment retry count and park pending
+  end
+</pre></div>
+<p>Ebilling status endpoint:</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create as draft
+  draft --&gt; approved : approve and post to IRD
+  approved --&gt; approved : retry failed IRD post
+  approved --&gt; approved : cancel branch unreachable in code
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bill cancel via status endpoint</td>
+<td>400 invalid cancel, branch raises before work</td>
+<td>views.py:362-363</td>
+</tr>
+<tr>
+<td>Tenant not eligible for bill post</td>
+<td>Bill approved locally but not sent to IRD</td>
+<td>views.py:277-287</td>
+</tr>
+<tr>
+<td>Approve without IRD configuration</td>
+<td>Activity log and failure, no IRD post</td>
+<td>views.py:669-674</td>
+</tr>
+<tr>
+<td>Retry an already synced bill</td>
+<td>400, already synced</td>
+<td>views.py:901-914</td>
+</tr>
+<tr>
+<td>Credit note flow</td>
+<td>Same pipeline with the sales-return builder</td>
+<td>views.py:958-1176, tasks.py:175-220</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Untraced / unverified"><h2 id="untraced-unverified">Untraced / unverified</h2>
+<ul>
+<li>Cheque create body (sales/cheque/views.py:102-176): the surrounding view is read, but the exact serializer field validation inside the cheque write-only serializer was not traced line by line - marked unverified for field-level rules.</li>
+<li>Customer payment approve body between the balance-deduction computation and the journal call (sales/customer_payment/views.py:651-760 region): deduction arithmetic for opening balances and allocations is summarized from the visible structure; individual edge cases (credit vs debit opening) are unverified.</li>
+<li>Delivery note cancel-submission body (sales/delivery_note/views.py:855-941): side-effect lines verified (activity 855/893, notification 863, Kafka 878/902), the exact rejection/revert branch conditions are inferred from the identical order pattern and marked unverified where not directly read.</li>
+<li>Ebilling return create body (sales/ebilling/views.py:1067-1192): structure verified from the side-effect map and the symmetric invoice flow; individual line conditions inside the create loop are unverified.</li>
+<li>The Excel import endpoints (delivery-note/import/ and import/item/, sales/delivery_note/views.py:1118-1257 and 1296+): classified RECORD from the existing pages; the import internals were not traced.</li>
+<li>The internal OPS endpoints (quotation/order/DN/DNR/return list, invoice list/approval-list/ageing/annex/detail-cheque/sales-invoice-approved-all/list-internal, payment quick-payment-check/fetch-internal/get-customer-advance/customer-payment-info, cheque delete-internal/list-internal/notf-issued-due-date/modify-cheque, ird-config-internal): classified OPS from the existing pages and the internal-password auth pattern (dashboard/auth_backends.py:169-177); response payloads were not traced in depth.</li>
+<li>Journal task internals: the Accounting HTTP calls are verified (dashboard/journal.py:6-51), but what the Accounting service does with the payload is out of scope of this service.</li>
+<li>IRD side behavior: the IRD CBMS API responses are handled as observed in post_to_ird (sales/sales_invoice/tasks.py:60-131); the IRD system itself is external.</li>
+<li>Miniapp endpoints: excluded per scope addendum, not traced.</li>
+<li>Payment-Service / eSewa provider path: not used in ProvidhyERP; the payment endpoints above contain no call to it (verified by the full side-effect scan of sales/customer_payment/views.py).</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../sales/ebilling.html"><div class="pn-dir">← Previous</div><div class="pn-name">Sales - e-Billing (IRD)</div></a><a class="pn next" href="../sales/invoice.html"><div class="pn-dir">Next →</div><div class="pn-name">Sales - Invoice</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l2"><a href="#quotation-status-change-and-cancel-submission">Quotation - status change and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-sales-quotation-status">Trace - POST /api/sales/quotation/status/</a></li><li class="l3"><a href="#trace-post-api-sales-quotation-cancel-submission">Trace - POST /api/sales/quotation/cancel-submission/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#order-status-change-and-cancel-submission">Order - status change and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-sales-order-status">Trace - POST /api/sales/order/status/</a></li><li class="l3"><a href="#trace-post-api-sales-order-cancel-submission">Trace - POST /api/sales/order/cancel-submission/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#delivery-note-status-change-and-cancel-submission">Delivery note - status change and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-sales-delivery-note-status">Trace - POST /api/sales/delivery-note/status/</a></li><li class="l3"><a href="#trace-post-api-sales-delivery-note-cancel-submission">Trace - POST /api/sales/delivery-note/cancel-submission/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#delivery-note-return-status-change-and-cancel-submission">Delivery note return - status change and cancel-submission</a></li><li class="l3"><a href="#trace-post-api-sales-delivery-note-return-status">Trace - POST /api/sales/delivery-note-return/status/</a></li><li class="l3"><a href="#trace-post-api-sales-delivery-note-return-cancel-submission">Trace - POST /api/sales/delivery-note-return/cancel-submission/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#invoice-create-status-change-cancel-submission-retry-print">Invoice - create, status change, cancel-submission, retry, print</a></li><li class="l3"><a href="#trace-post-api-sales-invoice-v2-create">Trace - POST /api/sales/invoice/v2/ (create)</a></li><li class="l3"><a href="#trace-post-api-sales-invoice-status-non-e-billing-path">Trace - POST /api/sales/invoice/status/ (non-e-billing path)</a></li><li class="l3"><a href="#trace-post-api-sales-invoice-cancel-submission">Trace - POST /api/sales/invoice/cancel-submission/</a></li><li class="l3"><a href="#trace-post-api-sales-invoice-retry">Trace - POST /api/sales/invoice/retry/</a></li><li class="l3"><a href="#the-celery-ird-pipeline-shared-by-create-approve-retry">The Celery IRD pipeline (shared by create, approve, retry)</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#sales-return-create-status-change-cancel-submission-retry">Sales return - create, status change, cancel-submission, retry</a></li><li class="l3"><a href="#trace-post-api-sales-return-v2-create">Trace - POST /api/sales/return/v2/ (create)</a></li><li class="l3"><a href="#trace-post-api-sales-return-status">Trace - POST /api/sales/return/status/</a></li><li class="l3"><a href="#trace-post-api-sales-return-cancel-submission">Trace - POST /api/sales/return/cancel-submission/</a></li><li class="l3"><a href="#trace-post-api-sales-return-retry">Trace - POST /api/sales/return/retry/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#customer-payment-create-status-change-cancel-submission-quick-payment">Customer payment - create, status change, cancel-submission, quick payment</a></li><li class="l3"><a href="#trace-post-api-sales-payment-create">Trace - POST /api/sales/payment/ (create)</a></li><li class="l3"><a href="#trace-post-api-sales-payment-status">Trace - POST /api/sales/payment/status/</a></li><li class="l3"><a href="#trace-post-api-sales-payment-cancel-submission">Trace - POST /api/sales/payment/cancel-submission/</a></li><li class="l3"><a href="#trace-post-api-sales-payment-quick-frontend">Trace - POST /api/sales/payment/quick/frontend/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#cheque-create-status-change-cancel-submission">Cheque - create, status change, cancel-submission</a></li><li class="l3"><a href="#trace-post-api-sales-cheque-create">Trace - POST /api/sales/cheque/ (create)</a></li><li class="l3"><a href="#trace-post-api-sales-cheque-status">Trace - POST /api/sales/cheque/status/</a></li><li class="l3"><a href="#trace-post-api-sales-cheque-cancel-submission">Trace - POST /api/sales/cheque/cancel-submission/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#ebilling-billing-invoice-billing-return-retry-ird-config">Ebilling - billing invoice, billing return, retry, ird-config</a></li><li class="l3"><a href="#trace-post-api-sales-billing-billing-invoice-create">Trace - POST /api/sales/billing/ (billing invoice create)</a></li><li class="l3"><a href="#trace-post-api-sales-billing-status">Trace - POST /api/sales/billing/status/</a></li><li class="l3"><a href="#trace-post-api-sales-billing-retry">Trace - POST /api/sales/billing/retry/</a></li><li class="l3"><a href="#trace-post-api-sales-billing-return-and-status-and-retry">Trace - POST /api/sales/billing/return/ and /status/ and /retry/</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#untraced-unverified">Untraced / unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

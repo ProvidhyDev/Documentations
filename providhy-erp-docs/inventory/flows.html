@@ -1,0 +1,953 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Inventory (ProductManagement) - Business Flows (Traced) - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc current" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced)</h1>
+<p>At runtime ProductManagement is both a user-facing master service and the stock engine of the ERP. ERP users create and edit products (with UOM, categories, batches, campaigns) through IAM-authenticated endpoints, and correct stock manually through the stock-adjustment document, which runs a configurable approval workflow (basic vs custom flow, self-approval vs designated approver) and moves the stock ledger when it is approved. The Sales and Purchase services are the other main writers: they hold, commit, release and reverse stock for orders, delivery notes, invoices, returns and GRNs through an internal password-gated protocol of verification and manipulation endpoints, all operating on the same two ledger structures - Inventory rows (per product, or per product+batch) and one BatchInventoryTotal row per batch-managed product. Every state change leaves a trail: activity logs and notifications go to the events service, product and adjustment lifecycle events go to Kafka through an internal producer endpoint, and stock-adjustment approval/cancellation additionally queues a dev-only Celery task that posts the adjustment journal to Accounting.</p>
+<p>All citations below are relative to the service repo root at sha edd7d59695d784144e7159945a3510d5e6978d2c. Companion endpoint reference: overview.md, products.md, categories.md, stock.md, adjustment.md, campaign.md, dashboard.md in this directory.</p>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>Latest-version routes only: 110 of 127 catalog routes (catalog/ProductManagement.json); the 17 superseded routes are listed at the end of this table and are not deep-traced. Class key: READ = list/search/detail, RECORD = simple create/update/delete, TRANSACTION = state-changing business flow with its own section below, OPS = internal/ops/maintenance.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Endpoint(s) rel. to service root</th>
+<th>Method</th>
+<th>Class</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>product</td>
+<td>/api/product/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Product create, latest (v1 /api/product/ superseded) - section Product creation</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>TRANSACTION</td>
+<td>Product read/update - section Product update</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/inactive/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Bulk active/inactive; IAM + PR901 active_inactive; activity log per row (product/views.py:1678-1744)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/uom/, /uom/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>UOM list/create/read/update; IAM + PR903; sanitize + case-insensitive unique (product/views.py:67-204)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/uom/inactive/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Bulk UOM activate/deactivate (product/views.py:280)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/uom/search/, /uom/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>UOM search, no-perm IAM variants (product/views.py:130, 169)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/uom/create-endpoint/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S bulk UOM create, internal password (product/views.py:3712)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/uom-import/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S secondary-unit conversion validate/create, internal (product/views.py:5061)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/category/, /category/detail/&lt;int:pk&gt;/, /category/inactive/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>Category CRUD + bulk status; IAM + PR902 (product/views.py:347-744)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/category/search/, /category/search/select/, /subcategory/search/select/, /report-product/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Category search and pickers (product/views.py:424-567, 3749)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/product-batch/detail/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>Batch create/update; on create seeds Inventory via self-call to /api/inventory/create-endpoint/ and fires kafka PRODUCT_EDITION (product/views.py:2383-2526)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/product-batch/search/select/&lt;int:product_id&gt;/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Batch picker (product/views.py:4766)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/product-batch/create-endpoint/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S batch create + inventory seed; called by adjustment approval and GRN flows; kafka NEW_BATCH_CREATION (product/views.py:3059-3160)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/product-batch/check/, /product-batch/check-multiple/, /check/, /check-multiple/, /active-check/, /type-check/, /duplicate-batch/</td>
+<td>POST, GET</td>
+<td>READ</td>
+<td>S2S product/batch existence, type split and batch-duplication checks, internal (product/views.py:2803-2964, 4810, 5455)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/search/, /list/, /list/inventory-data/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Product search, picker and single-product read (product/views.py:3277, 1413, 3529)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/search-global/, /batch-wise/, /variant-wise/, /product-list-accounting/, /product-list-cdxe/</td>
+<td>GET, POST</td>
+<td>READ</td>
+<td>S2S product lists; CDXE variant is API-key auth (product/views.py:3493-3904, 4740)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/recent-transactions/v2/&lt;int:pk&gt;/, /recent-transactions-internal/&lt;int:pk&gt;/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Product transaction timeline, cursor-based (product/views.py:4972-5031)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/products-uom/</td>
+<td>GET</td>
+<td>READ</td>
+<td>NDJSON stream of product UOM rows, internal (product/views.py:5032)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/elastic-search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Elasticsearch-backed product search, not deep-traced here</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/graphql/</td>
+<td>*</td>
+<td>READ</td>
+<td>GraphQL endpoint; resolvers check PR900/view, no endpoint auth (product/schema.py, products.md)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/import/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S tenant migration import; creates UOMs, categories, variants, products and seeds inventory (product/views.py:3905-4114)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/bulk-add/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Bulk product import - section Bulk product import</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/bulk-product-validation/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Pre-flight validation paired with bulk-add - section Bulk product import</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/change-case/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S bulk upper/lower of name/sku fields (product/views.py:5218-5254)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/deduplicate-unique-id/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>S2S repair of duplicate product unique_ids (product/views.py:5257)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/delete/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Delete unnecessary data, internal (product/views.py:4117)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/kafka-product-listing/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Product feed for external listing pipeline, no endpoint auth (product/views.py:4689)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/campaign/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Campaign list; part of section Campaign management</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/campaign/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>TRANSACTION</td>
+<td>Campaign read/update - section Campaign management</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/campaign/inactive/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Campaign bulk status - section Campaign management</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/campaign/search/, /campaign/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Campaign search and pickers (product/views.py:2530-2610)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>/api/product/campaign/check/, /campaign-data/</td>
+<td>POST, GET</td>
+<td>READ</td>
+<td>S2S campaign checks and product campaign data, internal (product/views.py:3242, 3687)</td>
+</tr>
+<tr>
+<td>product</td>
+<td>variant and product-variant routes (7): /variant/, /variant/search/, /variant/search/select/, /variant/detail/&lt;int:pk&gt;/, /variant/inactive/, /product-variant/, /product-variant/detail/&lt;int:pk&gt;/</td>
+<td>*</td>
+<td>EXCLUDED - variant feature</td>
+<td>Feature not used in ProvidhyERP and out of scope per SITESPEC; listed in overview.md</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory//adjustment/v2/{id}, /api/inventory/adjustment/v2/</td>
+<td>GET, POST</td>
+<td>TRANSACTION</td>
+<td>Revamped adjustment list/create - section Stock adjustment lifecycle</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>TRANSACTION</td>
+<td>Adjustment read/update for both generations - section Stock adjustment lifecycle</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/status/&lt;int:pk&gt;/, /adjustment/status/v2/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Submit/approve/cancel state machine, v1 + revamped - section Stock adjustment lifecycle</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/cancel-submission/&lt;int:pk&gt;/, /adjustment/cancel-submission/v2/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Withdraw or reject a submitted adjustment - section Stock adjustment lifecycle</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Delete a draft adjustment - section Stock adjustment lifecycle</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Filtered adjustment search; tenant and fiscal-year injected by filter mixin (inventory/views.py:538-585, dashboard/mixins.py:5-48)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/approval-list/, /api/dashboard/approval-list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Pending-approval lists (inventory/views.py:730, dashboard/views.py:169)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/recent-transaction/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Adjustment transaction timeline, internal (inventory/views.py:2688)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/adjustment/list/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Approved adjustment items for Accounting, internal (inventory/views.py:712)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/inventory-data/, /inventory-data/front-end/, /inventory/data/, /batch-inventory-total/, /product-total-quantity/</td>
+<td>POST, GET</td>
+<td>READ</td>
+<td>S2S stock quantity reads (inventory/views.py:103-263, 39, 5841, 5938)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/negative-stocks/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Negative inventory tracker with recent-transaction enrichment (inventory/views.py:5999-6099)</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/purchase-verification/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Purchase stock pre-flight - section Purchase stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/grn-manipulation/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>GRN stock in/out - section Purchase stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/purchase-invoice-manipulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Purchase invoice stock commit/cancel - section Purchase stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/purchase-return-manipulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Purchase return stock out/in - section Purchase stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/grn-return-manipulation/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>GRN return stock out/in; contains an always-true branch bug - section Purchase stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-verification/, /quantity-verification/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Sales pre-flight checks - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/check-manipulation/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Sales order / delivery note hold and release - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/drn-manipulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Delivery note stock movement - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/note-return-manupulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Delivery note return stock movement - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/note-return-verification/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Delivery note return pre-flight - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-invoice-manupulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Invoice hold, commit, cancel-submission and cancel - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-invoice-verification/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Invoice pre-flight check - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-invoice-manupulation-revert/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Approved-invoice reversal, restocks - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-return-manupulation/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Sales return restock - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-return-manupulation-revert/v2/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Sales return undo - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/sales-return-verification/</td>
+<td>GET</td>
+<td>TRANSACTION</td>
+<td>Sales return pre-flight; declared GET but reads request body, effectively broken - section Sales stock protocol</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/create/, /create-endpoint/, /bulk-create/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Inventory ledger seeding from product side - section Inventory seeding</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>/api/inventory/detail/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Raw field-by-field update of an Inventory row; IAM but no permission class - section Inventory seeding</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/system-choices/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Static choice labels, no permission check (dashboard/views.py:51)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/analytics/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Dashboard analytics, IAM no-perm (dashboard/views.py:102)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/tenant-data-deletion/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Destructive tenant master-data wipe, internal (dashboard/views.py:215)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/set-variant-path/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Variant path application, internal (dashboard/views.py:371)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/add-fiscal-year/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Fiscal-year seeding for adjustments, internal (inventory/views.py:5969)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/opening-info/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Product opening info fetch, internal (dashboard/views.py:392)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/transfer-closing/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Fiscal-year closing transfer, internal (dashboard/views.py:466)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/check-reconciliation/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Reconciliation data feed, internal (dashboard/views.py:545)</td>
+</tr>
+<tr>
+<td>core</td>
+<td>/graphql/</td>
+<td>*</td>
+<td>EXCLUDED - not mounted</td>
+<td>Catalog artifact; the mount is commented out (core/urls.py:11)</td>
+</tr>
+</tbody></table>
+<p>Superseded routes (17, no deep trace): v1 handlers whose v2/revamped counterpart is the latest - /api/product/ (product/urls.py:39), /api/product/recent-transactions/&lt;int:pk&gt;/ (:172), /api/inventory//adjustment/{id} (inventory/urls.py:7), /api/inventory/adjustment/status/&lt;int:pk&gt;/ (:194), /api/inventory/adjustment/cancel-submission/&lt;int:pk&gt;/ (:204), /api/inventory/drn-manipulation/ (:62), /api/inventory/note-return-manupulation/ (:72), /api/inventory/sales-invoice-manupulation/ (:87), /api/inventory/sales-invoice-manupulation-revert/ (:102), /api/inventory/sales-return-manupulation-revert/ (:112), /api/inventory/sales-return-manupulation/ (:122), /api/inventory/purchase-invoice-manipulation/ (:147), /api/inventory/purchase-return-manipulation/ (:157); plus three catalog artifacts for version-suffix URL includes flattened by the catalog scanner (product/urls.py:197, 206, 221) and the empty /api/inventory/ entry (inventory/urls.py:31, the version-include mount for adjustment search).</p>
+<p>Federated / eSewa miniapp endpoints: none. The catalog and source contain no /api/miniapp routes and no federated/miniapp auth backend in this service (dashboard/auth_backends.py:23-253 defines only IAM product/inventory backends, API-key auth and the internal-password permission), so the miniapp exclusion from the trace scope removes nothing here.</p>
+</section><section class="sec" data-title="Product creation - POST /api/product/v2/"><h2 id="product-creation-post-api-product-v2">Product creation - POST /api/product/v2/</h2>
+<p>What happens: creating a product is a cross-service flow. The view reads the tenant&#39;s batch-serial configuration from the Configuration service (the request fails with 503 if it is missing), computes the required-field set from the product type (goods need UOM and category; services may not manage inventory; independent-stock goods need an expiry date when the expiry compulsion is on), enforces a unique product name per tenant, sanitizes the payload through Configuration, optionally verifies a preferred supplier through a self-call, persists the product together with any secondary unit conversions and a ProductVariant row, and - for goods that manage stock - seeds the stock ledger by calling its own inventory create endpoint with the opening quantity. Finally it publishes a product_creation Kafka event and writes a CREATION activity log.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li>Auth: IAMAuthenticationBackendProduct (product/views.py:746, dashboard/auth_backends.py:23-51) - IAM token must include the PRODUCT_MASTER service PR900 and email-verified status; HasPermission (dashboard/auth_backends.py:98-130) with required_feature_permission PR901 PRODUCT_CREATION (product/views.py:747) and required_action_permission switched in initial() - POST to add_edit, GET to view (product/views.py:761-766). The v2 handler carries the same gate (product/views.py:1100-1121).</li>
+<li>Configuration gate: get_configuration for PRODUCT_FLOW / BATCH_AND_SERIAL (product/views.py:1133-1143) - 503 CONFIGURATION_NOT_FOUND when absent; the title and compulsion are read (product/views.py:1145-1148).</li>
+<li>Type-driven validation: goods add uom and product_category to required fields (product/views.py:1154-1156); service with manage_inventory true is rejected (product/views.py:1158-1162); independent-stock goods with expiry compulsion true need expiry_date (product/views.py:1164-1170); fixed-asset normalization runs before required-field validation (product/views.py:1173); empty-string reorder_quantity is rejected and negative values rejected (product/views.py:1175-1180); helper.valid_required_data enforces the rest (product/views.py:1181, dashboard/helper.py:358).</li>
+<li>Expiry title gate: title must be EXPIRY and compulsion a bool, else 503 (product/views.py:1312-1318).</li>
+<li>Uniqueness: is_unique on name scoped to the tenant, case-insensitive (product/views.py:1236, dashboard/helper.py:196-219).</li>
+<li>Preferred supplier check: when preferred_supplier is passed, a self-call POSTs to the ProjectMaster supplier check API (product/views.py:1228-1233). Notable: the code compares the requests Response object to the integer 204, which is never true, so any preferred_supplier fails and the request aborts with the generic error.</li>
+<li>Sanitize + persist: ProductSerializer.create inside transaction.atomic - tenant_id and entry_by injected from context (product/serializers.py:1054-1059); sanitize_main_data posts the payload to the Configuration SANITIZE_URL (product/serializers.py:1010-1052).</li>
+<li>Secondary units and variant: for each secondary_units entry a ProductUnitConversion row is created; when product_variant is passed a ProductVariant row plus its variant multi-value link is created (product/serializers.py:1093-1102).</li>
+<li>Inventory seed: for goods with manage_inventory a payload with password, tenant_id, product_id, entry_by, product_stock_keeping, opening_quantity, rate, opening_date is POSTed to the own /api/inventory/create/ endpoint; anything other than 201 aborts the whole transaction with the generic inventory error (product/views.py:1388-1400).</li>
+<li>Events: call_kafka publishes PRODUCT_CREATION (product/views.py:1402-1407, dashboard/kafka_function.py:4-13, product/async_func.py:14-36 - topic inventory_events, dev_inventory_events in development); activity log CREATION (product/views.py:1409, dashboard/custom_functions.py:44-58).</li>
+<li>Response: 201 with id, unique_id and message (product/views.py:1410).</li>
+</ol>
+<p>The superseded v1 handler POST /api/product/ (product/views.py:745-1097) is structurally identical but has no expiry-configuration gate, no sellable/manage_inventory boolean handling and its GET implementation is fully commented out (product/views.py:768-883), so GET on the v1 route returns 405.</p>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Product row + optional ProductUnitConversion rows + optional ProductVariant row written (product/views.py:1298-1340, product/serializers.py:1054-1059).</li>
+<li>Inventory row created for managed goods via self-call (product/views.py:1388-1400, inventory/views.py:51-100).</li>
+<li>Kafka product_creation event on inventory_events (product/async_func.py:14-36).</li>
+<li>Activity log CREATION to events service (dashboard/custom_functions.py:44-58).</li>
+<li>Configuration service calls: BATCH_AND_SERIAL read (product/views.py:1133) and SANITIZE_URL write (product/serializers.py:1047-1049).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST api product v2] --&gt; B[fetch BATCH_AND_SERIAL configuration]
+    B --&gt;|missing| B1[503 CONFIGURATION_NOT_FOUND]
+    B --&gt;|present| C{product type}
+    C --&gt;|goods| D[require uom and product_category]
+    C --&gt;|service| E{manage_inventory}
+    E --&gt;|true| E1[400 service cannot manage inventory]
+    E --&gt;|false| H
+    D --&gt; F{independent stock and expiry compulsion}
+    F --&gt;|yes| G[require expiry_date]
+    F --&gt;|no| H[validate required fields and reorder quantity]
+    G --&gt; H
+    H --&gt; I{configuration title is EXPIRY}
+    I --&gt;|no| I1[503 CONFIGURATION_NOT_FOUND]
+    I --&gt;|yes| J[unique name per tenant]
+    J --&gt; K[sanitize payload via Configuration]
+    K --&gt; L{preferred_supplier passed}
+    L --&gt;|yes| M[self-call supplier check]
+    M --&gt; M1[400 generic error, response compared to integer]
+    L --&gt;|no| N[persist product and secondary units and variant]
+    N --&gt; O{goods and manage_inventory}
+    O --&gt;|yes| P[self-call inventory create with opening]
+    O --&gt;|no| Q[kafka product_creation event]
+    P --&gt; Q
+    Q --&gt; R[activity log CREATION]
+    R --&gt; S[201 with id and unique_id]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP frontend
+    participant PM as ProductManagement
+    participant CFG as Configuration service
+    participant SUP as ProjectMaster service
+    participant INV as own inventory endpoint
+    participant K as Kafka producer API
+    participant EV as events service
+    FE-&gt;&gt;PM: POST api product v2 with IAM token
+    PM-&gt;&gt;CFG: get configuration BATCH_AND_SERIAL
+    CFG--&gt;&gt;PM: title and compulsion
+    PM-&gt;&gt;PM: type-driven validation and unique name
+    PM-&gt;&gt;CFG: sanitize payload
+    CFG--&gt;&gt;PM: sanitized fields
+    opt preferred_supplier present
+        PM-&gt;&gt;SUP: supplier check self-call
+        SUP--&gt;&gt;PM: response object
+    end
+    PM-&gt;&gt;PM: save product rows in transaction
+    opt goods and manage_inventory
+        PM-&gt;&gt;INV: POST api inventory create with opening
+        INV--&gt;&gt;PM: 201
+    end
+    PM-&gt;&gt;K: POST inventory_events product_creation
+    PM-&gt;&gt;EV: POST activity log CREATION
+    PM--&gt;&gt;FE: 201 created
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>goods with manage_inventory and opening quantity</td>
+<td>product saved, then own inventory endpoint creates the Inventory row with total and available equal to opening; 201 only after 201 from inventory</td>
+<td>product/views.py:1388-1400, inventory/views.py:85-96</td>
+</tr>
+<tr>
+<td>service with manage_inventory true</td>
+<td>400 before any write</td>
+<td>product/views.py:1158-1162</td>
+</tr>
+<tr>
+<td>BATCH_AND_SERIAL configuration missing or not titled EXPIRY</td>
+<td>503 CONFIGURATION_NOT_FOUND, nothing written</td>
+<td>product/views.py:1139-1143, 1312-1318</td>
+</tr>
+<tr>
+<td>preferred_supplier passed</td>
+<td>supplier self-call returns a Response object; comparison to 204 always false; 400 generic error aborts creation</td>
+<td>product/views.py:1228-1233</td>
+</tr>
+<tr>
+<td>duplicate product name in tenant</td>
+<td>400 uniqueness error before persist</td>
+<td>product/views.py:1236, dashboard/helper.py:196-219</td>
+</tr>
+<tr>
+<td>secondary units passed</td>
+<td>ProductUnitConversion rows created alongside the product</td>
+<td>product/views.py:1320-1340</td>
+</tr>
+<tr>
+<td>inventory self-call fails</td>
+<td>transaction rolls back product rows; 400 inventory creation error</td>
+<td>product/views.py:1398-1400</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Product update - POST /api/product/detail/&lt;int:pk&gt;/"><h2 id="product-update-post-api-product-detail-int-pk">Product update - POST /api/product/detail/&lt;int:pk&gt;/</h2>
+<p>What happens: the detail endpoint serves GET (view permission) and POST (add_edit). An update is tenant-scoped, re-reads the same batch-serial configuration, sanitizes the payload, fills any empty GL mapping from the tenant&#39;s accounting-automation configuration, replaces the ProductVariant link set when variants are passed, and publishes a product_edition Kafka event. GL ids, UOM and the non-editable fields are stripped from the update payload, so the update is partial by construction.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li>Auth and dispatch: same backend and feature as creation; initial() switches POST to add_edit (product/views.py:1533-1538, 1468-1472).</li>
+<li>Lookup: product fetched with select_related for category, subcategory, uom and campaign, scoped to request.auth (product/views.py:1474-1480); missing product yields 404 on GET and 400 INVALID_OBJECT on POST (product/views.py:1549-1551, 1671-1674).</li>
+<li>Configuration and expiry: BATCH_AND_SERIAL configuration read again; with expiry compulsion true a missing expiry_date fails (product/views.py:1558-1575).</li>
+<li>Sanitize: ProductSerializer.update posts to SANITIZE_URL and re-injects asset_category from context (product/serializers.py:1061-1064).</li>
+<li>GL completion: product_gl_addition_creation - fixed assets take the asset category as expense GL and clear income and inventory GL; otherwise empty expense/inventory/income GL slots are filled from the PRODUCT_FLOW AUTOMATION configuration titles PRODUCT_EXPENSE, PRODUCT_INVENTORY, PRODUCT_INCOME or SERVICE_* (dashboard/custom_functions.py:74-113).</li>
+<li>Variant sync: when product_variant is passed, the single ProductVariant row for the product is get_or_create&#39;d and its variant multi-value set is cleared then re-set (product/serializers.py:1093-1102). Note the secondary_units sync block is commented out, so detail updates never touch ProductUnitConversion rows (product/serializers.py:1074-1091).</li>
+<li>Edit log: changed fields are diffed via edit_logs for the activity log; GL fields are excluded from the diff (product/views.py:1509-1518).</li>
+<li>Events and response: call_kafka PRODUCT_EDITION (product/views.py:1659-1665); 200 with the serialized product (product/views.py:1670).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Product row updated; ProductVariant and its variant links replaced when passed (product/serializers.py:1093-1102).</li>
+<li>GL mapping fields possibly filled from configuration (dashboard/custom_functions.py:74-113).</li>
+<li>Kafka product_edition event (product/views.py:1659-1665).</li>
+<li>Activity log EDITION with field diffs (product/views.py:1482-1490).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[POST product detail pk] --&gt; B[load product for tenant]
+    B --&gt;|not found| C[404 on GET, 400 INVALID_OBJECT on POST]
+    B --&gt;|found| D[fetch BATCH_AND_SERIAL configuration]
+    D --&gt; E{expiry compulsion and expiry_date missing}
+    E --&gt;|yes| F[400]
+    E --&gt;|no| G[sanitize payload via Configuration]
+    G --&gt; H[product_gl_addition_creation]
+    H --&gt; I{is_fixed_asset}
+    I --&gt;|yes| J[expense GL from asset_category, income and inventory GL cleared]
+    I --&gt;|no| K[fill empty GL slots from automation configuration]
+    J --&gt; L{product_variant passed}
+    K --&gt; L
+    L --&gt;|yes| M[clear and re-set ProductVariant variant links]
+    L --&gt;|no| N[save product with sanitized fields]
+    M --&gt; N
+    N --&gt; O[kafka product_edition event]
+    O --&gt; P[activity log EDITION with field diffs]
+    P --&gt; Q[200 serialized product]
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>update with empty expense GL on a goods product</td>
+<td>GL filled from PRODUCT_EXPENSE automation config when the config exists</td>
+<td>dashboard/custom_functions.py:92-112</td>
+</tr>
+<tr>
+<td>update marking a fixed asset</td>
+<td>asset_category becomes expense GL, income and inventory GL set to None</td>
+<td>dashboard/custom_functions.py:76-80</td>
+</tr>
+<tr>
+<td>update passing product_variant</td>
+<td>existing ProductVariant row&#39;s variant set fully replaced</td>
+<td>product/serializers.py:1093-1102</td>
+</tr>
+<tr>
+<td>update passing secondary_units</td>
+<td>ignored - sync block commented out</td>
+<td>product/serializers.py:1074-1091</td>
+</tr>
+<tr>
+<td>update of uom or other non-edit fields</td>
+<td>silently stripped from the payload</td>
+<td>product/serializers.py:1105-1113</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Stock adjustment - the lifecycle"><h2 id="stock-adjustment-the-lifecycle">Stock adjustment - the lifecycle</h2>
+<p>The stock-adjustment document is the manual correction path for the stock ledger. The revamped v2 family is the live one (POST /api/inventory/adjustment/v2/ create, POST /api/inventory/adjustment/status/v2/<pk>/ status, POST /api/inventory/adjustment/cancel-submission/v2/<pk>/ revert; inventory/urls.py:185-245); the v1 status and cancel-submission routes are still routed but superseded (see Superseded routes). Adjustment is either an ADDITION (stock in, e.g. found goods) or a DEDUCTION (stock out, e.g. damaged goods), and DEDUCTION additionally requires a reason. Two stock-keeping methods matter: BATCH products write both the per-batch Inventory row and the BatchInventoryTotal rollup; independent products write the Inventory row only. The approver model differs from Accounting: approval is SELF (the creator, from DRAFT) or OTHER (the designated approval_user, from SUBMIT_FOR_APPROVAL).</p>
+<h3 id="trace-create-post-api-inventory-adjustment-v2">Trace (create - POST /api/inventory/adjustment/v2/)</h3>
+<ol>
+<li>Auth: IAMAuthenticationBackendInventory + STOCK_ADJUSTMENT feature; POST requires ADD_EDIT action, GET VIEW (inventory/views.py:376-386).</li>
+<li>Fiscal-year guard on entry_date (inventory/views.py:415); e-billing tenants must pass a reference (inventory/views.py:416-417).</li>
+<li>Item validation: every item needs product_id, quantity, rate; batch items need batch_number for new batches (inventory/views.py:438-442).</li>
+<li>StockAdjustmentSerializerWriteOnly2 validates and creates the StockAdjustment + items as DRAFT (inventory/views.py:450-459); nothing moves in the stock ledger at create time.</li>
+</ol>
+<h3 id="trace-status-post-api-inventory-adjustment-status-v2-pk">Trace (status - POST /api/inventory/adjustment/status/v2/<pk>/)</h3>
+<p>StockAdjustmentStatusAlter2 (inventory/views.py:1663). initial() picks the action permission: submit requires ADD_EDIT, all other transitions APPROVE_CANCEL (inventory/views.py:1691-1698).</p>
+<ol>
+<li>Load the tenant-scoped adjustment (inventory/views.py:1668-1675), fiscal-year guard (inventory/views.py:1793).</li>
+<li>Fetch the tenant approval-work configuration (inventory/views.py:1796-1801); no config = 503 (inventory/views.py:1816).</li>
+<li>BASIC flow (inventory/views.py:1760-1777): submit - creator only, from draft, requires approval_user id; approve - SELF (draft, creator) or OTHER (SFA, approval_user); cancel - from approved or from SFA (approval_user); anything else 400 INVALID_STATUS.</li>
+<li>CUSTOM flow (inventory/views.py:1779-1787): no submit; approve directly from draft (compulsion check when compulsion=true, inventory/views.py:1684-1689) or cancel.</li>
+<li><strong>On submit, DEDUCTION entries HOLD stock</strong>: per item, the batch case moves primary_quantity from available to hold on both the Inventory row and the BatchInventoryTotal row (inventory/views.py:1829-1858); the independent case does the same on the Inventory row and also reduces its amount (inventory/views.py:1860-1876). ADDITION entries hold nothing. The hold makes the stock unavailable to concurrent sales while the document awaits approval. Negative available is rejected (inventory/views.py:1841-1842).</li>
+<li><strong>On approve, stock is finally committed</strong>: DEDUCTION - from draft the draft-case writers reduce available and total permanently (inventory/views.py:1949-1990, 2114-2126); from SFA the approval-case writers convert the hold into a permanent total reduction (inventory/views.py:2114-2126). ADDITION increases total and available (inventory/views.py:1942-1946, 2139-2150).</li>
+<li><strong>On cancel, the move is reversed</strong>: cancelling an APPROVED adjustment restores the total and available quantities (inventory/views.py:2197-2240); cancelling from SFA only releases the hold (available restored, hold recomputed) because the total was never touched (inventory/views.py:2240-2280).</li>
+<li>Side effects on approve: activity log (inventory/views.py:2161-2167), a Kafka approval payload (inventory/views.py:2180-2186), and - only when the tenant has a PRODUCT_FLOW automation config AND the service runs with DEVELOPMENT enabled - a Celery journal_creation_task that posts the adjustment journal to Accounting (inventory/views.py:2169-2178).</li>
+<li>Notification/activity log on submit (inventory/views.py:1902-1916).</li>
+</ol>
+<h3 id="trace-cancel-submission-rejection-post-api-inventory-adjustment-cancel-submission-v2-pk">Trace (cancel-submission / rejection - POST /api/inventory/adjustment/cancel-submission/v2/<pk>/)</h3>
+<p>StockAdjustmentSubmissionRevertRevamped (inventory/views.py:2527). Only while in SFA, and only by the creator or the designated approval_user (inventory/views.py:2555-2558). For DEDUCTION it releases the hold (batch: Inventory + BatchInventoryTotal, independent: Inventory; inventory/views.py:2559-2587). With body type=rejection by the approval_user, the document stays draft but is flagged rejected with rejected fields, a rejection activity log and an ERROR notification (inventory/views.py:2590-2615).</p>
+<h3 id="trace-delete-post-api-inventory-adjustment-delete-pk">Trace (delete - POST /api/inventory/adjustment/delete/<pk>/)</h3>
+<p>StockAdjustmentDelete (inventory/views.py:2654): draft only and only by the creator (inventory/views.py:2673-2675); items and the document are deleted in one transaction. Note the permission is checked against the SALES_ORDER feature, not STOCK_ADJUSTMENT (inventory/views.py:2657) - a copy-paste quirk, so the effective gate depends on which feature the tenant granted.</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; draft : create v2
+  draft --&gt; submitted : submit, deduction holds stock
+  draft --&gt; approved : self approve, basic or custom flow
+  submitted --&gt; approved : approver approves, stock committed
+  submitted --&gt; draft : creator or approver reverts, hold released
+  submitted --&gt; draft : rejection, rejected flag set
+  approved --&gt; cancelled : cancel, stock move reversed
+  draft --&gt; [*] : delete, creator only
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST status v2] --&gt; B{flow config}
+  B --&gt;|none| E[503]
+  B --&gt;|BASIC| C{target}
+  B --&gt;|CUSTOM| C2{target}
+  C --&gt;|submit| D[creator guard, deduction holds stock, notify, log]
+  C --&gt;|approve| D2{self or other approver}
+  C2 --&gt;|approve| D3[compulsion check, approve from draft]
+  D2 --&gt;|self, from draft| D4[creator must be caller]
+  D2 --&gt;|other, from submitted| D5[approval_user must be caller]
+  D4 --&gt; F[commit stock move, activity log, kafka, dev-only celery journal]
+  D5 --&gt; F
+  D3 --&gt; F
+  C --&gt;|cancel| G{from approved or submitted}
+  C2 --&gt;|cancel| G
+  G --&gt;|approved| H[reverse total and available]
+  G --&gt;|submitted| I[release hold only]
+  F --&gt; J[200 approved]
+  H --&gt; J
+  I --&gt; J
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Submit a deduction</td>
+<td>Stock held (available to hold) on Inventory and BatchInventoryTotal rows</td>
+<td>inventory/views.py:1829-1876</td>
+</tr>
+<tr>
+<td>Submit an addition</td>
+<td>No stock move, status fields + notification + log only</td>
+<td>inventory/views.py:1878-1924</td>
+</tr>
+<tr>
+<td>Approve a deduction from draft (self)</td>
+<td>total and available reduced permanently</td>
+<td>inventory/views.py:2114-2126</td>
+</tr>
+<tr>
+<td>Approve a deduction from SFA (other)</td>
+<td>hold converted to permanent total reduction</td>
+<td>inventory/views.py:2114-2126</td>
+</tr>
+<tr>
+<td>Cancel an approved adjustment</td>
+<td>total and available restored</td>
+<td>inventory/views.py:2197-2240</td>
+</tr>
+<tr>
+<td>Cancel from SFA</td>
+<td>hold released, total untouched</td>
+<td>inventory/views.py:2240-2280</td>
+</tr>
+<tr>
+<td>Rejection via cancel-submission</td>
+<td>stays draft, rejected flag + ERROR notification</td>
+<td>inventory/views.py:2590-2615</td>
+</tr>
+<tr>
+<td>Approve with PRODUCT_FLOW config in production</td>
+<td>No journal posted - the Celery task is dev-only</td>
+<td>inventory/views.py:2175-2178</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Stock API - internal verify/manipulation protocol"><h2 id="stock-api-internal-verify-manipulation-protocol">Stock API - internal verify/manipulation protocol</h2>
+<p>Sales and Purchase move stock through this service via two password-gated endpoint families (shared INTERNAL_PASS, no IAM): <strong>verification</strong> endpoints that only check availability, and <strong>manipulation</strong> endpoints that move quantities between available and hold (and on final document commit, out of total). The live set (inventory/urls.py): purchase-verification, sales-verification, quantity-verification (delivery-note ready check), note-return-verification, sales-invoice-verification, sales-return-verification; and the manipulators: check-manipulation (sales order), drn-manipulation (delivery note), note-return-manupulation, sales-invoice-manupulation, sales-invoice-manupulation-revert, sales-return-manupulation, sales-return-manupulation-revert, purchase-invoice-manipulation, purchase-return-manipulation, grn-manipulation, grn-return-manipulation - most with the v2/revamped route superseding the v1 path.</p>
+<h3 id="trace-sales-order-submit-verification-then-hold">Trace (sales order submit - verification then hold)</h3>
+<ol>
+<li>Sales calls POST /api/inventory/quantity-verification/ with password, tenant_id, entry_status and items; DeliveryInvoiceVerification (inventory/views.py:2784) checks per item: for submit the quantity must fit in available_quantity, for approve it must fit in total_quantity; batch items are checked on each per-batch Inventory row plus the BatchInventoryTotal rollup (inventory/views.py:2785-2853). Read-only - it never writes.</li>
+<li>Sales then calls POST /api/inventory/check-manipulation/; SalesOrderInventoryCheckManipulation (inventory/views.py:2856) loads the tenant negative-inventory config (inventory/views.py:2859-2861), and for submit/approve subtracts the quantity from available_quantity and recomputes hold_quantity = total - available on the Inventory row or the BatchInventoryTotal row for batch items (inventory/views.py:2868-2906).</li>
+<li>A negative available is rejected unless the tenant has the negative-inventory config enabled (inventory/views.py:2882-2886, 2897-2901).</li>
+<li>On cancel_submission or cancelled the mirrored branch restores the quantities via inventory_ins_increment (inventory/views.py:2908-2929).</li>
+<li>DeliveryNoteManipulation (inventory/views.py:2940) is the same hold/release pattern for delivery-note documents.</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart LR
+  subgraph ledger before
+    T1[total 100, available 100, hold 0]
+  end
+  A[verify submit] --&gt;|qty 30 fits available| B[manipulate submit]
+  B --&gt; C[total 100, available 70, hold 30]
+  C --&gt; D[manipulate approve or commit]
+  D --&gt; E[total 70, available 70, hold 0]
+  C --&gt; F[manipulate cancel]
+  F --&gt; T1
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Verify at submit with insufficient available</td>
+<td>400, no write</td>
+<td>inventory/views.py:2785-2795</td>
+</tr>
+<tr>
+<td>Verify at approve with insufficient total</td>
+<td>400, no write</td>
+<td>inventory/views.py:2785-2795</td>
+</tr>
+<tr>
+<td>Manipulate with negative available, config off</td>
+<td>400 AVAILABLE_NEGATIVE</td>
+<td>inventory/views.py:2882-2886</td>
+</tr>
+<tr>
+<td>Manipulate with negative available, config on</td>
+<td>allowed - stock goes negative on hold</td>
+<td>inventory/views.py:2859-2861</td>
+</tr>
+<tr>
+<td>Missing Inventory row</td>
+<td>verify returns 400, manipulate returns 204 no content</td>
+<td>inventory/views.py:2852-2853, 2933-2934</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Campaign management"><h2 id="campaign-management">Campaign management</h2>
+<p>Campaigns are product discount/pricing records (type + value with from/to dates) referenced by products.</p>
+<ul>
+<li><strong>Update</strong> POST /api/product/campaign/detail/<pk>/ - IAM + PRODUCT_CAMPAIGN, POST requires ADD_EDIT; blocked for inactive campaigns (product/views.py:2714-2718); requires name, from_date, to_date, type, non-empty value; saves through the serializer and writes an EDITION activity log with the diff (product/views.py:2707-2733).</li>
+<li><strong>Bulk status</strong> POST /api/product/campaign/inactive/ - IAM + PRODUCT_CAMPAIGN, POST requires ACTIVE_INACTIVE; flips active_status for a list of ids, activity log per row, and returns 404 mid-loop on a missing id - the whole transaction rolls back, so it is all-or-nothing (product/views.py:2770-2800).</li>
+</ul>
+</section><section class="sec" data-title="Superseded routes (12 verified pairs)"><h2 id="superseded-routes-12-verified-pairs">Superseded routes (12 verified pairs)</h2>
+<p>The catalog pairs these v1/legacy paths with live v2/revamped successors (catalog/ProductManagement.json); the v1 routes are not deep-traced:</p>
+<table>
+<thead>
+<tr>
+<th>Superseded path</th>
+<th>Live successor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/api/product/</td>
+<td>/api/product/v2/</td>
+</tr>
+<tr>
+<td>/api/product/recent-transactions/<pk>/</td>
+<td>/api/product/recent-transactions/v2/<pk>/</td>
+</tr>
+<tr>
+<td>/api/inventory/adjustment/status/<pk>/</td>
+<td>/api/inventory/adjustment/status/v2/<pk>/</td>
+</tr>
+<tr>
+<td>/api/inventory/adjustment/cancel-submission/<pk>/</td>
+<td>/api/inventory/adjustment/cancel-submission/v2/<pk>/</td>
+</tr>
+<tr>
+<td>/api/inventory/drn-manipulation/</td>
+<td>/api/inventory/drn-manipulation/v2/</td>
+</tr>
+<tr>
+<td>/api/inventory/note-return-manupulation/</td>
+<td>/api/inventory/note-return-manupulation/v2/</td>
+</tr>
+<tr>
+<td>/api/inventory/sales-invoice-manupulation/</td>
+<td>/api/inventory/sales-invoice-manupulation/v2/</td>
+</tr>
+<tr>
+<td>/api/inventory/sales-invoice-manupulation-revert/</td>
+<td>/api/inventory/sales-invoice-manuplication-revert/ - see note</td>
+</tr>
+<tr>
+<td>/api/inventory/sales-return-manupulation/</td>
+<td>/api/inventory/sales-return-manuplication/v2/ - see note</td>
+</tr>
+<tr>
+<td>/api/inventory/sales-return-manuplication-revert/</td>
+<td>/api/inventory/sales-return-manuplication-revert/v2/ - see note</td>
+</tr>
+<tr>
+<td>/api/inventory/purchase-invoice-manipulation/</td>
+<td>/api/inventory/purchase-invoice-manipulation/v2/</td>
+</tr>
+<tr>
+<td>/api/inventory/purchase-return-manipulation/</td>
+<td>/api/inventory/purchase-return-manipulation/v2/</td>
+</tr>
+</tbody></table>
+<p>Note: the live revert v2 paths keep the misspelling manupulation from the v1 rows. The catalog also carries a duplicate registration /api/inventory//adjustment/v2/{id} (double slash, same StockAdjustmentViewset2 view).</p>
+</section><section class="sec" data-title="Untraced / unverified"><h2 id="untraced-unverified">Untraced / unverified</h2>
+<ul>
+<li>The v1 status endpoint (StockAdjustmentStatusAlter, inventory/views.py:957) and v1 revert (inventory/views.py:2398) are still routed; their guards were not traced line-by-line - unverified, but the v1 routes are superseded by the v2 family traced above.</li>
+<li>The exact debit/credit lines of the adjustment journal produced by the dev-only Celery task (tasks.journal_creation_task) - the task call site is verified (inventory/views.py:2175-2178) but the task body and the Accounting endpoint it posts to were not traced here.</li>
+<li>get_negative_inventory_config helper internals - call sites verified, source of the config value unverified.</li>
+<li>The GRN manipulation endpoints (grn-manipulation/, grn-return-manipulation/) exist but GRN documents are not used in ProvidhyERP - not traced.</li>
+<li>The earlier pass counted 17 superseded routes; 12 v1/v2 pairs plus the duplicate {id} registration are verified in the catalog - the remaining 4 are not individually identified.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../inventory/dashboard.html"><div class="pn-dir">← Previous</div><div class="pn-name">ProductManagement - Dashboard</div></a><a class="pn next" href="../inventory/products.html"><div class="pn-dir">Next →</div><div class="pn-name">ProductManagement - Products</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l2"><a href="#product-creation-post-api-product-v2">Product creation - POST /api/product/v2/</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#product-update-post-api-product-detail-int-pk">Product update - POST /api/product/detail/&lt;int:pk&gt;/</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#stock-adjustment-the-lifecycle">Stock adjustment - the lifecycle</a></li><li class="l3"><a href="#trace-create-post-api-inventory-adjustment-v2">Trace (create - POST /api/inventory/adjustment/v2/)</a></li><li class="l3"><a href="#trace-status-post-api-inventory-adjustment-status-v2-pk">Trace (status - POST /api/inventory/adjustment/status/v2/&lt;pk&gt;/)</a></li><li class="l3"><a href="#trace-cancel-submission-rejection-post-api-inventory-adjustment-cancel-submission-v2-pk">Trace (cancel-submission / rejection - POST /api/inventory/adjustment/cancel-submission/v2/&lt;pk&gt;/)</a></li><li class="l3"><a href="#trace-delete-post-api-inventory-adjustment-delete-pk">Trace (delete - POST /api/inventory/adjustment/delete/&lt;pk&gt;/)</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#stock-api-internal-verify-manipulation-protocol">Stock API - internal verify/manipulation protocol</a></li><li class="l3"><a href="#trace-sales-order-submit-verification-then-hold">Trace (sales order submit - verification then hold)</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#campaign-management">Campaign management</a></li><li class="l2"><a href="#superseded-routes-12-verified-pairs">Superseded routes (12 verified pairs)</a></li><li class="l2"><a href="#untraced-unverified">Untraced / unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

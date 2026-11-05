@@ -1,0 +1,1115 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Accounting - Business Flows (Traced) - Ledger &amp; Ops - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc current" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced) - Ledger &amp; Ops</h1>
+<p>Accounting is the general-ledger service of ProvidhyERP. This file covers the <strong>ledger and operations half</strong> of the service: chart-of-accounts structure changes, bank account management, the fiscal year close, the internal data-mutating ops routes, and the pending-journal dead-letter path. The voucher approval lifecycle (journal/payment/receipt/contra/bill-settlement status machines) and the module-facing <code>create-journal</code>/<code>cancel-journal</code> hooks are deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a>; the tables below link out to it.</p>
+<p>Runtime shape in one paragraph: every ledger line lives in a single <code>JournalVoucher</code> table whose <code>jv_type</code> column distinguishes journal, payment, receipt and contra vouchers (<code>journal_voucher/models.py:56-210</code>); the <code>ChartOfAccount</code> table is a hybrid tree where <code>group=True</code> rows are groups and <code>account=True</code> rows are accounts, linked through two parallel parent axes (<code>parent</code> for the direct parent, <code>parent_type</code> for the top-level account-type branch, <code>chart_of_accounts/models.py</code>); a <code>BankAccount</code> row is always paired 1:1 with a GL <code>ChartOfAccount</code> (the <code>gl_mapping</code> FK, <code>bank/models.py:28-30</code>, both FKs <code>PROTECT</code>). IAM-facing routes are tenant-scoped through <code>request.auth</code> (the tenant id returned by the IAM token check, <code>dashboard/auth_backends.py:21-57</code>); internal routes are gated by a single shared <code>INTERNAL_PASS</code> password compared in plain text (<code>dashboard/helpers.py:25, 225-228</code>). Fiscal close is computed <strong>outside</strong> Accounting (the caller does the carry-forward math) and applied locally as an idempotent bulk update (<code>chart_of_accounts/views.py:1429-1475</code>).</p>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>All 102 latest-version routes of the service (catalog: <code>catalog/Accounting.json</code>, no superseded versions). Class: READ = list/search/detail (one line); RECORD = simple create/update/delete (2-3 lines); TRANSACTION = state-changing business flow (full trace); OPS = internal/ops/maintenance (short trace). <strong>No federated or eSewa miniapp routes exist in the Accounting catalog, so no <code>EXCLUDED - miniapp domain</code> rows apply.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Class</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>account-payable</td>
+<td>/api/account-payable/supplier-create-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; supplier-payment journal. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>account_payable/views.py:22-166</code>)</td>
+</tr>
+<tr>
+<td>account-payable</td>
+<td>/api/account-payable/supplier-cancel-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; supplier-payment journal cancel. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>account_payable/views.py:167-184</code>)</td>
+</tr>
+<tr>
+<td>account-receivable</td>
+<td>/api/account-receivable/customer-create-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; customer-payment journal. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>account_receivable/views.py:25-167</code>)</td>
+</tr>
+<tr>
+<td>account-receivable</td>
+<td>/api/account-receivable/customer-cancel-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; customer-payment journal cancel. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>account_receivable/views.py:170-187</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + BANK_ACCOUNT (PR1305); POST creates account + linked GL COA. Traced below (<code>bank/views.py:24-84</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; update syncs the linked COA. Traced below (<code>bank/views.py:88-152</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + DELETE action; PROTECT FK turns refusal into a 500. Traced below (<code>bank/views.py:156-185</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/status/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + ACTIVE_INACTIVE; syncs linked COA. Traced below (<code>bank/views.py:189-255</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>bank/views.py:259-312</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>bank/views.py:313-356</code>)</td>
+</tr>
+<tr>
+<td>bank-account</td>
+<td>/api/bank-account/import/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password; migration import. Traced below (<code>bank/views.py:357-378</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + BILL_PAYMENT_RECEIVE (PR1306); POST creates a settlement. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>bill_pay_receive/views.py:32-101</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; draft update only (<code>bill_pay_receive/views.py:102-166</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + VIEW action; draft only (<code>bill_pay_receive/views.py:167-198</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/status/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM; approval posts an auto-approved journal. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>bill_pay_receive/views.py:199-394</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/entity-transaction/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check (<code>bill_pay_receive/views.py:395-424</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/cancel-submission/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM + VIEW; revert/reject. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>bill_pay_receive/views.py:425-478</code>)</td>
+</tr>
+<tr>
+<td>bill-settlement</td>
+<td>/api/bill-settlement/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM; full-text + trigram search (<code>bill_pay_receive/views.py:479-538</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + CHART_OF_ACCOUNTS (PR1301); POST creates an account (sanitize, unique name, auto code). Traced below (<code>chart_of_accounts/views.py:57-121</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; POST updates an account, bank-linked COAs blocked (<code>chart_of_accounts/views.py:122-202</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + DELETE action; hard delete, no usage guard (<code>chart_of_accounts/views.py:203-229</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/status/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + ACTIVE_INACTIVE; bulk active/inactive, bank COAs blocked. Traced below (<code>chart_of_accounts/views.py:233-300</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>chart_of_accounts/views.py:617-629</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/register-coa/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password; onboarding seed of the tenant default COA. Traced below (<code>chart_of_accounts/views.py:742-765</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; group create/update (<code>chart_of_accounts/views.py:304-377</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; group detail/update (<code>chart_of_accounts/views.py:378-446</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + DELETE (<code>chart_of_accounts/views.py:449-484</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/status/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + ACTIVE_INACTIVE; cascades to children + bank GL accounts. Traced below (<code>chart_of_accounts/views.py:485-613</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>chart_of_accounts/views.py:684-696</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/choices/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check (<code>chart_of_accounts/views.py:768-771</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/group/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>chart_of_accounts/views.py:872-877</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM; GL account picker (<code>chart_of_accounts/views.py:811-827</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/search/select/&lt;str:supplier&gt;/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM; supplier-scoped GL picker (same view, <code>chart_of_accounts/urls.py:56-59</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/get-account-detail/</td>
+<td>GET, POST</td>
+<td>READ</td>
+<td>Internal; lookup by id/name and product-gl mapping (<code>chart_of_accounts/views.py:944-1028</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/tree/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; COA tree (<code>chart_of_accounts/views.py:1306-1309</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/delete-transfered-coa/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password; nulls parent FKs then deletes tenant COAs. Traced below (<code>chart_of_accounts/views.py:1031-1054</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/coa-list-reporting/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Internal; reporting list (<code>chart_of_accounts/views.py:1057-1058</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/import/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; migration import (serializer internals untraced, <code>chart_of_accounts/views.py:1083-1084</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/check-bulk-account/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; bulk pre-create check (<code>chart_of_accounts/views.py:1108-1109</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/check/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; account existence/name check (<code>chart_of_accounts/views.py:2034-2072</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/bulk-validation/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; bulk validation (<code>chart_of_accounts/views.py:1150-1162</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/bulk-create/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; bulk account create (loop untraced, <code>chart_of_accounts/views.py:1206-1242</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/get-opening-info/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; returns active-account openings grouped by tenant. Traced below (<code>chart_of_accounts/views.py:1375-1399</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/transfer-closing/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal; fiscal-close carry-forward with ActionModel idempotency. Traced below (<code>chart_of_accounts/views.py:1402-1475</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/coa-ids/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; COA ids per tenant (<code>chart_of_accounts/views.py:1478-1499</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/fixed-assets/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; fixed-asset account search (<code>chart_of_accounts/views.py:1838-1894</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/coa-new-account-management/</td>
+<td>POST, GET</td>
+<td>OPS</td>
+<td>Internal; bulk account creation for one tenant or ALL tenants. Traced below (<code>chart_of_accounts/views.py:1503-1649</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/ensure-tds-accounts/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal (no auth classes, password gate); idempotent TDS accounts + config. Traced below (<code>chart_of_accounts/views.py:1674-1835</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/fixed-assets-prouduct-account/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; fixed-asset account list by ids (<code>chart_of_accounts/views.py:1897-1925</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/fixed-asset-intangible-asset/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; the two fixed-asset groups (<code>chart_of_accounts/views.py:1928-1958</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/list-bank-account-multiple/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; bank list for multiple tenants (<code>chart_of_accounts/views.py:1961-1964</code>)</td>
+</tr>
+<tr>
+<td>chart-of-account</td>
+<td>/api/chart-of-account/modify-coa-grp-acc-visibility/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; bulk <code>show</code> toggle by name+code. Traced below (<code>chart_of_accounts/views.py:1987-2031</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + CONTRA_VOUCHER (PR1307); POST requires <code>bank</code>. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>contra/views.py:37-111</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; draft update only (<code>contra/views.py:112-184</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + VIEW action; draft + creator only (<code>contra/views.py:185-228</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/status/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM; approval flow. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>contra/views.py:229-563</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/cancel-submission/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM + VIEW; revert/reject. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>contra/views.py:564-658</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>contra/views.py:659-704</code>)</td>
+</tr>
+<tr>
+<td>contra</td>
+<td>/api/contra/switch-drcr-contra/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password; bulk cr/dr flip on draft contra items. Traced below (<code>contra/views.py:706-750</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/</td>
+<td>GET, POST</td>
+<td>OPS</td>
+<td>No auth (public); ping-style message, no data (<code>dashboard/views.py:71-83</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/accounting-choices/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; static choices for the FE (<code>dashboard/views.py:86-139</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/entity/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; entity picker (inner query untraced, <code>dashboard/views.py:142-146</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/journals/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; submitted-for-approval queue across the 4 voucher types (<code>dashboard/views.py:338-403</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/journal-count/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; AR/AP current vs last-month balances via GL config (<code>dashboard/views.py:406-477</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/create-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; module-approved journals. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>dashboard/views.py:618-763</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/cancel-journal/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>Internal password; module journal cancellation. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>dashboard/views.py:766-782</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/report/entity/search/select/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; report entity picker (<code>dashboard/views.py:251-255</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/tenant-data-deletion/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal password; raw-SQL tenant data wipe. Traced below (<code>dashboard/views.py:793-876</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/accounting-kafka-events/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>No auth (public); debug dump of redis db6 event lists (<code>dashboard/views.py:879-897</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/add-fiscal-year/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; bulk <code>fiscal_year</code> update on ALL JournalVoucher + ID rows. Traced below (<code>dashboard/views.py:900-921</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/check-reconciliation/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; JV-vs-document reconciliation check (core loop untraced, <code>dashboard/views.py:924-1162</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/search-global/</td>
+<td>POST</td>
+<td>OPS</td>
+<td>Internal; global COA name lookup (body untraced, <code>dashboard/views.py:1163-1166</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/get-receivable-payable-summary/</td>
+<td>POST</td>
+<td>READ</td>
+<td>Internal; time-binned AR/AP balances via <code>general_ledger</code> (<code>dashboard/views.py:480-560</code>)</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>/api/dashboard/fix-old-payment-vouchers/</td>
+<td>GET, POST</td>
+<td>OPS</td>
+<td>Internal; backfills <code>bank</code>/<code>jv_type</code> on legacy module vouchers. Traced below (<code>dashboard/views.py:1200-1498</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + JOURNAL_VOUCHER (PR1302); POST creates a draft. Lifecycle deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>journal_voucher/views.py:38-112</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; POST updates draft only (<code>journal_voucher/views.py:116-185</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + VIEW action (not DELETE); draft + creator only (<code>journal_voucher/views.py:189-224</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/status/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM VIEW/APPROVE_CANCEL; the approval state machine. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>journal_voucher/views.py:228-455</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/cancel-submission/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM + VIEW; revert-to-draft or rejection. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>journal_voucher/views.py:567-660</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM; excludes module-referenced vouchers (<code>journal_voucher/views.py:661-718</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/approval-list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal password; top-5 submitted for the master dashboard (<code>journal_voucher/views.py:720-751</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/item-reporting/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal; re-emits approved items to Kafka (<code>journal_voucher/views.py:753-795</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/invoices/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM, no feature check; proxies purchase/sales invoice lists (<code>journal_voucher/views.py:799-850</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/pending-journal-list/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>No auth (public); dead-letter rows for all tenants. Traced below (<code>journal_voucher/views.py:853-863</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/pending-journal-list/&lt;int:pk&gt;/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>No auth (public); single dead-letter row (<code>journal_voucher/views.py:864-867</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/quick-journal-list/</td>
+<td>POST</td>
+<td>READ</td>
+<td>No auth (public); quick voucher list (<code>journal_voucher/views.py:870-1021</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/entity-related-journal-list/</td>
+<td>POST</td>
+<td>READ</td>
+<td>No auth (public); entity filter only, no tenant scoping (<code>journal_voucher/views.py:1024-1066</code>)</td>
+</tr>
+<tr>
+<td>journal-voucher</td>
+<td>/api/journal-voucher/approval-list-for-transaction-report/</td>
+<td>GET</td>
+<td>OPS</td>
+<td>Internal; line-item data for transaction reports (<code>journal_voucher/views.py:1069-1243</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + PAYMENT_VOUCHER (PR1303); POST requires <code>bank</code>. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>payment_voucher/views.py:44-122</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; draft update only (<code>payment_voucher/views.py:123-196</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + VIEW action; draft + creator only (<code>payment_voucher/views.py:197-236</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/status/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM; approval flow + supplier-payment cancel guard. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>payment_voucher/views.py:237-600</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/cancel-submission/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM + VIEW; revert/reject. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>payment_voucher/views.py:601-695</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>payment_voucher/views.py:696-756</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/fix-bank-in-payment-voucher/</td>
+<td>GET, POST</td>
+<td>OPS</td>
+<td>Internal; re-points bank items to the voucher bank. Traced below (<code>payment_voucher/views.py:757-820</code>)</td>
+</tr>
+<tr>
+<td>payment-voucher</td>
+<td>/api/payment-voucher/list-payment-voucher-sp/</td>
+<td>GET</td>
+<td>READ</td>
+<td>Internal; keyed list for sales/purchase (<code>payment_voucher/views.py:823-843</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM + RECEIPT_VOUCHER (PR1304); POST requires <code>bank</code>. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>receipt_voucher/views.py:33-110</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/detail/&lt;int:pk&gt;/</td>
+<td>GET, POST</td>
+<td>RECORD</td>
+<td>IAM; draft update only (<code>receipt_voucher/views.py:111-185</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/delete/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>RECORD</td>
+<td>IAM + VIEW action; draft + creator only (<code>receipt_voucher/views.py:186-224</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/status/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM; approval flow + customer-payment cancel guard. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>receipt_voucher/views.py:225-586</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/cancel-submission/&lt;int:pk&gt;/</td>
+<td>POST</td>
+<td>TRANSACTION</td>
+<td>IAM + VIEW; revert/reject. Deep-traced in <a href="flows-vouchers.html">flows-vouchers.md</a> (<code>receipt_voucher/views.py:587-682</code>)</td>
+</tr>
+<tr>
+<td>receipt-voucher</td>
+<td>/api/receipt-voucher/search/</td>
+<td>GET</td>
+<td>READ</td>
+<td>IAM (<code>receipt_voucher/views.py:683-700</code>)</td>
+</tr>
+</tbody></table>
+<p>Counts: 102 total - 34 READ, 27 RECORD, 17 TRANSACTION, 24 OPS. Of the 17 TRANSACTION rows, 10 are the voucher-family and module-hook endpoints traced in <a href="flows-vouchers.html">flows-vouchers.md</a>; the 7 in this file are <code>transfer-closing</code> (fiscal close) plus the bill-settlement and AP/AR rows that cross-link there, and this file&#39;s own deep traces (bank, COA, fiscal close, ops, pending-journal) cover every remaining data-mutating route.</p>
+</section><section class="sec" data-title="Auth and internal gates (how every trace below starts)"><h2 id="auth-and-internal-gates-how-every-trace-below-starts">Auth and internal gates (how every trace below starts)</h2>
+<ul>
+<li><strong>IAM routes</strong> - <code>IAMAuthenticationBackend.authenticate</code> (<code>dashboard/auth_backends.py:21-57</code>) takes the JWT from the <code>accessToken</code> cookie, the <code>Authorization</code> header, or the request body (<code>dashboard/helpers.py:365-393</code>) and POSTs it to the IAM backend <code>api/token/verify/</code> (<code>dashboard/auth_backends.py:60-71</code>); a missing/failed verify is a 401, a dead IAM is a 503. It then requires <code>ACCOUNTING</code> in the user&#39;s <code>subscribed_services</code> and <code>email_verified</code> (lines 44-56), and loads the tenant&#39;s fiscal year into request context. <code>HasPermission</code> (<code>dashboard/auth_backends.py:74-107</code>) then enforces the view&#39;s <code>required_feature_permission</code> + <code>required_action_permission</code> with a live GET to IAM, unless the caller is a <code>tenant_root</code> (bypass) - and non-GET requests additionally require an unexpired subscription. Each view&#39;s <code>initial()</code> swaps the required action per HTTP method (e.g. <code>GET</code>-as-<code>VIEW</code>, <code>POST</code>-as-<code>ADD_EDIT</code>), e.g. <code>bank/views.py:24-52</code>.</li>
+<li><strong>Internal routes</strong> - <code>InternalRequestPermission</code> (<code>dashboard/auth_backends.py:110-121</code>) compares the <code>password</code> field (body for POST, query for GET) against <code>PASSWORD = config(&quot;INTERNAL_PASS&quot;)</code> (<code>dashboard/helpers.py:25</code>) with a plain string compare (<code>dashboard/helpers.py:225-228</code>). There is no per-caller identity: any service holding the shared password can call any internal route for any tenant.</li>
+<li><strong>Feature codes</strong> used in this file: CHART_OF_ACCOUNTS <code>PR1301</code>, BANK_ACCOUNT <code>PR1305</code> (<code>dashboard/choices.py:230, 234</code>); actions <code>add_edit</code>/<code>view</code>/<code>active_inactive</code>/<code>delete</code> (<code>dashboard/choices.py:319-325</code>).</li>
+<li><strong>Side-effect plumbing</strong> shared by every traced route below: <code>create_activity_log</code> (<code>dashboard/activity_log.py:11-33</code>) posts to the internal Kafka-producer service when <code>kafka_data=True</code>, which writes the <code>service_logs</code> topic (<code>dev_service_logs</code> in development) via <code>dashboard/async_func.py:90-119</code>; failures are logged and swallowed (<code>dashboard/kafka_functions.py:10-38</code>).</li>
+</ul>
+</section><section class="sec" data-title="Bank account operations - /api/bank-account/"><h2 id="bank-account-operations-api-bank-account">Bank account operations - /api/bank-account/</h2>
+<p><strong>What happens.</strong> A bank account is not one row: creating it writes the <code>BankAccount</code> master row <em>and</em> a paired GL <code>ChartOfAccount</code> (flagged <code>bank=True</code>) under the tenant&#39;s configured bank group, linked by <code>gl_mapping</code> (<code>bank/serializers.py:39-103</code>). Names pass through the Configuration service sanitizer and must be unique per tenant. Inactive-ing a bank mirrors the status onto its GL account so it disappears from voucher bank pickers, and deleting a bank that any voucher references does not fail cleanly - the <code>PROTECT</code> FK blows up into a generic 500 (<code>bank/views.py:181-185</code>).</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><strong>Auth</strong> - IAM + <code>BANK_ACCOUNT</code> (<code>PR1305</code>); <code>initial()</code> maps <code>GET</code> to <code>view</code> and <code>POST</code> to <code>add_edit</code> (<code>bank/views.py:24-52</code>).</li>
+<li><strong>Create</strong> - <code>POST /api/bank-account/</code> (<code>bank/views.py:53-75</code>): requires <code>name</code>, runs in one transaction, then <code>BankAccountSerializer.create</code> (<code>bank/serializers.py:39-103</code>):<ul>
+<li>posts the fields to the Configuration sanitizer (<code>dashboard/helpers.py:49-51</code>, <code>bank/serializers.py:46-63</code>); a failed call is a <code>SANITIZE_ERROR</code> 400;</li>
+<li>checks tenant-wide name uniqueness on the sanitized name (<code>bank/serializers.py:65-68</code>);</li>
+<li>creates the <code>BankAccount</code> row (<code>bank/serializers.py:71</code>);</li>
+<li>reads the <code>GL_MAPPING</code>/<code>BANK</code> configuration for the <code>BANK_GROUP</code> id (<code>bank/serializers.py:73-80</code>); if the configuration is missing the request dies with 503 <code>TemporaryServiceUnavailableError</code> (<code>bank/serializers.py:103</code>);</li>
+<li>creates the GL <code>ChartOfAccount</code> under the bank group with <code>bank=True</code>, copying the opening fields; its <code>code_number</code> is the last sibling&#39;s code plus the sibling <code>interval</code>, and a collision aborts with <code>COA_LIMIT_EXCEED</code> (<code>bank/serializers.py:157-206</code>, then <code>94-99</code>).</li>
+</ul>
+</li>
+<li><strong>Side effect</strong> - the view writes a <code>CREATION</code> activity log to the <code>service_logs</code> Kafka topic (<code>bank/views.py:77-84</code>).</li>
+<li><strong>Update</strong> - <code>POST /detail/&amp;lt;int:pk&amp;gt;/</code> (<code>bank/views.py:117-142</code>): same sanitize + uniqueness path but excluding self (<code>bank/serializers.py:105-155</code>); once an opening was set, changing <code>opening</code> or <code>opening_cr_dr</code> is rejected with <code>Opening cannot be edited!</code> (<code>bank/serializers.py:140-144</code>); the linked COA&#39;s <code>name</code>/<code>opening</code>/<code>opening_date</code>/<code>opening_cr_dr</code> are force-synced (<code>bank/serializers.py:148-153</code>); an <code>EDITION</code> log carries the changed fields (<code>bank/views.py:144-152</code>).</li>
+<li><strong>Delete</strong> - <code>POST /delete/&amp;lt;int:pk&amp;gt;/</code> (<code>bank/views.py:166-185</code>): fetches the tenant&#39;s bank and calls <code>instance.delete()</code> directly. <code>JournalVoucher.bank</code> is a <code>PROTECT</code> FK (<code>journal_voucher/models.py:18-20</code>), so any voucher referencing the bank raises <code>ProtectedError</code>, which the bare <code>except Exception</code> converts into a 500 <code>SERVER_EXCEPTION</code> (<code>bank/views.py:181-185</code>). No usage pre-check, no cascade, no log entry.</li>
+<li><strong>Status</strong> - <code>POST /status/</code> (<code>bank/views.py:207-242</code>): bulk <code>ids</code> + <code>active_status</code>; per id it sets the bank status <em>and</em> the linked <code>gl_mapping</code> COA status in the same save sequence (<code>bank/views.py:229-233</code>), then an <code>ACTIVE</code>/<code>INACTIVE</code> log (<code>bank/views.py:244-255</code>).</li>
+<li><strong>Import (internal)</strong> - <code>POST /import/</code> (<code>bank/views.py:357-378</code>): password gate, then <code>BankAccountMigrateCreationSerializer</code> (<code>bank/serializers.py:215-276</code>) creates rows with <code>migrated=True</code> and links the GL COA exactly like the manual create; a <code>REFERENCE</code> log says <code>Bank {name} migrated successfully</code> (<code>bank/serializers.py:331-340</code>).</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Activity logs to Kafka <code>service_logs</code> for create/update/active/inactive/migrate (<code>dashboard/activity_log.py:11-33</code>).</li>
+<li>Configuration reads on every create/import (<code>GL_MAPPING</code>/<code>BANK</code>) and a sanitize round-trip on every create/update.</li>
+<li>No journal is posted at any point - opening balances sit on the COA row until vouchers are approved (see <a href="flows-vouchers.html">flows-vouchers.md</a>).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+  [*] --&gt; Created
+  Created --&gt; Active : status change
+  Created --&gt; Inactive : status change
+  Active --&gt; Inactive : status change
+  Inactive --&gt; Active : status change
+  Created --&gt; Deleted : delete with no voucher reference
+  Active --&gt; Deleted : delete with no voucher reference
+  Inactive --&gt; Deleted : delete with no voucher reference
+  Deleted --&gt; [*]
+</pre></div>
+<p>State of the <code>BankAccount</code> row. The paired GL COA follows <code>Created -&gt; Active/Inactive</code> automatically and is the row that voucher bank pickers read.</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;POST delete with pk&quot;] --&gt; B[&quot;fetch BankAccount scoped to tenant&quot;]
+  B --&gt; C{&quot;row exists?&quot;}
+  C -- &quot;no&quot; --&gt; D[&quot;404 BANK_ACCOUNT_NOT_FOUND&quot;]
+  C -- &quot;yes&quot; --&gt; E[&quot;instance.delete()&quot;]
+  E --&gt; F{&quot;any JournalVoucher.bank references it?&quot;}
+  F -- &quot;no&quot; --&gt; G[&quot;200 deleted successfully&quot;]
+  F -- &quot;yes&quot; --&gt; H[&quot;ProtectedError from PROTECT FK&quot;]
+  H --&gt; I[&quot;bare except Exception&quot;]
+  I --&gt; J[&quot;500 SERVER_EXCEPTION&quot;]
+</pre></div>
+<p>Delete has no business-level guard; the database constraint is the only protection, and it surfaces as an opaque 500 (<code>bank/views.py:181-185</code>).</p>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create while the BANK_GROUP configuration is missing</td>
+<td>503 <code>SERVICE_UNAVAILABLE</code>, bank row is not committed (transaction rolls back)</td>
+<td><code>bank/serializers.py:73-80, 103</code></td>
+</tr>
+<tr>
+<td>Create with a name equal to an existing bank (tenant-wide)</td>
+<td>400, nothing created</td>
+<td><code>bank/serializers.py:65-68</code></td>
+</tr>
+<tr>
+<td>Create when the next auto code is already taken</td>
+<td>400 <code>COA_LIMIT_EXCEED</code></td>
+<td><code>bank/serializers.py:199-204</code></td>
+</tr>
+<tr>
+<td>Update a bank that already has an opening</td>
+<td>Opening fields rejected: <code>Opening cannot be edited!</code></td>
+<td><code>bank/serializers.py:140-144</code></td>
+</tr>
+<tr>
+<td>Delete a bank used by any voucher</td>
+<td>500 <code>SERVER_EXCEPTION</code> (ProtectedError), bank survives</td>
+<td><code>bank/views.py:181-185</code>, <code>journal_voucher/models.py:18-20</code></td>
+</tr>
+<tr>
+<td>Inactive a bank</td>
+<td>Bank and its GL COA both become <code>inactive</code>; vouchers can no longer pick it, existing vouchers are untouched</td>
+<td><code>bank/views.py:229-233</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Chart of accounts - structure changes - /api/chart-of-account/"><h2 id="chart-of-accounts-structure-changes-api-chart-of-account">Chart of accounts - structure changes - /api/chart-of-account/</h2>
+<p><strong>What happens.</strong> The COA tree (<code>ChartOfAccount</code> rows with <code>group=True</code>/<code>account=True</code>, dual parent axes) is shaped three ways: by onboarding (<code>register-coa</code> seeds the platform default for a new tenant), by tenant users creating/renaming/re-homing/toggling accounts and groups under IAM, and by internal bulk routes used by other services. Account creation sanitizes the name, enforces tenant-wide uniqueness, and auto-assigns <code>code_number</code> as last-sibling-code + interval; group inactivation cascades to every descendant <em>and</em> to the GL accounts of any bank mapped inside the group. Delete is a hard delete with no usage check.</p>
+<h3 id="trace-create-an-account">Trace - create an account</h3>
+<ol>
+<li><strong>Auth</strong> - IAM + <code>CHART_OF_ACCOUNTS</code> (<code>PR1301</code>); <code>POST</code> maps to <code>add_edit</code> (<code>chart_of_accounts/views.py:57-86</code>).</li>
+<li><strong>Validate</strong> - <code>POST /api/chart-of-account/</code> (<code>chart_of_accounts/views.py:87-109</code>): requires <code>name</code> + <code>parent</code>, one transaction.</li>
+<li><strong>Sanitize</strong> - <code>ChartOfAccountCreateSerializer.create</code> posts <code>name/opening/opening_date/description</code> to the Configuration sanitizer (<code>chart_of_accounts/serializers.py:194-213</code>).</li>
+<li><strong>Uniqueness</strong> - tenant-wide unique check on the sanitized name (<code>chart_of_accounts/serializers.py:214-216</code>).</li>
+<li><strong>Code assignment</strong> - <code>coa_addition -&gt; chart_of_account</code> (<code>chart_of_accounts/serializers.py:144-192</code>): the parent must belong to the tenant; the top-level branch (<code>parent_type</code>) is the parent itself when <code>default_on</code>, otherwise its parent; the code base is the last <code>account=True</code> child (on either tree axis) of that branch; <code>new_code = base_code + interval</code>; if <code>new_code</code> already exists for the tenant it is 400 <code>COA_LIMIT_EXCEED</code> (<code>chart_of_accounts/serializers.py:187-190</code>). <code>account_type</code> is inherited from the base child.</li>
+<li><strong>Persist</strong> - the row is saved with <code>account=True</code>, the inherited <code>account_type</code>, the computed <code>code_number</code>/<code>interval</code>, and <code>default_on</code> taken from request context (<code>chart_of_accounts/serializers.py:219-222</code>); the view logs <code>CREATION</code> to <code>service_logs</code> (<code>chart_of_accounts/views.py:111-118</code>).</li>
+</ol>
+<h3 id="trace-update-an-account">Trace - update an account</h3>
+<p><code>POST /detail/&amp;lt;int:pk&amp;gt;/</code> (<code>chart_of_accounts/views.py:156-202</code>) only edits <code>name</code>/<code>parent</code>/<code>description</code> - opening fields are not updatable (<code>chart_of_accounts/serializers.py:225-232</code>); bank-linked COAs are refused with <code>BANK_COA_ERROR</code> (<code>chart_of_accounts/views.py:168-169</code>). After sanitize + self-excluded uniqueness, re-homing under a different parent recomputes <code>code_number</code> on the new branch (<code>chart_of_accounts/serializers.py:325-329</code>); same parent keeps the code (<code>chart_of_accounts/serializers.py:330-331</code>). An <code>EDITION</code> log carries the diff (<code>chart_of_accounts/views.py:181-202</code>).</p>
+<h3 id="trace-delete-status">Trace - delete / status</h3>
+<ul>
+<li><strong>Delete</strong> - <code>POST /delete/&amp;lt;int:pk&amp;gt;/</code> (<code>chart_of_accounts/views.py:213-229</code>): <code>instance.delete()</code> with no check for vouchers referencing the account. Referencing journals are a <code>PROTECT</code> FK (<code>journal_voucher/models.py:215</code>), so a used account raises and the view&#39;s <code>except</code> returns 500 (<code>chart_of_accounts/views.py:223-229</code>); an unused one is gone.</li>
+<li><strong>Account status</strong> - <code>POST /status/</code> (<code>chart_of_accounts/views.py:253-287</code>): bulk ids, validates <code>active_status</code>, refuses bank COAs (<code>chart_of_accounts/views.py:274-275</code>), sets the flag per id, <code>ACTIVE</code>/<code>INACTIVE</code> log (<code>chart_of_accounts/views.py:289-300</code>). No cascade - an inactive account simply stops appearing in pickers.</li>
+<li><strong>Group status</strong> - <code>POST /group/status/</code> (<code>chart_of_accounts/views.py:505-565</code>): bulk ids; per group it sets the flag, cascades the same status to all children on both tree axes (<code>chart_of_accounts/views.py:531-534, 567-569</code>), then reads the <code>GL_MAPPING</code>/<code>BANK</code> configuration and, if the affected subtree contains the configured bank group, flips <code>active_status</code> on every <code>bank_gl</code> account inside it (<code>chart_of_accounts/views.py:536-552, 571-600</code>). Missing bank configuration is a 503 (<code>chart_of_accounts/views.py:553-556</code>).</li>
+</ul>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Activity logs to Kafka <code>service_logs</code> for every mutation above.</li>
+<li>Configuration reads (<code>GL_MAPPING</code>/<code>BANK</code>) on group status change and bank-account status interplay; sanitize round-trips on create/update.</li>
+<li>Group inactivation can silently deactivate bank GL accounts that sit under the group (cascade, <code>chart_of_accounts/views.py:571-600</code>).</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;POST create account&quot;] --&gt; B[&quot;sanitize name via Configuration&quot;]
+  B --&gt; C{&quot;name unique in tenant?&quot;}
+  C -- &quot;no&quot; --&gt; D[&quot;400 duplicate&quot;]
+  C -- &quot;yes&quot; --&gt; E[&quot;resolve top-level branch via default_on&quot;]
+  E --&gt; F[&quot;new_code = last sibling code + interval&quot;]
+  F --&gt; G{&quot;code already used in tenant?&quot;}
+  G -- &quot;yes&quot; --&gt; H[&quot;400 COA_LIMIT_EXCEED&quot;]
+  G -- &quot;no&quot; --&gt; I[&quot;save account with inherited account_type&quot;]
+  I --&gt; J[&quot;activity log to service_logs&quot;]
+</pre></div>
+<p>Account creation (<code>chart_of_accounts/serializers.py:144-222</code>).</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;POST group status change&quot;] --&gt; B[&quot;set active_status on group row&quot;]
+  B --&gt; C[&quot;cascade status to all children on both parent axes&quot;]
+  C --&gt; D[&quot;read GL_MAPPING BANK configuration&quot;]
+  D --&gt; E{&quot;bank group config present?&quot;}
+  E -- &quot;no&quot; --&gt; F[&quot;503 SERVICE_UNAVAILABLE&quot;]
+  E -- &quot;yes&quot; --&gt; G{&quot;affected subtree contains the bank group?&quot;}
+  G -- &quot;yes&quot; --&gt; H[&quot;flip active_status on every bank_gl account inside&quot;]
+  G -- &quot;no&quot; --&gt; I[&quot;no bank effect&quot;]
+  H --&gt; J[&quot;ACTIVE or INACTIVE log&quot;]
+  I --&gt; J
+</pre></div>
+<p>Group status cascade (<code>chart_of_accounts/views.py:505-600</code>).</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant FE as Frontend
+  participant AC as Accounting
+  participant CF as Configuration
+  participant DB as PostgreSQL
+  participant K as Kafka producer svc
+  FE-&gt;&gt;AC: POST group status with ids
+  AC-&gt;&gt;CF: GET configuration for GL_MAPPING and BANK
+  CF--&gt;&gt;AC: bank group id
+  AC-&gt;&gt;DB: update group active_status
+  AC-&gt;&gt;DB: bulk update child active_status
+  AC-&gt;&gt;DB: bulk update bank_gl account active_status
+  AC-&gt;&gt;K: activity log event for service_logs topic
+  AC--&gt;&gt;FE: 200 status changed
+</pre></div>
+<p>Cross-service sequence for a group status change.</p>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create under a parent whose branch is full</td>
+<td>400 <code>COA_LIMIT_EXCEED</code>, no row written</td>
+<td><code>chart_of_accounts/serializers.py:187-190</code></td>
+</tr>
+<tr>
+<td>Rename an account to an existing name</td>
+<td>400, update aborted</td>
+<td><code>chart_of_accounts/serializers.py:320-323</code></td>
+</tr>
+<tr>
+<td>Move an account to another parent</td>
+<td>New <code>code_number</code> computed on the new branch, old code becomes reusable</td>
+<td><code>chart_of_accounts/serializers.py:325-329</code></td>
+</tr>
+<tr>
+<td>Inactive a bank-linked COA via account status</td>
+<td>400 <code>BANK_COA_ERROR</code>; bank accounts must go through bank routes</td>
+<td><code>chart_of_accounts/views.py:274-275</code></td>
+</tr>
+<tr>
+<td>Inactive a group that contains the bank group</td>
+<td>Bank GL accounts inside are deactivated too</td>
+<td><code>chart_of_accounts/views.py:571-600</code></td>
+</tr>
+<tr>
+<td>Group status change with bank config missing</td>
+<td>503 after the group + children were already updated (same transaction, rolls back)</td>
+<td><code>chart_of_accounts/views.py:553-556</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Fiscal year close - /api/chart-of-account/get-opening-info/ + /api/chart-of-account/transfer-closing/"><h2 id="fiscal-year-close-api-chart-of-account-get-opening-info-api-chart-of-account-transfer-closing">Fiscal year close - /api/chart-of-account/get-opening-info/ + /api/chart-of-account/transfer-closing/</h2>
+<p><strong>What happens.</strong> Fiscal close is split: the <em>caller</em> (an ops service; which one is unverified) fetches every active account&#39;s current opening fields, computes the carry-forward balances outside Accounting, and posts them back. Accounting then applies the new openings in one bulk update per tenant and stamps an <code>ActionModel</code> marker so the same tenant+year can never be closed twice. The balances that move are exactly the <code>opening</code>, <code>opening_cr_dr</code> and <code>opening_date</code> columns on <code>ChartOfAccount</code> rows - no journals are posted, no other service is written. Closed years are then read <em>differently</em>: when a request carries a fiscal year whose status is <code>closed</code>, the COA serializer replaces the stored openings with values fetched from the Reporting service&#39;s opening-history endpoint.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><strong>Read the openings</strong> - <code>POST /get-opening-info/</code> (<code>chart_of_accounts/views.py:1375-1399</code>, internal password): for the given <code>tenant_id</code> list it returns all <code>account=True</code> rows with <code>active_status=active</code>, selecting <code>id/opening_cr_dr/opening/unique_id/opening_date/tenant_id/account_type/retain</code>, grouped per tenant (<code>chart_of_accounts/views.py:1380-1399</code>). Inactive accounts are excluded, so a tenant that deactivated an account closes it out without an opening line.</li>
+<li><strong>Apply the closing</strong> - <code>POST /transfer-closing/</code> (<code>chart_of_accounts/views.py:1402-1475</code>, internal password), body <code>{tenant_id: {fy_id, accounts: [{id, opening, opening_cr_dr, opening_date?}]}}</code>, one transaction:<ul>
+<li><strong>Idempotency guard</strong> - existing <code>ActionModel</code> rows with <code>action_type=ACCOUNT_CLOSING</code> for the given tenants+years are loaded first; any tenant already stamped is skipped entirely (<code>chart_of_accounts/views.py:1435-1443</code>).</li>
+<li><strong>Per-tenant update</strong> - <code>update_opening_info</code> re-filters the requested account ids against <code>account=True</code> <em>and</em> <code>active_status=active</code> again (<code>chart_of_accounts/views.py:1405-1412</code>); for each: <code>opening</code> is overwritten unconditionally (default 0), <code>opening_cr_dr</code> only when provided, and <code>opening_date</code> advances <strong>only if the incoming date is later</strong> than the current one (or the current is empty) (<code>chart_of_accounts/views.py:1414-1425</code>).</li>
+<li><strong>Persist</strong> - <code>bulk_update</code> of <code>opening/opening_cr_dr/opening_date</code> (batch 2000) (<code>chart_of_accounts/views.py:1455-1459</code>), then <code>ActionModel(tenant_id, fy_id, ACCOUNT_CLOSING)</code> rows <code>bulk_create</code>d for the newly closed tenants (<code>chart_of_accounts/views.py:1460-1471</code>). An empty result set returns the message <code>No accounts to update</code> without writing markers (<code>chart_of_accounts/views.py:1451-1454</code>).</li>
+</ul>
+</li>
+<li><strong>Reading closed years</strong> - <code>ChartOfAccountSerializer.to_representation</code> (<code>chart_of_accounts/serializers.py:60-88</code>): when the request&#39;s fiscal year context has status <code>closed</code> (<code>dashboard/choices.py:451</code>), it calls the Reporting service <code>api/dashboard/opening-history-detail/</code> with the shared password (<code>chart_of_accounts/serializers.py:51-58</code>, <code>dashboard/helpers.py:190</code>) and substitutes <code>opening/opening_cr_dr/opening_date</code> from the history record - so closed-year reports show the frozen openings, while the live columns keep serving the current year.</li>
+<li><strong>Tagging vouchers</strong> - <code>POST /api/dashboard/add-fiscal-year/</code> (<code>dashboard/views.py:900-921</code>, internal): takes a <code>{tenant_id: fy}</code> map and bulk-sets <code>fiscal_year</code> on <strong>every</strong> <code>JournalVoucher</code> row (loaded into memory, <code>dashboard/views.py:905-910</code>) and on <code>ID</code> rows with <code>name=JV</code> for the mapped tenants; a tenant missing from the map gets an empty fiscal_year string.</li>
+</ol>
+<h3 id="side-effects">Side effects</h3>
+<ul>
+<li>Writes: <code>ChartOfAccount.opening/opening_cr_dr/opening_date</code> (active accounts only), <code>ActionModel</code> markers, and <code>JournalVoucher.fiscal_year</code> + <code>ID.fiscal_year</code> (add-fiscal-year).</li>
+<li>Reads: Reporting <code>opening-history-detail</code> per COA detail render of a closed fiscal year.</li>
+<li>No Kafka events and no activity logs on the close routes themselves.</li>
+</ul>
+<h3 id="diagrams">Diagrams</h3>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant OPS as Caller service
+  participant AC as Accounting
+  participant RP as Reporting
+  participant DB as PostgreSQL
+  OPS-&gt;&gt;AC: POST get-opening-info with tenant list
+  AC-&gt;&gt;DB: select active account openings
+  AC--&gt;&gt;OPS: openings grouped by tenant
+  Note over OPS: carry-forward computed outside Accounting
+  OPS-&gt;&gt;AC: POST transfer-closing with new openings and fy_id
+  AC-&gt;&gt;DB: load existing ActionModel markers
+  AC-&gt;&gt;DB: bulk update opening opening_cr_dr opening_date
+  AC-&gt;&gt;DB: bulk create ActionModel ACCOUNT_CLOSING
+  AC--&gt;&gt;OPS: 200 Opening balances updated
+  OPS-&gt;&gt;RP: closed year bookkeeping outside this service (unverified)
+  Note over AC,RP: later reads of a closed year fetch openings from Reporting
+</pre></div>
+<p>Fiscal close end to end. The carry-forward math happens in the caller; Accounting applies and guards it (<code>chart_of_accounts/views.py:1402-1475</code>).</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;transfer-closing request for tenant and fy&quot;] --&gt; B{&quot;ActionModel marker exists for tenant fy ACCOUNT_CLOSING?&quot;}
+  B -- &quot;yes&quot; --&gt; C[&quot;skip tenant entirely&quot;]
+  B -- &quot;no&quot; --&gt; D[&quot;re-filter ids to active accounts only&quot;]
+  D --&gt; E[&quot;opening overwritten, opening_cr_dr if given&quot;]
+  E --&gt; F{&quot;incoming opening_date later than current?&quot;}
+  F -- &quot;yes&quot; --&gt; G[&quot;advance opening_date&quot;]
+  F -- &quot;no&quot; --&gt; H[&quot;keep current opening_date&quot;]
+  G --&gt; I[&quot;bulk_update then bulk_create ActionModel&quot;]
+  H --&gt; I
+</pre></div>
+<p>Idempotency and date-monotonicity rules (<code>chart_of_accounts/views.py:1414-1471</code>).</p>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Close the same tenant+year twice</td>
+<td>Second call skips the tenant; no double apply</td>
+<td><code>chart_of_accounts/views.py:1435-1443</code></td>
+</tr>
+<tr>
+<td>Close payload contains an inactive account</td>
+<td>Row is re-filtered out and keeps its old opening</td>
+<td><code>chart_of_accounts/views.py:1405-1412</code></td>
+</tr>
+<tr>
+<td>Incoming opening_date earlier than stored</td>
+<td>Stored date wins</td>
+<td><code>chart_of_accounts/views.py:1420-1425</code></td>
+</tr>
+<tr>
+<td>View a closed year account detail</td>
+<td>Openings come from Reporting history, not the live columns</td>
+<td><code>chart_of_accounts/serializers.py:65-84</code></td>
+</tr>
+<tr>
+<td>add-fiscal-year for tenants not in the map</td>
+<td>Their JV rows get fiscal_year set to an empty string</td>
+<td><code>dashboard/views.py:905-910</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Internal ops routes that mutate data"><h2 id="internal-ops-routes-that-mutate-data">Internal ops routes that mutate data</h2>
+<p>Short traces for the remaining data-mutating internal routes. All are gated by the shared <code>INTERNAL_PASS</code> password (class-level <code>InternalRequestPermission</code> or an in-body <code>validate_internal_pass</code> check) - none of them know which service is calling.</p>
+<ul>
+<li><strong>Register the default COA</strong> - <code>POST /api/chart-of-account/register-coa/</code> (<code>chart_of_accounts/views.py:742-765</code>): manual password + <code>tenant_id</code> + <code>data</code> + <code>response_account</code> check (<code>dashboard/custom_functions.py:30-46</code>), then <code>defaults.create_default_chart_of_accounts</code> builds the platform standard tree for a new tenant (<code>chart_of_accounts/views.py:752-754</code>, <code>dashboard/defaults.py:4</code>) and returns <code>{name: {id, name}}</code> only for the requested <code>response_account</code> names. Onboarding seed; no activity log, no permission classes beyond the password check.</li>
+<li><strong>Bulk account management</strong> - <code>POST/GET /api/chart-of-account/coa-new-account-management/</code> (<code>chart_of_accounts/views.py:1503-1649</code>): <code>tenant_id</code> may be <code>all</code> (resolved through the internal tenant list, <code>chart_of_accounts/views.py:1506-1510</code>) with optional start/end slicing; per tenant it finds the parent <strong>group</strong> by exact name, skips tenants without it, and for each missing account name re-uses the normal create serializer - sanitize, uniqueness, auto-code included (<code>chart_of_accounts/views.py:1553-1583</code>). <code>entry_by</code> is written as an empty string. GET mode lists a parent&#39;s children or checks name existence.</li>
+<li><strong>Ensure TDS accounts</strong> - <code>POST /api/chart-of-account/ensure-tds-accounts/</code> (<code>chart_of_accounts/views.py:1674-1835</code>; <code>permission_classes=[InternalRequestPermission]</code>, <code>authentication_classes=[]</code>): for one tenant or every tenant that has any COA row (<code>chart_of_accounts/views.py:1697-1702</code>), it ensures <code>TDS Receivable</code> (code 12202 under Other Current Assets) and <code>TDS Payable</code> (code 21302 under Taxes Payable; spec at <code>chart_of_accounts/views.py:1652-1671</code>); if a <em>different</em> account occupies the fixed code it renumbers that account to max-sibling-code+1 (<code>chart_of_accounts/views.py:1704-1718, 1769-1778</code>); finally it bulk-ensures the matching <code>GL_MAPPING</code> configuration entries in the Configuration service in one POST (<code>chart_of_accounts/views.py:1809-1831</code>).</li>
+<li><strong>Bulk create / validation / check-bulk</strong> - <code>POST /bulk-create/</code> (<code>chart_of_accounts/views.py:1206-1242+</code>, <code>InternalRequestPermission</code>): pre-generates <code>ID</code> rows for the batch (<code>chart_of_accounts/views.py:1210-1223</code>) then runs <code>ChartOfAccountBulkCreateSerializer</code> (loop internals untraced); note a debug <code>print</code> in <code>get_account_type_with_interval</code> (<code>chart_of_accounts/views.py:1239</code>). <code>POST /bulk-validation/</code> (<code>chart_of_accounts/views.py:1150-1203</code>) and <code>POST /check-bulk-account/</code> (<code>chart_of_accounts/views.py:1108-1147</code>) are the pre-flight companions; check-bulk only maps already-existing accounts case-insensitively.</li>
+<li><strong>COA migration import</strong> - <code>POST /import/</code> (<code>chart_of_accounts/views.py:1083-1106</code>, in-body password): bulk import of <code>coa_data</code> (row-level handling untraced).</li>
+<li><strong>Delete transferred COAs</strong> - <code>POST /delete-transfered-coa/</code> (<code>chart_of_accounts/views.py:1031-1054</code>): in-body password; nulls <code>parent</code>/<code>parent_type</code> FKs first, then deletes all tenant COA rows. No usage check - the DB FK on journal items is <code>PROTECT</code>, so this only succeeds if the referencing vouchers were deleted first (e.g. via the tenant deletion route).</li>
+<li><strong>COA/group visibility</strong> - <code>POST /modify-coa-grp-acc-visibility/</code> (<code>chart_of_accounts/views.py:1987-2031</code>): bulk-sets <code>show</code> on accounts and groups matched by exact <code>name</code>+<code>code_number</code> pairs (optionally tenant-scoped) - this is how the platform hides standard accounts per tenant without deleting them.</li>
+<li><strong>Bank import</strong> - <code>POST /api/bank-account/import/</code> (<code>bank/views.py:357-378</code>): covered in the bank section; <code>migrated=True</code> rows, GL COA linked the same way.</li>
+<li><strong>Fix old payment vouchers</strong> - <code>GET/POST /api/dashboard/fix-old-payment-vouchers/</code> (<code>dashboard/views.py:1200-1498</code>, <code>InternalRequestPermission</code>): finds <code>JournalVoucher</code> rows with <code>jv_type</code> journal/payment, a non-null <code>supplier_payment_entry_id</code>, NULL <code>bank</code> and status approved/cancelled (<code>dashboard/views.py:1234-1247</code>), fetches the supplier payments from the Purchase service (<code>dashboard/views.py:1203-1216</code>), then sets <code>jv.bank</code> to the CR item matching the payment&#39;s <code>source_account</code>, flips <code>jv_type</code> to <code>payment</code> and marks that item <code>bank=True</code> (<code>dashboard/views.py:1261-1298</code>). A mirrored customer-payment branch exists for receivables (<code>dashboard/views.py:1336-1433</code>, verified in an earlier pass). <code>POST</code> requires <code>tenant_id</code> as a list (<code>dashboard/views.py:1481-1498</code>).</li>
+<li><strong>Fix bank mismatch</strong> - <code>GET/POST /api/payment-voucher/fix-bank-in-payment-voucher/</code> (<code>payment_voucher/views.py:757-820</code>, <code>InternalRequestPermission</code>): for one tenant or <code>all</code> (tenant list via internal call, <code>payment_voucher/views.py:760-764</code>), re-points every <code>bank=True</code> item of every payment voucher to the voucher&#39;s own <code>bank</code> account (<code>payment_voucher/views.py:790-815</code>). GET returns the current mapping for a dry run.</li>
+<li><strong>Switch contra DR/CR</strong> - <code>POST /api/contra/switch-drcr-contra/</code> (<code>contra/views.py:706-750</code>, <code>InternalRequestPermission</code>): selects <strong>all</strong> contra journal items across all tenants (<code>contra/views.py:710-712</code> - no tenant filter) and bulk-flips <code>cr_dr</code> (flip loop untraced beyond the filter). A data-correction escape hatch.</li>
+<li><strong>Tenant data deletion</strong> - <code>POST /api/dashboard/tenant-data-deletion/</code> (<code>dashboard/views.py:793-876</code>): in-body password; raw-SQL deletes in FK-safe order - <code>BillSettlementItem</code>, <code>JournalVoucherItem</code>, then <code>BillSettlement</code>, <code>JournalVoucher</code>, <code>BankAccount</code>, <code>ActionModel</code>, <code>PendingJournal</code> (<code>dashboard/views.py:808-851</code>), then ORM-delete of <code>ID</code> rows (<code>dashboard/views.py:867</code>), then COA cleanup: null <code>parent</code>/<code>parent_type</code> and delete (<code>dashboard/views.py:869-874</code>). <code>execute_raw_sql</code> is <code>dashboard/views.py:785</code>. This is the only sanctioned mass-deletion path and it also clears the pending-journal dead letters for the tenant.</li>
+<li><strong>Kafka events dump</strong> - <code>GET /api/dashboard/accounting-kafka-events/</code> (<code>dashboard/views.py:879-897</code>): <strong>no auth classes at all</strong> - it dumps every <code>*_events</code> list from redis db6 (the accounting events cache) to any caller. A debug tool left public.</li>
+</ul>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;POST tenant-data-deletion with tenant list&quot;] --&gt; B[&quot;validate internal password&quot;]
+  B --&gt; C[&quot;delete BillSettlementItem rows&quot;]
+  C --&gt; D[&quot;delete JournalVoucherItem rows&quot;]
+  D --&gt; E[&quot;delete BillSettlement rows&quot;]
+  E --&gt; F[&quot;delete JournalVoucher rows&quot;]
+  F --&gt; G[&quot;delete BankAccount rows&quot;]
+  G --&gt; H[&quot;delete ActionModel and PendingJournal rows&quot;]
+  H --&gt; I[&quot;ORM delete ID rows&quot;]
+  I --&gt; J[&quot;null COA parent and parent_type&quot;]
+  J --&gt; K[&quot;delete ChartOfAccount rows&quot;]
+  K --&gt; L[&quot;200 Data deleted for tenant&quot;]
+</pre></div>
+<p>Delete order matters: children before parents, FK-nulling before the COA delete (<code>dashboard/views.py:805-874</code>).</p>
+</section><section class="sec" data-title="Pending journal - dead-letter handling"><h2 id="pending-journal-dead-letter-handling">Pending journal - dead-letter handling</h2>
+<p><strong>What happens.</strong> When a module service&#39;s journal hook fails, the failure is parked as a <code>PendingJournal</code> row (<code>journal_voucher/models.py:249-264</code>: tenant, unique_id, invoice_id, invoice_type, particular, amount, <code>error_message</code>). This is a dead letter, not a queue: <strong>no retry processor exists anywhere in this repository.</strong> The dashboard hook even converts the failure into a 200 so the module approval completes (<code>dashboard/views.py:750-762</code>), and the only ways to see or clear a row are the public untenant-scoped list endpoint, the Django admin, or the tenant deletion route.</p>
+<h3 id="trace">Trace</h3>
+<ol>
+<li><strong>Producers</strong> - <code>POST /api/dashboard/create-journal/</code>: any exception inside <code>automated_journal</code> after the password gate creates the row and still returns <code>200 Journal creation scheduled!</code> (<code>dashboard/views.py:750-762</code>). The AP/AR hooks instead return 400 after parking the row (<code>account_payable/views.py:153-163</code>; <code>account_receivable/views.py:156-166</code>, which dedupes with <code>get_or_create</code> on tenant+unique_id).</li>
+<li><strong>Visibility</strong> - <code>GET /api/journal-voucher/pending-journal-list/</code> and <code>/pending-journal-list/&lt;pk&gt;/</code> (<code>journal_voucher/views.py:853-867</code>): <strong>no authentication classes</strong>, no tenant filter - one request lists every tenant&#39;s dead letters (the serializer strips <code>error_message</code>, <code>journal_voucher/serializers.py:519-523</code>); the admin site lists the same rows (<code>journal_voucher/admin.py:95-111</code>).</li>
+<li><strong>Clearing</strong> - only <code>tenant-data-deletion</code> deletes them by raw SQL (<code>dashboard/views.py:845-851</code>); an operator can also delete rows through the admin. There is no endpoint that re-attempts journal creation from a pending row.</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[&quot;module service POSTs create-journal&quot;] --&gt; B{&quot;automated_journal raises?&quot;}
+  B -- &quot;no&quot; --&gt; C[&quot;approved JournalVoucher plus Kafka approval record&quot;]
+  B -- &quot;yes&quot; --&gt; D[&quot;PendingJournal row with error_message&quot;]
+  D --&gt; E[&quot;200 Journal creation scheduled to the module&quot;]
+  E --&gt; F[&quot;row sits until manually inspected&quot;]
+  F --&gt; G[&quot;public pending-journal-list endpoint reads it&quot;]
+  F --&gt; H[&quot;admin site reads it&quot;]
+  F --&gt; I[&quot;tenant-data-deletion removes it&quot;]
+</pre></div>
+<p>Dead-letter path (creation side traced in <a href="flows-vouchers.html">flows-vouchers.md</a>; the rows and their lack of recovery live here).</p>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Module invoice approval, journal build fails</td>
+<td>Module gets 200; journal missing; row in PendingJournal; no retry</td>
+<td><code>dashboard/views.py:750-762</code></td>
+</tr>
+<tr>
+<td>Same failing hook called twice via AR path</td>
+<td>Second call dedupes the row via get_or_create</td>
+<td><code>account_receivable/views.py:157-165</code></td>
+</tr>
+<tr>
+<td>Anon GET pending-journal-list</td>
+<td>All tenants&#39; dead letters, error_message stripped</td>
+<td><code>journal_voucher/views.py:853-867</code>, <code>journal_voucher/serializers.py:519-523</code></td>
+</tr>
+<tr>
+<td>Tenant offboarding</td>
+<td>PendingJournal rows deleted with the rest of the tenant data</td>
+<td><code>dashboard/views.py:845-851</code></td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Untraced / unverified"><h2 id="untraced-unverified">Untraced / unverified</h2>
+<ul>
+<li><strong>Who runs the fiscal close</strong>: no caller of <code>get-opening-info</code>/<code>transfer-closing</code> exists in this repo; the service that computes the carry-forward (and marks a fiscal year <code>closed</code>) is unverified. Accounting only <em>applies</em> the values and <em>reads</em> closed-year openings from Reporting.</li>
+<li><strong><code>check-reconciliation</code> internals</strong> (<code>dashboard/views.py:924-1162</code>): entry point, password gate and per-tenant data setup traced; the inner reconciliation comparison loop was not read in full.</li>
+<li><strong><code>search-global</code></strong> (<code>dashboard/views.py:1163-1166</code>): POST body handling untraced.</li>
+<li><strong><code>bulk-create</code> loop</strong> (<code>chart_of_accounts/views.py:1242+</code>) and <code>ChartOfAccountBulkCreateSerializer</code>: ID pre-generation traced; the per-row creation loop and serializer were not read.</li>
+<li><strong>COA <code>import/</code></strong> (<code>chart_of_accounts/views.py:1084-1106</code>): password gate traced; row-level import handling untraced.</li>
+<li><strong>fix-old-payment-vouchers customer branch</strong> (<code>dashboard/views.py:1336-1433</code>): read in an earlier pass, line numbers not re-verified in this session.</li>
+<li><strong><code>switch-drcr-contra</code> flip loop</strong> (<code>contra/views.py:712-750</code>): filter (all tenants) verified; the bulk-update body was not re-read.</li>
+<li><strong>PendingJournal retry</strong>: no processor, cron or consumer for <code>PendingJournal</code> exists in this repo; whether an external worker re-processes it is unverified.</li>
+<li><strong>The <code>reconciliation/</code> app</strong> (<code>reconciliation/urls.py:15-42</code>) defines <code>create-missed/</code>, <code>delete-unwanted/</code>, <code>update-mismatched/</code> and a <code>journal-vouchers</code> router, but <code>Accounting/urls.py</code> never includes it - those routes are <strong>unrouted</strong> in f1-production. Whether that is intentional is unknown.</li>
+</ul>
+<p>Frontend usage: 25 of the 102 routes are referenced by the frontend build (<code>fe_usage.json</code>, Accounting key); internal and ops routes are not expected to be FE-facing. The classification above is a floor, not a ceiling - the FE may call fewer than 25 in practice.</p>
+</section></article><div class="pagenav"><a class="pn" href="../accounting/dashboard.html"><div class="pn-dir">← Previous</div><div class="pn-name">Accounting - Dashboards, Fiscal Year, Internal Hooks</div></a><a class="pn next" href="../accounting/flows-vouchers.html"><div class="pn-dir">Next →</div><div class="pn-name">Business Flows (Traced) - Vouchers &amp; Ledger Posting</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l2"><a href="#auth-and-internal-gates-how-every-trace-below-starts">Auth and internal gates (how every trace below starts)</a></li><li class="l2"><a href="#bank-account-operations-api-bank-account">Bank account operations - /api/bank-account/</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#chart-of-accounts-structure-changes-api-chart-of-account">Chart of accounts - structure changes - /api/chart-of-account/</a></li><li class="l3"><a href="#trace-create-an-account">Trace - create an account</a></li><li class="l3"><a href="#trace-update-an-account">Trace - update an account</a></li><li class="l3"><a href="#trace-delete-status">Trace - delete / status</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#fiscal-year-close-api-chart-of-account-get-opening-info-api-chart-of-account-transfer-closing">Fiscal year close - /api/chart-of-account/get-opening-info/ + /api/chart-of-account/transfer-closing/</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#side-effects">Side effects</a></li><li class="l3"><a href="#diagrams">Diagrams</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#internal-ops-routes-that-mutate-data">Internal ops routes that mutate data</a></li><li class="l2"><a href="#pending-journal-dead-letter-handling">Pending journal - dead-letter handling</a></li><li class="l3"><a href="#trace">Trace</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#untraced-unverified">Untraced / unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>

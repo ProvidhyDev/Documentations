@@ -1,0 +1,745 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Accounting - Business Flows (Traced) - Vouchers &amp; Ledger Posting - Providhy ERP Docs</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6e4f'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='bold' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="../assets/style.css"></head><body><header class="topbar"><button id="burger" class="btn icon" aria-label="Menu">≡</button><a class="brand" href="../index.html">Providhy ERP <span>Docs</span></a><div class="top-actions"><button id="themeBtn" class="btn icon" aria-label="Toggle theme">◑</button></div></header><div class="layout"><nav id="sidebar"><div class="sb-search"><input id="sbSearch" type="search" placeholder="Filter docs..." autocomplete="off"></div><div class="sb-group"><h2>Start Here &amp; Cross-Cutting</h2><a class="sb-item sb-doc" href="../guide/00-readme.html"><span>Start Here</span></a><a class="sb-item sb-doc" href="../guide/01-overview.html"><span>Platform Overview</span></a><a class="sb-item sb-doc" href="../guide/02-user-journeys.html"><span>User Journeys</span></a><a class="sb-item sb-doc" href="../guide/11-er-diagrams.html"><span>ER Diagrams</span></a><a class="sb-item sb-doc" href="../guide/12-sequence-diagrams.html"><span>Sequence Diagrams</span></a><a class="sb-item sb-doc" href="../guide/13-api-catalog.html"><span>API Catalog</span></a></div><div class="sb-group"><h2>Sales</h2><a class="sb-item sb-doc" href="../sales/overview.html"><span>Sales Module</span></a><a class="sb-item sb-doc" href="../sales/cheque.html"><span>Sales - Cheque</span></a><a class="sb-item sb-doc" href="../sales/delivery-note-return.html"><span>Sales - Delivery Note Return</span></a><a class="sb-item sb-doc" href="../sales/delivery-note.html"><span>Sales - Delivery Note</span></a><a class="sb-item sb-doc" href="../sales/ebilling.html"><span>Sales - e-Billing (IRD)</span></a><a class="sb-item sb-doc" href="../sales/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../sales/invoice.html"><span>Sales - Invoice</span></a><a class="sb-item sb-doc" href="../sales/order.html"><span>Sales - Order</span></a><a class="sb-item sb-doc" href="../sales/payment.html"><span>Sales - Customer Payment</span></a><a class="sb-item sb-doc" href="../sales/quotation.html"><span>Sales - Quotation</span></a><a class="sb-item sb-doc" href="../sales/return.html"><span>Sales - Return</span></a></div><div class="sb-group"><h2>Purchase</h2><a class="sb-item sb-doc" href="../purchase/overview.html"><span>Purchase Module</span></a><a class="sb-item sb-doc" href="../purchase/cheque.html"><span>Purchase - Cheque</span></a><a class="sb-item sb-doc" href="../purchase/expense.html"><span>Purchase - Expense</span></a><a class="sb-item sb-doc" href="../purchase/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../purchase/invoice.html"><span>Purchase - Invoice</span></a><a class="sb-item sb-doc" href="../purchase/order.html"><span>Purchase - Order</span></a><a class="sb-item sb-doc" href="../purchase/payment.html"><span>Purchase - Payment</span></a><a class="sb-item sb-doc" href="../purchase/requisition.html"><span>Purchase - Requisition</span></a><a class="sb-item sb-doc" href="../purchase/return.html"><span>Purchase - Return</span></a></div><div class="sb-group"><h2>Accounting</h2><a class="sb-item sb-doc" href="../accounting/overview.html"><span>Accounting Module</span></a><a class="sb-item sb-doc" href="../accounting/chart-of-accounts.html"><span>Accounting - Chart of Accounts, Groups, Banks</span></a><a class="sb-item sb-doc" href="../accounting/dashboard.html"><span>Accounting - Dashboards, Fiscal Year, Internal Hooks</span></a><a class="sb-item sb-doc" href="../accounting/flows-ledger-ops.html"><span>Business Flows (Traced) - Ledger &amp; Ops</span></a><a class="sb-item sb-doc current" href="../accounting/flows-vouchers.html"><span>Business Flows (Traced) - Vouchers &amp; Ledger Posting</span></a><a class="sb-item sb-doc" href="../accounting/vouchers.html"><span>Accounting - Vouchers &amp; Bill Settlement</span></a></div><div class="sb-group"><h2>Inventory (ProductManagement)</h2><a class="sb-item sb-doc" href="../inventory/overview.html"><span>ProductManagement - Overview</span></a><a class="sb-item sb-doc" href="../inventory/adjustment.html"><span>ProductManagement - Stock Adjustment</span></a><a class="sb-item sb-doc" href="../inventory/campaign.html"><span>ProductManagement - Campaigns</span></a><a class="sb-item sb-doc" href="../inventory/categories.html"><span>ProductManagement - Categories</span></a><a class="sb-item sb-doc" href="../inventory/dashboard.html"><span>ProductManagement - Dashboard</span></a><a class="sb-item sb-doc" href="../inventory/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../inventory/products.html"><span>ProductManagement - Products</span></a><a class="sb-item sb-doc" href="../inventory/stock.html"><span>ProductManagement - Stock</span></a></div><div class="sb-group"><h2>ProjectMaster</h2><a class="sb-item sb-doc" href="../projectmaster/overview.html"><span>ERP-ProjectMaster - Overview</span></a><a class="sb-item sb-doc" href="../projectmaster/customer.html"><span>ProjectMaster - Customers</span></a><a class="sb-item sb-doc" href="../projectmaster/dashboard.html"><span>ERP-ProjectMaster - Dashboard</span></a><a class="sb-item sb-doc" href="../projectmaster/employee.html"><span>ProjectMaster - Employees</span></a><a class="sb-item sb-doc" href="../projectmaster/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../projectmaster/miniapp.html"><span>ProjectMaster - Miniapp Party Endpoints</span></a><a class="sb-item sb-doc" href="../projectmaster/payment-term.html"><span>ERP-ProjectMaster - Payment Term</span></a><a class="sb-item sb-doc" href="../projectmaster/supplier.html"><span>ProjectMaster - Suppliers</span></a></div><div class="sb-group"><h2>Reporting</h2><a class="sb-item sb-doc" href="../reporting/overview.html"><span>Reporting</span></a><a class="sb-item sb-doc" href="../reporting/analytics.html"><span>Reporting - Analytics (Dashboard Insights)</span></a><a class="sb-item sb-doc" href="../reporting/flows.html"><span>Business Flows (Traced)</span></a><a class="sb-item sb-doc" href="../reporting/reports.html"><span>Reporting - Reports</span></a><a class="sb-item sb-doc" href="../reporting/warehouse.html"><span>Reporting - Warehouse</span></a></div><div class="sb-group"><h2>TMS (Tenant Management)</h2><a class="sb-item sb-doc" href="../tms/overview.html"><span>TMS Service (Tenant Management System)</span></a><a class="sb-item sb-doc" href="../tms/payment.html"><span>TMS - Subscription Payment</span></a><a class="sb-item sb-doc" href="../tms/tenant.html"><span>TMS - Tenant Management</span></a></div><div class="sb-group"><h2>Events</h2><a class="sb-item sb-doc" href="../events/overview.html"><span>Events Service</span></a><a class="sb-item sb-doc" href="../events/activitylog.html"><span>Events - Activity Log &amp; Export Log</span></a><a class="sb-item sb-doc" href="../events/email.html"><span>Events - Email</span></a><a class="sb-item sb-doc" href="../events/notification.html"><span>Events - Notifications</span></a></div><div class="sb-group"><h2>IAM</h2><a class="sb-item sb-doc" href="../iam/overview.html"><span>IAM Backend</span></a><a class="sb-item sb-doc" href="../iam/admin.html"><span>IAM - Users, Groups, Permissions</span></a><a class="sb-item sb-doc" href="../iam/auth.html"><span>IAM - Token, Registration, Password</span></a><a class="sb-item sb-doc" href="../iam/external.html"><span>IAM - Federated External Identity</span></a></div><div class="sb-group"><h2>Payment</h2><a class="sb-item sb-doc" href="../payment/overview.html"><span>Payment Service</span></a><a class="sb-item sb-doc" href="../payment/esewa.html"><span>Payment - eSewa</span></a></div><div class="sb-group"><h2>Document</h2><a class="sb-item sb-doc" href="../document/overview.html"><span>Document Service</span></a></div><div class="sb-group"><h2>Migration</h2><a class="sb-item sb-doc" href="../migration/overview.html"><span>Migration Service</span></a><a class="sb-item sb-doc" href="../migration/bulk-import.html"><span>Migration - Bulk Import Flows</span></a></div><div class="sb-group"><h2>Configuration</h2><a class="sb-item sb-doc" href="../configuration/overview.html"><span>Configuration Service</span></a><a class="sb-item sb-doc" href="../configuration/dashboard.html"><span>Configuration - Dashboard: Fiscal Year &amp; Master Defaults</span></a><a class="sb-item sb-doc" href="../configuration/service-configuration.html"><span>Configuration - Service Configuration &amp; Cost Terms</span></a></div><div class="sb-group"><h2>Package Registry</h2><a class="sb-item sb-doc" href="../package/overview.html"><span>ERP Project Package (Package Registry)</span></a></div><div class="sb-group"><h2>Website</h2><a class="sb-item sb-doc" href="../website/overview.html"><span>Website Service</span></a><a class="sb-item sb-doc" href="../website/content.html"><span>Website - Blog, Content, Leads</span></a></div><div class="sb-group"><h2>Kafka Infrastructure</h2><a class="sb-item sb-doc" href="../kafka/overview.html"><span>Kafka Infrastructure (Consumer / Producer / Warehouse)</span></a></div><div class="sb-foot">76 pages - 16 services, traced from f1-production code, verified 2026-11-04</div></nav><div id="scrim"></div><main id="main"><article class="doc-article"><section class="sec" data-title="Overview"><h1>Business Flows (Traced) - Vouchers &amp; Ledger Posting</h1>
+<p>Deep trace of the Accounting money path: the four voucher families (journal, payment, receipt, contra) with their full create/submit/approve/reject/cancel/delete lifecycle, the shared bill-settlement flow, and the internal dashboard hooks through which Sales, Purchase, Inventory and payment modules post journals into the ledger. Every citation is verified against the f1-production source at SHA a60aaba3.</p>
+<p>Citations are relative to the Accounting repo root. Shared building blocks used throughout:</p>
+<ul>
+<li>IAMAuthenticationBackend (dashboard/auth_backends.py:21-57) - validates the tenant token by POST to IAM api/token/verify/ (dashboard/auth_backends.py:60-71), requires the ACCOUNTING service PR1300 in subscribed_services and email_verified (dashboard/auth_backends.py:41-42), returns user_id and tenant_id (dashboard/auth_backends.py:50-53), and puts the tenant&#39;s active fiscal year on request.fiscal_year (dashboard/auth_backends.py:48-49).</li>
+<li>HasPermission (dashboard/auth_backends.py:74-107) - blocks non-GET when the subscription expired (dashboard/auth_backends.py:76-77), bypasses for tenant_root users (dashboard/auth_backends.py:79-80), otherwise fetches the user&#39;s feature/action grants from IAM api/internal-check-permissions/ (dashboard/auth_backends.py:83-85) and requires the view&#39;s required_feature_permission plus required_action_permission.</li>
+<li>InternalRequestPermission (dashboard/auth_backends.py:110-121) - password in the POST body or GET query must equal the shared INTERNAL_PASS (dashboard/helpers.py:25, dashboard/helpers.py:225-228).</li>
+<li>Fiscal-year guard - every voucher create/update calls custom.validate_fiscal_year (dashboard/custom_functions.py:535-555) which rejects entry dates outside the tenant&#39;s active Nepali fiscal year.</li>
+<li>Balance rules - custom.check_debit_credit_settlement_for_line_items (dashboard/custom_functions.py:49-72) requires total debit equals total credit; custom.total_amount_calculation_of_line_items (dashboard/custom_functions.py:75-89) requires a positive sum for voucher amounts.</li>
+<li>Sanitization - voucher and item payloads are round-tripped through the Configuration service sanitize endpoint before write (e.g. payment_voucher/serializers.py:276-306, dashboard/helpers.py:138).</li>
+<li>Notifications and activity logs are emitted as Kafka records, not direct Events calls - the direct HTTP calls are commented out (dashboard/notification.py:22-23, dashboard/activity_log.py:31-32) and go through kafka.call_kafka_for_log_and_notification (dashboard/kafka_functions.py:41-59) with record types NOTIFICATION_RECORD and LOG_RECORD (dashboard/choices.py:344-345).</li>
+</ul>
+</section><section class="sec" data-title="Endpoint classification"><h2 id="endpoint-classification">Endpoint classification</h2>
+<p>Classification of all 102 latest-version Accounting routes (catalog: all 102 are unversioned; no superseded routes exist in this service). TRANSACTION endpoints are deep-traced below; READ endpoints get one line each here.</p>
+<h3 id="read-43">READ (43)</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>View (file:line)</th>
+<th>One line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET /api/dashboard/</td>
+<td>DashboardAPIView (dashboard/views.py:71)</td>
+<td>Service liveness stub, no auth</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/accounting-choices/</td>
+<td>AccountingChoiceView (dashboard/views.py:86)</td>
+<td>IAM no-perm; dropdown choice lists (account types, statuses, JV types, bank types)</td>
+</tr>
+<tr>
+<td>POST /api/dashboard/entity/search/select/</td>
+<td>JournalLineItemView (dashboard/views.py:140)</td>
+<td>IAM no-perm; batch entity name lookup for journal line items</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/journals/</td>
+<td>JournalDashboardSFAView (dashboard/views.py:175)</td>
+<td>IAM no-perm; top-5 submitted-for-approval journals for the master dashboard, redis-cached 60s (dashboard/views.py:199-208)</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/journal-count/</td>
+<td>JournalDashboardCountView (dashboard/views.py:220)</td>
+<td>IAM no-perm; pending SFA journal count badge</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/report/entity/search/select/</td>
+<td>LedgerSupplierCustomerSearchSelectView (dashboard/views.py:785)</td>
+<td>IAM no-perm; supplier/customer/employee select for ledger reports</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/search-global/</td>
+<td>COANameSearchForGlobalAPIView (dashboard/views.py:1163)</td>
+<td>internal; trigram COA name search for the global search box, top 5</td>
+</tr>
+<tr>
+<td>GET /api/dashboard/get-receivable-payable-summary/</td>
+<td>ReceivableVSPayableView (dashboard/views.py:230)</td>
+<td>internal; receivable vs payable totals fed to the TMS dashboard</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/search/</td>
+<td>ChartOfAccountSearchView (chart_of_accounts/views.py:616)</td>
+<td>IAM + PR1301 VIEW; full-text + trigram account search</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/group/search/</td>
+<td>ChartOfAccountGroupSearchView (chart_of_accounts/views.py:683)</td>
+<td>IAM + PR1301 VIEW; group search</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/group/choices/</td>
+<td>GroupChoicesListingAPIView (chart_of_accounts/views.py:768)</td>
+<td>IAM only, no feature check; main group choices</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/group/search/select/</td>
+<td>ChartOfAccountGroupSearchSelectView (chart_of_accounts/views.py:872)</td>
+<td>IAM only; group select with bank/cash code hints</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/search/select/</td>
+<td>ChartOfAccountGLSearchView (chart_of_accounts/views.py:811)</td>
+<td>IAM only; GL account select, optional supplier filter</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/search/select/{supplier}/</td>
+<td>ChartOfAccountGLSearchView (chart_of_accounts/views.py:811)</td>
+<td>IAM only; GL select pre-filtered by supplier</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/get-account-detail/</td>
+<td>ChartOfAccountGetInternalDetailView (chart_of_accounts/views.py:944)</td>
+<td>internal; single/multi account detail by ids</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/tree/</td>
+<td>ChartOfAccountTreeApiView (chart_of_accounts/views.py:1306)</td>
+<td>IAM only, no feature check; full account tree for the UI</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/coa-list-reporting/</td>
+<td>ChartOfAccountReportingListAPIView (chart_of_accounts/views.py:1057)</td>
+<td>internal; reporting list, optional main-group filter</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/check-bulk-account/</td>
+<td>ChartOfAccountBulkProductCreateAPIView (chart_of_accounts/views.py:1108)</td>
+<td>internal password; maps account names to existing account ids</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/check/</td>
+<td>ChartOfAccountCheckAPIView (chart_of_accounts/views.py:2034)</td>
+<td>internal; account existence check, optional account_type filter</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/bulk-validation/</td>
+<td>BulkValidationAPIView (chart_of_accounts/views.py:1150)</td>
+<td>internal; pre-import validation of COA rows, raw SQL name/parent checks</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/get-opening-info/</td>
+<td>GetOpeningForFiscalClosure (chart_of_accounts/views.py:1375)</td>
+<td>internal; computes opening balance rows per account for fiscal closure</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/coa-ids/</td>
+<td>TenantsCOAsIDAPIView (chart_of_accounts/views.py:1582)</td>
+<td>internal; COA ids per tenant</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/fixed-assets/</td>
+<td>FixedAssetsSearchListAPIView (chart_of_accounts/views.py:1669)</td>
+<td>internal; fixed/intangible asset account lookup by product</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/fixed-assets-prouduct-account/</td>
+<td>FixedAssetAccountsListAPIView (chart_of_accounts/views.py:1883)</td>
+<td>internal; product-to-fixed-asset-account list</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/fixed-asset-intangible-asset/</td>
+<td>FixedAssetIntangibleAssetGroupListView (chart_of_accounts/views.py:1990)</td>
+<td>IAM + PR1301 VIEW; fixed/intangible group list</td>
+</tr>
+<tr>
+<td>GET /api/chart-of-account/list-bank-account-multiple/</td>
+<td>BankAccountListMuliple (chart_of_accounts/views.py:2013)</td>
+<td>internal; bank-flagged account list, optional ids filter</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/search/</td>
+<td>JournalVoucherSearchView (journal_voucher/views.py:660)</td>
+<td>IAM + PR1302 VIEW; manually-created JV search, excludes transaction-linked JVs (journal_voucher/views.py:691-700)</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/approval-list/</td>
+<td>JournalVoucherAPIViewForMasterDashboardSOAList (journal_voucher/views.py:720)</td>
+<td>internal password; SFA JV list for dashboard</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/item-reporting/</td>
+<td>JournalVoucherLineItemDetailReporting (journal_voucher/views.py:753)</td>
+<td>internal password; approved JV items for one account in a date range</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/invoices/</td>
+<td>JournalVoucherPendingBillsAPIView (journal_voucher/views.py:798)</td>
+<td>IAM + PR1302; pending source bills (sales/purchase invoice, return) fetched from Sales/Purchase internal list endpoints</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/pending-journal-list/</td>
+<td>PendingJournalCreateForSalesPurchaseView (journal_voucher/views.py:853)</td>
+<td>no auth at all; lists PendingJournal retry rows (security note, see Unverified and anomalies)</td>
+</tr>
+<tr>
+<td>GET /api/journal-voucher/pending-journal-list/{pk}/</td>
+<td>PendingJournalCreateForSalesPurchaseView (journal_voucher/views.py:853)</td>
+<td>no auth; single PendingJournal row</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/quick-journal-list/</td>
+<td>QuickJournalListView (journal_voucher/views.py:870)</td>
+<td>no auth; JVs related to one invoice/payment/return for quick views</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/entity-related-journal-list/</td>
+<td>EntityRelatedJournalListView (journal_voucher/views.py:1024)</td>
+<td>no auth; JVs by supplier/customer payment ids</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/approval-list-for-transaction-report/</td>
+<td>JournalVoucherLineItemDetailForTransactionReport (journal_voucher/views.py:1069)</td>
+<td>internal password; approved JV items for the transaction report</td>
+</tr>
+<tr>
+<td>GET /api/payment-voucher/search/</td>
+<td>PaymentVoucherSearchView (payment_voucher/views.py:696)</td>
+<td>IAM + PR1303 VIEW; payment voucher search with bank name + trigram</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/list-payment-voucher-sp/</td>
+<td>PaymentVoucherListDetailSPView (payment_voucher/views.py:823)</td>
+<td>internal; payment vouchers by supplier payment ids</td>
+</tr>
+<tr>
+<td>GET /api/receipt-voucher/search/</td>
+<td>ReceiptVoucherSearchView (receipt_voucher/views.py:683)</td>
+<td>IAM + PR1304 VIEW; receipt voucher search, marks linked quick payments as not cancellable</td>
+</tr>
+<tr>
+<td>GET /api/contra/search/</td>
+<td>ContraSearchView (contra/views.py:659)</td>
+<td>IAM + PR1305 VIEW; contra voucher search</td>
+</tr>
+<tr>
+<td>GET /api/bank-account/search/</td>
+<td>BankSearchView (bank/views.py:237)</td>
+<td>IAM + PR1307 VIEW; bank account search</td>
+</tr>
+<tr>
+<td>GET /api/bank-account/search/select/</td>
+<td>BankAccountSearchSelectView (bank/views.py:282)</td>
+<td>IAM + PR1307 VIEW; bank select</td>
+</tr>
+<tr>
+<td>GET /api/bill-settlement/search/</td>
+<td>BillSettlementSearchView (bill_pay_receive/views.py:479)</td>
+<td>IAM + PR1306 VIEW; bill settlement search</td>
+</tr>
+<tr>
+<td>GET /api/bill-settlement/entity-transaction/</td>
+<td>BillEntityTransactionView (bill_pay_receive/views.py:395)</td>
+<td>IAM no-perm variant; fetches the journal created for a bill settlement</td>
+</tr>
+</tbody></table>
+<h3 id="record-14-master-data-reference-writes-no-ledger-postings">RECORD (14) - master data / reference writes, no ledger postings</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>View (file:line)</th>
+<th>One line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET/POST /api/dashboard/add-fiscal-year/</td>
+<td>AddFiscalYearInfoApiView (dashboard/views.py:957)</td>
+<td>internal; upserts the tenant&#39;s fiscal-year info row (dashboard/models.py:3-18)</td>
+</tr>
+<tr>
+<td>GET/POST /api/chart-of-account/</td>
+<td>ChartOfAccountAPIView (chart_of_accounts/views.py:56)</td>
+<td>IAM + PR1301; list accounts, create account</td>
+</tr>
+<tr>
+<td>GET/POST /api/chart-of-account/detail/{pk}/</td>
+<td>ChartOfAccountDetailView (chart_of_accounts/views.py:121)</td>
+<td>IAM + PR1301; account detail, in-place update (bank accounts blocked, chart_of_accounts/views.py:168-169)</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/delete/{pk}/</td>
+<td>ChartOfAccountDeleteView (chart_of_accounts/views.py:202)</td>
+<td>IAM + PR1301 DELETE; deletes one account</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/status/</td>
+<td>ChartOfAccountStatusChangeView (chart_of_accounts/views.py:232)</td>
+<td>IAM + PR1301 ACTIVE_INACTIVE; bulk active/inactive, bank accounts blocked</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/register-coa/</td>
+<td>RegisterChartOfAccountAPIView (chart_of_accounts/views.py:742)</td>
+<td>internal password; registers the default COA chart for a tenant via defaults.create_default_chart_of_accounts</td>
+</tr>
+<tr>
+<td>GET/POST /api/chart-of-account/group/</td>
+<td>ChartOfGroupAPIView (chart_of_accounts/views.py:303)</td>
+<td>IAM + PR1301; list/create groups</td>
+</tr>
+<tr>
+<td>GET/POST /api/chart-of-account/group/detail/{pk}/</td>
+<td>ChartOfGroupDetailView (chart_of_accounts/views.py:377)</td>
+<td>IAM + PR1301; group detail, update</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/group/delete/{pk}/</td>
+<td>ChartOfGroupDeleteView (chart_of_accounts/views.py:449)</td>
+<td>IAM + PR1301 DELETE; deletes a group (children must be gone first via PROTECT FKs)</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/group/status/</td>
+<td>ChartOfGroupStatusChangeView (chart_of_accounts/views.py:484)</td>
+<td>IAM + PR1301 ACTIVE_INACTIVE; group status + cascades bank account status for bank groups (chart_of_accounts/views.py:571-599)</td>
+</tr>
+<tr>
+<td>GET/POST /api/bank-account/</td>
+<td>BankAccountAPIView (bank/views.py:24)</td>
+<td>IAM + PR1307; bank account list/create</td>
+</tr>
+<tr>
+<td>GET/POST /api/bank-account/detail/{pk}/</td>
+<td>BankAccountDetailView (bank/views.py:87)</td>
+<td>IAM + PR1307; bank detail/update</td>
+</tr>
+<tr>
+<td>POST /api/bank-account/delete/{pk}/</td>
+<td>BankAccountDeleteView (bank/views.py:131)</td>
+<td>IAM + PR1307 DELETE; deletes bank account</td>
+</tr>
+<tr>
+<td>POST /api/bank-account/status/</td>
+<td>BankAccountStatusChangeView (bank/views.py:157)</td>
+<td>IAM + PR1307 ACTIVE_INACTIVE; bank account active/inactive</td>
+</tr>
+</tbody></table>
+<h3 id="ops-13-operations-repair-import-monitoring">OPS (13) - operations, repair, import, monitoring</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>View (file:line)</th>
+<th>One line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST /api/dashboard/tenant-data-deletion/</td>
+<td>TenantAccountingDataDeleteView (dashboard/views.py:819)</td>
+<td>password-gated only; deletes all accounting rows for one tenant (dashboard/views.py:826-855)</td>
+</tr>
+<tr>
+<td>GET/POST /api/dashboard/accounting-kafka-events/</td>
+<td>AccountingEventsView (dashboard/views.py:932)</td>
+<td>no auth; replays a stored Kafka payload or lists the last 10 (debug)</td>
+</tr>
+<tr>
+<td>POST /api/dashboard/check-reconciliation/</td>
+<td>AccountingCheckReportReconcileAPIView (dashboard/views.py:975)</td>
+<td>internal; per-tenant JV-vs-source-doc reconciliation feed for the Reconciliation Service</td>
+</tr>
+<tr>
+<td>GET/POST /api/dashboard/fix-old-payment-vouchers/</td>
+<td>FixOldPaymentVouchersAPIView (dashboard/views.py:1200)</td>
+<td>internal; one-time repair re-linking old payment vouchers to supplier/customer payments (dashboard/views.py:1481-1499)</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/delete-transfered-coa/</td>
+<td>ChartOfAccountTransferedDataDeleteView (chart_of_accounts/views.py:1031)</td>
+<td>internal; deletes migrated COA rows for tenants</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/import/</td>
+<td>ChartOfAccountMigrateCreateAPIView (chart_of_accounts/views.py:1083)</td>
+<td>internal password; migration import of COA rows</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/bulk-create/</td>
+<td>BulkCreateAPIView (chart_of_accounts/views.py:1206)</td>
+<td>internal; bulk COA import with generated unique ids and parent mapping</td>
+</tr>
+<tr>
+<td>GET/POST /api/chart-of-account/coa-new-account-management/</td>
+<td>ChartOfAccountNewAccountManagement (chart_of_accounts/views.py:1883)</td>
+<td>internal; ops listing/editing of accounts by name</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/ensure-tds-accounts/</td>
+<td>EnsureTDSAccountsView (chart_of_accounts/views.py:2003)</td>
+<td>internal; creates TDS expense/asset accounts on demand</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/modify-coa-grp-acc-visibility/</td>
+<td>CoaAccGroupVisibilityView (chart_of_accounts/views.py:2071)</td>
+<td>internal; bulk sets the show flag on accounts/groups</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/fix-bank-in-payment-voucher/</td>
+<td>PayamentVoucherToFixBankMisMatched (payment_voucher/views.py:757)</td>
+<td>internal; re-points bank on payment vouchers whose bank account was replaced</td>
+</tr>
+<tr>
+<td>POST /api/bank-account/import/</td>
+<td>BankAccountMigrateAPIView (bank/views.py:318)</td>
+<td>internal password; bank account migration import</td>
+</tr>
+<tr>
+<td>POST /api/contra/switch-drcr-contra/</td>
+<td>SwitchDrCrInContraAPIView (contra/views.py:706)</td>
+<td>internal; flips dr/cr on old contra items for a tenant (contra/views.py:736-749)</td>
+</tr>
+</tbody></table>
+<h3 id="transaction-32-deep-traced-below">TRANSACTION (32) - deep-traced below</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>View (file:line)</th>
+<th>One line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST /api/journal-voucher/</td>
+<td>JournalVoucherAPIView (journal_voucher/views.py:37)</td>
+<td>Create a manual journal (draft)</td>
+</tr>
+<tr>
+<td>GET/POST /api/journal-voucher/detail/{pk}/</td>
+<td>JournalVoucherDetailView (journal_voucher/views.py:115)</td>
+<td>Read journal; update while draft</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/delete/{pk}/</td>
+<td>JournalVoucherDeleteView (journal_voucher/views.py:188)</td>
+<td>Delete a draft journal</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/status/{pk}/</td>
+<td>JournalVoucherStatusChange (journal_voucher/views.py:227)</td>
+<td>Submit for approval, approve, reject-on-submit, cancel</td>
+</tr>
+<tr>
+<td>POST /api/journal-voucher/cancel-submission/{pk}/</td>
+<td>JournalVoucherCancelSubmissionView (journal_voucher/views.py:566)</td>
+<td>Revert submitted-for-approval to draft</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/</td>
+<td>PaymentVoucherAPIView (payment_voucher/views.py:44)</td>
+<td>Create a payment voucher (draft)</td>
+</tr>
+<tr>
+<td>GET/POST /api/payment-voucher/detail/{pk}/</td>
+<td>PaymentVoucherDetailView (payment_voucher/views.py:123)</td>
+<td>Read; update while draft</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/delete/{pk}/</td>
+<td>PaymentVoucherDeleteView (payment_voucher/views.py:197)</td>
+<td>Delete a draft payment voucher</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/status/{pk}/</td>
+<td>PaymentVoucherStatusChange (payment_voucher/views.py:237)</td>
+<td>Submit/approve/reject/cancel</td>
+</tr>
+<tr>
+<td>POST /api/payment-voucher/cancel-submission/{pk}/</td>
+<td>PaymentVoucherCancelSubmissionView (payment_voucher/views.py:601)</td>
+<td>Revert SFA to draft</td>
+</tr>
+<tr>
+<td>POST /api/receipt-voucher/</td>
+<td>ReceiptVoucherAPIView (receipt_voucher/views.py:33)</td>
+<td>Create a receipt voucher (draft)</td>
+</tr>
+<tr>
+<td>GET/POST /api/receipt-voucher/detail/{pk}/</td>
+<td>ReceiptVoucherDetailView (receipt_voucher/views.py:111)</td>
+<td>Read; update while draft</td>
+</tr>
+<tr>
+<td>POST /api/receipt-voucher/delete/{pk}/</td>
+<td>ReceiptVoucherDeleteView (receipt_voucher/views.py:186)</td>
+<td>Delete a draft receipt voucher</td>
+</tr>
+<tr>
+<td>POST /api/receipt-voucher/status/{pk}/</td>
+<td>ReceiptVoucherStatusChange (receipt_voucher/views.py:225)</td>
+<td>Submit/approve/reject/cancel</td>
+</tr>
+<tr>
+<td>POST /api/receipt-voucher/cancel-submission/{pk}/</td>
+<td>ReceiptVoucherCancelSubmissionView (receipt_voucher/views.py:587)</td>
+<td>Revert SFA to draft</td>
+</tr>
+<tr>
+<td>POST /api/contra/</td>
+<td>ContraAPIView (contra/views.py:37)</td>
+<td>Create a contra (bank transfer) voucher (draft)</td>
+</tr>
+<tr>
+<td>GET/POST /api/contra/detail/{pk}/</td>
+<td>ContraDetailView (contra/views.py:112)</td>
+<td>Read; update while draft</td>
+</tr>
+<tr>
+<td>POST /api/contra/delete/{pk}/</td>
+<td>ContraDeleteView (contra/views.py:185)</td>
+<td>Delete a draft contra voucher</td>
+</tr>
+<tr>
+<td>POST /api/contra/status/{pk}/</td>
+<td>ContraStatusChange (contra/views.py:229)</td>
+<td>Submit/approve/reject/cancel</td>
+</tr>
+<tr>
+<td>POST /api/contra/cancel-submission/{pk}/</td>
+<td>ContraCancelSubmissionView (contra/views.py:564)</td>
+<td>Revert SFA to draft</td>
+</tr>
+<tr>
+<td>GET/POST /api/bill-settlement/</td>
+<td>BillSettlementAPIView (bill_pay_receive/views.py:32)</td>
+<td>Create a bill settlement (draft)</td>
+</tr>
+<tr>
+<td>GET/POST /api/bill-settlement/detail/{pk}/</td>
+<td>BillSettlementDetailView (bill_pay_receive/views.py:102)</td>
+<td>Read; update while draft</td>
+</tr>
+<tr>
+<td>POST /api/bill-settlement/delete/{pk}/</td>
+<td>BillSettlementDeleteView (bill_pay_receive/views.py:167)</td>
+<td>Delete a draft bill settlement</td>
+</tr>
+<tr>
+<td>POST /api/bill-settlement/status/{pk}/</td>
+<td>BillSettlementStatusChange (bill_pay_receive/views.py:199)</td>
+<td>Submit/approve/cancel - approval auto-creates the linked JV</td>
+</tr>
+<tr>
+<td>POST /api/bill-settlement/cancel-submission/{pk}/</td>
+<td>BillSettlementCancelSubmissionView (bill_pay_receive/views.py:425)</td>
+<td>Revert SFA to draft</td>
+</tr>
+<tr>
+<td>POST /api/dashboard/create-journal/</td>
+<td>JournalCreateForSalesPurchaseViewStockAdjustment (dashboard/views.py:618)</td>
+<td>Internal hook: other modules&#39; approved transactions post journals here</td>
+</tr>
+<tr>
+<td>POST /api/dashboard/cancel-journal/</td>
+<td>JournalCancelForSalesPurchaseViewStockAdjustment (dashboard/views.py:766)</td>
+<td>Internal hook: cancel the JV a module transaction created</td>
+</tr>
+<tr>
+<td>POST /api/account-payable/supplier-create-journal/</td>
+<td>JournalCreateForSupplierPaymentView (account_payable/views.py)</td>
+<td>Internal hook: supplier payment posts a payment-style JV</td>
+</tr>
+<tr>
+<td>POST /api/account-payable/supplier-cancel-journal/</td>
+<td>JournalCancelForSupplierPaymentView (account_payable/views.py)</td>
+<td>Internal hook: cancel that JV</td>
+</tr>
+<tr>
+<td>POST /api/account-receivable/customer-create-journal/</td>
+<td>JournalCreateForCustomerPaymentView (account_receivable/views.py)</td>
+<td>Internal hook: customer payment posts a receipt-style JV</td>
+</tr>
+<tr>
+<td>POST /api/account-receivable/customer-cancel-journal/</td>
+<td>JournalCancelForCustomerPaymentView (account_receivable/views.py)</td>
+<td>Internal hook: cancel that JV</td>
+</tr>
+<tr>
+<td>POST /api/chart-of-account/transfer-closing/</td>
+<td>CloseOpeningForFiscalYear (chart_of_accounts/views.py:1366)</td>
+<td>Fiscal-year close: rolls closing balances into next-year openings (FY domain - detailed in the FY half of this site)</td>
+</tr>
+</tbody></table>
+<h3 id="excluded-0">EXCLUDED (0)</h3>
+<p>No federated miniapp-domain routes exist in the Accounting service, so nothing is excluded under that rule. The Payment Service (eSewa wallet provider) is not used in ProvidhyERP and is not modeled as a path here.</p>
+</section><section class="sec" data-title="Voucher status state machine"><h2 id="voucher-status-state-machine">Voucher status state machine</h2>
+<p>All four voucher families share one status column (journal_voucher/models.py:100-104, choices StatusChoices dashboard/choices.py:62-67) and one rejection flag (journal_voucher/models.py:109-112). Bill settlements use the same statuses (journal_voucher/models.py:37).</p>
+<div class="diagram"><pre class="mermaid-src">stateDiagram-v2
+    [*] --&gt; draft
+    draft --&gt; submitted_for_approval
+    draft --&gt; [*] : delete
+    submitted_for_approval --&gt; draft
+    submitted_for_approval --&gt; approved
+    submitted_for_approval --&gt; cancelled
+    approved --&gt; cancelled
+    approved --&gt; [*]
+    draft --&gt; rejected_flag
+    rejected_flag --&gt; draft
+</pre></div>
+<p>Transitions and guards (journal family, same for payment/receipt/contra):</p>
+<ul>
+<li>draft to submitted_for_approval - only the original entry_by can submit, and an approval_user id must be supplied (journal_voucher/views.py:320-330).</li>
+<li>submitted_for_approval to draft - cancel-submission, only by the submitter (journal_voucher/views.py:626-635); or rejection: the approval user (or anyone other than the submitter) posts type rejection, which sets rejected, rejected_by, rejected_comment, rejected_date and keeps status draft-eligible (journal_voucher/views.py:606-625).</li>
+<li>submitted_for_approval to approved - only the designated approval_user, not the submitter (journal_voucher/views.py:353-357).</li>
+<li>submitted_for_approval or approved to cancelled - cancelled_by/cancelled_date set; a journal with additional cost (other_info.additional_cost) refuses cancellation (journal_voucher/views.py:279-281).</li>
+<li>draft delete - only the original entry_by, items deleted first (journal_voucher/views.py:216-220).</li>
+</ul>
+<p>The approval behavior is tenant-configured: the status endpoint fetches the tenant&#39;s approval-work configuration from the Configuration service (get_configuration, dashboard/send_requests.py:52-72; journal_voucher/views.py:260-265) and branches on its title (choices.ConfigTitle dashboard/choices.py:174-176).</p>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+    A[&quot;POST status/{pk}/&quot;] --&gt; B[&quot;fetch approval-work config from Configuration&quot;]
+    B --&gt;|no config found| E[&quot;503 service unavailable&quot;]
+    B --&gt;|title BASIC| C{&quot;requested status&quot;}
+    C --&gt;|submitted_for_approval| D[&quot;handle_submission_for_approval - guard entry_by, require approval_user&quot;]
+    C --&gt;|approved| F[&quot;basic flow only - approve if status is submitted_for_approval&quot;]
+    C --&gt;|cancelled| G[&quot;cancel - blocked when additional cost present&quot;]
+    C --&gt;|other| H[&quot;400 APPROVAL_FLOW_ERROR&quot;]
+    B --&gt;|title CUSTOM| I{&quot;requested status&quot;}
+    I --&gt;|approved| J[&quot;custom flow - approve after custom-flow compulsions check&quot;]
+    I --&gt;|cancelled| K[&quot;cancel - no status pre-check&quot;]
+    I --&gt;|other| H
+</pre></div>
+<h3 id="side-effects-on-approval-and-cancel-journal-family">Side effects on approval and cancel (journal family)</h3>
+<p>Approving writes: status/approved_by/approved_date (journal_voucher/views.py:358-365), an activity log record (journal_voucher/views.py:372, via dashboard/activity_log.py:67-103 to Kafka LOG_RECORD), and a Kafka approval record (journal_voucher/views.py:374-391, record type JOURNAL_VOUCHER_APPROVAL_RECORD dashboard/choices.py:346) whose payload is built by kafkaJournalVoucherItemReportingSerializer (journal_voucher/serializers.py:805-834) after pulling supplier/customer/employee names from Projectmaster (journal_voucher/views.py:457-529). Cancelling writes the cancelled fields plus a JOURNAL_VOUCHER_CANCEL Kafka record (journal_voucher/views.py:401-436). Submissions and rejections additionally send a notification record (journal_voucher/views.py:338-343, 613-618).</p>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+    participant FE as ERP Frontend
+    participant JV as JournalVoucherStatusChange
+    participant CFG as Configuration service
+    participant PM as Projectmaster
+    participant KAF as Kafka
+    FE-&gt;&gt;JV: POST /api/journal-voucher/status/{pk}/ with status approved
+    JV-&gt;&gt;CFG: GET approval-work config (password, tenant_id)
+    CFG--&gt;&gt;JV: config with title BASIC or CUSTOM
+    JV-&gt;&gt;JV: guard - caller must be approval_user, current status submitted_for_approval
+    JV-&gt;&gt;PM: get-all-supplier, get-all-customer, get-all-employee (password)
+    PM--&gt;&gt;JV: entity name maps
+    JV-&gt;&gt;JV: save approved fields, build kafka payload
+    JV-&gt;&gt;KAF: JOURNAL_VOUCHER_APPROVAL_RECORD payload
+    JV-&gt;&gt;KAF: activity log record (LOG_RECORD)
+    JV--&gt;&gt;FE: 200 with approved voucher payload
+</pre></div>
+<p>The Payment, Receipt and Contra families repeat the identical shape with their own Kafka record types (PAYMENT_VOUCHER_APPROVAL_RECORD/PAYMENT_VOUCHER_CANCEL dashboard/choices.py:348-349, RECEIPT_VOUCHER_APPROVAL_RECORD/RECEIPT_VOUCHER_CANCEL dashboard/choices.py:350-351, CONTRA_APPROVAL_RECORD/CONTRA_CANCEL dashboard/choices.py:352-353). Bill settlement approval additionally creates the linked JV (see Bill settlement section).</p>
+</section><section class="sec" data-title="Bill settlement"><h2 id="bill-settlement">Bill settlement</h2>
+<p>Bill settlement settles a party bill against an opening/credit position. It reuses the voucher status machine (journal_voucher/models.py:37) but has one extra side effect: approval <strong>auto-creates the linked journal voucher</strong> and rewrites the party&#39;s remaining opening. All mutations run in one transaction (bill_pay_receive/views.py:226).</p>
+<h3 id="trace-post-api-bill-settlement-status-pk">Trace (POST /api/bill-settlement/status/{pk}/)</h3>
+<ol>
+<li>Auth: IAMAuthenticationBackend + BILL_PAYMENT_RECEIVE feature (bill_pay_receive/views.py:200-202); initial() picks the action permission by request status - submit requires VIEW, everything else APPROVE_CANCEL (bill_pay_receive/views.py:204-211).</li>
+<li>Load the tenant-scoped BillSettlement or 400 BILL_NOT_FOUND (bill_pay_receive/views.py:213-220).</li>
+<li>Fetch the tenant&#39;s approval-work configuration from the Configuration service (bill_pay_receive/views.py:231-236); <strong>no config = 503 SERVICE_UNAVAILABLE</strong> (bill_pay_receive/views.py:272).</li>
+<li>BASIC flow (bill_pay_receive/views.py:237-255): submit - only the original entry_by, only from draft, approval_user id required, sets approval/submit fields, sends notification + activity log (bill_pay_receive/views.py:288-309); approve - compulsion check then approval (bill_pay_receive/views.py:244-248); cancel - from SFA or approved (bill_pay_receive/views.py:250-253).</li>
+<li>CUSTOM flow (bill_pay_receive/views.py:257-270): <strong>no submit</strong> - approve goes directly, with the compulsion check requiring status DRAFT (bill_pay_receive/views.py:281-286); cancel as in BASIC.</li>
+<li>On approval (bill_pay_receive/views.py:311-340): basic-flow compulsion requires SFA when compulsion=true (bill_pay_receive/views.py:274-279); approver must be the designated approval_user when coming from SFA, or the original entry_by when approving a draft directly (bill_pay_receive/views.py:312-319); writes approved fields, then <strong>updates the entity&#39;s remain opening</strong> via custom.update_remain_opening_of_entity (bill_pay_receive/views.py:327-331) and <strong>creates the automated journal</strong> via bill_settlement_journal (bill_pay_receive/views.py:333-334), then an activity log (bill_pay_receive/views.py:336).</li>
+<li>On cancellation (bill_pay_receive/views.py:342-374): same guards mirrored, reverts the remain opening and cancels the linked journal via bill_settlement_journal_cancel (bill_pay_receive/views.py:361-368).</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[POST status pk] --&gt; B[fetch approval-work config]
+  B --&gt;|no config| E[503 service unavailable]
+  B --&gt;|title BASIC| C{requested status}
+  C --&gt;|submitted for approval| D[submit guard entry_by plus draft, set approval_user]
+  C --&gt;|approved| F[compulsion check, approve guard, write approved]
+  C --&gt;|cancelled| G[cancel guard from SFA or approved]
+  C --&gt;|other| H[400 approval flow error]
+  B --&gt;|title CUSTOM| I{requested status}
+  I --&gt;|approved| J[compulsion check requires draft, approve directly]
+  I --&gt;|cancelled| G
+  I --&gt;|other| H
+  F --&gt; K[update remain opening of entity]
+  K --&gt; L[create automated journal voucher]
+  L --&gt; M[activity log]
+  G --&gt; N[revert remain opening]
+  N --&gt; O[cancel linked journal voucher]
+</pre></div>
+<div class="diagram"><pre class="mermaid-src">sequenceDiagram
+  participant FE as ERP Frontend
+  participant BS as BillSettlementStatusChange
+  participant CFG as Configuration service
+  participant JV as JournalVoucher store
+  participant KAF as Kafka
+  FE-&gt;&gt;BS: POST status with approved
+  BS-&gt;&gt;CFG: approval-work config
+  CFG--&gt;&gt;BS: BASIC or CUSTOM
+  BS-&gt;&gt;BS: guards plus compulsion check
+  BS-&gt;&gt;BS: update remain opening of entity
+  BS-&gt;&gt;JV: bill_settlement_journal creates JV
+  BS-&gt;&gt;KAF: activity log record
+  BS--&gt;&gt;FE: 200 approved
+</pre></div>
+<h3 id="scenarios">Scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+<th>Cited code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approve from SFA by the designated approver</td>
+<td>Normal approval, JV created, remain opening updated</td>
+<td>bill_pay_receive/views.py:312-334</td>
+</tr>
+<tr>
+<td>Approve a draft directly (basic flow, compulsion off)</td>
+<td>Allowed - entry_by may approve their own draft</td>
+<td>bill_pay_receive/views.py:318-324</td>
+</tr>
+<tr>
+<td>Custom flow, compulsion true, status not draft</td>
+<td>400 approval flow error</td>
+<td>bill_pay_receive/views.py:281-286</td>
+</tr>
+<tr>
+<td>Cancel an approved settlement</td>
+<td>JV cancelled, remain opening reverted, log written</td>
+<td>bill_pay_receive/views.py:342-374</td>
+</tr>
+<tr>
+<td>Tenant has no approval-work config</td>
+<td>503, nothing written</td>
+<td>bill_pay_receive/views.py:272</td>
+</tr>
+</tbody></table>
+</section><section class="sec" data-title="Journal hooks (internal, the money path)"><h2 id="journal-hooks-internal-the-money-path">Journal hooks (internal, the money path)</h2>
+<p>The internal endpoints below are how every other module posts to the ledger. They share the same skeleton: validate tenant_id plus method plus the shared internal password, fetch the tenant&#39;s full supplier/customer/employee sets from ProjectMaster once, build O(1) lookups, collect all GL accounts in one query, then call journal.automated_journal.</p>
+<h3 id="post-api-dashboard-create-journal-sales-purchase-stock-adjustment">POST /api/dashboard/create-journal/ (Sales, Purchase, stock adjustment)</h3>
+<p>JournalCreateForSalesPurchaseViewStockAdjustment.post (dashboard/views.py:712-763).</p>
+<ol>
+<li>Password gate: validate_internal_pass against the shared INTERNAL_PASS (dashboard/views.py:718-719).</li>
+<li>Entity fetch: all suppliers, customers, employees of the tenant from ProjectMaster (dashboard/views.py:619-646, 725).</li>
+<li>automated_journal dispatches on the method field to a per-transaction builder (dashboard/journal.py:242-293): purchase invoice, purchase return, sales invoice, sales return, supplier payment, customer payment, expense entry, stock adjustment, GRN and GRN-return (the GRN builders exist but the GRN document family is not used in ProvidhyERP). Cheque methods are folded into the payment builders by cheque_type (dashboard/journal.py:266-283).</li>
+<li>Each builder (e.g. expense_entry_journal dashboard/journal.py:326-372) reads the tenant&#39;s relevant automation configuration (e.g. PURCHASE_FLOW for the VAT account), creates the JournalVoucher <strong>already APPROVED</strong> with module_reference=True and the module feature stamped, and assembles the debit/credit items in the fixed JOURNAL_ITEM_ORDERING slot layout.</li>
+<li>Kafka: the items are serialized by kafkaJournalVoucherItemReportingSerializer and published with the record type mapped from the transaction kind - JOURNAL_VOUCHER_APPROVAL_RECORD for invoices/returns/expenses, PAYMENT_VOUCHER_APPROVAL_RECORD for supplier payments, RECEIPT_VOUCHER_APPROVAL_RECORD for customer payments (dashboard/journal.py:296-322).</li>
+<li><strong>Failure semantics</strong>: any exception is swallowed - a PendingJournal row records the failure (tenant, unique_id, invoice id, type, amount, error) and the endpoint still returns 200 &#39;Journal creation scheduled!&#39; (dashboard/views.py:750-762). NotImplementedError returns 400 (dashboard/views.py:748-749). The caller&#39;s document approval is NOT rolled back.</li>
+</ol>
+<div class="diagram"><pre class="mermaid-src">flowchart TD
+  A[create-journal with method plus data] --&gt; B{password valid}
+  B --&gt;|no| X[400 incorrect data format]
+  B --&gt;|yes| C[fetch tenant entities from ProjectMaster]
+  C --&gt; D[dispatch on method]
+  D --&gt;|invoice, return, expense| E[builder creates approved JV, module_reference true]
+  D --&gt;|supplier payment| F[payment style JV]
+  D --&gt;|customer payment| G[receipt style JV]
+  D --&gt;|cheque issued| F
+  D --&gt;|cheque received| G
+  E --&gt; H[Kafka journal voucher approval record]
+  F --&gt; I[Kafka payment voucher approval record]
+  G --&gt; J[Kafka receipt voucher approval record]
+  E --&gt; K{exception?}
+  K --&gt;|yes| L[PendingJournal row, still 200]
+  K --&gt;|no| M[200 with JV payload]
+</pre></div>
+<h3 id="post-api-dashboard-cancel-journal">POST /api/dashboard/cancel-journal/</h3>
+<p>JournalCancelForSalesPurchaseViewStockAdjustment.post (dashboard/views.py:766-782): same password gate, then journal.automated_cancel_journal(entry_id, method, tenant, user, approved_by) (dashboard/journal.py:3304) which cancels the JV the module document created (status cancelled, cancelled fields, cancel Kafka record). Called when a module document is cancelled after its journal posted.</p>
+<h3 id="post-api-account-payable-supplier-create-journal-and-api-account-receivable-customer-create-journal">POST /api/account-payable/supplier-create-journal/ and /api/account-receivable/customer-create-journal/</h3>
+<p>Same skeleton as create-journal (account_payable/views.py:116-164, account_receivable/views.py:119-167), but with a <strong>different failure contract</strong>: on exception they create the PendingJournal row and return <strong>400 with the error</strong> (account_payable/views.py:153-163, account_receivable/views.py:156-166) instead of 200. Their cancel twins (account_payable/views.py:167-183, account_receivable/views.py:170-185) mirror cancel-journal.</p>
+</section><section class="sec" data-title="PendingJournal"><h2 id="pendingjournal">PendingJournal</h2>
+<p>PendingJournal rows are the ledger&#39;s failure queue: one row per failed module journal, with the error message captured. The list route GET /api/dashboard/pending-journals/ (and by pk) exposes them for ops inspection (journal_voucher/views.py:853-867). No automatic retry worker exists in the Accounting repo - unverified whether an external job re-drives them.</p>
+</section><section class="sec" data-title="Untraced / unverified"><h2 id="untraced-unverified">Untraced / unverified</h2>
+<ul>
+<li>Per-builder debit/credit line composition (sales_invoice_journal, purchase_invoice_journal, supplier_payment_journal, customer_payment_journal, stock_adjustment_journal, grn builders) - the dispatch and slot pattern are traced (dashboard/journal.py:225-323, 326-400); the exact account selections inside each builder were not all read line-by-line - unverified.</li>
+<li>bill_settlement_journal / bill_settlement_journal_cancel internals (called at bill_pay_receive/views.py:334, 368) - existence and call sites verified, line composition unverified.</li>
+<li>PendingJournal retry mechanics - no retry worker found in this repo; unverified if re-driven externally.</li>
+<li>transfer-closing (fiscal close) is covered in flows-ledger-ops.md.</li>
+</ul>
+</section></article><div class="pagenav"><a class="pn" href="../accounting/flows-ledger-ops.html"><div class="pn-dir">← Previous</div><div class="pn-name">Business Flows (Traced) - Ledger &amp; Ops</div></a><a class="pn next" href="../accounting/vouchers.html"><div class="pn-dir">Next →</div><div class="pn-name">Accounting - Vouchers &amp; Bill Settlement</div></a></div></main><aside id="toc"><h2>On this page</h2><ul><li class="l2"><a href="#endpoint-classification">Endpoint classification</a></li><li class="l3"><a href="#read-43">READ (43)</a></li><li class="l3"><a href="#record-14-master-data-reference-writes-no-ledger-postings">RECORD (14) - master data / reference writes, no ledger postings</a></li><li class="l3"><a href="#ops-13-operations-repair-import-monitoring">OPS (13) - operations, repair, import, monitoring</a></li><li class="l3"><a href="#transaction-32-deep-traced-below">TRANSACTION (32) - deep-traced below</a></li><li class="l3"><a href="#excluded-0">EXCLUDED (0)</a></li><li class="l2"><a href="#voucher-status-state-machine">Voucher status state machine</a></li><li class="l3"><a href="#side-effects-on-approval-and-cancel-journal-family">Side effects on approval and cancel (journal family)</a></li><li class="l2"><a href="#bill-settlement">Bill settlement</a></li><li class="l3"><a href="#trace-post-api-bill-settlement-status-pk">Trace (POST /api/bill-settlement/status/{pk}/)</a></li><li class="l3"><a href="#scenarios">Scenarios</a></li><li class="l2"><a href="#journal-hooks-internal-the-money-path">Journal hooks (internal, the money path)</a></li><li class="l3"><a href="#post-api-dashboard-create-journal-sales-purchase-stock-adjustment">POST /api/dashboard/create-journal/ (Sales, Purchase, stock adjustment)</a></li><li class="l3"><a href="#post-api-dashboard-cancel-journal">POST /api/dashboard/cancel-journal/</a></li><li class="l3"><a href="#post-api-account-payable-supplier-create-journal-and-api-account-receivable-customer-create-journal">POST /api/account-payable/supplier-create-journal/ and /api/account-receivable/customer-create-journal/</a></li><li class="l2"><a href="#pendingjournal">PendingJournal</a></li><li class="l2"><a href="#untraced-unverified">Untraced / unverified</a></li></ul></aside></div><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" id="mermaidScript"></script><script src="../assets/site.js"></script></body></html>
